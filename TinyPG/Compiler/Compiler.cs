@@ -196,7 +196,16 @@ namespace TinyPG.Compiler
 				try
 				{
 					compilerresult.Value = itree.Eval(null);
-					output += "\r\nResult: " + (compilerresult.Value == null ? "null" : compilerresult.Value.ToString());
+					if (errors != null && errors.Count > 0)
+					{
+						output += "\r\nSemantics Errors: \r\n";
+						foreach (IParseError err in errors)
+							output += string.Format("({0},{1}): {2}\r\n", err.Line, err.Column, err.Message);
+					}
+					else
+					{
+						output += "\r\nResult: " + (compilerresult.Value == null ? "null" : compilerresult.Value.ToString());
+					}
 				}
 				catch (Exception exc)
 				{

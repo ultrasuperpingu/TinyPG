@@ -86,7 +86,7 @@ namespace TinyPG.CodeGenerators.VBNet
 									+ "        End Property\r\n";
 				parsetree = parsetree.Replace(@"<%INodesGet%>", inodes);
 				parsetree = parsetree.Replace(@"<%ImplementsIParseNodeText%>", " Implements IParseNode.Text");
-				parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]); //TODO
+				parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
 			}
 			else
 			{

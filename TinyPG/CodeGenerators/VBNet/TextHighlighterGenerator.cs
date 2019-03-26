@@ -62,6 +62,7 @@ namespace TinyPG.CodeGenerators.VBNet
 			generatedtext = generatedtext.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 			generatedtext = generatedtext.Replace(@"<%HightlightTokens%>", tokens.ToString());
 			generatedtext = generatedtext.Replace(@"<%RtfColorPalette%>", colors.ToString());
+			generatedtext = generatedtext.Replace(@"<%TextHighlighterCustomCode%>", Grammar.Directives["TextHighlighter"]["CustomCode"]);
 
 			if (Debug)
 			{

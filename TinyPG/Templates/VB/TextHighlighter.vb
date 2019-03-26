@@ -502,6 +502,6 @@ Namespace <%Namespace%>
         End Sub
 
 #End Region
-
+        <%TextHighlighterCustomCode%>
     End Class
 End Namespace

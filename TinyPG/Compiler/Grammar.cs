@@ -220,6 +220,8 @@ namespace TinyPG.Compiler
 			}
 			if (!d.ContainsKey("Generate"))
 				d["Generate"] = "False"; // do NOT generate a text highlighter by default
+			if (!d.ContainsKey("CustomCode"))
+				d["CustomCode"] = ""; // no custom code by default
 		}
 
 		public string GetTemplatePath()
@@ -250,10 +252,10 @@ namespace TinyPG.Compiler
 
 
 			DirectoryInfo dir = new DirectoryInfo(folder + @"\");
-			if (dir.Exists)
-				return folder;
-			else
-				return null;
+			if (!dir.Exists)
+				Directory.CreateDirectory(folder);
+			
+			return folder;
 		}
 
 		public string PrintGrammar()

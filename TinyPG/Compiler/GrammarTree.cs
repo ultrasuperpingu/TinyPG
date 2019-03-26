@@ -213,6 +213,7 @@ namespace TinyPG.Compiler
 				case "TextHighlighter":
 					names.Add("Generate");
 					names.Add("FileName");
+					names.Add("CustomCode");
 					break;
 				default:
 					return null;
