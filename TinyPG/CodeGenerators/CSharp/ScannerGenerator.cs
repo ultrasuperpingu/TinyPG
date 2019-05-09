@@ -50,7 +50,13 @@ namespace TinyPG.CodeGenerators.CSharp
 			bool first = true;
 			foreach (TerminalSymbol s in Grammar.GetTerminals())
 			{
-				regexps.Append("            regex = new Regex(" + s.Expression.ToString() + ", RegexOptions.Compiled");
+				string RegexCompiled = null;
+				Grammar.Directives.Find("TinyPG").TryGetValue("RegexCompiled", out RegexCompiled);
+
+				regexps.Append("            regex = new Regex(" + s.Expression.ToString() + ", RegexOptions.None");
+
+				if (RegexCompiled == null || RegexCompiled.ToLower().Equals("true"))
+					regexps.Append(" | RegexOptions.Compiled");
 
 				if (s.Attributes.ContainsKey("IgnoreCase"))
 					regexps.Append(" | RegexOptions.IgnoreCase");
