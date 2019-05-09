@@ -155,7 +155,7 @@ namespace TinyPG.Compiler
 			if (!d.ContainsKey("Namespace"))
 				d["Namespace"] = "TinyPG"; // set default namespace
 			if (!d.ContainsKey("OutputPath"))
-				d["OutputPath"] = "./"; // write files to current path
+				d["OutputPath"] = "." + Path.DirectorySeparatorChar; // write files to current path
 			if (!d.ContainsKey("Language"))
 				d["Language"] = "C#"; // set default language
 			if (!d.ContainsKey("TemplatePath"))
@@ -167,13 +167,16 @@ namespace TinyPG.Compiler
 					case "vbnet":
 					case "vb.net":
 					case "vb":
-						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory + @"Templates\VB\";
+						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
+                            Path.Combine("Templates","VB") + Path.DirectorySeparatorChar;
 						break;
 					case "java":
-						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory + @"Templates\Java\";
+						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
+                            Path.Combine("Templates", "Java") + Path.DirectorySeparatorChar;
 						break;
 					default:
-						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory + @"Templates\C#\";
+						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
+                            Path.Combine("Templates","C#") + Path.DirectorySeparatorChar;
 						break;
 				}
 			}
@@ -234,7 +237,7 @@ namespace TinyPG.Compiler
 				folder = Path.GetFullPath(folder + pathout);
 
 
-			DirectoryInfo dir = new DirectoryInfo(folder + @"\");
+			DirectoryInfo dir = new DirectoryInfo(folder + Path.DirectorySeparatorChar);
 			if (dir.Exists)
 				return folder;
 			else
@@ -243,7 +246,7 @@ namespace TinyPG.Compiler
 
 		public string GetOutputPath()
 		{
-			string folder = Directory.GetCurrentDirectory() + @"\";
+			string folder = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar;
 			string pathout = Directives["TinyPG"]["OutputPath"];
 			if (Path.IsPathRooted(pathout))
 				folder = Path.GetFullPath(pathout);
@@ -251,7 +254,7 @@ namespace TinyPG.Compiler
 				folder = Path.GetFullPath(folder + pathout);
 
 
-			DirectoryInfo dir = new DirectoryInfo(folder + @"\");
+			DirectoryInfo dir = new DirectoryInfo(folder + Path.DirectorySeparatorChar);
 			if (!dir.Exists)
 				Directory.CreateDirectory(folder);
 			
