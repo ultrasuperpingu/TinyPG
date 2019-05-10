@@ -510,10 +510,9 @@ namespace <%Namespace%>
 			threadAutoHighlight.Join(1000);
 			if (threadAutoHighlight.IsAlive)
 				threadAutoHighlight.Abort();
-}
+        }
 
 		#endregion
-
 <%TextHighlighterCustomCode%>
 	}
 }
