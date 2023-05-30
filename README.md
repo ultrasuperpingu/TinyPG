@@ -28,7 +28,7 @@ These are the new features and fixes we have added to the original code:
  - IDE expression evaluator now include line and column numbers in errors.
  - Unexpected token errors now display the offending character.
  - We now always show the list of expected tokens on errors.
-
+ - Added Java and C++ support
 
 ### Downloads
 
