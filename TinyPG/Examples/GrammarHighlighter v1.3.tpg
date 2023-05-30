@@ -1,4 +1,4 @@
-// a Tiny Grammar Highlighter v1.3
+// a Tiny Grammar Highlighter v1.5
 // Copyright © Herre Kuijpers 2008-2012
 // this grammar is used to quickly scan for sections in the text to be highlighted
 // because real-time highlighting is required, the scan must be done in a few ms.

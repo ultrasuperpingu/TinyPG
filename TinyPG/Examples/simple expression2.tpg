@@ -1,4 +1,4 @@
-//@TinyPG - a Tiny Parser Generator v1.2
+//@TinyPG - a Tiny Parser Generator v1.5
 //Copyright © Herre Kuijpers 2008-2010
 //Simple expression calculator
 <% @TinyPG Language="C#" OutputPath=".\TinyPG\SimpleExpr\" %>

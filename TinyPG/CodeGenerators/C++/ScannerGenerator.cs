@@ -3,12 +3,12 @@ using System.Text;
 using System.IO;
 using TinyPG.Compiler;
 
-namespace TinyPG.CodeGenerators.CSharp
+namespace TinyPG.CodeGenerators.Cpp
 {
 	public class ScannerGenerator : BaseGenerator, ICodeGenerator
 	{
 		internal ScannerGenerator()
-			: base("Scanner.cs")
+			: base("Scanner.h")
 		{
 		}
 
@@ -26,7 +26,7 @@ namespace TinyPG.CodeGenerators.CSharp
 
 			foreach (TerminalSymbol s in Grammar.SkipSymbols)
 			{
-				skiplist.AppendLine("            SkipList.Add(TokenType::" + s.Name + ");");
+				skiplist.AppendLine("            SkipList.push_back(TokenType::" + s.Name + ");");
 			}
 
 			if (Grammar.FileAndLine != null)
@@ -50,21 +50,15 @@ namespace TinyPG.CodeGenerators.CSharp
 			bool first = true;
 			foreach (TerminalSymbol s in Grammar.GetTerminals())
 			{
-				string RegexCompiled = null;
-				Grammar.Directives.Find("TinyPG").TryGetValue("RegexCompiled", out RegexCompiled);
+                regexps.Append("            regex = std::regex(" + Unverbatim(s.Expression.ToString()) + ", std::regex_constants::ECMAScript");
 
-				regexps.Append("            regex = new Regex(" + s.Expression.ToString() + ", RegexOptions.None");
-
-				if (RegexCompiled == null || RegexCompiled.ToLower().Equals("true"))
-					regexps.Append(" | RegexOptions.Compiled");
-
-				if (s.Attributes.ContainsKey("IgnoreCase"))
-					regexps.Append(" | RegexOptions.IgnoreCase");
+                if (s.Attributes.ContainsKey("IgnoreCase"))
+					regexps.Append(" | std::regex_constants::icase");
 
 				regexps.Append(");\r\n");
 
-				regexps.Append("            Patterns.Add(TokenType." + s.Name + ", regex);\r\n");
-				regexps.Append("            Tokens.Add(TokenType." + s.Name + ");\r\n\r\n");
+				regexps.Append("            Patterns.insert(std::pair<TokenType,std::regex>(TokenType::" + s.Name + ", regex));\r\n");
+				regexps.Append("            Tokens.push_back(TokenType::" + s.Name + ");\r\n\r\n");
 
 				if (first) first = false;
 				else tokentype.AppendLine(",");
@@ -93,5 +87,16 @@ namespace TinyPG.CodeGenerators.CSharp
 
 			return scanner;
 		}
-	}
+
+        private string Unverbatim(string v)
+        {
+            if (v[0] == '@')
+            {
+                v = v.Substring(1);
+                v = v.Replace(@"\", @"\\");
+                v = v.Replace(@"""", "\"");
+            }
+            return v;
+        }
+    }
 }

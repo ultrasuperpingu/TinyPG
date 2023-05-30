@@ -186,7 +186,7 @@ namespace TinyPG.Compiler
 			directive[key] = value;
 
 			List<string> names = new List<string>(new string[] { "Namespace", "OutputPath", "TemplatePath", });
-			List<string> languages = new List<string>(new string[] { "c#", "cs", "csharp", "vb", "vb.net", "vbnet", "visualbasic", "java" });
+			List<string> languages = new List<string>(new string[] { "c#", "cs", "csharp", "vb", "vb.net", "vbnet", "visualbasic", "java", "cpp", "c++" });
 			switch (directive.Name)
 			{
 				case "TinyPG":

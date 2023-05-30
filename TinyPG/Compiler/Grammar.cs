@@ -170,11 +170,16 @@ namespace TinyPG.Compiler
 						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
                             Path.Combine("Templates","VB") + Path.DirectorySeparatorChar;
 						break;
-					case "java":
-						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
+                    case "java":
+                        d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
                             Path.Combine("Templates", "Java") + Path.DirectorySeparatorChar;
-						break;
-					default:
+                        break;
+                    case "cpp":
+                    case "c++":
+                        d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
+                            Path.Combine("Templates", "C++") + Path.DirectorySeparatorChar;
+                        break;
+                    default:
 						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
                             Path.Combine("Templates","C#") + Path.DirectorySeparatorChar;
 						break;
