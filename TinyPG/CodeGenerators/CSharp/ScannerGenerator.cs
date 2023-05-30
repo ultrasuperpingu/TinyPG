@@ -26,11 +26,11 @@ namespace TinyPG.CodeGenerators.CSharp
 
 			foreach (TerminalSymbol s in Grammar.SkipSymbols)
 			{
-				skiplist.AppendLine("            SkipList.Add(TokenType::" + s.Name + ");");
+				skiplist.AppendLine("            SkipList.Add(TokenType." + s.Name + ");");
 			}
 
 			if (Grammar.FileAndLine != null)
-				skiplist.AppendLine("            FileAndLine = TokenType::" + Grammar.FileAndLine.Name + ";");
+				skiplist.AppendLine("            FileAndLine = TokenType." + Grammar.FileAndLine.Name + ";");
 
 			// build system tokens
 			tokentype.AppendLine("\r\n            //Non terminal tokens:");
