@@ -26,7 +26,7 @@ namespace <%Namespace%>
 		private Token LookAheadToken;
 		private List<TokenType> Tokens;
 		private List<TokenType> SkipList; // tokens to be skipped
-		private readonly TokenType FileAndLine = TokenType.DEFAULT;
+		private readonly TokenType FileAndLine = TokenType._NONE_;
 
     public Scanner()
 		{
@@ -192,7 +192,6 @@ namespace <%Namespace%>
 
 	public enum TokenType
 	{
-        DEFAULT = 0,
 <%TokenType%>
 	}
 

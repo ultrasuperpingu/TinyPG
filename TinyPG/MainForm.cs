@@ -444,12 +444,12 @@ namespace TinyPG
 
 		private void theTinyPGGrammarToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\BNFGrammar v1.3.tpg");
+			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\BNFGrammar 1.3.tpg");
 		}
 
 		private void theTinyPGGrammarV10ToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\BNFGrammar v1.0.tpg");
+			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\BNFGrammar 1.0.tpg");
 		}
 
 		private void theTinyPGGrammarHighlighterV12ToolStripMenuItem_Click(object sender, EventArgs e)

@@ -345,11 +345,21 @@ namespace TinyPG.Compiler
 				Rule r = (Rule)Nodes[2].Eval(tree, g, nts);
 				if (nts != null)
 					nts.Rules.Add(r);
-
-				if (Nodes[3].Token.Type == TokenType.CODEBLOCK)
+                
+				if (Nodes[3].Token.Type == TokenType.COLON)
 				{
-					string codeblock = Nodes[3].Token.Text;
-					nts.CodeBlock = codeblock;
+					r.ReturnType = Nodes[4].Token.Text.ToString();
+
+                }
+
+                if (Nodes[3].Token.Type == TokenType.CODEBLOCK || Nodes.Count > 4 && Nodes[5].Token.Type == TokenType.CODEBLOCK)
+				{
+					string codeblock;
+					if (Nodes[3].Token.Type == TokenType.CODEBLOCK)
+						codeblock = Nodes[3].Token.Text;
+					else
+                        codeblock = Nodes[5].Token.Text;
+                    nts.CodeBlock = codeblock;
 					ValidateCodeBlock(tree, nts, Nodes[3]);
 
 					// beautify the codeblock format
@@ -473,7 +483,7 @@ namespace TinyPG.Compiler
 				Symbol s = symbols.Find(match.Groups["var"].Value);
 				if (s == null)
 				{
-					tree.Errors.Add(new ParseError("Variable $" + match.Groups["var"].Value + " cannot be matched.", 0x1016, node.Token.File, node.Token.StartPos + match.Groups["var"].Index, node.Token.StartPos + match.Groups["var"].Index, match.Groups["var"].Length));
+					tree.Errors.Add(new ParseError("Variable $" + match.Groups["var"].Value + " cannot be matched.", 0x1016, node.Token.File, node.Token.StartPos + match.Groups["var"].Index, node.Token.StartPos + match.Groups["var"].Index, node.Token.StartPos + match.Groups["var"].Index, match.Groups["var"].Length));
 					break; // error situation
 				}
 			}

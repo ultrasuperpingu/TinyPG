@@ -117,7 +117,7 @@ namespace TinyPG.CodeGenerators.Cpp
 					indexer = match.Groups["index"].Value;
 				}
 
-				string replacement = "this.GetValue(tree, TokenType." + s.Name + ", " + indexer + ")";
+				string replacement = "this->GetValue(tree, TokenType::" + s.Name + ", " + indexer + ")";
 
 				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
 				match = var.Match(codeblock);

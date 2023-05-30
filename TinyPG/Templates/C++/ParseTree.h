@@ -35,8 +35,12 @@ namespace <%Namespace%>
 			this->Text = text;
 			//this->nodes = new List<ParseNode>();
 		}
+		inline void* GetValue(const ParseTree& tree, TokenType type, int index)
+		{
+			GetValueRefIndex(tree, type, index);
+		}
 
-		inline void* GetValue(const ParseTree& tree, TokenType type, int& index)
+		inline void* GetValueRefIndex(const ParseTree& tree, TokenType type, int& index)
 		{
 			void* o = NULL;
 			if (index < 0) return o;

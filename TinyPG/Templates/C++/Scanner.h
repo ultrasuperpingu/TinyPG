@@ -34,7 +34,6 @@ namespace <%Namespace%>
 
 	enum TokenType
 	{
-		DEFAULT = 0,
 <%TokenType%>
 	};
 	
@@ -106,7 +105,7 @@ namespace <%Namespace%>
 		Token LookAheadToken;
 		std::vector<TokenType> Tokens;
 		std::vector<TokenType> SkipList; // tokens to be skipped
-		TokenType FileAndLine = TokenType::DEFAULT;
+		TokenType FileAndLine = TokenType::_NONE_;
 
 	public:
 		inline Scanner()
