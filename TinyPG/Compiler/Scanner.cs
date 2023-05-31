@@ -129,7 +129,7 @@ namespace TinyPG
             Patterns.Add(TokenType.STRING, regex);
             Tokens.Add(TokenType.STRING);
 
-            regex = new Regex(@"[_a-zA-Z0-9.<>#@]+", RegexOptions.None | RegexOptions.Compiled);
+            regex = new Regex(@"[_a-zA-Z0-9.<>#@\""]+", RegexOptions.None | RegexOptions.Compiled);
             Patterns.Add(TokenType.DEFAULT_VALUE, regex);
             Tokens.Add(TokenType.DEFAULT_VALUE);
 

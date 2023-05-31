@@ -27,6 +27,24 @@ namespace TinyPG.CodeGenerators.Cpp
 
             foreach (TerminalSymbol s in Grammar.GetTerminals())
 			{
+                /*evalmethods.AppendLine("        inline virtual bool IsToken" + s.Name + "Present(int index)");
+                evalmethods.AppendLine("        {");
+                evalmethods.AppendLine("            if (index < 0) return false;");
+                evalmethods.AppendLine("            // left to right");
+                evalmethods.AppendLine("            for (ParseNode* node : Nodes)");
+                evalmethods.AppendLine("            {");
+                evalmethods.AppendLine("				if (node->TokenVal.Type == TokenType::"+s.Name+")");
+                evalmethods.AppendLine("                {");
+                evalmethods.AppendLine("                    index--;");
+                evalmethods.AppendLine("                    if (index < 0)");
+                evalmethods.AppendLine("                    {");
+                evalmethods.AppendLine("						return true;");
+                evalmethods.AppendLine("                    }");
+                evalmethods.AppendLine("                }");
+                evalmethods.AppendLine("            }");
+                evalmethods.AppendLine("			return false;");
+                evalmethods.AppendLine("        }\r\n");*/
+
                 string returnType = "std::string";
                 evalmethods.AppendLine("        inline virtual " + returnType + " Get" + s.Name + "Value(const ParseTree& tree, int index)");
                 evalmethods.AppendLine("        {");
@@ -79,7 +97,26 @@ namespace TinyPG.CodeGenerators.Cpp
 				}
 				evalmethods.AppendLine("        }\r\n");
 
-                evalmethods.AppendLine("        inline virtual " + returnType + " Get" + s.Name + "Value(const ParseTree& tree, int index)");
+                /*evalmethods.AppendLine("        inline virtual bool IsToken" + s.Name + "Present(int index)");
+                evalmethods.AppendLine("        {");
+                evalmethods.AppendLine("            if (index < 0) return false;");
+                evalmethods.AppendLine("            // left to right");
+                evalmethods.AppendLine("            for (ParseNode* node : Nodes)");
+                evalmethods.AppendLine("            {");
+                evalmethods.AppendLine("				if (node->TokenVal.Type == TokenType::"+s.Name+")");
+                evalmethods.AppendLine("                {");
+                evalmethods.AppendLine("                    index--;");
+                evalmethods.AppendLine("                    if (index < 0)");
+                evalmethods.AppendLine("                    {");
+                evalmethods.AppendLine("						return true;");
+                evalmethods.AppendLine("                    }");
+                evalmethods.AppendLine("                }");
+                evalmethods.AppendLine("            }");
+                evalmethods.AppendLine("			return false;");
+                evalmethods.AppendLine("        }\r\n"); */
+				
+				
+				evalmethods.AppendLine("        inline virtual " + returnType + " Get" + s.Name + "Value(const ParseTree& tree, int index)");
                 evalmethods.AppendLine("        {");
                 evalmethods.AppendLine("            " + returnType + " o = NULL;");
                 evalmethods.AppendLine("            if (index < 0) return o;");
@@ -170,8 +207,31 @@ namespace TinyPG.CodeGenerators.Cpp
 				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
 				match = var.Match(codeblock);
 			}
+            
+			
+			var = new Regex(@"\?(?<var>[a-zA-Z_0-9]+)(\[(?<index>[^]]+)\])?", RegexOptions.Compiled);
+            match = var.Match(codeblock);
+            while (match.Success)
+            {
+                Symbol s = symbols.Find(match.Groups["var"].Value);
+                if (s == null)
+                {
+                    //TOD: handle error situation
+                    //Errors.Add("Variable $" + match.Groups["var"].Value + " cannot be matched.");
+                    break; // error situation
+                }
+                string indexer = "0";
+                if (match.Groups["index"].Value.Length > 0)
+                {
+                    indexer = match.Groups["index"].Value;
+                }
 
-			codeblock = "            " + codeblock.Replace("\n", "\r\n        ");
+                string replacement = "this->IsTokenPresent(TokenType::" + s.Name + ", " + indexer + ")";
+
+                codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
+                match = var.Match(codeblock);
+            }
+            codeblock = "            " + codeblock.Replace("\n", "\r\n        ");
 			return codeblock;
 		}
 	}

@@ -35,6 +35,25 @@ namespace <%Namespace%>
 			this->Text = text;
 			//this->nodes = new List<ParseNode>();
 		}
+		
+		inline virtual bool IsTokenPresent(TokenType type, int index)
+		{
+		    if (index < 0) return false;
+		    // left to right
+		    for (ParseNode* node : Nodes)
+		    {
+				if (node->TokenVal.Type == type)
+		        {
+		            index--;
+		            if (index < 0)
+		            {
+						return true;
+		            }
+		        }
+		    }
+			return false;
+		}
+
 		/*inline void* GetValue(const ParseTree& tree, TokenType type, int index)
 		{
 			GetValueRefIndex(tree, type, index);

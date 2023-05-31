@@ -30,7 +30,7 @@ DIRECTIVEOPEN		-> @"<%\s*@";
 DIRECTIVECLOSE	-> @"%>";
 EOF               	-> @"^$";
 STRING             	-> @"@?\""(\""\""|[^\""])*\""";
-DEFAULT_VALUE        -> @"[_a-zA-Z0-9.<>#@]+";
+DEFAULT_VALUE        -> @"[_a-zA-Z0-9.<>#@\""]+";
 
 [Skip]
 WHITESPACE        	-> @"\s+";
