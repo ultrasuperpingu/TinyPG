@@ -92,9 +92,9 @@ namespace TinyPG.CodeGenerators.Cpp
         {
             if (v[0] == '@')
             {
-                v = v.Substring(1);
+                v = v.Substring(2, v.Length - 3);
                 v = v.Replace(@"\", @"\\");
-                v = v.Replace(@"""", "\"");
+				v = "\"" + v.Replace(@"""", "\\\"") + "\"";
             }
             return v;
         }

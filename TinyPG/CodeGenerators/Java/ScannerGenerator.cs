@@ -88,13 +88,13 @@ namespace TinyPG.CodeGenerators.Java
 
 		private string Unverbatim(string v)
 		{
-			if (v[0] == '@')
-			{
-				v = v.Substring(1);
-				v = v.Replace(@"\", @"\\");
-				v = v.Replace(@"""", "\"");
-			}
-			return v;
+            if (v[0] == '@')
+            {
+                v = v.Substring(2, v.Length - 3);
+                v = v.Replace(@"\", @"\\");
+                v = "\"" + v.Replace(@"""", "\\\"") + "\"";
+            }
+            return v;
 		}
 	}
 }
