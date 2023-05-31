@@ -48,7 +48,7 @@ namespace TinyPG.CodeGenerators.Cpp
                 string returnType = "std::string";
                 evalmethods.AppendLine("        inline virtual " + returnType + " Get" + s.Name + "Value(const ParseTree& tree, int index)");
                 evalmethods.AppendLine("        {");
-                evalmethods.AppendLine("            " + returnType + " o = NULL;");
+                evalmethods.AppendLine("            " + returnType + " o = \"\";");
                 evalmethods.AppendLine("            if (index < 0) return o;");
                 evalmethods.AppendLine("            // left to right");
                 evalmethods.AppendLine("            for (ParseNode* node : Nodes)");
@@ -77,7 +77,10 @@ namespace TinyPG.CodeGenerators.Cpp
 				string returnType = "void*";
 				if (!string.IsNullOrEmpty(s.ReturnType))
 					returnType = s.ReturnType;
-				evalmethods.AppendLine("        inline virtual " + returnType + " Eval" + s.Name + "(const ParseTree& tree, std::vector<void*> paramlist)");
+				string defaultReturnValue = "NULL";
+                if (!string.IsNullOrEmpty(s.ReturnTypeDefault))
+                    defaultReturnValue = s.ReturnTypeDefault;
+                evalmethods.AppendLine("        inline virtual " + returnType + " Eval" + s.Name + "(const ParseTree& tree, std::vector<void*> paramlist)");
 				evalmethods.AppendLine("        {");
 				if (s.CodeBlock != null)
 				{
@@ -87,11 +90,11 @@ namespace TinyPG.CodeGenerators.Cpp
 				else
 				{
 					if (s.Name == "Start") // return a nice warning message from root object.
-						evalmethods.AppendLine("            return NULL; //\"Could not interpret input; no semantics implemented.\";");
+						evalmethods.AppendLine("            return "+defaultReturnValue+"; //\"Could not interpret input; no semantics implemented.\";");
 					else
 						evalmethods.AppendLine("            for (ParseNode* node : Nodes)\r\n" +
 											   "                node->Eval(tree, paramlist);\r\n" +
-											   "            return NULL;");
+                                               "            return "+defaultReturnValue+";");
 
 					// otherwise simply not implemented!
 				}
@@ -118,7 +121,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				
 				evalmethods.AppendLine("        inline virtual " + returnType + " Get" + s.Name + "Value(const ParseTree& tree, int index)");
                 evalmethods.AppendLine("        {");
-                evalmethods.AppendLine("            " + returnType + " o = NULL;");
+                evalmethods.AppendLine("            " + returnType + " o = "+defaultReturnValue+";");
                 evalmethods.AppendLine("            if (index < 0) return o;");
                 evalmethods.AppendLine("            // left to right");
                 evalmethods.AppendLine("            for (ParseNode* node : Nodes)");
