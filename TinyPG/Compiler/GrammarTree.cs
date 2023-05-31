@@ -179,6 +179,7 @@ namespace TinyPG.Compiler
 			GrammarNode node = (GrammarNode)paramlist[2];
 
 			string key = node.Nodes[0].Token.Text;
+			// TODO:Manage escape sequences and @ correctly (probably need to modify string def in BNF Grammar)
 			string value = node.Nodes[2].Token.Text.Substring(1, node.Nodes[2].Token.Text.Length - 2);
 			if (value.StartsWith("\""))
 				value = value.Substring(1);
@@ -348,17 +349,23 @@ namespace TinyPG.Compiler
                 
 				if (Nodes[3].Token.Type == TokenType.COLON)
 				{
-					r.ReturnType = Nodes[4].Token.Text.ToString();
-
+                    nts.ReturnType = Nodes[4].Token.Text.ToString();
+                    if (Nodes[5].Token.Type == TokenType.DEFAULT)
+                    {
+                        nts.ReturnTypeDefault = Nodes[7].Token.Text.ToString();
+                    }
                 }
 
-                if (Nodes[3].Token.Type == TokenType.CODEBLOCK || Nodes.Count > 4 && Nodes[5].Token.Type == TokenType.CODEBLOCK)
+
+                if (Nodes[3].Token.Type == TokenType.CODEBLOCK || Nodes.Count > 5 && Nodes[5].Token.Type == TokenType.CODEBLOCK|| Nodes.Count > 9 && Nodes[9].Token.Type == TokenType.CODEBLOCK)
 				{
-					string codeblock;
+					string codeblock = null;
 					if (Nodes[3].Token.Type == TokenType.CODEBLOCK)
 						codeblock = Nodes[3].Token.Text;
-					else
+					else if(Nodes[5].Token.Type == TokenType.CODEBLOCK)
                         codeblock = Nodes[5].Token.Text;
+                    else if (Nodes[9].Token.Type == TokenType.CODEBLOCK)
+                        codeblock = Nodes[9].Token.Text;
                     nts.CodeBlock = codeblock;
 					ValidateCodeBlock(tree, nts, Nodes[3]);
 

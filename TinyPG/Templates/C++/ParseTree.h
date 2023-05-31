@@ -35,7 +35,7 @@ namespace <%Namespace%>
 			this->Text = text;
 			//this->nodes = new List<ParseNode>();
 		}
-		inline void* GetValue(const ParseTree& tree, TokenType type, int index)
+		/*inline void* GetValue(const ParseTree& tree, TokenType type, int index)
 		{
 			GetValueRefIndex(tree, type, index);
 		}
@@ -59,7 +59,7 @@ namespace <%Namespace%>
 				}
 			}
 			return o;
-		}
+		}*/
 
 		public:
 		/// <summary>
@@ -68,7 +68,7 @@ namespace <%Namespace%>
 		/// <param name="tree">the parsetree itself</param>
 		/// <param name="paramlist">optional input parameters</param>
 		/// <returns>a partial result of the evaluation</returns>
-		inline void* Eval(const ParseTree& tree, std::vector<void*> paramlist)
+		/*inline void* Eval(const ParseTree& tree, std::vector<void*> paramlist)
 		{
 			void* Value = NULL;
 
@@ -80,7 +80,7 @@ namespace <%Namespace%>
 					break;
 			}
 			return Value;
-		}
+		}*/
 
 <%VirtualEvalMethods%>
 
@@ -174,10 +174,10 @@ namespace <%Namespace%>
 		/// </summary>
 		/// <param name="paramlist">additional optional input parameters</param>
 		/// <returns>the output of the evaluation function</returns>
-		inline void* Eval(std::vector<void*> paramlist)
+		/*inline void* Eval(std::vector<void*> paramlist)
 		{
 			return Nodes[0]->Eval(*this, paramlist);
-		}
+		}*/
 	};
    
 }

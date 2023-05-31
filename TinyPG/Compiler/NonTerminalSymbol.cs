@@ -22,8 +22,10 @@ namespace TinyPG.Compiler
 		private bool containsEmpty;
 		private int visitCount;
 		public Symbols FirstTerminals;
+		public string ReturnType;
+        public string ReturnTypeDefault;
 
-		public NonTerminalSymbol()
+        public NonTerminalSymbol()
 			: this("NTS_" + ++counter)
 		{
 		}

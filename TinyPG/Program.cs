@@ -48,7 +48,7 @@ namespace TinyPG
 
 				if (grammar != null)
 				{
-					grammar.SourceFilename = GrammarFilePath;
+					grammar.SourceFilename = Path.GetFileName(GrammarFilePath);
 					if (prog.BuildCode(grammar, new TinyPG.Compiler.Compiler()))
 					{
 						TimeSpan span = DateTime.Now.Subtract(starttimer);

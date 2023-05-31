@@ -1,4 +1,4 @@
-// Automatically generated from source file: C:\Users\Ping\Documents\TinyPG\TinyPG\Examples\BNFGrammar 1.5.tpg
+// Automatically generated from source file: BNFGrammar 1.5.tpg
 // By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
 
 using System;
@@ -424,6 +424,52 @@ namespace TinyPG
                 if (tok.Type != TokenType.TYPE) {
                     tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.TYPE.ToString(), 0x1001, tok));
                     return;
+                }
+
+                 // Concat Rule
+                tok = scanner.LookAhead(TokenType.DEFAULT); // Option Rule
+                if (tok.Type == TokenType.DEFAULT)
+                {
+
+                     // Concat Rule
+                    tok = scanner.Scan(TokenType.DEFAULT); // Terminal Rule: DEFAULT
+                    n = node.CreateNode(tok, tok.ToString() );
+                    node.Token.UpdateRange(tok);
+                    node.Nodes.Add(n);
+                    if (tok.Type != TokenType.DEFAULT) {
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.DEFAULT.ToString(), 0x1001, tok));
+                        return;
+                    }
+
+                     // Concat Rule
+                    tok = scanner.Scan(TokenType.BRACKETOPEN); // Terminal Rule: BRACKETOPEN
+                    n = node.CreateNode(tok, tok.ToString() );
+                    node.Token.UpdateRange(tok);
+                    node.Nodes.Add(n);
+                    if (tok.Type != TokenType.BRACKETOPEN) {
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETOPEN.ToString(), 0x1001, tok));
+                        return;
+                    }
+
+                     // Concat Rule
+                    tok = scanner.Scan(TokenType.DEFAULT_VALUE); // Terminal Rule: DEFAULT_VALUE
+                    n = node.CreateNode(tok, tok.ToString() );
+                    node.Token.UpdateRange(tok);
+                    node.Nodes.Add(n);
+                    if (tok.Type != TokenType.DEFAULT_VALUE) {
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.DEFAULT_VALUE.ToString(), 0x1001, tok));
+                        return;
+                    }
+
+                     // Concat Rule
+                    tok = scanner.Scan(TokenType.BRACKETCLOSE); // Terminal Rule: BRACKETCLOSE
+                    n = node.CreateNode(tok, tok.ToString() );
+                    node.Token.UpdateRange(tok);
+                    node.Nodes.Add(n);
+                    if (tok.Type != TokenType.BRACKETCLOSE) {
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETCLOSE.ToString(), 0x1001, tok));
+                        return;
+                    }
                 }
             }
 

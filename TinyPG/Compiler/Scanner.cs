@@ -1,4 +1,4 @@
-// Automatically generated from source file: C:\Users\Ping\Documents\TinyPG\TinyPG\Examples\BNFGrammar 1.5.tpg
+// Automatically generated from source file: BNFGrammar 1.5.tpg
 // By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
 
 using System;
@@ -81,6 +81,10 @@ namespace TinyPG
             Patterns.Add(TokenType.COLON, regex);
             Tokens.Add(TokenType.COLON);
 
+            regex = new Regex(@"default", RegexOptions.None | RegexOptions.Compiled);
+            Patterns.Add(TokenType.DEFAULT, regex);
+            Tokens.Add(TokenType.DEFAULT);
+
             regex = new Regex(@"(\*|\+|\?)", RegexOptions.None | RegexOptions.Compiled);
             Patterns.Add(TokenType.UNARYOPER, regex);
             Tokens.Add(TokenType.UNARYOPER);
@@ -124,6 +128,10 @@ namespace TinyPG
             regex = new Regex(@"@?\""(\""\""|[^\""])*\""", RegexOptions.None | RegexOptions.Compiled);
             Patterns.Add(TokenType.STRING, regex);
             Tokens.Add(TokenType.STRING);
+
+            regex = new Regex(@"[_a-zA-Z0-9.<>#@]+", RegexOptions.None | RegexOptions.Compiled);
+            Patterns.Add(TokenType.DEFAULT_VALUE, regex);
+            Tokens.Add(TokenType.DEFAULT_VALUE);
 
             regex = new Regex(@"\s+", RegexOptions.None | RegexOptions.Compiled);
             Patterns.Add(TokenType.WHITESPACE, regex);
@@ -321,20 +329,22 @@ namespace TinyPG
             PIPE    = 21,
             SEMICOLON= 22,
             COLON   = 23,
-            UNARYOPER= 24,
-            IDENTIFIER= 25,
-            TYPE    = 26,
-            INTEGER = 27,
-            DOUBLE  = 28,
-            HEX     = 29,
-            ARROW   = 30,
-            DIRECTIVEOPEN= 31,
-            DIRECTIVECLOSE= 32,
-            EOF     = 33,
-            STRING  = 34,
-            WHITESPACE= 35,
-            COMMENTLINE= 36,
-            COMMENTBLOCK= 37
+            DEFAULT = 24,
+            UNARYOPER= 25,
+            IDENTIFIER= 26,
+            TYPE    = 27,
+            INTEGER = 28,
+            DOUBLE  = 29,
+            HEX     = 30,
+            ARROW   = 31,
+            DIRECTIVEOPEN= 32,
+            DIRECTIVECLOSE= 33,
+            EOF     = 34,
+            STRING  = 35,
+            DEFAULT_VALUE= 36,
+            WHITESPACE= 37,
+            COMMENTLINE= 38,
+            COMMENTBLOCK= 39
 	}
 
 	public class Token

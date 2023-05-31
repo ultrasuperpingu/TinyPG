@@ -2,6 +2,8 @@
 using System.IO;
 using TinyPG.Compiler;
 using System.Text.RegularExpressions;
+using System.Reflection;
+using System.Security.Cryptography;
 
 namespace TinyPG.CodeGenerators.Cpp
 {
@@ -23,20 +25,46 @@ namespace TinyPG.CodeGenerators.Cpp
 			StringBuilder evalsymbols = new StringBuilder();
 			StringBuilder evalmethods = new StringBuilder();
 
-			// build non terminal tokens
-			foreach (Symbol s in Grammar.GetNonTerminals())
+            foreach (TerminalSymbol s in Grammar.GetTerminals())
+			{
+                string returnType = "std::string";
+                evalmethods.AppendLine("        inline virtual " + returnType + " Get" + s.Name + "Value(const ParseTree& tree, int index)");
+                evalmethods.AppendLine("        {");
+                evalmethods.AppendLine("            " + returnType + " o = NULL;");
+                evalmethods.AppendLine("            if (index < 0) return o;");
+                evalmethods.AppendLine("            // left to right");
+                evalmethods.AppendLine("            for (ParseNode* node : Nodes)");
+                evalmethods.AppendLine("            {");
+                evalmethods.AppendLine("				if (node->TokenVal.Type == TokenType::"+s.Name+")");
+                evalmethods.AppendLine("                {");
+                evalmethods.AppendLine("                    index--;");
+                evalmethods.AppendLine("                    if (index < 0)");
+                evalmethods.AppendLine("                    {");
+                evalmethods.AppendLine("                        o =  node->TokenVal.Text;");
+                evalmethods.AppendLine("						break;");
+                evalmethods.AppendLine("                    }");
+                evalmethods.AppendLine("                }");
+                evalmethods.AppendLine("            }");
+                evalmethods.AppendLine("			return o;");
+                evalmethods.AppendLine("        }\r\n");
+            }
+
+            // build non terminal tokens
+            foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
 				evalsymbols.AppendLine("                case TokenType::" + s.Name + ":");
 				evalsymbols.AppendLine("                    Value = Eval" + s.Name + "(tree, paramlist);");
 				//evalsymbols.AppendLine("                Value = Token.Text;");
 				evalsymbols.AppendLine("                    break;");
-
-				evalmethods.AppendLine("        inline virtual void* Eval" + s.Name + "(const ParseTree& tree, std::vector<void*> paramlist)");
+				string returnType = "void*";
+				if (!string.IsNullOrEmpty(s.ReturnType))
+					returnType = s.ReturnType;
+				evalmethods.AppendLine("        inline virtual " + returnType + " Eval" + s.Name + "(const ParseTree& tree, std::vector<void*> paramlist)");
 				evalmethods.AppendLine("        {");
 				if (s.CodeBlock != null)
 				{
 					// paste user code here
-					evalmethods.AppendLine(FormatCodeBlock(s as NonTerminalSymbol));
+					evalmethods.AppendLine(FormatCodeBlock(s));
 				}
 				else
 				{
@@ -50,7 +78,27 @@ namespace TinyPG.CodeGenerators.Cpp
 					// otherwise simply not implemented!
 				}
 				evalmethods.AppendLine("        }\r\n");
-			}
+
+                evalmethods.AppendLine("        inline virtual " + returnType + " Get" + s.Name + "Value(const ParseTree& tree, int index)");
+                evalmethods.AppendLine("        {");
+                evalmethods.AppendLine("            " + returnType + " o = NULL;");
+                evalmethods.AppendLine("            if (index < 0) return o;");
+                evalmethods.AppendLine("            // left to right");
+                evalmethods.AppendLine("            for (ParseNode* node : Nodes)");
+                evalmethods.AppendLine("            {");
+                evalmethods.AppendLine("				if (node->TokenVal.Type == TokenType::"+s.Name+")");
+                evalmethods.AppendLine("                {");
+                evalmethods.AppendLine("                    index--;");
+                evalmethods.AppendLine("                    if (index < 0)");
+                evalmethods.AppendLine("                    {");
+                evalmethods.AppendLine("                        o = node->Eval"+s.Name+"(tree, { });");
+                evalmethods.AppendLine("						break;");
+                evalmethods.AppendLine("                    }");
+                evalmethods.AppendLine("                }");
+                evalmethods.AppendLine("            }");
+                evalmethods.AppendLine("			return o;");
+                evalmethods.AppendLine("        }\r\n");
+            }
 
 			parsetree = parsetree.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 			if (Debug)
@@ -117,7 +165,7 @@ namespace TinyPG.CodeGenerators.Cpp
 					indexer = match.Groups["index"].Value;
 				}
 
-				string replacement = "this->GetValue(tree, TokenType::" + s.Name + ", " + indexer + ")";
+				string replacement = "this->Get"+s.Name+"Value(tree, " + indexer + ")";
 
 				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
 				match = var.Match(codeblock);

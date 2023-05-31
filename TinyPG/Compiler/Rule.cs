@@ -58,7 +58,6 @@ namespace TinyPG.Compiler
 		public Symbol Symbol;
 		public Rules Rules;
 		public RuleType Type;
-        public string ReturnType;
 
         public Rule()
 			: this(null, RuleType.Choice)

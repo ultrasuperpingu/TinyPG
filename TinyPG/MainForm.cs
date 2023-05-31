@@ -604,7 +604,7 @@ namespace TinyPG
 
 			if (grammar != null)
 			{
-				grammar.SourceFilename = GrammarFile;
+				grammar.SourceFilename = Path.GetFileName(GrammarFile);
 				SetHighlighterLanguage(grammar.Directives["TinyPG"]["Language"]);
 
 				if (prog.BuildCode(grammar, compiler))
