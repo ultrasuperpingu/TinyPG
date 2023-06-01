@@ -15,6 +15,9 @@ namespace TinyPG.CodeGenerators.Cpp
 
 		public string Generate(Grammar Grammar, bool Debug)
 		{
+			if (Debug)
+				throw new Exception("Cpp cannot be generated in debug mode");
+
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
 
@@ -30,20 +33,10 @@ namespace TinyPG.CodeGenerators.Cpp
 			}
 
 			parser = parser.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
-			if (Debug)
-			{
-				parser = parser.Replace(@"<%Namespace%>", "TinyPG.Debug");
-				parser = parser.Replace(@"<%IParser%>", " : TinyPG.Debug.IParser");
-				parser = parser.Replace(@"<%IParseTree%>", "TinyPG.Debug.IParseTree");
-				parser = parser.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
-			}
-			else
-			{
-				parser = parser.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-				parser = parser.Replace(@"<%IParser%>", "");
-				parser = parser.Replace(@"<%IParseTree%>", "ParseTree");
-				parser = parser.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
-			}
+			parser = parser.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+			parser = parser.Replace(@"<%IParser%>", "");
+			parser = parser.Replace(@"<%IParseTree%>", "ParseTree");
+			parser = parser.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
 
 			parser = parser.Replace(@"<%ParseNonTerminals%>", parsers.ToString());
 			return parser;

@@ -16,6 +16,8 @@ namespace TinyPG.CodeGenerators.Cpp
 		{
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
+			if (Debug)
+				throw new Exception("Cpp cannot be generated in debug mode");
 
 			string scanner = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
 
@@ -71,19 +73,9 @@ namespace TinyPG.CodeGenerators.Cpp
 			scanner = scanner.Replace(@"<%SkipList%>", skiplist.ToString());
 			scanner = scanner.Replace(@"<%RegExps%>", regexps.ToString());
 			scanner = scanner.Replace(@"<%TokenType%>", tokentype.ToString());
-
-			if (Debug)
-			{
-				scanner = scanner.Replace(@"<%Namespace%>", "TinyPG.Debug");
-				scanner = scanner.Replace(@"<%IToken%>", " : TinyPG.Debug.IToken");
-				scanner = scanner.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
-			}
-			else
-			{
-				scanner = scanner.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-				scanner = scanner.Replace(@"<%IToken%>", "");
-				scanner = scanner.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
-			}
+			scanner = scanner.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+			scanner = scanner.Replace(@"<%IToken%>", "");
+			scanner = scanner.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
 
 			return scanner;
 		}

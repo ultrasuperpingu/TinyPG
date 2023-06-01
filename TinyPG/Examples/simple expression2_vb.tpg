@@ -44,32 +44,32 @@ Start -> (AddExpr)? EOF
 { Return $AddExpr };      
 
 
-AddExpr -> MultExpr (PLUSMINUS MultExpr)*
+AddExpr -> MultExpr (PLUSMINUS MultExpr)* : Double
 { 
-	Dim Value As Integer = Convert.ToInt32($MultExpr)
-	Dim i As Integer = 1
+	Dim Value As Double = Convert.ToDouble($MultExpr)
+	Dim i As Double = 1
 	While $MultExpr[i] IsNot Nothing
 		Dim sign As String = $PLUSMINUS[i-1].ToString()
 		If sign = "+" Then
-			Value += Convert.ToInt32($MultExpr[i])
+			Value += Convert.ToDouble($MultExpr[i])
 		Else 
-			Value -= Convert.ToInt32($MultExpr[i])
+			Value -= Convert.ToDouble($MultExpr[i])
 		End If
 		i=i+1
 	End While
 	Return Value
 };
 
-MultExpr -> Atom (MULTDIV Atom)*
+MultExpr -> Atom (MULTDIV Atom)* : Double
 {
-	Dim Value As Integer = Convert.ToInt32($Atom)
-	Dim i As Integer = 1
+	Dim Value As Double = Convert.ToDouble($Atom)
+	Dim i As Double = 1
 	While $Atom[i] IsNot Nothing
 		Dim sign As String = $MULTDIV[i-1].ToString()
 		If sign = "*" Then
-			Value *= Convert.ToInt32($Atom[i])
+			Value *= Convert.ToDouble($Atom[i])
 		Else 
-			Value /= Convert.ToInt32($Atom[i])
+			Value /= Convert.ToDouble($Atom[i])
 		End If
 		i=i+1
 	End While
@@ -77,7 +77,7 @@ MultExpr -> Atom (MULTDIV Atom)*
 	Return Value
 };
 
-Atom -> NUMBER |  BROPEN AddExpr BRCLOSE | ID
+Atom -> NUMBER |  BROPEN AddExpr BRCLOSE | ID : Double
 {
 	If $NUMBER IsNot Nothing Then
 		Return $NUMBER

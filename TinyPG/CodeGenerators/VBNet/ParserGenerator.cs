@@ -54,11 +54,11 @@ namespace TinyPG.CodeGenerators.VBNet
 		{
 
 			StringBuilder sb = new StringBuilder();
-			sb.AppendLine("        Private Sub Parse" + s.Name + "(ByVal parent As ParseNode)" + Helper.AddComment("'", "NonTerminalSymbol: " + s.Name));
-			sb.AppendLine("            Dim tok As Token");
-			sb.AppendLine("            Dim n As ParseNode");
-			sb.AppendLine("            Dim node As ParseNode = parent.CreateNode(m_scanner.GetToken(TokenType." + s.Name + "), \"" + s.Name + "\")");
-			sb.AppendLine("            parent.Nodes.Add(node)");
+			sb.AppendLine("		Private Sub Parse" + s.Name + "(ByVal parent As ParseNode)" + Helper.AddComment("'", "NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("			Dim tok As Token");
+			sb.AppendLine("			Dim n As ParseNode");
+			sb.AppendLine("			Dim node As ParseNode = parent.CreateNode(m_scanner.GetToken(TokenType." + s.Name + "), \"" + s.Name + "\")");
+			sb.AppendLine("			parent.Nodes.Add(node)");
 			sb.AppendLine("");
 
 			foreach (Rule rule in s.Rules)
@@ -66,8 +66,8 @@ namespace TinyPG.CodeGenerators.VBNet
 				sb.AppendLine(GenerateProductionRuleCode(s.Rules[0], 3));
 			}
 
-			sb.AppendLine("            parent.Token.UpdateRange(node.Token)");
-			sb.AppendLine("        End Sub" + Helper.AddComment("'", "NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("			parent.Token.UpdateRange(node.Token)");
+			sb.AppendLine("		End Sub" + Helper.AddComment("'", "NonTerminalSymbol: " + s.Name));
 			sb.AppendLine();
 			return sb.ToString();
 		}

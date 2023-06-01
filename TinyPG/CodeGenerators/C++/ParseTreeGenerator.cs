@@ -4,6 +4,7 @@ using TinyPG.Compiler;
 using System.Text.RegularExpressions;
 using System.Reflection;
 using System.Security.Cryptography;
+using System;
 
 namespace TinyPG.CodeGenerators.Cpp
 {
@@ -18,6 +19,8 @@ namespace TinyPG.CodeGenerators.Cpp
 		{
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
+			if (Debug)
+				throw new Exception("Cpp cannot be generated in debug mode");
 
 			// copy the parse tree file (optionally)
 			string parsetree = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
@@ -124,30 +127,15 @@ namespace TinyPG.CodeGenerators.Cpp
 			}
 
 			parsetree = parsetree.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
-			if (Debug)
-			{
-				parsetree = parsetree.Replace(@"<%Namespace%>", "TinyPG.Debug");
-				parsetree = parsetree.Replace(@"<%ParseError%>", " : TinyPG.Debug.IParseError");
-				parsetree = parsetree.Replace(@"<%ParseErrors%>", "List<TinyPG.Debug.IParseError>");
-				parsetree = parsetree.Replace(@"<%IParseTree%>", ", TinyPG.Debug.IParseTree");
-				parsetree = parsetree.Replace(@"<%IParseNode%>", " : TinyPG.Debug.IParseNode");
-				parsetree = parsetree.Replace(@"<%ITokenGet%>", "public IToken IToken { get {return (IToken)Token;} }");
 
-				string inodes = "public List<IParseNode> INodes {get { return nodes.ConvertAll<IParseNode>( new Converter<ParseNode, IParseNode>( delegate(ParseNode n) { return (IParseNode)n; })); }}\r\n\r\n";
-				parsetree = parsetree.Replace(@"<%INodesGet%>", inodes);
-				parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
-			}
-			else
-			{
-				parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-				parsetree = parsetree.Replace(@"<%ParseError%>", "");
-				parsetree = parsetree.Replace(@"<%ParseErrors%>", "std::vector<ParseError>");
-				parsetree = parsetree.Replace(@"<%IParseTree%>", "");
-				parsetree = parsetree.Replace(@"<%IParseNode%>", "");
-				parsetree = parsetree.Replace(@"<%ITokenGet%>", "");
-				parsetree = parsetree.Replace(@"<%INodesGet%>", "");
-				parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
-			}
+			parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+			parsetree = parsetree.Replace(@"<%ParseError%>", "");
+			parsetree = parsetree.Replace(@"<%ParseErrors%>", "std::vector<ParseError>");
+			parsetree = parsetree.Replace(@"<%IParseTree%>", "");
+			parsetree = parsetree.Replace(@"<%IParseNode%>", "");
+			parsetree = parsetree.Replace(@"<%ITokenGet%>", "");
+			parsetree = parsetree.Replace(@"<%INodesGet%>", "");
+			parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
 
 			parsetree = parsetree.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
 			parsetree = parsetree.Replace(@"<%VirtualEvalMethods%>", evalmethods.ToString());
