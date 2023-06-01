@@ -58,12 +58,6 @@ namespace TinyPG.Compiler
 		public Symbols SkipSymbols { get; set; }
 
 		/// <summary>
-		/// The special symbol used to alter the internal file and line
-		/// number tracking for correct error reporting.
-		/// </summary>
-		public Symbol FileAndLine { get; set; }
-
-		/// <summary>
 		/// these are specific directives that should be applied to the grammar
 		/// this can be meta data, or information on how code should be generated, e.g.
 		/// <%@ Grammar Namespace="TinyPG" %> will generate code with namespace TinyPG.
