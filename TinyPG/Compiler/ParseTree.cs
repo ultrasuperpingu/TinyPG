@@ -180,42 +180,42 @@ namespace TinyPG
 
 			switch (Token.Type)
 			{
-                case TokenType.Start:
-                    Value = EvalStart(tree, paramlist);
-                    break;
-                case TokenType.Directive:
-                    Value = EvalDirective(tree, paramlist);
-                    break;
-                case TokenType.NameValue:
-                    Value = EvalNameValue(tree, paramlist);
-                    break;
-                case TokenType.ExtProduction:
-                    Value = EvalExtProduction(tree, paramlist);
-                    break;
-                case TokenType.Attribute:
-                    Value = EvalAttribute(tree, paramlist);
-                    break;
-                case TokenType.Params:
-                    Value = EvalParams(tree, paramlist);
-                    break;
-                case TokenType.Param:
-                    Value = EvalParam(tree, paramlist);
-                    break;
-                case TokenType.Production:
-                    Value = EvalProduction(tree, paramlist);
-                    break;
-                case TokenType.Rule:
-                    Value = EvalRule(tree, paramlist);
-                    break;
-                case TokenType.Subrule:
-                    Value = EvalSubrule(tree, paramlist);
-                    break;
-                case TokenType.ConcatRule:
-                    Value = EvalConcatRule(tree, paramlist);
-                    break;
-                case TokenType.Symbol:
-                    Value = EvalSymbol(tree, paramlist);
-                    break;
+				case TokenType.Start:
+					Value = EvalStart(tree, paramlist);
+				break;
+				case TokenType.Directive:
+					Value = EvalDirective(tree, paramlist);
+				break;
+				case TokenType.NameValue:
+					Value = EvalNameValue(tree, paramlist);
+				break;
+				case TokenType.ExtProduction:
+					Value = EvalExtProduction(tree, paramlist);
+				break;
+				case TokenType.Attribute:
+					Value = EvalAttribute(tree, paramlist);
+				break;
+				case TokenType.Params:
+					Value = EvalParams(tree, paramlist);
+				break;
+				case TokenType.Param:
+					Value = EvalParam(tree, paramlist);
+				break;
+				case TokenType.Production:
+					Value = EvalProduction(tree, paramlist);
+				break;
+				case TokenType.Rule:
+					Value = EvalRule(tree, paramlist);
+				break;
+				case TokenType.Subrule:
+					Value = EvalSubrule(tree, paramlist);
+				break;
+				case TokenType.ConcatRule:
+					Value = EvalConcatRule(tree, paramlist);
+				break;
+				case TokenType.Symbol:
+					Value = EvalSymbol(tree, paramlist);
+				break;
 
 				default:
 					Value = Token.Text;
@@ -224,87 +224,87 @@ namespace TinyPG
 			return Value;
 		}
 
-        protected virtual object EvalStart(ParseTree tree, params object[] paramlist)
-        {
-            return "Could not interpret input; no semantics implemented.";
-        }
+		protected virtual object EvalStart(ParseTree tree, params object[] paramlist)
+		{
+			return "Could not interpret input; no semantics implemented.";
+		}
 
-        protected virtual object EvalDirective(ParseTree tree, params object[] paramlist)
-        {
-            foreach (ParseNode node in Nodes)
-                node.Eval(tree, paramlist);
-            return null;
-        }
+		protected virtual object EvalDirective(ParseTree tree, params object[] paramlist)
+		{
+			foreach (ParseNode node in Nodes)
+				node.Eval(tree, paramlist);
+			return null;
+		}
 
-        protected virtual object EvalNameValue(ParseTree tree, params object[] paramlist)
-        {
-            foreach (ParseNode node in Nodes)
-                node.Eval(tree, paramlist);
-            return null;
-        }
+		protected virtual object EvalNameValue(ParseTree tree, params object[] paramlist)
+		{
+			foreach (ParseNode node in Nodes)
+				node.Eval(tree, paramlist);
+			return null;
+		}
 
-        protected virtual object EvalExtProduction(ParseTree tree, params object[] paramlist)
-        {
-            foreach (ParseNode node in Nodes)
-                node.Eval(tree, paramlist);
-            return null;
-        }
+		protected virtual object EvalExtProduction(ParseTree tree, params object[] paramlist)
+		{
+			foreach (ParseNode node in Nodes)
+				node.Eval(tree, paramlist);
+			return null;
+		}
 
-        protected virtual object EvalAttribute(ParseTree tree, params object[] paramlist)
-        {
-            foreach (ParseNode node in Nodes)
-                node.Eval(tree, paramlist);
-            return null;
-        }
+		protected virtual object EvalAttribute(ParseTree tree, params object[] paramlist)
+		{
+			foreach (ParseNode node in Nodes)
+				node.Eval(tree, paramlist);
+			return null;
+		}
 
-        protected virtual object EvalParams(ParseTree tree, params object[] paramlist)
-        {
-            foreach (ParseNode node in Nodes)
-                node.Eval(tree, paramlist);
-            return null;
-        }
+		protected virtual object EvalParams(ParseTree tree, params object[] paramlist)
+		{
+			foreach (ParseNode node in Nodes)
+				node.Eval(tree, paramlist);
+			return null;
+		}
 
-        protected virtual object EvalParam(ParseTree tree, params object[] paramlist)
-        {
-            foreach (ParseNode node in Nodes)
-                node.Eval(tree, paramlist);
-            return null;
-        }
+		protected virtual object EvalParam(ParseTree tree, params object[] paramlist)
+		{
+			foreach (ParseNode node in Nodes)
+				node.Eval(tree, paramlist);
+			return null;
+		}
 
-        protected virtual object EvalProduction(ParseTree tree, params object[] paramlist)
-        {
-            foreach (ParseNode node in Nodes)
-                node.Eval(tree, paramlist);
-            return null;
-        }
+		protected virtual object EvalProduction(ParseTree tree, params object[] paramlist)
+		{
+			foreach (ParseNode node in Nodes)
+				node.Eval(tree, paramlist);
+			return null;
+		}
 
-        protected virtual object EvalRule(ParseTree tree, params object[] paramlist)
-        {
-            foreach (ParseNode node in Nodes)
-                node.Eval(tree, paramlist);
-            return null;
-        }
+		protected virtual object EvalRule(ParseTree tree, params object[] paramlist)
+		{
+			foreach (ParseNode node in Nodes)
+				node.Eval(tree, paramlist);
+			return null;
+		}
 
-        protected virtual object EvalSubrule(ParseTree tree, params object[] paramlist)
-        {
-            foreach (ParseNode node in Nodes)
-                node.Eval(tree, paramlist);
-            return null;
-        }
+		protected virtual object EvalSubrule(ParseTree tree, params object[] paramlist)
+		{
+			foreach (ParseNode node in Nodes)
+				node.Eval(tree, paramlist);
+			return null;
+		}
 
-        protected virtual object EvalConcatRule(ParseTree tree, params object[] paramlist)
-        {
-            foreach (ParseNode node in Nodes)
-                node.Eval(tree, paramlist);
-            return null;
-        }
+		protected virtual object EvalConcatRule(ParseTree tree, params object[] paramlist)
+		{
+			foreach (ParseNode node in Nodes)
+				node.Eval(tree, paramlist);
+			return null;
+		}
 
-        protected virtual object EvalSymbol(ParseTree tree, params object[] paramlist)
-        {
-            foreach (ParseNode node in Nodes)
-                node.Eval(tree, paramlist);
-            return null;
-        }
+		protected virtual object EvalSymbol(ParseTree tree, params object[] paramlist)
+		{
+			foreach (ParseNode node in Nodes)
+				node.Eval(tree, paramlist);
+			return null;
+		}
 
 
 

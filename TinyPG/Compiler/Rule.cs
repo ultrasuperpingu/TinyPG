@@ -59,7 +59,7 @@ namespace TinyPG.Compiler
 		public Rules Rules;
 		public RuleType Type;
 
-        public Rule()
+		public Rule()
 			: this(null, RuleType.Choice)
 		{
 		}
@@ -102,39 +102,38 @@ namespace TinyPG.Compiler
 		}
 
 		/*
-        internal void DetermineLookAheadTree(LookAheadNode node)
-        {
-            switch (Type)
-            {
-                case RuleType.Terminal:
-                    LookAheadNode f = node.Nodes.Find(Symbol.Name);
-                    if (f == null)
-                    {
-                        LookAheadNode n = new LookAheadNode();
-                        n.LookAheadTerminal = (TerminalSymbol) Symbol;
-                        node.Nodes.Add(n);
-                    }
-                    else
-                        Console.WriteLine("throw new Exception(\"Terminal already exists\");");
-                    break;
-                case RuleType.NonTerminal:
-                    NonTerminalSymbol nts = Symbol as NonTerminalSymbol;
-
-                    break;
-                //case RuleType.Production:
-                case RuleType.Concat:
-                    break;
-                case RuleType.OneOrMore:
-                    break;
-                case RuleType.Option:
-                case RuleType.Choice:
-                case RuleType.ZeroOrMore:
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-        */
+		internal void DetermineLookAheadTree(LookAheadNode node)
+		{
+			switch (Type)
+			{
+				case RuleType.Terminal:
+					LookAheadNode f = node.Nodes.Find(Symbol.Name);
+					if (f == null)
+					{
+						LookAheadNode n = new LookAheadNode();
+						n.LookAheadTerminal = (TerminalSymbol) Symbol;
+						node.Nodes.Add(n);
+					}
+					else
+						Console.WriteLine("throw new Exception(\"Terminal already exists\");");
+					break;
+				case RuleType.NonTerminal:
+					NonTerminalSymbol nts = Symbol as NonTerminalSymbol;
+					break;
+				//case RuleType.Production:
+				case RuleType.Concat:
+					break;
+				case RuleType.OneOrMore:
+					break;
+				case RuleType.Option:
+				case RuleType.Choice:
+				case RuleType.ZeroOrMore:
+					break;
+				default:
+					throw new NotImplementedException();
+			}
+		}
+		*/
 
 		internal bool DetermineFirstTerminals(Symbols FirstTerminals)
 		{
@@ -143,7 +142,6 @@ namespace TinyPG.Compiler
 
 		internal bool DetermineFirstTerminals(Symbols FirstTerminals, int index)
 		{
-
 			// indicates if Nonterminal can evaluate to an empty terminal (e.g. in case T -> a? or T -> a*)
 			// in which case the parent rule should continue scanning after this nonterminal for Firsts.
 			bool containsEmpty = false; // assume terminal is found

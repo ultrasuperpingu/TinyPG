@@ -19,14 +19,13 @@ namespace TinyPG
 
 		public void Generate(bool debug)
 		{
-
 			ICodeGenerator generator;
 
 			string language = grammar.Directives["TinyPG"]["Language"];
 			foreach (Directive d in grammar.Directives)
 			{
 				generator = CodeGeneratorFactory.CreateGenerator(d.Name, language);
-                
+
 				if (generator != null && d.ContainsKey("FileName"))
 				{
 					generator.FileName = d["FileName"];

@@ -46,7 +46,7 @@ namespace System.Text
 		{
 			string t = "";
 			for (int i = 0; i < indentcount; i++)
-				t += "    ";
+				t += IndentString;
 
 			return t;
 		}
@@ -67,8 +67,43 @@ namespace System.Text
 #if DEBUG
 			return " " + commenter + " " + comment;
 #else
-            return "";
+			return "";
 #endif
 		}
+		public static string Unverbatim(string v)
+		{
+			if (v[0] == '@')
+			{
+				v = v.Substring(2, v.Length - 3);
+				v = v.Replace(@"\", @"\\");
+				v = "\"" + v.Replace(@"""", "\\\"") + "\"";
+			}
+			return v;
+		}
+		private static string _IndentString = "\t";
+		public static string IndentString
+		{
+			get => _IndentString;
+			set
+			{
+				_IndentString = value;
+				Indent2 = _IndentString + _IndentString;
+				Indent3 = Indent2 + _IndentString;
+			}
+		}
+		public static string Indent1
+		{
+			get { return _IndentString; }
+		}
+		public static string Indent2
+		{
+			get;
+			private set;
+		} = "\t\t";
+		public static string Indent3
+		{
+			get;
+			private set;
+		} = "\t\t\t";
 	}
 }

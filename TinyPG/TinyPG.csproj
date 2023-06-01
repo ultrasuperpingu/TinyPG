@@ -12,8 +12,7 @@
     <AssemblyName>TinyPG</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>TinyPG.Program</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -56,7 +55,6 @@
     <Compile Include="CodeGenerators\Java\ParserGenerator.cs" />
     <Compile Include="CodeGenerators\Java\ParseTreeGenerator.cs" />
     <Compile Include="CodeGenerators\Java\ScannerGenerator.cs" />
-    <Compile Include="CodeGenerators\Java\TextHighlighterGenerator.cs" />
     <Compile Include="CodeGenerators\VBNet\ParserGenerator.cs" />
     <Compile Include="CodeGenerators\VBNet\ParseTreeGenerator.cs" />
     <Compile Include="CodeGenerators\VBNet\ScannerGenerator.cs" />
@@ -149,6 +147,15 @@
     <None Include="Examples\simple expression2.tpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Examples\simple expression2_vb.tpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Examples\simple expression2_java.tpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Examples\simple expression2_cpp.tpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Compile Include="Compiler\TerminalSymbol.cs" />
     <Compile Include="SyntaxChecker.cs" />
     <Content Include="Templates\C#\Parser.cs">
@@ -163,7 +170,6 @@
     <Content Include="Templates\C#\TextHighlighter.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Examples\simple expression2_vb.tpg" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controls\AutoComplete.resx">

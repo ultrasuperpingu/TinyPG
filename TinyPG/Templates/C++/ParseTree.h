@@ -13,7 +13,7 @@ namespace <%Namespace%>
 		protected:
 		<%ITokenGet%>
 		public:
-			std::vector<ParseNode*> Nodes;
+		std::vector<ParseNode*> Nodes;
 		<%INodesGet%>
 		//[XmlIgnore] // avoid circular references when serializing
 		ParseNode* Parent;
@@ -38,19 +38,19 @@ namespace <%Namespace%>
 		
 		inline virtual bool IsTokenPresent(TokenType type, int index)
 		{
-		    if (index < 0) return false;
-		    // left to right
-		    for (ParseNode* node : Nodes)
-		    {
+			if (index < 0) return false;
+			// left to right
+			for (ParseNode* node : Nodes)
+			{
 				if (node->TokenVal.Type == type)
-		        {
-		            index--;
-		            if (index < 0)
-		            {
+				 {
+					index--;
+					if (index < 0)
+					{
 						return true;
-		            }
-		        }
-		    }
+					}
+				 }
+			}
 			return false;
 		}
 
@@ -166,6 +166,11 @@ namespace <%Namespace%>
 			TokenVal.Text = "Root";
 			//Errors = new ParseErrors();
 		}
+		
+		virtual inline ~ParseTree()
+		{
+			//CleanupChildren();
+		}
 
 		inline std::string PrintTree()
 		{
@@ -198,5 +203,5 @@ namespace <%Namespace%>
 			return Nodes[0]->Eval(*this, paramlist);
 		}*/
 	};
-   
+ 
 }

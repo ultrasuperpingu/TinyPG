@@ -3,7 +3,7 @@
 
 package <%Namespace%>;
 
-    
+
 public class Parser <%IParser%>
 {
 	private Scanner scanner;

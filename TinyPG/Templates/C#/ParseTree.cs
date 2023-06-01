@@ -141,7 +141,23 @@ namespace <%Namespace%>
 			this.text = text;
 			this.nodes = new List<ParseNode>();
 		}
-
+		protected virtual bool IsTokenPresent(TokenType type, int index)
+		{
+			if (index < 0) return false;
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == type)
+				{
+					index--;
+					if (index < 0)
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
 		protected object GetValue(ParseTree tree, TokenType type, int index)
 		{
 			return GetValue(tree, type, ref index);

@@ -264,6 +264,6 @@ namespace TinyPG.CodeGenerators.CSharp
 			return t;
 		}
 
-		public static string IndentString = "    ";
+		public static string IndentString = "\t";
 	}
 }

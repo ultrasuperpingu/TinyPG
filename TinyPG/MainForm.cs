@@ -441,7 +441,19 @@ namespace TinyPG
 		{
 			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\simple expression2.tpg");
 		}
+		private void calculatorVBTSM_Click(object sender, EventArgs e)
+		{
+			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\simple expression2_vb.tpg");
+		}
+		private void calculatorJavaTSM_Click(object sender, EventArgs e)
+		{
+			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\simple expression2_java.tpg");
+		}
 
+		private void calculatorCppTSM_Click(object sender, EventArgs e)
+		{
+			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\simple expression2_cpp.tpg");
+		}
 		private void theTinyPGGrammarToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\BNFGrammar 1.3.tpg");
@@ -449,7 +461,7 @@ namespace TinyPG
 
 		private void theTinyPGGrammarV10ToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\BNFGrammar 1.0.tpg");
+			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\BNFGrammar 1.5.tpg");
 		}
 
 		private void theTinyPGGrammarHighlighterV12ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -464,6 +476,10 @@ namespace TinyPG
 				if (e.LinkText == "www.codeproject.com")
 				{
 					System.Diagnostics.Process.Start("http://www.codeproject.com/script/Articles/MemberArticles.aspx?amid=2192187");
+				}
+				else if (e.LinkText == "https://github.com/ultrasuperpingu/TinyPG")
+				{
+					System.Diagnostics.Process.Start("https://github.com/ultrasuperpingu/TinyPG");
 				}
 			}
 			catch (Exception ex)
@@ -625,12 +641,16 @@ namespace TinyPG
 			StringBuilder about = new StringBuilder();
 
 			//http://www.codeproject.com/script/Articles/MemberArticles.aspx?amid=2192187
+			//https://github.com/ultrasuperpingu/TinyPG
 
 			about.AppendLine(AssemblyInfo.ProductName + " v" + Application.ProductVersion);
 			about.AppendLine(AssemblyInfo.CopyRightsDetail);
 			about.AppendLine();
-			about.AppendLine("For more information about the author");
+			about.AppendLine("For more information about the original author");
 			about.AppendLine("or TinyPG visit www.codeproject.com");
+			about.AppendLine();
+			about.AppendLine("For more information about the current project");
+			about.AppendLine("visit https://github.com/ultrasuperpingu/TinyPG");
 
 			outputFloaty.Show();
 			tabOutput.SelectedIndex = 0;
@@ -818,7 +838,9 @@ namespace TinyPG
 				statusLine.Text = "-";
 			}
 		}
+
 		#endregion
+
 
 	}
 }

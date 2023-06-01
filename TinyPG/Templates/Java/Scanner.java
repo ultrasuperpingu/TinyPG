@@ -64,7 +64,7 @@ public class Scanner
 		return t;
 	}
 
-	 /// <summary>
+	/// <summary>
 	/// executes a lookahead of the next token
 	/// and will advance the scan on the input string
 	/// </summary>
@@ -89,8 +89,8 @@ public class Scanner
 		int i;
 		int startpos = StartPos;
 		int endpos = EndPos;
-        int currentline = CurrentLine;
-        String currentFile = CurrentFile;
+		int currentline = CurrentLine;
+		String currentFile = CurrentFile;
 		Token tok = null;
 		ArrayList<TokenType> scantokens;
 

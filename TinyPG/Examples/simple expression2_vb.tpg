@@ -12,10 +12,10 @@
 		Protected _context as System.Collections.Generic.Dictionary(Of String, Integer)
 		Public Property Context as System.Collections.Generic.Dictionary(Of String, Integer)
 			Get
-				if(_context Is  Nothing And Me.Parent IsNot Nothing) Then
+				If _context Is Nothing and Parent IsNot Nothing
 					return Parent.Context
 				End If
-				return Nothing
+				return _context
 			End Get
 			Set
 				_context = value
@@ -30,15 +30,15 @@
 			End If
 		End Function
 " %>
-			EOF         -> @"^\s*$";
-[Color(255, 0, 0)] 	NUMBER 	-> @"[0-9]+";
-[Color(255, 0, 0)] 	ID	 	-> @"[a-zA-Z_][a-zA-Z0-9_]*";
-[Color(0, 0, 255)] 	PLUSMINUS 	-> @"(\+|-)";
-[Color(0, 0, 255)] 	MULTDIV 	-> @"\*|/";
-[Color(0, 0, 255)] 	BROPEN 	->  @"\(";
-[Color(0, 0, 255)] 	BRCLOSE 	->  @"\)";
+			EOF           -> @"^\s*$";
+[Color(255, 0, 0)] 	NUMBER        -> @"[0-9]+";
+[Color(255, 0, 0)] 	ID            -> @"[a-zA-Z_][a-zA-Z0-9_]*";
+[Color(0, 0, 255)] 	PLUSMINUS     -> @"(\+|-)";
+[Color(0, 0, 255)] 	MULTDIV       -> @"\*|/";
+[Color(0, 0, 255)] 	BROPEN        -> @"\(";
+[Color(0, 0, 255)] 	BRCLOSE       -> @"\)";
 
-[Skip] 		WHITESPACE  -> @"\s+";
+[Skip] 		WHITESPACE    -> @"\s+";
 
 Start -> (AddExpr)? EOF
 { Return $AddExpr };      
@@ -46,7 +46,6 @@ Start -> (AddExpr)? EOF
 
 AddExpr -> MultExpr (PLUSMINUS MultExpr)*
 { 
-
 	Dim Value As Integer = Convert.ToInt32($MultExpr)
 	Dim i As Integer = 1
 	While $MultExpr[i] IsNot Nothing

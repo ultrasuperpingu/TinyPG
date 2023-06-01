@@ -1,18 +1,33 @@
 //@TinyPG - a Tiny Parser Generator v1.2
 //Copyright © Herre Kuijpers 2008-2010
 //Simple expression calculator
-<% @TinyPG Language="Java" Namespace="tinypg" OutputPath="C:\Users\Ping\Documents\TestParser\src\tinypg\" %>
+//
+// You can test it with a simple main class like this:
+//public class TestParser {
+//    public static void main(String[] args) {
+//        HashMap<String,Integer> context=new HashMap<>();
+//        context.put("_5",5);
+//        context.put("_15",15);
+//        Parser p=new Parser(new Scanner());
+//        ParseTree tree = p.Parse("_5*3+_15/2");
+//        tree.setContext(context);
+//        System.out.println(tree.Eval());
+//    }    
+//}
+
+<% @TinyPG Language="Java" Namespace="tinypg" OutputPath="TestJava\TestParser\src\tinypg\" %>
 
 // include text highlighting as part of the input window
-<% @TextHighlighter Generate="true" %>
+//<% @TextHighlighter Generate="true" %>
 
 <% @ParseTree CustomCode="
 	protected java.util.HashMap<String,Integer> context;
 	public java.util.HashMap<String,Integer> getContext() {
-		if(context == null && this.Parent != null) {
+		if(context == null && Parent != null)
+		{
 			return Parent.getContext();
 		}
-		return null;
+		return context;
 	}
 
 	public void setContext(java.util.HashMap<String,Integer> value) {
@@ -29,15 +44,15 @@
 [Color(255, 0, 0)] 	ID	 	-> @"[a-zA-Z_][a-zA-Z0-9_]*";
 [Color(0, 0, 255)] 	PLUSMINUS 	-> @"(\+|-)";
 [Color(0, 0, 255)] 	MULTDIV 	-> @"\*|/";
-[Color(0, 0, 255)] 	BROPEN 	->  @"\(";
-[Color(0, 0, 255)] 	BRCLOSE 	->  @"\)";
+[Color(0, 0, 255)] 	BROPEN 	-> @"\(";
+[Color(0, 0, 255)] 	BRCLOSE 	-> @"\)";
 
 [Skip] 		WHITESPACE  	-> @"\s+";
 
-Start -> (AddExpr)? EOF
-{ return $AddExpr; };      
+Start -> (AddExpr)? EOF : int
+{ return (int)$AddExpr; };      
 
-AddExpr -> MultExpr (PLUSMINUS MultExpr)*
+AddExpr -> MultExpr (PLUSMINUS MultExpr)* : int
 { 
 	int Value = (int)$MultExpr;
 	int i = 1;
@@ -53,7 +68,7 @@ AddExpr -> MultExpr (PLUSMINUS MultExpr)*
 	return Value; 
 };
 
-MultExpr -> Atom (MULTDIV Atom)*
+MultExpr -> Atom (MULTDIV Atom)* : int
 { 
 	int Value = (int)$Atom;
 	int i = 1;
@@ -68,10 +83,10 @@ MultExpr -> Atom (MULTDIV Atom)*
 	return Value; 
 };
 
-Atom -> NUMBER | BROPEN AddExpr BRCLOSE | ID
+Atom -> NUMBER | BROPEN AddExpr BRCLOSE | ID : int
 {
 	if ($NUMBER != null) return Integer.parseInt($NUMBER.toString());
 	if ($ID != null) return getVarValue($ID.toString());
-	else return $AddExpr; 
+	else return (int)$AddExpr; 
 };
 

@@ -25,63 +25,64 @@ namespace TinyPG.CodeGenerators.Cpp
 			StringBuilder evalsymbols = new StringBuilder();
 			StringBuilder evalmethods = new StringBuilder();
 
-            foreach (TerminalSymbol s in Grammar.GetTerminals())
+			foreach (TerminalSymbol s in Grammar.GetTerminals())
 			{
-                /*evalmethods.AppendLine("        inline virtual bool IsToken" + s.Name + "Present(int index)");
-                evalmethods.AppendLine("        {");
-                evalmethods.AppendLine("            if (index < 0) return false;");
-                evalmethods.AppendLine("            // left to right");
-                evalmethods.AppendLine("            for (ParseNode* node : Nodes)");
-                evalmethods.AppendLine("            {");
-                evalmethods.AppendLine("				if (node->TokenVal.Type == TokenType::"+s.Name+")");
-                evalmethods.AppendLine("                {");
-                evalmethods.AppendLine("                    index--;");
-                evalmethods.AppendLine("                    if (index < 0)");
-                evalmethods.AppendLine("                    {");
-                evalmethods.AppendLine("						return true;");
-                evalmethods.AppendLine("                    }");
-                evalmethods.AppendLine("                }");
-                evalmethods.AppendLine("            }");
-                evalmethods.AppendLine("			return false;");
-                evalmethods.AppendLine("        }\r\n");*/
+				/*evalmethods.AppendLine("		inline virtual bool IsToken" + s.Name + "Present(int index)");
+				evalmethods.AppendLine("		{");
+				evalmethods.AppendLine("			if (index < 0) return false;");
+				evalmethods.AppendLine("			// left to right");
+				evalmethods.AppendLine("			for (ParseNode* node : Nodes)");
+				evalmethods.AppendLine("			{");
+				evalmethods.AppendLine("				if (node->TokenVal.Type == TokenType::"+s.Name+")");
+				evalmethods.AppendLine("			    {");
+				evalmethods.AppendLine("			        index--;");
+				evalmethods.AppendLine("			        if (index < 0)");
+				evalmethods.AppendLine("			        {");
+				evalmethods.AppendLine("						return true;");
+				evalmethods.AppendLine("			        }");
+				evalmethods.AppendLine("			    }");
+				evalmethods.AppendLine("			}");
+				evalmethods.AppendLine("			return false;");
+				evalmethods.AppendLine("		}\r\n");*/
 
-                string returnType = "std::string";
-                evalmethods.AppendLine("        inline virtual " + returnType + " Get" + s.Name + "Value(const ParseTree& tree, int index)");
-                evalmethods.AppendLine("        {");
-                evalmethods.AppendLine("            " + returnType + " o = \"\";");
-                evalmethods.AppendLine("            if (index < 0) return o;");
-                evalmethods.AppendLine("            // left to right");
-                evalmethods.AppendLine("            for (ParseNode* node : Nodes)");
-                evalmethods.AppendLine("            {");
-                evalmethods.AppendLine("				if (node->TokenVal.Type == TokenType::"+s.Name+")");
-                evalmethods.AppendLine("                {");
-                evalmethods.AppendLine("                    index--;");
-                evalmethods.AppendLine("                    if (index < 0)");
-                evalmethods.AppendLine("                    {");
-                evalmethods.AppendLine("                        o =  node->TokenVal.Text;");
-                evalmethods.AppendLine("						break;");
-                evalmethods.AppendLine("                    }");
-                evalmethods.AppendLine("                }");
-                evalmethods.AppendLine("            }");
-                evalmethods.AppendLine("			return o;");
-                evalmethods.AppendLine("        }\r\n");
-            }
+				string returnType = "std::string";
+				evalmethods.AppendLine("		inline virtual " + returnType + " Get" + s.Name + "Value(const ParseTree& tree, int index)");
+				evalmethods.AppendLine("		{");
+				evalmethods.AppendLine("			" + returnType + " o = \"\";");
+				evalmethods.AppendLine("			if (index < 0) return o;");
+				evalmethods.AppendLine("			// left to right");
+				evalmethods.AppendLine("			for (ParseNode* node : Nodes)");
+				evalmethods.AppendLine("			{");
+				evalmethods.AppendLine("				if (node->TokenVal.Type == TokenType::"+s.Name+")");
+				evalmethods.AppendLine("				{");
+				evalmethods.AppendLine("					index--;");
+				evalmethods.AppendLine("					if (index < 0)");
+				evalmethods.AppendLine("					{");
+				evalmethods.AppendLine("						o =  node->TokenVal.Text;");
+				evalmethods.AppendLine("						break;");
+				evalmethods.AppendLine("					}");
+				evalmethods.AppendLine("				}");
+				evalmethods.AppendLine("			}");
+				evalmethods.AppendLine("			return o;");
+				evalmethods.AppendLine("		}\r\n");
+			}
 
-            // build non terminal tokens
-            foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
+			// build non terminal tokens
+			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
-				evalsymbols.AppendLine("                case TokenType::" + s.Name + ":");
-				evalsymbols.AppendLine("                    Value = Eval" + s.Name + "(tree, paramlist);");
-				//evalsymbols.AppendLine("                Value = Token.Text;");
-				evalsymbols.AppendLine("                    break;");
+				evalsymbols.AppendLine("				case TokenType::" + s.Name + ":");
+				evalsymbols.AppendLine("					Value = Eval" + s.Name + "(tree, paramlist);");
+				//evalsymbols.AppendLine("					Value = Token.Text;");
+				evalsymbols.AppendLine("					break;");
+
 				string returnType = "void*";
 				if (!string.IsNullOrEmpty(s.ReturnType))
 					returnType = s.ReturnType;
 				string defaultReturnValue = "NULL";
-                if (!string.IsNullOrEmpty(s.ReturnTypeDefault))
-                    defaultReturnValue = s.ReturnTypeDefault;
-                evalmethods.AppendLine("        inline virtual " + returnType + " Eval" + s.Name + "(const ParseTree& tree, std::vector<void*> paramlist)");
-				evalmethods.AppendLine("        {");
+				if (!string.IsNullOrEmpty(s.ReturnTypeDefault))
+					defaultReturnValue = s.ReturnTypeDefault;
+				evalmethods.AppendLine("		inline virtual " + returnType + " Eval" + s.Name + "(const ParseTree& tree, std::vector<void*> paramlist)");
+				evalmethods.AppendLine("		{");
 				if (s.CodeBlock != null)
 				{
 					// paste user code here
@@ -90,55 +91,37 @@ namespace TinyPG.CodeGenerators.Cpp
 				else
 				{
 					if (s.Name == "Start") // return a nice warning message from root object.
-						evalmethods.AppendLine("            return "+defaultReturnValue+"; //\"Could not interpret input; no semantics implemented.\";");
+						evalmethods.AppendLine("			return "+defaultReturnValue+"; //\"Could not interpret input; no semantics implemented.\";");
 					else
-						evalmethods.AppendLine("            for (ParseNode* node : Nodes)\r\n" +
-											   "                node->Eval(tree, paramlist);\r\n" +
-                                               "            return "+defaultReturnValue+";");
+						evalmethods.AppendLine("			for (ParseNode* node : Nodes)\r\n" +
+											   "				node->Eval(tree, paramlist);\r\n" +
+											   "			return "+defaultReturnValue+";");
 
 					// otherwise simply not implemented!
 				}
-				evalmethods.AppendLine("        }\r\n");
-
-                /*evalmethods.AppendLine("        inline virtual bool IsToken" + s.Name + "Present(int index)");
-                evalmethods.AppendLine("        {");
-                evalmethods.AppendLine("            if (index < 0) return false;");
-                evalmethods.AppendLine("            // left to right");
-                evalmethods.AppendLine("            for (ParseNode* node : Nodes)");
-                evalmethods.AppendLine("            {");
-                evalmethods.AppendLine("				if (node->TokenVal.Type == TokenType::"+s.Name+")");
-                evalmethods.AppendLine("                {");
-                evalmethods.AppendLine("                    index--;");
-                evalmethods.AppendLine("                    if (index < 0)");
-                evalmethods.AppendLine("                    {");
-                evalmethods.AppendLine("						return true;");
-                evalmethods.AppendLine("                    }");
-                evalmethods.AppendLine("                }");
-                evalmethods.AppendLine("            }");
-                evalmethods.AppendLine("			return false;");
-                evalmethods.AppendLine("        }\r\n"); */
+				evalmethods.AppendLine("		}\r\n");
 				
 				
-				evalmethods.AppendLine("        inline virtual " + returnType + " Get" + s.Name + "Value(const ParseTree& tree, int index)");
-                evalmethods.AppendLine("        {");
-                evalmethods.AppendLine("            " + returnType + " o = "+defaultReturnValue+";");
-                evalmethods.AppendLine("            if (index < 0) return o;");
-                evalmethods.AppendLine("            // left to right");
-                evalmethods.AppendLine("            for (ParseNode* node : Nodes)");
-                evalmethods.AppendLine("            {");
-                evalmethods.AppendLine("				if (node->TokenVal.Type == TokenType::"+s.Name+")");
-                evalmethods.AppendLine("                {");
-                evalmethods.AppendLine("                    index--;");
-                evalmethods.AppendLine("                    if (index < 0)");
-                evalmethods.AppendLine("                    {");
-                evalmethods.AppendLine("                        o = node->Eval"+s.Name+"(tree, { });");
-                evalmethods.AppendLine("						break;");
-                evalmethods.AppendLine("                    }");
-                evalmethods.AppendLine("                }");
-                evalmethods.AppendLine("            }");
-                evalmethods.AppendLine("			return o;");
-                evalmethods.AppendLine("        }\r\n");
-            }
+				evalmethods.AppendLine("		inline virtual " + returnType + " Get" + s.Name + "Value(const ParseTree& tree, int index)");
+				evalmethods.AppendLine("		{");
+				evalmethods.AppendLine("			" + returnType + " o = "+defaultReturnValue+";");
+				evalmethods.AppendLine("			if (index < 0) return o;");
+				evalmethods.AppendLine("			// left to right");
+				evalmethods.AppendLine("			for (ParseNode* node : Nodes)");
+				evalmethods.AppendLine("			{");
+				evalmethods.AppendLine("				if (node->TokenVal.Type == TokenType::"+s.Name+")");
+				evalmethods.AppendLine("				{");
+				evalmethods.AppendLine("					index--;");
+				evalmethods.AppendLine("					if (index < 0)");
+				evalmethods.AppendLine("					{");
+				evalmethods.AppendLine("						o = node->Eval"+s.Name+"(tree, { });");
+				evalmethods.AppendLine("						break;");
+				evalmethods.AppendLine("					}");
+				evalmethods.AppendLine("				}");
+				evalmethods.AppendLine("			}");
+				evalmethods.AppendLine("			return o;");
+				evalmethods.AppendLine("		}\r\n");
+			}
 
 			parsetree = parsetree.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 			if (Debug)
@@ -195,7 +178,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				Symbol s = symbols.Find(match.Groups["var"].Value);
 				if (s == null)
 				{
-					//TOD: handle error situation
+					//TODO: handle error situation
 					//Errors.Add("Variable $" + match.Groups["var"].Value + " cannot be matched.");
 					break; // error situation
 				}
@@ -210,31 +193,30 @@ namespace TinyPG.CodeGenerators.Cpp
 				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
 				match = var.Match(codeblock);
 			}
-            
 			
 			var = new Regex(@"\?(?<var>[a-zA-Z_0-9]+)(\[(?<index>[^]]+)\])?", RegexOptions.Compiled);
-            match = var.Match(codeblock);
-            while (match.Success)
-            {
-                Symbol s = symbols.Find(match.Groups["var"].Value);
-                if (s == null)
-                {
-                    //TOD: handle error situation
-                    //Errors.Add("Variable $" + match.Groups["var"].Value + " cannot be matched.");
-                    break; // error situation
-                }
-                string indexer = "0";
-                if (match.Groups["index"].Value.Length > 0)
-                {
-                    indexer = match.Groups["index"].Value;
-                }
+			match = var.Match(codeblock);
+			while (match.Success)
+			{
+				Symbol s = symbols.Find(match.Groups["var"].Value);
+				if (s == null)
+				{
+					//TODO: handle error situation
+					//Errors.Add("Variable $" + match.Groups["var"].Value + " cannot be matched.");
+					break; // error situation
+				}
+				string indexer = "0";
+				if (match.Groups["index"].Value.Length > 0)
+				{
+					indexer = match.Groups["index"].Value;
+				}
 
-                string replacement = "this->IsTokenPresent(TokenType::" + s.Name + ", " + indexer + ")";
+				string replacement = "this->IsTokenPresent(TokenType::" + s.Name + ", " + indexer + ")";
 
-                codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
-                match = var.Match(codeblock);
-            }
-            codeblock = "            " + codeblock.Replace("\n", "\r\n        ");
+				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
+				match = var.Match(codeblock);
+			}
+			codeblock = Helper.Indent3 + codeblock.Replace("\n", "\r\n" + Helper.Indent2);
 			return codeblock;
 		}
 	}

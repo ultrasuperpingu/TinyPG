@@ -1,0 +1,94 @@
+//@TinyPG - a Tiny Parser Generator v1.5
+//Copyright © Herre Kuijpers 2008-2010, modified by ultrasuperpingu 2023
+//Simple expression calculator
+//
+// You can test it with a simple main like this:
+//void main() {
+//	TinyPG::Scanner s = TinyPG::Scanner();
+//	TinyPG::Parser p = TinyPG::Parser(s);
+//	auto tree = p.Parse("(5 + 3) / 5 * (3 - 2)");
+//	std::map<std::string, int> context;
+//	context.insert(std::pair<std::string, int>("_5", 5));
+//	context.insert(std::pair<std::string, int>("_15", 15));
+//	tree.setContext(&context);
+//	std::cerr << tree.Nodes[0]->EvalStart(tree, {}) << std::endl;
+//}
+
+<% @TinyPG Language="Cpp" Namespace="TinyPG" OutputPath="TestCpp\TestParser" %>
+
+// include text highlighting as part of the input window
+//<% @TextHighlighter Generate="true" %>
+
+<% @ParseTree CustomCode="
+	protected:
+	std::map<std::string,int>* context;
+	public:
+	std::map<std::string,int>* getContext() {
+		if(context == NULL && Parent != NULL)
+		{
+			return Parent->getContext();
+		}
+		return context;
+	}
+
+	void setContext(std::map<std::string,int>* value) {
+		context = value;
+	}
+
+	int getVarValue(std::string id) {
+		//TODO: check variable exists
+		return getContext() == NULL?0:(*getContext())[id];
+	}
+" %>
+
+			EOF_         	-> @"^\s*$";
+[Color(255, 0, 0)] 	NUMBER 	-> @"[0-9]+";
+[Color(255, 0, 0)] 	ID	 	-> @"[a-zA-Z_][a-zA-Z0-9_]*";
+[Color(0, 0, 255)] 	PLUSMINUS 	-> @"(\+|-)";
+[Color(0, 0, 255)] 	MULTDIV 	-> @"\*|/";
+[Color(0, 0, 255)] 	BROPEN 	-> @"\(";
+[Color(0, 0, 255)] 	BRCLOSE 	-> @"\)";
+
+[Skip] 		WHITESPACE  	-> @"\s+";
+
+Start -> (AddExpr)? EOF_ : int default(0)
+{ return (int)$AddExpr; };      
+
+AddExpr -> MultExpr (PLUSMINUS MultExpr)* : int default(0)
+{ 
+	int Value = $MultExpr;
+	int i = 1;
+	while ($MultExpr[i] != NULL)
+	{
+		std::string sign = $PLUSMINUS[i-1];
+		if (sign == "+")
+			Value += (int)($MultExpr[i++]);
+		else 
+			Value -= (int)($MultExpr[i++]);
+	}
+
+	return Value; 
+};
+
+MultExpr -> Atom (MULTDIV Atom)* : int default(0)
+{ 
+	int Value = (int)$Atom;
+	int i = 1;
+	while ($Atom[i] != NULL)
+	{
+		std::string sign = $MULTDIV[i-1];
+		if (sign == "*")
+			Value *= (int)($Atom[i++]);
+		else 
+			Value /= (int)($Atom[i++]);
+	}
+	return Value; 
+};
+
+Atom -> NUMBER | BROPEN AddExpr BRCLOSE | ID : int default(0)
+{
+	if (?NUMBER) return std::stoi($NUMBER);
+	if (?ID) return getVarValue($ID);
+	else return $AddExpr; 
+};
+

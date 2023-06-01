@@ -78,7 +78,7 @@ namespace TinyPG.CodeGenerators.VBNet
 			int i = 0;
 			Symbols firsts = null;
 			StringBuilder sb = new StringBuilder();
-			string Indent = IndentTabs(indent);
+			string Indent = Helper.Indent(indent);
 
 			switch (r.Type)
 			{
@@ -89,8 +89,8 @@ namespace TinyPG.CodeGenerators.VBNet
 					sb.AppendLine(Indent + "node.Token.UpdateRange(tok)");
 					sb.AppendLine(Indent + "node.Nodes.Add(n)");
 					sb.AppendLine(Indent + "If tok.Type <> TokenType." + r.Symbol.Name + " Then");
-					sb.AppendLine(Indent + "    m_tree.Errors.Add(New ParseError(\"Unexpected token '\" + tok.Text.Replace(\"\\n\", \"\") + \"' found. Expected \" + TokenType." + r.Symbol.Name + ".ToString(), &H1001, tok))");
-					sb.AppendLine(Indent + "    Return\r\n");
+					sb.AppendLine(Indent + Helper.Indent1 +"m_tree.Errors.Add(New ParseError(\"Unexpected token '\" + tok.Text.Replace(\"\\n\", \"\") + \"' found. Expected \" + TokenType." + r.Symbol.Name + ".ToString(), &H1001, tok))");
+					sb.AppendLine(Indent + Helper.Indent1 + "Return\r\n");
 					sb.AppendLine(Indent + "End If\r\n");
 					break;
 				case RuleType.NonTerminal:
@@ -158,7 +158,7 @@ namespace TinyPG.CodeGenerators.VBNet
 
 					i = 0;
 					firsts = r.GetFirstTerminals();
-					sb.Append(Indent + "    tok = m_scanner.LookAhead(");
+					sb.Append(Indent +  Helper.Indent1 +"tok = m_scanner.LookAhead(");
 					foreach (TerminalSymbol s in firsts)
 					{
 						if (i == 0)
@@ -231,13 +231,13 @@ namespace TinyPG.CodeGenerators.VBNet
 					{
 						foreach (TerminalSymbol s in rule.GetFirstTerminals())
 						{
-							sb.AppendLine(Indent + "    Case TokenType." + s.Name + "");
+							sb.AppendLine(Indent +  Helper.Indent1 +"Case TokenType." + s.Name + "");
 							sb.Append(GenerateProductionRuleCode(rule, indent + 2));
 						}
 					}
-					sb.AppendLine(Indent + "    Case Else");
-					sb.AppendLine(Indent + "        m_tree.Errors.Add(new ParseError(\"Unexpected token '\" + tok.Text.Replace(\"\\n\", \"\") + \"' found.\", &H0002, tok))");
-					sb.AppendLine(Indent + "        Exit Select");
+					sb.AppendLine(Indent +  Helper.Indent1 +"Case Else");
+					sb.AppendLine(Indent +  Helper.Indent2 +"m_tree.Errors.Add(new ParseError(\"Unexpected token '\" + tok.Text.Replace(\"\\n\", \"\") + \"' found.\", &H0002, tok))");
+					sb.AppendLine(Indent +  Helper.Indent2 +"Exit Select");
 					sb.AppendLine(Indent + "End Select" + Helper.AddComment("'", "Choice Rule"));
 					break;
 				default:
@@ -246,14 +246,5 @@ namespace TinyPG.CodeGenerators.VBNet
 			return sb.ToString();
 		}
 
-		// replaces tabs by spaces, so outlining is more consistent
-		public static string IndentTabs(int indent)
-		{
-			string t = "";
-			for (int i = 0; i < indent; i++)
-				t += "    ";
-
-			return t;
-		}
 	}
 }

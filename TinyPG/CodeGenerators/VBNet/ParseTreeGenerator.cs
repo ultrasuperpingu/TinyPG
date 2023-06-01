@@ -26,11 +26,11 @@ namespace TinyPG.CodeGenerators.VBNet
 			// build non terminal tokens
 			foreach (Symbol s in Grammar.GetNonTerminals())
 			{
-				evalsymbols.AppendLine("                Case TokenType." + s.Name + "");
-				evalsymbols.AppendLine("                    Value = Eval" + s.Name + "(tree, paramlist)");
-				evalsymbols.AppendLine("                    Exit Select");
+				evalsymbols.AppendLine("				Case TokenType." + s.Name + "");
+				evalsymbols.AppendLine("					Value = Eval" + s.Name + "(tree, paramlist)");
+				evalsymbols.AppendLine("					Exit Select");
 
-				evalmethods.AppendLine("        Protected Overridable Function Eval" + s.Name + "(ByVal tree As ParseTree, ByVal ParamArray paramlist As Object()) As Object");
+				evalmethods.AppendLine("		Protected Overridable Function Eval" + s.Name + "(ByVal tree As ParseTree, ByVal ParamArray paramlist As Object()) As Object");
 				if (s.CodeBlock != null)
 				{
 					// paste user code here
@@ -39,13 +39,13 @@ namespace TinyPG.CodeGenerators.VBNet
 				else
 				{
 					if (s.Name == "Start") // return a nice warning message from root object.
-						evalmethods.AppendLine("            Return \"Could not interpret input; no semantics implemented.\"");
+						evalmethods.AppendLine("			Return \"Could not interpret input; no semantics implemented.\"");
 					else
-						evalmethods.AppendLine("            Throw New NotImplementedException()");
+						evalmethods.AppendLine("			Throw New NotImplementedException()");
 
 					// otherwise simply not implemented!
 				}
-				evalmethods.AppendLine("        End Function\r\n");
+				evalmethods.AppendLine("		End Function\r\n");
 			}
 
 			parsetree = parsetree.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
@@ -58,11 +58,11 @@ namespace TinyPG.CodeGenerators.VBNet
 				parsetree = parsetree.Replace(@"<%ParseError%>", "\r\n        Implements IParseError\r\n");
 				parsetree = parsetree.Replace(@"<%ParseErrors%>", "List(Of IParseError)");
 
-				string itoken = "        Public ReadOnly Property IToken() As IToken Implements IParseNode.IToken\r\n"
-								+ "            Get\r\n"
-								+ "                Return DirectCast(Token, IToken)\r\n"
-								+ "            End Get\r\n"
-								+ "        End Property\r\n";
+				string itoken = "		Public ReadOnly Property IToken() As IToken Implements IParseNode.IToken\r\n"
+								+ "			Get\r\n"
+								+ "				Return DirectCast(Token, IToken)\r\n"
+								+ "			End Get\r\n"
+								+ "		End Property\r\n";
 
 				parsetree = parsetree.Replace(@"<%ITokenGet%>", itoken);
 
@@ -76,14 +76,14 @@ namespace TinyPG.CodeGenerators.VBNet
 				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorLength%>", " Implements IParseError.Length");
 				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorMessage%>", " Implements IParseError.Message");
 
-				string inodes = "        Public Shared Function Node2INode(ByVal node As ParseNode) As IParseNode\r\n"
-									+ "            Return DirectCast(node, IParseNode)\r\n"
-									+ "        End Function\r\n\r\n"
-									+ "        Public ReadOnly Property INodes() As List(Of IParseNode) Implements IParseNode.INodes\r\n"
-									+ "            Get\r\n"
-									+ "                Return Nodes.ConvertAll(Of IParseNode)(New Converter(Of ParseNode, IParseNode)(AddressOf Node2INode))\r\n"
-									+ "            End Get\r\n"
-									+ "        End Property\r\n";
+				string inodes = "		Public Shared Function Node2INode(ByVal node As ParseNode) As IParseNode\r\n"
+									+ "			Return DirectCast(node, IParseNode)\r\n"
+									+ "		End Function\r\n\r\n"
+									+ "		Public ReadOnly Property INodes() As List(Of IParseNode) Implements IParseNode.INodes\r\n"
+									+ "			Get\r\n"
+									+ "				Return Nodes.ConvertAll(Of IParseNode)(New Converter(Of ParseNode, IParseNode)(AddressOf Node2INode))\r\n"
+									+ "			End Get\r\n"
+									+ "		End Property\r\n";
 				parsetree = parsetree.Replace(@"<%INodesGet%>", inodes);
 				parsetree = parsetree.Replace(@"<%ImplementsIParseNodeText%>", " Implements IParseNode.Text");
 				parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
@@ -152,7 +152,7 @@ namespace TinyPG.CodeGenerators.VBNet
 				match = var.Match(codeblock);
 			}
 
-			codeblock = "            " + codeblock.Replace("\n", "\r\n        ");
+			codeblock =  Helper.Indent3 + codeblock.Replace("\n", "\r\n" +  Helper.Indent2);
 			return codeblock;
 		}
 	}

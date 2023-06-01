@@ -27,19 +27,19 @@ namespace TinyPG.CodeGenerators.Java
 
 			foreach (TerminalSymbol s in Grammar.SkipSymbols)
 			{
-				skiplist.AppendLine("            SkipList.add(TokenType." + s.Name + ");");
+				skiplist.AppendLine(Helper.Indent3 + "SkipList.add(TokenType." + s.Name + ");");
 			}
 
 			if (Grammar.FileAndLine != null)
-				skiplist.AppendLine("            FileAndLine = TokenType." + Grammar.FileAndLine.Name + ";");
+				skiplist.AppendLine(Helper.Indent3 + "FileAndLine = TokenType." + Grammar.FileAndLine.Name + ";");
 
-			// build system tokens
-			tokentype.AppendLine("\r\n            //Non terminal tokens:");
+			// build system token
+			tokentype.AppendLine("\r\n" + Helper.Indent3 + "//Non terminal tokens:");
 			tokentype.AppendLine(Helper.Outline("_NONE_", 3, ",", 5));
 			tokentype.AppendLine(Helper.Outline("_UNDETERMINED_", 3, ",", 5));
 
 			// build non terminal tokens
-			tokentype.AppendLine("\r\n            //Non terminal tokens:");
+			tokentype.AppendLine("\r\n" + Helper.Indent3 + "//Non terminal tokens:");
 			foreach (Symbol s in Grammar.GetNonTerminals())
 			{
 				tokentype.AppendLine(Helper.Outline(s.Name, 3, ",", 5));
@@ -47,16 +47,16 @@ namespace TinyPG.CodeGenerators.Java
 			}
 
 			// build terminal tokens
-			tokentype.AppendLine("\r\n            //Terminal tokens:");
+			tokentype.AppendLine("\r\n" + Helper.Indent3 + "//Terminal tokens:");
 			bool first = true;
 			foreach (TerminalSymbol s in Grammar.GetTerminals())
 			{
-				regexps.Append("            regex = Pattern.compile(" + Unverbatim(s.Expression.ToString()));
+				regexps.Append(Helper.Indent3 + "regex = Pattern.compile(" + Helper.Unverbatim(s.Expression.ToString()));
 				if (s.Attributes.ContainsKey("IgnoreCase"))
 					regexps.Append(", Pattern.CASE_INSENSITIVE");
 				regexps.Append(");\r\n");
-				regexps.Append("            Patterns.put(TokenType." + s.Name + ", regex);\r\n");
-				regexps.Append("            Tokens.add(TokenType." + s.Name + ");\r\n\r\n");
+				regexps.Append(Helper.Indent3 + "Patterns.put(TokenType." + s.Name + ", regex);\r\n");
+				regexps.Append(Helper.Indent3 + "Tokens.add(TokenType." + s.Name + ");\r\n\r\n");
 
 				if (first) first = false;
 				else tokentype.AppendLine(",");
@@ -84,17 +84,6 @@ namespace TinyPG.CodeGenerators.Java
 			}
 
 			return scanner;
-		}
-
-		private string Unverbatim(string v)
-		{
-            if (v[0] == '@')
-            {
-                v = v.Substring(2, v.Length - 3);
-                v = v.Replace(@"\", @"\\");
-                v = "\"" + v.Replace(@"""", "\\\"") + "\"";
-            }
-            return v;
 		}
 	}
 }

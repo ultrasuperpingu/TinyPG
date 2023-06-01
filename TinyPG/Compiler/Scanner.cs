@@ -37,113 +37,113 @@ namespace TinyPG
 			Skipped = new List<Token>();
 
 			SkipList = new List<TokenType>();
-            SkipList.Add(TokenType.WHITESPACE);
-            SkipList.Add(TokenType.COMMENTLINE);
-            SkipList.Add(TokenType.COMMENTBLOCK);
+			SkipList.Add(TokenType.WHITESPACE);
+			SkipList.Add(TokenType.COMMENTLINE);
+			SkipList.Add(TokenType.COMMENTBLOCK);
 
-            regex = new Regex(@"\(", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.BRACKETOPEN, regex);
-            Tokens.Add(TokenType.BRACKETOPEN);
+			regex = new Regex(@"\(", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.BRACKETOPEN, regex);
+			Tokens.Add(TokenType.BRACKETOPEN);
 
-            regex = new Regex(@"\)", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.BRACKETCLOSE, regex);
-            Tokens.Add(TokenType.BRACKETCLOSE);
+			regex = new Regex(@"\)", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.BRACKETCLOSE, regex);
+			Tokens.Add(TokenType.BRACKETCLOSE);
 
-            regex = new Regex(@"\{[^\}]*\}([^};][^}]*\}+)*;", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.CODEBLOCK, regex);
-            Tokens.Add(TokenType.CODEBLOCK);
+			regex = new Regex(@"\{[^\}]*\}([^};][^}]*\}+)*;", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.CODEBLOCK, regex);
+			Tokens.Add(TokenType.CODEBLOCK);
 
-            regex = new Regex(@",", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.COMMA, regex);
-            Tokens.Add(TokenType.COMMA);
+			regex = new Regex(@",", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.COMMA, regex);
+			Tokens.Add(TokenType.COMMA);
 
-            regex = new Regex(@"\[", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.SQUAREOPEN, regex);
-            Tokens.Add(TokenType.SQUAREOPEN);
+			regex = new Regex(@"\[", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.SQUAREOPEN, regex);
+			Tokens.Add(TokenType.SQUAREOPEN);
 
-            regex = new Regex(@"\]", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.SQUARECLOSE, regex);
-            Tokens.Add(TokenType.SQUARECLOSE);
+			regex = new Regex(@"\]", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.SQUARECLOSE, regex);
+			Tokens.Add(TokenType.SQUARECLOSE);
 
-            regex = new Regex(@"=", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.ASSIGN, regex);
-            Tokens.Add(TokenType.ASSIGN);
+			regex = new Regex(@"=", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.ASSIGN, regex);
+			Tokens.Add(TokenType.ASSIGN);
 
-            regex = new Regex(@"\|", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.PIPE, regex);
-            Tokens.Add(TokenType.PIPE);
+			regex = new Regex(@"\|", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.PIPE, regex);
+			Tokens.Add(TokenType.PIPE);
 
-            regex = new Regex(@";", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.SEMICOLON, regex);
-            Tokens.Add(TokenType.SEMICOLON);
+			regex = new Regex(@";", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.SEMICOLON, regex);
+			Tokens.Add(TokenType.SEMICOLON);
 
-            regex = new Regex(@":", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.COLON, regex);
-            Tokens.Add(TokenType.COLON);
+			regex = new Regex(@":", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.COLON, regex);
+			Tokens.Add(TokenType.COLON);
 
-            regex = new Regex(@"default", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.DEFAULT, regex);
-            Tokens.Add(TokenType.DEFAULT);
+			regex = new Regex(@"default", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.DEFAULT, regex);
+			Tokens.Add(TokenType.DEFAULT);
 
-            regex = new Regex(@"(\*|\+|\?)", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.UNARYOPER, regex);
-            Tokens.Add(TokenType.UNARYOPER);
+			regex = new Regex(@"(\*|\+|\?)", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.UNARYOPER, regex);
+			Tokens.Add(TokenType.UNARYOPER);
 
-            regex = new Regex(@"[a-zA-Z_][a-zA-Z0-9_]*", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.IDENTIFIER, regex);
-            Tokens.Add(TokenType.IDENTIFIER);
+			regex = new Regex(@"[a-zA-Z_][a-zA-Z0-9_]*", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.IDENTIFIER, regex);
+			Tokens.Add(TokenType.IDENTIFIER);
 
-            regex = new Regex(@"[a-zA-Z_][a-zA-Z0-9_]*(::[a-zA-Z_][a-zA-Z0-9_]*)*(<[a-zA-Z_][a-zA-Z0-9_]*(::[a-zA-Z_][a-zA-Z0-9_]*)*>)?", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.TYPE, regex);
-            Tokens.Add(TokenType.TYPE);
+			regex = new Regex(@"[a-zA-Z_][a-zA-Z0-9_]*(::[a-zA-Z_][a-zA-Z0-9_]*)*(<[a-zA-Z_][a-zA-Z0-9_]*(::[a-zA-Z_][a-zA-Z0-9_]*)*>)?", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.TYPE, regex);
+			Tokens.Add(TokenType.TYPE);
 
-            regex = new Regex(@"[0-9]+", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.INTEGER, regex);
-            Tokens.Add(TokenType.INTEGER);
+			regex = new Regex(@"[0-9]+", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.INTEGER, regex);
+			Tokens.Add(TokenType.INTEGER);
 
-            regex = new Regex(@"[0-9]*\.[0-9]+", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.DOUBLE, regex);
-            Tokens.Add(TokenType.DOUBLE);
+			regex = new Regex(@"[0-9]*\.[0-9]+", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.DOUBLE, regex);
+			Tokens.Add(TokenType.DOUBLE);
 
-            regex = new Regex(@"(0x[0-9a-fA-F]{6})", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.HEX, regex);
-            Tokens.Add(TokenType.HEX);
+			regex = new Regex(@"(0x[0-9a-fA-F]{6})", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.HEX, regex);
+			Tokens.Add(TokenType.HEX);
 
-            regex = new Regex(@"->", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.ARROW, regex);
-            Tokens.Add(TokenType.ARROW);
+			regex = new Regex(@"->", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.ARROW, regex);
+			Tokens.Add(TokenType.ARROW);
 
-            regex = new Regex(@"<%\s*@", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.DIRECTIVEOPEN, regex);
-            Tokens.Add(TokenType.DIRECTIVEOPEN);
+			regex = new Regex(@"<%\s*@", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.DIRECTIVEOPEN, regex);
+			Tokens.Add(TokenType.DIRECTIVEOPEN);
 
-            regex = new Regex(@"%>", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.DIRECTIVECLOSE, regex);
-            Tokens.Add(TokenType.DIRECTIVECLOSE);
+			regex = new Regex(@"%>", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.DIRECTIVECLOSE, regex);
+			Tokens.Add(TokenType.DIRECTIVECLOSE);
 
-            regex = new Regex(@"^$", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.EOF, regex);
-            Tokens.Add(TokenType.EOF);
+			regex = new Regex(@"^$", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.EOF, regex);
+			Tokens.Add(TokenType.EOF);
 
-            regex = new Regex(@"@?\""(\""\""|[^\""])*\""", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.STRING, regex);
-            Tokens.Add(TokenType.STRING);
+			regex = new Regex(@"@?\""(\""\""|[^\""])*\""", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.STRING, regex);
+			Tokens.Add(TokenType.STRING);
 
-            regex = new Regex(@"[_a-zA-Z0-9.<>#@\""]+", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.DEFAULT_VALUE, regex);
-            Tokens.Add(TokenType.DEFAULT_VALUE);
+			regex = new Regex(@"[_a-zA-Z0-9.<>#@\""]+", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.DEFAULT_VALUE, regex);
+			Tokens.Add(TokenType.DEFAULT_VALUE);
 
-            regex = new Regex(@"\s+", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.WHITESPACE, regex);
-            Tokens.Add(TokenType.WHITESPACE);
+			regex = new Regex(@"\s+", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.WHITESPACE, regex);
+			Tokens.Add(TokenType.WHITESPACE);
 
-            regex = new Regex(@"//[^\n]*\n?", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.COMMENTLINE, regex);
-            Tokens.Add(TokenType.COMMENTLINE);
+			regex = new Regex(@"//[^\n]*\n?", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.COMMENTLINE, regex);
+			Tokens.Add(TokenType.COMMENTLINE);
 
-            regex = new Regex(@"/\*[^*]*\*+(?:[^/*][^*]*\*+)*/", RegexOptions.None | RegexOptions.Compiled);
-            Patterns.Add(TokenType.COMMENTBLOCK, regex);
-            Tokens.Add(TokenType.COMMENTBLOCK);
+			regex = new Regex(@"/\*[^*]*\*+(?:[^/*][^*]*\*+)*/", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.COMMENTBLOCK, regex);
+			Tokens.Add(TokenType.COMMENTBLOCK);
 
 
 		}
@@ -300,51 +300,51 @@ namespace TinyPG
 	public enum TokenType
 	{
 
-            //Non terminal tokens:
-            _NONE_  = 0,
-            _UNDETERMINED_= 1,
+			//Non terminal tokens:
+			_NONE_           = 0,
+			_UNDETERMINED_   = 1,
 
-            //Non terminal tokens:
-            Start   = 2,
-            Directive= 3,
-            NameValue= 4,
-            ExtProduction= 5,
-            Attribute= 6,
-            Params  = 7,
-            Param   = 8,
-            Production= 9,
-            Rule    = 10,
-            Subrule = 11,
-            ConcatRule= 12,
-            Symbol  = 13,
+			//Non terminal tokens:
+			Start            = 2,
+			Directive        = 3,
+			NameValue        = 4,
+			ExtProduction    = 5,
+			Attribute        = 6,
+			Params           = 7,
+			Param            = 8,
+			Production       = 9,
+			Rule             = 10,
+			Subrule          = 11,
+			ConcatRule       = 12,
+			Symbol           = 13,
 
-            //Terminal tokens:
-            BRACKETOPEN= 14,
-            BRACKETCLOSE= 15,
-            CODEBLOCK= 16,
-            COMMA   = 17,
-            SQUAREOPEN= 18,
-            SQUARECLOSE= 19,
-            ASSIGN  = 20,
-            PIPE    = 21,
-            SEMICOLON= 22,
-            COLON   = 23,
-            DEFAULT = 24,
-            UNARYOPER= 25,
-            IDENTIFIER= 26,
-            TYPE    = 27,
-            INTEGER = 28,
-            DOUBLE  = 29,
-            HEX     = 30,
-            ARROW   = 31,
-            DIRECTIVEOPEN= 32,
-            DIRECTIVECLOSE= 33,
-            EOF     = 34,
-            STRING  = 35,
-            DEFAULT_VALUE= 36,
-            WHITESPACE= 37,
-            COMMENTLINE= 38,
-            COMMENTBLOCK= 39
+			//Terminal tokens:
+			BRACKETOPEN      = 14,
+			BRACKETCLOSE     = 15,
+			CODEBLOCK        = 16,
+			COMMA            = 17,
+			SQUAREOPEN       = 18,
+			SQUARECLOSE      = 19,
+			ASSIGN           = 20,
+			PIPE             = 21,
+			SEMICOLON        = 22,
+			COLON            = 23,
+			DEFAULT          = 24,
+			UNARYOPER        = 25,
+			IDENTIFIER       = 26,
+			TYPE             = 27,
+			INTEGER          = 28,
+			DOUBLE           = 29,
+			HEX              = 30,
+			ARROW            = 31,
+			DIRECTIVEOPEN    = 32,
+			DIRECTIVECLOSE   = 33,
+			EOF              = 34,
+			STRING           = 35,
+			DEFAULT_VALUE    = 36,
+			WHITESPACE       = 37,
+			COMMENTLINE      = 38,
+			COMMENTBLOCK     = 39
 	}
 
 	public class Token

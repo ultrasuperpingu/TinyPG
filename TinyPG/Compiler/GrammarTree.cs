@@ -152,7 +152,20 @@ namespace TinyPG.Compiler
 					if (g.Directives.Find(name) != null)
 					{
 						tree.Errors.Add(new ParseError("Directive '" + name + "' is already defined", 0x1030, node.Nodes[1]));
-						return null; ;
+						return null;
+					}
+					if (name == "TextHighlighter")
+					{
+						var decl = g.Directives.Find("TinyPG");
+						if (decl != null && decl.ContainsKey("Language"))
+						{
+							var lang=CodeGenerators.CodeGeneratorFactory.GetSupportedLanguage(decl["Language"]);
+							if (lang != CodeGenerators.SupportedLanguage.CSharp && lang != CodeGenerators.SupportedLanguage.VBNet)
+							{
+								tree.Errors.Add(new ParseError("Directive '" + name + "' is not supported with language " + decl["Language"], 0x1030, node.Nodes[1]));
+								return null;
+							}
+						}
 					}
 					break;
 				default:
@@ -179,10 +192,14 @@ namespace TinyPG.Compiler
 			GrammarNode node = (GrammarNode)paramlist[2];
 
 			string key = node.Nodes[0].Token.Text;
-			// TODO:Manage escape sequences and @ correctly (probably need to modify string def in BNF Grammar)
-			string value = node.Nodes[2].Token.Text.Substring(1, node.Nodes[2].Token.Text.Length - 2);
-			if (value.StartsWith("\""))
-				value = value.Substring(1);
+			// TODO (partially done):Manage escape sequences and @ correctly (probably need to modify string def in BNF Grammar)
+			//string value = node.Nodes[2].Token.Text.Substring(1, node.Nodes[2].Token.Text.Length - 2);
+			//if (value.StartsWith("\""))
+			//	value = value.Substring(1);
+			string value = node.Nodes[2].Token.Text;
+			value = Helper.Unverbatim(value);
+			value = value.Substring(1, node.Nodes[2].Token.Text.Length - 2);
+
 
 			directive[key] = value;
 
@@ -195,6 +212,7 @@ namespace TinyPG.Compiler
 					names.Add("OutputPath");
 					names.Add("TemplatePath");
 					names.Add("Language");
+					names.Add("RegexCompiled");
 
 					if (key == "TemplatePath")
 						if (grammer.GetTemplatePath() == null)
@@ -256,10 +274,10 @@ namespace TinyPG.Compiler
 					if (symbol is NonTerminalSymbol)
 						tree.Errors.Add(new ParseError("Attribute for non-terminal rule not allowed: " + node.Nodes[1].Token.Text, 0x1035, node));
 
-					if (symbol.Attributes["Color"].Length != 1 && symbol.Attributes["Color"].Length != 3)
+					if (symbol.Attributes["Color"] == null || symbol.Attributes["Color"].Length != 1 && symbol.Attributes["Color"].Length != 3)
 						tree.Errors.Add(new ParseError("Attribute " + node.Nodes[1].Token.Text + " has too many or missing parameters", 0x103A, node.Nodes[1]));
 
-					for (int i = 0; i < symbol.Attributes["Color"].Length; i++)
+					for (int i = 0; symbol.Attributes["Color"] != null && i < symbol.Attributes["Color"].Length; i++)
 					{
 						if (symbol.Attributes["Color"][i] is string)
 						{
@@ -337,6 +355,11 @@ namespace TinyPG.Compiler
 				TerminalSymbol term = g.Symbols.Find(Nodes[0].Token.Text) as TerminalSymbol;
 				if (term == null)
 					tree.Errors.Add(new ParseError("Symbol '" + Nodes[0].Token.Text + "' is not declared. ", 0x1040, Nodes[0]));
+				if (Nodes[3].Token.Type == TokenType.COLON)
+					tree.Errors.Add(new ParseError("Terminal Symbol '" + Nodes[0].Token.Text + "' cannot declare a return type. ", 0x1040, Nodes[0]));
+
+				if (Nodes[3].Token.Type == TokenType.CODEBLOCK || Nodes.Count > 5 && Nodes[5].Token.Type == TokenType.CODEBLOCK|| Nodes.Count > 9 && Nodes[9].Token.Type == TokenType.CODEBLOCK)
+					tree.Errors.Add(new ParseError("Terminal Symbol '" + Nodes[0].Token.Text + "' cannot declare a code block. ", 0x1040, Nodes[0]));
 			}
 			else
 			{
@@ -346,27 +369,27 @@ namespace TinyPG.Compiler
 				Rule r = (Rule)Nodes[2].Eval(tree, g, nts);
 				if (nts != null)
 					nts.Rules.Add(r);
-                
+
 				if (Nodes[3].Token.Type == TokenType.COLON)
 				{
-                    nts.ReturnType = Nodes[4].Token.Text.ToString();
-                    if (Nodes[5].Token.Type == TokenType.DEFAULT)
-                    {
-                        nts.ReturnTypeDefault = Nodes[7].Token.Text.ToString();
-                    }
-                }
+					nts.ReturnType = Nodes[4].Token.Text.ToString();
+					if (Nodes[5].Token.Type == TokenType.DEFAULT)
+					{
+						nts.ReturnTypeDefault = Nodes[7].Token.Text.ToString();
+					}
+				}
 
 
-                if (Nodes[3].Token.Type == TokenType.CODEBLOCK || Nodes.Count > 5 && Nodes[5].Token.Type == TokenType.CODEBLOCK|| Nodes.Count > 9 && Nodes[9].Token.Type == TokenType.CODEBLOCK)
+				if (Nodes[3].Token.Type == TokenType.CODEBLOCK || Nodes.Count > 5 && Nodes[5].Token.Type == TokenType.CODEBLOCK|| Nodes.Count > 9 && Nodes[9].Token.Type == TokenType.CODEBLOCK)
 				{
 					string codeblock = null;
 					if (Nodes[3].Token.Type == TokenType.CODEBLOCK)
 						codeblock = Nodes[3].Token.Text;
 					else if(Nodes[5].Token.Type == TokenType.CODEBLOCK)
-                        codeblock = Nodes[5].Token.Text;
-                    else if (Nodes[9].Token.Type == TokenType.CODEBLOCK)
-                        codeblock = Nodes[9].Token.Text;
-                    nts.CodeBlock = codeblock;
+						codeblock = Nodes[5].Token.Text;
+					else if (Nodes[9].Token.Type == TokenType.CODEBLOCK)
+						codeblock = Nodes[9].Token.Text;
+					nts.CodeBlock = codeblock;
 					ValidateCodeBlock(tree, nts, Nodes[3]);
 
 					// beautify the codeblock format

@@ -126,7 +126,7 @@ namespace TinyPG.Compiler
 				if (Result.Errors.Count > 0)
 				{
 					foreach (CodeDom.CompilerError o in Result.Errors)
-						Errors.Add(o.ErrorText + " on line " + o.Line.ToString());
+						Errors.Add(o.ErrorNumber.ToString() + " (" + o.Line.ToString()+"," + o.Column.ToString()+"): " + o.ErrorText);
 				}
 				else
 					assembly = Result.CompiledAssembly;

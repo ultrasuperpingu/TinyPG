@@ -26,32 +26,38 @@ namespace TinyPG.CodeGenerators.Java
 			StringBuilder evalmethods = new StringBuilder();
 
 			// build non terminal tokens
-			foreach (Symbol s in Grammar.GetNonTerminals())
+			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
-				evalsymbols.AppendLine("                case " + s.Name + ":");
-				evalsymbols.AppendLine("                    Value = Eval" + s.Name + "(tree, paramlist);");
-				//evalsymbols.AppendLine("                Value = Token.Text;");
-				evalsymbols.AppendLine("                    break;");
+				evalsymbols.AppendLine("				case " + s.Name + ":");
+				evalsymbols.AppendLine("					Value = Eval" + s.Name + "(tree, paramlist);");
+				//evalsymbols.AppendLine("					Value = Token.Text;");
+				evalsymbols.AppendLine("					break;");
 
-				evalmethods.AppendLine("        protected Object Eval" + s.Name + "(ParseTree tree, Object... paramlist)");
-				evalmethods.AppendLine("        {");
+				string returnType = "object";
+				if (!string.IsNullOrEmpty(s.ReturnType))
+					returnType = s.ReturnType;
+				string defaultReturnValue = "default("+returnType+")";
+				if (!string.IsNullOrEmpty(s.ReturnTypeDefault))
+					defaultReturnValue = s.ReturnTypeDefault;
+				evalmethods.AppendLine("		protected " + returnType + " Eval" + s.Name + "(ParseTree tree, Object... paramlist)");
+				evalmethods.AppendLine("		{");
 				if (s.CodeBlock != null)
 				{
 					// paste user code here
-					evalmethods.AppendLine(FormatCodeBlock(s as NonTerminalSymbol));
+					evalmethods.AppendLine(FormatCodeBlock(s));
 				}
 				else
 				{
 					if (s.Name == "Start") // return a nice warning message from root object.
-						evalmethods.AppendLine("            return \"Could not interpret input; no semantics implemented.\";");
+						evalmethods.AppendLine("			return "+defaultReturnValue+"; //\"Could not interpret input; no semantics implemented.\";");
 					else
-						evalmethods.AppendLine("            for (ParseNode node : getNodes())\r\n" +
-											   "                node.Eval(tree, paramlist);\r\n" +
-											   "            return null;");
+						evalmethods.AppendLine("			for (ParseNode node : getNodes())\r\n" +
+											   "				node.Eval(tree, paramlist);\r\n" +
+											   "			return "+defaultReturnValue+";");
 
 					// otherwise simply not implemented!
 				}
-				evalmethods.AppendLine("        }\r\n");
+				evalmethods.AppendLine("		}\r\n");
 			}
 
 			parsetree = parsetree.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
@@ -109,7 +115,7 @@ namespace TinyPG.CodeGenerators.Java
 				Symbol s = symbols.Find(match.Groups["var"].Value);
 				if (s == null)
 				{
-					//TOD: handle error situation
+					//TODO: handle error situation
 					//Errors.Add("Variable $" + match.Groups["var"].Value + " cannot be matched.");
 					break; // error situation
 				}
@@ -124,8 +130,30 @@ namespace TinyPG.CodeGenerators.Java
 				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
 				match = var.Match(codeblock);
 			}
+			
+			var = new Regex(@"\?(?<var>[a-zA-Z_0-9]+)(\[(?<index>[^]]+)\])?", RegexOptions.Compiled);
+			match = var.Match(codeblock);
+			while (match.Success)
+			{
+				Symbol s = symbols.Find(match.Groups["var"].Value);
+				if (s == null)
+				{
+					//TODO: handle error situation
+					//Errors.Add("Variable $" + match.Groups["var"].Value + " cannot be matched.");
+					break; // error situation
+				}
+				string indexer = "0";
+				if (match.Groups["index"].Value.Length > 0)
+				{
+					indexer = match.Groups["index"].Value;
+				}
 
-			codeblock = "            " + codeblock.Replace("\n", "\r\n        ");
+				string replacement = "this.IsTokenPresent(TokenType." + s.Name + ", " + indexer + ")";
+
+				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
+				match = var.Match(codeblock);
+			}
+			codeblock = Helper.Indent3 + codeblock.Replace("\n", "\r\n" + Helper.Indent2);
 			return codeblock;
 		}
 	}

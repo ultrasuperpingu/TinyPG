@@ -16,9 +16,19 @@ namespace <%Namespace%>
 		ParseTree* tree;
 
 	public:
-		inline Parser(Scanner& scanner) : scanner(scanner)
+		inline Parser(Scanner& scanner) : scanner(scanner), tree(NULL)
 		{
 		}
+
+		virtual inline ~Parser()
+		{
+			if (tree != NULL)
+			{
+				delete tree;
+				tree = NULL;
+			}
+		}
+
 
 		inline <%IParseTree%> Parse(std::string input)
 		{

@@ -54,12 +54,12 @@ namespace TinyPG.CodeGenerators.Java
 		{
 
 			StringBuilder sb = new StringBuilder();
-			sb.AppendLine("        private void Parse" + s.Name + "(ParseNode parent)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
-			sb.AppendLine("        {");
-			sb.AppendLine("            Token tok;");
-			sb.AppendLine("            ParseNode n;");
-			sb.AppendLine("            ParseNode node = parent.CreateNode(scanner.GetToken(TokenType." + s.Name + "), \"" + s.Name + "\");");
-			sb.AppendLine("            parent.getNodes().add(node);");
+			sb.AppendLine("		private void Parse" + s.Name + "(ParseNode parent)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("		{");
+			sb.AppendLine("			Token tok;");
+			sb.AppendLine("			ParseNode n;");
+			sb.AppendLine("			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType." + s.Name + "), \"" + s.Name + "\");");
+			sb.AppendLine("			parent.getNodes().add(node);");
 			sb.AppendLine("");
 
 			foreach (Rule rule in s.Rules)
@@ -67,8 +67,8 @@ namespace TinyPG.CodeGenerators.Java
 				sb.AppendLine(GenerateProductionRuleCode(s.Rules[0], 3));
 			}
 
-			sb.AppendLine("            parent.Token.UpdateRange(node.Token);");
-			sb.AppendLine("        }" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("			parent.Token.UpdateRange(node.Token);");
+			sb.AppendLine("		}" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
 			sb.AppendLine();
 			return sb.ToString();
 		}
@@ -79,7 +79,7 @@ namespace TinyPG.CodeGenerators.Java
 			int i = 0;
 			Symbols firsts = null;
 			StringBuilder sb = new StringBuilder();
-			string Indent = IndentTabs(indent);
+			string Indent = Helper.Indent(indent);
 
 			switch (r.Type)
 			{
@@ -245,14 +245,14 @@ namespace TinyPG.CodeGenerators.Java
 					{
 						foreach (TerminalSymbol s in rule.GetFirstTerminals())
 						{
-							sb.AppendLine(Indent + "    case " + s.Name + ":");
+							sb.AppendLine(Indent + "	case " + s.Name + ":");
 						}
 						sb.Append(GenerateProductionRuleCode(rule, indent + 2));
-						sb.AppendLine(Indent + "        break;");
+						sb.AppendLine(Indent + "		break;");
 					}
-					sb.AppendLine(Indent + "    default:");
-					sb.AppendLine(Indent + "        tree.Errors.add(new ParseError(\"Unexpected token '\" + tok.getText().replace(\"\\n\", \"\") + \"' found. Expected " + expectedTokens + ".\", 0x0002, tok));");
-					sb.AppendLine(Indent + "        break;");
+					sb.AppendLine(Indent + "	default:");
+					sb.AppendLine(Indent + "		tree.Errors.add(new ParseError(\"Unexpected token '\" + tok.getText().replace(\"\\n\", \"\") + \"' found. Expected " + expectedTokens + ".\", 0x0002, tok));");
+					sb.AppendLine(Indent + "		break;");
 					sb.AppendLine(Indent + "}" + Helper.AddComment("Choice Rule"));
 					break;
 				default:
@@ -261,14 +261,5 @@ namespace TinyPG.CodeGenerators.Java
 			return sb.ToString();
 		}
 
-		// replaces tabs by spaces, so outlining is more consistent
-		public static string IndentTabs(int indent)
-		{
-			string t = "";
-			for (int i = 0; i < indent; i++)
-				t += "    ";
-
-			return t;
-		}
 	}
 }

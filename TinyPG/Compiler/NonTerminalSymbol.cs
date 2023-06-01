@@ -23,9 +23,9 @@ namespace TinyPG.Compiler
 		private int visitCount;
 		public Symbols FirstTerminals;
 		public string ReturnType;
-        public string ReturnTypeDefault;
+		public string ReturnTypeDefault;
 
-        public NonTerminalSymbol()
+		public NonTerminalSymbol()
 			: this("NTS_" + ++counter)
 		{
 		}
@@ -40,15 +40,15 @@ namespace TinyPG.Compiler
 		}
 
 		/*
-        internal void DetermineLookAheadTree(LookAheadNode node)
-        {
-            //recursion here
-            foreach (Rule rule in Rules)
-            {
-                rule.DetermineLookAheadTree(node);
-            }
-        }
-        */
+		internal void DetermineLookAheadTree(LookAheadNode node)
+		{
+			//recursion here
+			foreach (Rule rule in Rules)
+			{
+				rule.DetermineLookAheadTree(node);
+			}
+		}
+		*/
 		internal bool DetermineFirstTerminals()
 		{
 			// check if nonterminal has already been visited x times

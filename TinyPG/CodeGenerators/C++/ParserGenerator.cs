@@ -52,16 +52,14 @@ namespace TinyPG.CodeGenerators.Cpp
 		// generates the method header and body
 		private string GenerateParseMethod(NonTerminalSymbol s)
 		{
-			string Indent2 = IndentTabs(2);
-			string Indent3 = IndentTabs(3);
 			StringBuilder sb = new StringBuilder();
-			sb.AppendLine(Indent2 + "inline void Parse" + s.Name + "(ParseNode* parent)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
-			sb.AppendLine(Indent2 + "{");
-			sb.AppendLine(Indent3 + "Token tok;");
-			sb.AppendLine(Indent3 + "ParseNode* n;");
-			sb.AppendLine(Indent3 + "bool found;");
-			sb.AppendLine(Indent3 + "ParseNode* node = parent->CreateNode(scanner.GetToken(TokenType::" + s.Name + "), \"" + s.Name + "\");");
-			sb.AppendLine(Indent3 + "parent->Nodes.push_back(node);");
+			sb.AppendLine(Helper.Indent2 + "inline void Parse" + s.Name + "(ParseNode* parent)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
+			sb.AppendLine(Helper.Indent2 + "{");
+			sb.AppendLine(Helper.Indent3 + "Token tok;");
+			sb.AppendLine(Helper.Indent3 + "ParseNode* n;");
+			sb.AppendLine(Helper.Indent3 + "bool found;");
+			sb.AppendLine(Helper.Indent3 + "ParseNode* node = parent->CreateNode(scanner.GetToken(TokenType::" + s.Name + "), \"" + s.Name + "\");");
+			sb.AppendLine(Helper.Indent3 + "parent->Nodes.push_back(node);");
 			sb.AppendLine("");
 
 			if (s.Rules.Count == 1)
@@ -69,8 +67,8 @@ namespace TinyPG.CodeGenerators.Cpp
 			else
 				throw new Exception("Internal error");
 
-			sb.AppendLine(Indent3 + "parent->TokenVal.UpdateRange(node->TokenVal);");
-			sb.AppendLine(Indent2 + "}" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
+			sb.AppendLine(Helper.Indent3 + "parent->TokenVal.UpdateRange(node->TokenVal);");
+			sb.AppendLine(Helper.Indent2 + "}" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
 			sb.AppendLine();
 			return sb.ToString();
 		}
@@ -82,7 +80,7 @@ namespace TinyPG.CodeGenerators.Cpp
 			Symbols firsts = null;
 			Symbols firstsExtended = null;
 			StringBuilder sb = new StringBuilder();
-			string Indent = IndentTabs(indent);
+			string Indent = Helper.Indent(indent);
 			switch (r.Type)
 			{
 				case RuleType.Terminal:
@@ -92,8 +90,8 @@ namespace TinyPG.CodeGenerators.Cpp
 					sb.AppendLine(Indent + "node->TokenVal.UpdateRange(tok);");
 					sb.AppendLine(Indent + "node->Nodes.push_back(n);");
 					sb.AppendLine(Indent + "if (tok.Type != TokenType::" + r.Symbol.Name + ") {");
-					sb.AppendLine(Indent + IndentString + "tree->Errors.push_back(ParseError(\"Unexpected token '\" + replace(tok.Text, \"\\n\", \"\") + \"' found. Expected " + r.Symbol.Name + "\", 0x1001, tok));");
-					sb.AppendLine(Indent + IndentString + "return;");
+					sb.AppendLine(Indent + Helper.Indent1 + "tree->Errors.push_back(ParseError(\"Unexpected token '\" + replace(tok.Text, \"\\n\", \"\") + \"' found. Expected " + r.Symbol.Name + "\", 0x1001, tok));");
+					sb.AppendLine(Indent + Helper.Indent1 + "return;");
 					sb.AppendLine(Indent + "}");
 					break;
 				case RuleType.NonTerminal:
@@ -143,16 +141,16 @@ namespace TinyPG.CodeGenerators.Cpp
 					firsts = r.GetFirstTerminals();
 					firstsExtended = CollectExpectedTokens(rules, index + 1);
 					firstsExtended.AddRange(firsts);
-					sb.AppendLine(Indent + IndentString + "if(!found) {");
-					sb.Append(Indent + IndentString + IndentString + "tok = scanner.LookAhead({");
+					sb.AppendLine(Indent + Helper.Indent1 + "if(!found) {");
+					sb.Append(Indent + Helper.Indent2 + "tok = scanner.LookAhead({");
 					AppendTokenList(firsts, sb);
 					sb.AppendLine("});" + Helper.AddComment("OneOrMore Rule"));
-					sb.AppendLine(Indent + IndentString + "found = true;");
-					sb.AppendLine(Indent + IndentString + "} else {");
-					sb.Append(Indent + IndentString + IndentString + "tok = scanner.LookAhead({");
+					sb.AppendLine(Indent + Helper.Indent1 + "found = true;");
+					sb.AppendLine(Indent + Helper.Indent1 + "} else {");
+					sb.Append(Indent + Helper.Indent2 + "tok = scanner.LookAhead({");
 					AppendTokenList(firstsExtended, sb);
 					sb.AppendLine("});" + Helper.AddComment("OneOrMore Rule"));
-					sb.AppendLine(Indent + IndentString + "}");
+					sb.AppendLine(Indent + Helper.Indent1 + "}");
 					sb.Append(Indent + "} while (");
 					AppendTokenCondition(firsts, sb, Indent);
 					sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
@@ -197,14 +195,14 @@ namespace TinyPG.CodeGenerators.Cpp
 					{
 						foreach (TerminalSymbol s in r.Rules[i].GetFirstTerminals())
 						{
-							sb.AppendLine(Indent + IndentString + "case TokenType::" + s.Name + ":");
+							sb.AppendLine(Indent + Helper.Indent1 + "case TokenType::" + s.Name + ":");
 						}
 						sb.Append(GenerateProductionRuleCode(r.Rules, i, indent + 2));
-						sb.AppendLine(Indent + IndentString + IndentString + "break;");
+						sb.AppendLine(Indent + Helper.Indent2 + "break;");
 					}
-					sb.AppendLine(Indent + IndentString + "default:");
-					sb.AppendLine(Indent + IndentString + IndentString + "tree->Errors.push_back(ParseError(\"Unexpected token '\" + replace(tok.Text, \"\\n\", \"\") + \"' found. Expected " + expectedTokens + ".\", 0x0002, tok));");
-					sb.AppendLine(Indent + IndentString + IndentString + "break;");
+					sb.AppendLine(Indent + Helper.Indent1 + "default:");
+					sb.AppendLine(Indent + Helper.Indent2 + "tree->Errors.push_back(ParseError(\"Unexpected token '\" + replace(tok.Text, \"\\n\", \"\") + \"' found. Expected " + expectedTokens + ".\", 0x0002, tok));");
+					sb.AppendLine(Indent + Helper.Indent2 + "break;");
 					sb.AppendLine(Indent + "}" + Helper.AddComment("Choice Rule"));
 					break;
 				default:
@@ -254,16 +252,5 @@ namespace TinyPG.CodeGenerators.Cpp
 
 		}
 
-		// replaces tabs by spaces, so outlining is more consistent
-		public static string IndentTabs(int indent)
-		{
-			string t = "";
-			for (int i = 0; i < indent; i++)
-				t += IndentString;
-
-			return t;
-		}
-
-		public static string IndentString = "    ";
 	}
 }

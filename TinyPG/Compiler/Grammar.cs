@@ -121,19 +121,19 @@ namespace TinyPG.Compiler
 		}
 
 		/*
-        private LookAheadTree DetermineLookAheadTree()
-        {
-            LookAheadTree tree = new LookAheadTree();
-            foreach (NonTerminalSymbol nts in GetNonTerminals())
-            {
-                tree.NonTerminal = nts;
-                nts.DetermineLookAheadTree(tree);
-                //nts.DetermineFirstTerminals();
-                tree.PrintTree();
-            }
-            return tree;
-        }
-        */
+		private LookAheadTree DetermineLookAheadTree()
+		{
+			LookAheadTree tree = new LookAheadTree();
+			foreach (NonTerminalSymbol nts in GetNonTerminals())
+			{
+				tree.NonTerminal = nts;
+				nts.DetermineLookAheadTree(tree);
+				//nts.DetermineFirstTerminals();
+				tree.PrintTree();
+			}
+			return tree;
+		}
+		*/
 
 		private void DetermineFirsts()
 		{
@@ -168,20 +168,20 @@ namespace TinyPG.Compiler
 					case "vb.net":
 					case "vb":
 						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
-                            Path.Combine("Templates","VB") + Path.DirectorySeparatorChar;
+							Path.Combine("Templates","VB") + Path.DirectorySeparatorChar;
 						break;
-                    case "java":
-                        d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
-                            Path.Combine("Templates", "Java") + Path.DirectorySeparatorChar;
-                        break;
-                    case "cpp":
-                    case "c++":
-                        d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
-                            Path.Combine("Templates", "C++") + Path.DirectorySeparatorChar;
-                        break;
-                    default:
+					case "java":
 						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
-                            Path.Combine("Templates","C#") + Path.DirectorySeparatorChar;
+							Path.Combine("Templates", "Java") + Path.DirectorySeparatorChar;
+						break;
+					case "cpp":
+					case "c++":
+						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
+							Path.Combine("Templates", "C++") + Path.DirectorySeparatorChar;
+						break;
+					default:
+						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
+							Path.Combine("Templates","C#") + Path.DirectorySeparatorChar;
 						break;
 				}
 			}

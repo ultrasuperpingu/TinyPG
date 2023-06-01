@@ -192,4 +192,4 @@ class ParseNode<%IParseNode%>
 
 <%ParseTreeCustomCode%>
 }
-    
+
