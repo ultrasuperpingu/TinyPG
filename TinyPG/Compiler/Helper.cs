@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 // extends the System.Text namespace
 namespace System.Text
@@ -18,13 +19,9 @@ namespace System.Text
 	/// some handy to use static helper functions
 	/// Note that this class is used by the TinyTG.Compiler classes for string formatting
 	/// </summary>
-	public sealed class Helper
+	public static class Helper
 	{
-		private Helper()
-		{
-		}
-
-		public static string Reverse(string text)
+		public static string Reverse(this string text)
 		{
 			char[] charArray = new char[text.Length];
 			int len = text.Length - 1;
@@ -42,15 +39,14 @@ namespace System.Text
 			return r;
 		}
 
-		public static string Indent(int indentcount)
+		public static string Indent(int indentcount, string indentString = IndentString)
 		{
 			string t = "";
 			for (int i = 0; i < indentcount; i++)
-				t += IndentString;
+				t += indentString;
 
 			return t;
 		}
-
 		/// <summary>
 		/// will add a comment that can be used for debugging problems in generated code
 		/// comment will only be added if profile is set to Debug mode
@@ -80,30 +76,29 @@ namespace System.Text
 			}
 			return v;
 		}
-		private static string _IndentString = "\t";
-		public static string IndentString
+		public const string IndentString = "\t";
+		public const string Indent1 = IndentString;
+		public const string Indent2 = IndentString + IndentString;
+		public const string Indent3 = Indent2 + IndentString;
+		public static string Tabify(this string input, byte spacesPerIndent = 4)
 		{
-			get => _IndentString;
-			set
-			{
-				_IndentString = value;
-				Indent2 = _IndentString + _IndentString;
-				Indent3 = Indent2 + _IndentString;
-			}
+			Regex r = new Regex(@"(\G|^)(\t*) {"+spacesPerIndent+"}", RegexOptions.Multiline);
+			input = r.Replace(input, "$1$2\t");
+			r = new Regex("^(\t*)[ ]+", RegexOptions.Multiline); 
+			return r.Replace(input, "$1"); ;
 		}
-		public static string Indent1
+
+		public static string Untabify(this string input, byte spacesPerIndent = 4, bool cleanup = true)
 		{
-			get { return _IndentString; }
+			if(cleanup)
+				input=Tabify(input, spacesPerIndent);
+			Regex r = new Regex(@"(\G|^)(\t)", RegexOptions.Multiline);
+			return r.Replace(input, Indent(spacesPerIndent, " "));
 		}
-		public static string Indent2
+		public static string FixNewLines(this string input)
 		{
-			get;
-			private set;
-		} = "\t\t";
-		public static string Indent3
-		{
-			get;
-			private set;
-		} = "\t\t\t";
+			// Inefficient way to do it...
+			return input.Replace("\r\n", "\n").Replace('\r','\n').Replace("\n", Environment.NewLine); ;
+		}
 	}
 }

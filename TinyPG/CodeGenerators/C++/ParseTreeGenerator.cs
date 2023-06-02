@@ -127,7 +127,6 @@ namespace TinyPG.CodeGenerators.Cpp
 			}
 
 			parsetree = parsetree.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
-
 			parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 			parsetree = parsetree.Replace(@"<%ParseError%>", "");
 			parsetree = parsetree.Replace(@"<%ParseErrors%>", "std::vector<ParseError>");
@@ -204,7 +203,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
 				match = var.Match(codeblock);
 			}
-			codeblock = Helper.Indent3 + codeblock.Replace("\n", "\r\n" + Helper.Indent2);
+			codeblock = "			" + codeblock.Replace("\n", "\r\n		");
 			return codeblock;
 		}
 	}

@@ -24,7 +24,6 @@ public class Scanner
 	private Token LookAheadToken;
 	private ArrayList<TokenType> Tokens;
 	private ArrayList<TokenType> SkipList; // tokens to be skipped
-	private static final TokenType FileAndLine = null;
 	private static final List<TokenType> tokenTypeList = Arrays.asList(TokenType.values());
 	
 	public Scanner()
@@ -164,18 +163,6 @@ public class Scanner
 				tok.setSkipped (Skipped); // assign prior skips to this token
 				Skipped=new ArrayList<Token>(); //reset skips
 			}
-			// Check to see if the parsed token wants to 
-			// alter the file and line number.
-			if (tok.Type == FileAndLine)
-			{
-				Matcher match = Patterns.get(tok.Type).matcher(tok.getText());
-				String fileMatch = match.group("File");
-				if (fileMatch != null)
-					currentFile = fileMatch.replace("\\\\", "\\");
-				String lineMatch = match.group("Line");
-				if (lineMatch != null)
-					currentline = Integer.parseInt(lineMatch);
-				}
 		}
 		while (SkipList.contains(tok.Type));
 
@@ -295,6 +282,7 @@ class Token<%IToken%>
 		if (token.getEndPos() > endpos) endpos = token.getEndPos();
 	}
 
+	@Override
 	public String toString()
 	{
 		if (text != null)

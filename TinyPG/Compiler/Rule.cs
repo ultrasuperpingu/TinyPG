@@ -80,7 +80,6 @@ namespace TinyPG.Compiler
 		}
 		public Symbols GetFirstTerminals()
 		{
-			Symbols visited = new Symbols();
 			Symbols FirstTerminals = new Symbols();
 			DetermineFirstTerminals(FirstTerminals);
 			return FirstTerminals;

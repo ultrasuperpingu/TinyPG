@@ -11,12 +11,12 @@
 //	context.insert(std::pair<std::string, int>("_5", 5));
 //	context.insert(std::pair<std::string, int>("_15", 15));
 //	tree.setContext(&context);
-//	std::cerr << tree.Nodes[0]->EvalStart(tree, {}) << std::endl;
+//	std::cerr << tree.Eval({}) << std::endl;
 //}
 
-<% @TinyPG Language="Cpp" Namespace="TinyPG" OutputPath="TestCpp\TestParser" %>
+<% @TinyPG Language="Cpp" Namespace="TinyPG" OutputPath="TestCpp\SimpleExpr" %>
 
-// include text highlighting as part of the input window
+// this is not supported in Cpp
 //<% @TextHighlighter Generate="true" %>
 
 <% @ParseTree CustomCode="

@@ -15,10 +15,11 @@ namespace TinyPG.CodeGenerators.Java
 
 		public string Generate(Grammar Grammar, bool Debug)
 		{
-			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
-				return null;
 			if (Debug)
 				throw new Exception("Java cannot be generated in debug mode");
+
+			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
+				return null;
 
 			// generate the parser file
 			StringBuilder parsers = new StringBuilder();
@@ -45,21 +46,21 @@ namespace TinyPG.CodeGenerators.Java
 		{
 
 			StringBuilder sb = new StringBuilder();
-			sb.AppendLine("		private void Parse" + s.Name + "(ParseNode parent)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
-			sb.AppendLine("		{");
-			sb.AppendLine("			Token tok;");
-			sb.AppendLine("			ParseNode n;");
-			sb.AppendLine("			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType." + s.Name + "), \"" + s.Name + "\");");
-			sb.AppendLine("			parent.getNodes().add(node);");
+			sb.AppendLine("	private void Parse" + s.Name + "(ParseNode parent)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("	{");
+			sb.AppendLine("		Token tok;");
+			sb.AppendLine("		ParseNode n;");
+			sb.AppendLine("		ParseNode node = parent.CreateNode(scanner.GetToken(TokenType." + s.Name + "), \"" + s.Name + "\");");
+			sb.AppendLine("		parent.getNodes().add(node);");
 			sb.AppendLine("");
 
 			foreach (Rule rule in s.Rules)
 			{
-				sb.AppendLine(GenerateProductionRuleCode(s.Rules[0], 3));
+				sb.AppendLine(GenerateProductionRuleCode(s.Rules[0], 2));
 			}
 
-			sb.AppendLine("			parent.Token.UpdateRange(node.Token);");
-			sb.AppendLine("		}" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("		parent.Token.UpdateRange(node.Token);");
+			sb.AppendLine("	}" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
 			sb.AppendLine();
 			return sb.ToString();
 		}
@@ -81,8 +82,8 @@ namespace TinyPG.CodeGenerators.Java
 					sb.AppendLine(Indent + "node.Token.UpdateRange(tok);");
 					sb.AppendLine(Indent + "node.getNodes().add(n);");
 					sb.AppendLine(Indent + "if (tok.Type != TokenType." + r.Symbol.Name + ") {");
-					sb.AppendLine(Indent + "    tree.Errors.add(new ParseError(\"Unexpected token '\" + tok.getText().replace(\"\\n\", \"\") + \"' found. Expected \" + TokenType." + r.Symbol.Name + ".toString(), 0x1001, tok));");
-					sb.AppendLine(Indent + "    return;");
+					sb.AppendLine(Indent + "	tree.Errors.add(new ParseError(\"Unexpected token '\" + tok.getText().replace(\"\\n\", \"\") + \"' found. Expected \" + TokenType." + r.Symbol.Name + ".toString(), 0x1001, tok));");
+					sb.AppendLine(Indent + "	return;");
 					sb.AppendLine(Indent + "}");
 					break;
 				case RuleType.NonTerminal:
@@ -100,25 +101,11 @@ namespace TinyPG.CodeGenerators.Java
 					firsts = r.GetFirstTerminals();
 					i = 0;
 					sb.Append(Indent + "tok = scanner.LookAhead(");
-					foreach (TerminalSymbol s in firsts)
-					{
-						if (i == 0)
-							sb.Append("TokenType." + s.Name);
-						else
-							sb.Append(", TokenType." + s.Name);
-						i++;
-					}
+					AppendTokenList(firsts, sb);
 					sb.AppendLine(");" + Helper.AddComment("ZeroOrMore Rule"));
 
-					i = 0;
-					foreach (TerminalSymbol s in firsts)
-					{
-						if (i == 0)
-							sb.Append(Indent + "while (tok.Type == TokenType." + s.Name);
-						else
-							sb.Append("\r\n" + Indent + "    || tok.Type == TokenType." + s.Name);
-						i++;
-					}
+					sb.Append(Indent + "while (");
+					AppendTokenCondition(firsts, sb, Indent);
 					sb.AppendLine(")");
 					sb.AppendLine(Indent + "{");
 
@@ -129,14 +116,7 @@ namespace TinyPG.CodeGenerators.Java
 
 					i = 0;
 					sb.Append(Indent + "tok = scanner.LookAhead(");
-					foreach (TerminalSymbol s in firsts)
-					{
-						if (i == 0)
-							sb.Append("TokenType." + s.Name);
-						else
-							sb.Append(", TokenType." + s.Name);
-						i++;
-					}
+					AppendTokenList(firsts, sb);
 					sb.AppendLine(");" + Helper.AddComment("ZeroOrMore Rule"));
 					sb.AppendLine(Indent + "}");
 					break;
@@ -176,25 +156,11 @@ namespace TinyPG.CodeGenerators.Java
 					i = 0;
 					firsts = r.GetFirstTerminals();
 					sb.Append(Indent + "tok = scanner.LookAhead(");
-					foreach (TerminalSymbol s in firsts)
-					{
-						if (i == 0)
-							sb.Append("TokenType." + s.Name);
-						else
-							sb.Append(", TokenType." + s.Name);
-						i++;
-					}
+					AppendTokenList(firsts, sb);
 					sb.AppendLine(");" + Helper.AddComment("Option Rule"));
 
-					i = 0;
-					foreach (TerminalSymbol s in firsts)
-					{
-						if (i == 0)
-							sb.Append(Indent + "if (tok.Type == TokenType." + s.Name);
-						else
-							sb.Append("\r\n" + Indent + "    || tok.Type == TokenType." + s.Name);
-						i++;
-					}
+					sb.Append(Indent + "if (");
+					AppendTokenCondition(firsts, sb, Indent);
 					sb.AppendLine(")");
 					sb.AppendLine(Indent + "{");
 
@@ -209,25 +175,7 @@ namespace TinyPG.CodeGenerators.Java
 					firsts = r.GetFirstTerminals();
 					sb.Append(Indent + "tok = scanner.LookAhead(");
 					var tokens = new List<string>();
-					foreach (TerminalSymbol s in firsts)
-					{
-						if (i == 0)
-							sb.Append("TokenType." + s.Name);
-						else
-							sb.Append(", TokenType." + s.Name);
-						i++;
-						tokens.Add(s.Name);
-					}
-					string expectedTokens;
-					if (tokens.Count == 1)
-						expectedTokens = tokens[0];
-					else if (tokens.Count == 2)
-						expectedTokens = tokens[0] + " or " + tokens[1];
-					else
-					{
-						expectedTokens = string.Join(", ", tokens.GetRange(0, tokens.Count - 1).ToArray());
-						expectedTokens += ", or " + tokens[tokens.Count - 1];
-					}
+					AppendTokenList(firsts, sb, tokens);
 					sb.AppendLine(");" + Helper.AddComment("Choice Rule"));
 
 					sb.AppendLine(Indent + "switch (tok.Type)");
@@ -242,6 +190,7 @@ namespace TinyPG.CodeGenerators.Java
 						sb.AppendLine(Indent + "		break;");
 					}
 					sb.AppendLine(Indent + "	default:");
+					string expectedTokens = BuildExpectedTokensStringForErrorMessage(tokens);
 					sb.AppendLine(Indent + "		tree.Errors.add(new ParseError(\"Unexpected token '\" + tok.getText().replace(\"\\n\", \"\") + \"' found. Expected " + expectedTokens + ".\", 0x0002, tok));");
 					sb.AppendLine(Indent + "		break;");
 					sb.AppendLine(Indent + "}" + Helper.AddComment("Choice Rule"));
@@ -252,5 +201,47 @@ namespace TinyPG.CodeGenerators.Java
 			return sb.ToString();
 		}
 
+		private static string BuildExpectedTokensStringForErrorMessage(List<string> tokens)
+		{
+			string expectedTokens;
+			if (tokens.Count == 1)
+				expectedTokens = tokens[0];
+			else if (tokens.Count == 2)
+				expectedTokens = tokens[0] + " or " + tokens[1];
+			else
+			{
+				expectedTokens = string.Join(", ", tokens.GetRange(0, tokens.Count - 1).ToArray());
+				expectedTokens += ", or " + tokens[tokens.Count - 1];
+			}
+
+			return expectedTokens;
+		}
+		private void AppendTokenList(Symbols symbols, StringBuilder sb, List<string> tokenNames = null)
+		{
+			int i = 0;
+			foreach (TerminalSymbol s in symbols)
+			{
+				if (i == 0)
+					sb.Append("TokenType." + s.Name);
+				else
+					sb.Append(", TokenType." + s.Name);
+				i++;
+				if (tokenNames != null)
+					tokenNames.Add(s.Name);
+			}
+		}
+
+		private void AppendTokenCondition(Symbols symbols, StringBuilder sb, string indent)
+		{
+			for (int i = 0; i < symbols.Count; i++)
+			{
+				TerminalSymbol s = (TerminalSymbol)symbols[i];
+				if (i == 0)
+					sb.Append("tok.Type == TokenType." + s.Name);
+				else
+					sb.Append(Environment.NewLine + indent + "    || tok.Type == TokenType." + s.Name);
+			}
+
+		}
 	}
 }

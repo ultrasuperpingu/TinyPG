@@ -26,16 +26,16 @@ namespace TinyPG.CodeGenerators.CSharp
 
 			foreach (TerminalSymbol s in Grammar.SkipSymbols)
 			{
-				skiplist.AppendLine(Helper.Indent3 + "SkipList.Add(TokenType." + s.Name + ");");
+				skiplist.AppendLine("			SkipList.Add(TokenType." + s.Name + ");");
 			}
 
 			// build system tokens
-			tokentype.AppendLine("\r\n" + Helper.Indent3 + "//Non terminal tokens:");
+			tokentype.AppendLine("\r\n			//Non terminal tokens:");
 			tokentype.AppendLine(Helper.Outline("_NONE_", 3, "= 0,", 5));
 			tokentype.AppendLine(Helper.Outline("_UNDETERMINED_", 3, "= 1,", 5));
 
 			// build non terminal tokens
-			tokentype.AppendLine("\r\n" + Helper.Indent3 + "//Non terminal tokens:");
+			tokentype.AppendLine("\r\n			//Non terminal tokens:");
 			foreach (Symbol s in Grammar.GetNonTerminals())
 			{
 				tokentype.AppendLine(Helper.Outline(s.Name, 3, "= " + String.Format("{0:d},", counter), 5));
@@ -43,14 +43,14 @@ namespace TinyPG.CodeGenerators.CSharp
 			}
 
 			// build terminal tokens
-			tokentype.AppendLine("\r\n" + Helper.Indent3 + "//Terminal tokens:");
+			tokentype.AppendLine("\r\n			//Terminal tokens:");
 			bool first = true;
 			foreach (TerminalSymbol s in Grammar.GetTerminals())
 			{
 				string RegexCompiled = null;
 				Grammar.Directives.Find("TinyPG").TryGetValue("RegexCompiled", out RegexCompiled);
 
-				regexps.Append(Helper.Indent3 + "regex = new Regex(" + s.Expression.ToString() + ", RegexOptions.None");
+				regexps.Append("			regex = new Regex(" + s.Expression.ToString() + ", RegexOptions.None");
 
 				if (RegexCompiled == null || RegexCompiled.ToLower().Equals("true"))
 					regexps.Append(" | RegexOptions.Compiled");
@@ -60,8 +60,8 @@ namespace TinyPG.CodeGenerators.CSharp
 
 				regexps.Append(");\r\n");
 
-				regexps.Append(Helper.Indent3 + "Patterns.Add(TokenType." + s.Name + ", regex);\r\n");
-				regexps.Append(Helper.Indent3 + "Tokens.Add(TokenType." + s.Name + ");\r\n\r\n");
+				regexps.Append("			Patterns.Add(TokenType." + s.Name + ", regex);\r\n");
+				regexps.Append("			Tokens.Add(TokenType." + s.Name + ");\r\n\r\n");
 
 				if (first) first = false;
 				else tokentype.AppendLine(",");

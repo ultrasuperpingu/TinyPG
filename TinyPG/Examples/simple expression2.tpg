@@ -1,7 +1,7 @@
 //@TinyPG - a Tiny Parser Generator v1.5
 //Copyright © Herre Kuijpers 2008-2010
 //Simple expression calculator
-<% @TinyPG Language="C#" OutputPath=".\TinyPG\SimpleExpr\" %>
+<% @TinyPG Language="C#" OutputPath=".\TestCSharp\SimpleExpr\" %>
 
 // include text highlighting as part of the input window
 <% @TextHighlighter Generate="true" %>

@@ -1,4 +1,4 @@
-//@TinyPG - a Tiny Parser Generator v1.2
+//@TinyPG - a Tiny Parser Generator v1.5
 //Copyright © Herre Kuijpers 2008-2010
 //Simple expression calculator
 //
@@ -15,9 +15,9 @@
 //    }    
 //}
 
-<% @TinyPG Language="Java" Namespace="tinypg" OutputPath="TestJava\TestParser\src\tinypg\" %>
+<% @TinyPG Language="Java" Namespace="tinypg" OutputPath="TestJava\SimpleExpr\src\tinypg\" %>
 
-// include text highlighting as part of the input window
+// this is not supported in Java
 //<% @TextHighlighter Generate="true" %>
 
 <% @ParseTree CustomCode="

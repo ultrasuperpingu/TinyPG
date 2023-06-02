@@ -105,7 +105,6 @@ namespace <%Namespace%>
 		Token LookAheadToken;
 		std::vector<TokenType> Tokens;
 		std::vector<TokenType> SkipList; // tokens to be skipped
-		TokenType FileAndLine = TokenType::_NONE_;
 
 	public:
 		inline Scanner()
@@ -254,19 +253,6 @@ namespace <%Namespace%>
 					Skipped = std::vector<Token>(); //reset skips
 					//Skipped = new List<Token>(); //reset skips
 				}
-
-				// Check to see if the parsed token wants to 
-				// alter the file and line number.
-				/*if (tok.Type == FileAndLine)
-				{
-					Match match = Patterns[tok.Type].Match(tok.Text);
-					Group fileMatch = match.Groups["File"];
-					if (fileMatch.Success)
-						currentFile = fileMatch.Value.Replace("\\\\", "\\");
-					Group lineMatch = match.Groups["Line"];
-					if (lineMatch.Success)
-						currentline = int.Parse(lineMatch.Value, NumberStyles.Integer, CultureInfo.InvariantCulture);
-				}*/
 			}
 			//while (SkipList.Contains(tok.Type));
 			while (contains(SkipList, tok.Type));

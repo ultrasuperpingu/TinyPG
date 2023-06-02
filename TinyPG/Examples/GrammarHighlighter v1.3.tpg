@@ -25,7 +25,7 @@
 
 
 			ATTRIBUTESYMBOL	-> @"[^\[\]]";
-[Color(43, 145, 202)] ATTRIBUTEKEYWORD	-> @"^(Skip|Color|IgnoreCase|FileAndLine)";
+[Color(43, 145, 202)] ATTRIBUTEKEYWORD	-> @"^(Skip|Color|IgnoreCase)";
 			ATTRIBUTENONKEYWORD	-> @"[^\(\)\]\n\s]+";
 
 			ATTRIBUTEOPEN		-> @"\[\s*";

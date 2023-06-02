@@ -243,7 +243,7 @@ namespace TinyPG
 			outputFloaty.Show();
 			tabOutput.SelectedIndex = 0;
 
-			CompileGrammar();
+			CompileGrammar(false);
 
 			if (compiler != null && compiler.Errors.Count == 0)
 			{
@@ -509,7 +509,7 @@ namespace TinyPG
 			try
 			{
 				if (IsDirty || compiler == null || !compiler.IsCompiled)
-					CompileGrammar();
+					CompileGrammar(true);
 
 				if (grammar == null)
 					return;
@@ -530,7 +530,7 @@ namespace TinyPG
 			{
 
 				if (IsDirty || compiler == null || !compiler.IsCompiled)
-					CompileGrammar();
+					CompileGrammar(true);
 
 				if (string.IsNullOrEmpty(GrammarFile))
 					return;
@@ -599,7 +599,7 @@ namespace TinyPG
 			textEditor.Select(tree.Errors[0].Position, tree.Errors[0].Length > 0 ? tree.Errors[0].Length : 1);
 		}
 
-		private void CompileGrammar()
+		private void CompileGrammar(bool fallbackIfNeeded)
 		{
 
 			if (string.IsNullOrEmpty(GrammarFile))
@@ -620,13 +620,17 @@ namespace TinyPG
 
 			if (grammar != null)
 			{
+				TimeSpan span = DateTime.Now.Subtract(starttimer);
+				output.AppendLine("Grammar parsed successfully in " + span.TotalMilliseconds.ToString(CultureInfo.InvariantCulture) + "ms.");
+
 				grammar.SourceFilename = Path.GetFileName(GrammarFile);
 				SetHighlighterLanguage(grammar.Directives["TinyPG"]["Language"]);
-
+				
+				starttimer = DateTime.Now;
 				if (prog.BuildCode(grammar, compiler))
 				{
-					TimeSpan span = DateTime.Now.Subtract(starttimer);
-					output.AppendLine("Compilation successful in " + span.TotalMilliseconds + "ms.");
+					span = DateTime.Now.Subtract(starttimer);
+					output.AppendLine("Compilation successful in " + span.TotalMilliseconds.ToString(CultureInfo.InvariantCulture) + "ms.");
 				}
 			}
 
@@ -710,7 +714,7 @@ namespace TinyPG
 
 			textEditor.Text = File.ReadAllText(GrammarFile);
 			textEditor.ClearUndo();
-			CompileGrammar();
+			CompileGrammar(true);
 			textOutput.Text = "";
 			textEditor.Focus();
 			SetStatusbar();
@@ -719,8 +723,6 @@ namespace TinyPG
 			SetFormCaption();
 			textEditor.Select(0, 0);
 			checker.Check(textEditor.Text);
-
-
 		}
 
 		private void SaveGrammarAs()
@@ -730,7 +732,6 @@ namespace TinyPG
 			{
 				SaveGrammar(saveFileDialog.FileName);
 			}
-
 		}
 
 		private string OpenGrammar()
@@ -744,7 +745,8 @@ namespace TinyPG
 
 		private void SaveGrammar(string filename)
 		{
-			if (String.IsNullOrEmpty(filename)) return;
+			if (string.IsNullOrEmpty(filename))
+				return;
 
 			GrammarFile = filename;
 

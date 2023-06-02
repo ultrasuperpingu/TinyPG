@@ -22,13 +22,12 @@ namespace <%Namespace%>
 		public int CurrentPosition;
 		public List<Token> Skipped; // tokens that were skipped
 		public Dictionary<TokenType, Regex> Patterns;
-   
+
 		private Token LookAheadToken;
 		private List<TokenType> Tokens;
 		private List<TokenType> SkipList; // tokens to be skipped
-		private readonly TokenType FileAndLine = TokenType._NONE_;
 
-    public Scanner()
+	public Scanner()
 		{
 			Regex regex;
 			Patterns = new Dictionary<TokenType, Regex>();
@@ -164,19 +163,6 @@ namespace <%Namespace%>
 					// only assign to non-skipped tokens
 					tok.Skipped = Skipped; // assign prior skips to this token
 					Skipped = new List<Token>(); //reset skips
-				}
-
-				// Check to see if the parsed token wants to 
-				// alter the file and line number.
-				if (tok.Type == FileAndLine)
-				{
-					Match match = Patterns[tok.Type].Match(tok.Text);
-					Group fileMatch = match.Groups["File"];
-					if (fileMatch.Success)
-						currentFile = fileMatch.Value.Replace("\\\\", "\\");
-					Group lineMatch = match.Groups["Line"];
-					if (lineMatch.Success)
-						currentline = int.Parse(lineMatch.Value, NumberStyles.Integer, CultureInfo.InvariantCulture);
 				}
 			}
 			while (SkipList.Contains(tok.Type));

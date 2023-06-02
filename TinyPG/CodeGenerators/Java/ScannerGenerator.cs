@@ -29,38 +29,38 @@ namespace TinyPG.CodeGenerators.Java
 
 			foreach (TerminalSymbol s in Grammar.SkipSymbols)
 			{
-				skiplist.AppendLine(Helper.Indent3 + "SkipList.add(TokenType." + s.Name + ");");
+				skiplist.AppendLine("		SkipList.add(TokenType." + s.Name + ");");
 			}
 
 			// build system token
-			tokentype.AppendLine("\r\n" + Helper.Indent3 + "//Non terminal tokens:");
-			tokentype.AppendLine(Helper.Outline("_NONE_", 3, ",", 5));
-			tokentype.AppendLine(Helper.Outline("_UNDETERMINED_", 3, ",", 5));
+			tokentype.AppendLine("\r\n	//Non terminal tokens:");
+			tokentype.AppendLine(Helper.Outline("_NONE_", 1, ",", 4));
+			tokentype.AppendLine(Helper.Outline("_UNDETERMINED_", 1, ",", 4));
 
 			// build non terminal tokens
-			tokentype.AppendLine("\r\n" + Helper.Indent3 + "//Non terminal tokens:");
+			tokentype.AppendLine("\r\n	//Non terminal tokens:");
 			foreach (Symbol s in Grammar.GetNonTerminals())
 			{
-				tokentype.AppendLine(Helper.Outline(s.Name, 3, ",", 5));
+				tokentype.AppendLine(Helper.Outline(s.Name, 1, ",", 4));
 				counter++;
 			}
 
 			// build terminal tokens
-			tokentype.AppendLine("\r\n" + Helper.Indent3 + "//Terminal tokens:");
+			tokentype.AppendLine("\r\n	//Terminal tokens:");
 			bool first = true;
 			foreach (TerminalSymbol s in Grammar.GetTerminals())
 			{
-				regexps.Append(Helper.Indent3 + "regex = Pattern.compile(" + Helper.Unverbatim(s.Expression.ToString()));
+				regexps.Append("		regex = Pattern.compile(" + Helper.Unverbatim(s.Expression.ToString()));
 				if (s.Attributes.ContainsKey("IgnoreCase"))
 					regexps.Append(", Pattern.CASE_INSENSITIVE");
 				regexps.Append(");\r\n");
-				regexps.Append(Helper.Indent3 + "Patterns.put(TokenType." + s.Name + ", regex);\r\n");
-				regexps.Append(Helper.Indent3 + "Tokens.add(TokenType." + s.Name + ");\r\n\r\n");
+				regexps.Append("		Patterns.put(TokenType." + s.Name + ", regex);\r\n");
+				regexps.Append("		Tokens.add(TokenType." + s.Name + ");\r\n\r\n");
 
 				if (first) first = false;
 				else tokentype.AppendLine(",");
 
-				tokentype.Append(Helper.Outline(s.Name, 3, "", 5));
+				tokentype.Append(Helper.Outline(s.Name, 1, "", 4));
 				counter++;
 			}
 

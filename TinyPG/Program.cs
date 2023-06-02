@@ -12,6 +12,7 @@ using System.IO;
 using System.Windows.Forms;
 using TinyPG.Compiler;
 using System.Text;
+using System.Threading;
 
 namespace TinyPG
 {
@@ -44,7 +45,7 @@ namespace TinyPG
 				DateTime starttimer = DateTime.Now;
 
 				Program prog = new Program(ManageParseError, output);
-				Grammar grammar = prog.ParseGrammar(System.IO.File.ReadAllText(GrammarFilePath), Path.GetFileName(GrammarFilePath));
+				Grammar grammar = prog.ParseGrammar(File.ReadAllText(GrammarFilePath), Path.GetFileName(GrammarFilePath));
 
 				if (grammar != null)
 				{
@@ -60,7 +61,7 @@ namespace TinyPG
 			}
 			else
 			{
-				Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
+				Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
 				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
 				Application.Run(new MainForm());
@@ -115,7 +116,6 @@ namespace TinyPG
 
 		public bool BuildCode(Grammar grammar, TinyPG.Compiler.Compiler compiler)
 		{
-
 			this.output.AppendLine("Building code...");
 			compiler.Compile(grammar);
 			if (!compiler.IsCompiled)

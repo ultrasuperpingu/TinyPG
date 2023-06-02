@@ -8,8 +8,7 @@ namespace TinyPG.CodeGenerators.Cpp
 {
 	public class ParserGenerator : BaseGenerator, ICodeGenerator
 	{
-		internal ParserGenerator()
-			: base("Parser.h")
+		internal ParserGenerator() : base("Parser.h")
 		{
 		}
 
@@ -46,13 +45,12 @@ namespace TinyPG.CodeGenerators.Cpp
 		private string GenerateParseMethod(NonTerminalSymbol s)
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.AppendLine(Helper.Indent2 + "inline void Parse" + s.Name + "(ParseNode* parent)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
-			sb.AppendLine(Helper.Indent2 + "{");
-			sb.AppendLine(Helper.Indent3 + "Token tok;");
-			sb.AppendLine(Helper.Indent3 + "ParseNode* n;");
-			sb.AppendLine(Helper.Indent3 + "bool found;");
-			sb.AppendLine(Helper.Indent3 + "ParseNode* node = parent->CreateNode(scanner.GetToken(TokenType::" + s.Name + "), \"" + s.Name + "\");");
-			sb.AppendLine(Helper.Indent3 + "parent->Nodes.push_back(node);");
+			sb.AppendLine("		inline void Parse" + s.Name + "(ParseNode* parent)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("		{");
+			sb.AppendLine("			Token tok;");
+			sb.AppendLine("			ParseNode* n;");
+			sb.AppendLine("			ParseNode* node = parent->CreateNode(scanner.GetToken(TokenType::" + s.Name + "), \"" + s.Name + "\");");
+			sb.AppendLine("			parent->Nodes.push_back(node);");
 			sb.AppendLine("");
 
 			if (s.Rules.Count == 1)
@@ -60,8 +58,8 @@ namespace TinyPG.CodeGenerators.Cpp
 			else
 				throw new Exception("Internal error");
 
-			sb.AppendLine(Helper.Indent3 + "parent->TokenVal.UpdateRange(node->TokenVal);");
-			sb.AppendLine(Helper.Indent2 + "}" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("			parent->TokenVal.UpdateRange(node->TokenVal);");
+			sb.AppendLine("		}" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
 			sb.AppendLine();
 			return sb.ToString();
 		}
@@ -71,7 +69,6 @@ namespace TinyPG.CodeGenerators.Cpp
 		{
 			Rule r = rules[index];
 			Symbols firsts = null;
-			Symbols firstsExtended = null;
 			StringBuilder sb = new StringBuilder();
 			string Indent = Helper.Indent(indent);
 			switch (r.Type)
@@ -83,8 +80,8 @@ namespace TinyPG.CodeGenerators.Cpp
 					sb.AppendLine(Indent + "node->TokenVal.UpdateRange(tok);");
 					sb.AppendLine(Indent + "node->Nodes.push_back(n);");
 					sb.AppendLine(Indent + "if (tok.Type != TokenType::" + r.Symbol.Name + ") {");
-					sb.AppendLine(Indent + Helper.Indent1 + "tree->Errors.push_back(ParseError(\"Unexpected token '\" + replace(tok.Text, \"\\n\", \"\") + \"' found. Expected " + r.Symbol.Name + "\", 0x1001, tok));");
-					sb.AppendLine(Indent + Helper.Indent1 + "return;");
+					sb.AppendLine(Indent + "	tree->Errors.push_back(ParseError(\"Unexpected token '\" + replace(tok.Text, \"\\n\", \"\") + \"' found. Expected " + r.Symbol.Name + "\", 0x1001, tok));");
+					sb.AppendLine(Indent + "	return;");
 					sb.AppendLine(Indent + "}");
 					break;
 				case RuleType.NonTerminal:
@@ -101,8 +98,6 @@ namespace TinyPG.CodeGenerators.Cpp
 					break;
 				case RuleType.ZeroOrMore:
 					firsts = r.GetFirstTerminals();
-					firstsExtended = CollectExpectedTokens(rules, index + 1);
-					firstsExtended.AddRange(firsts);
 					sb.Append(Indent + "tok = scanner.LookAhead({");
 					AppendTokenList(firsts, sb);
 					sb.AppendLine("});" + Helper.AddComment("ZeroOrMore Rule"));
@@ -118,12 +113,11 @@ namespace TinyPG.CodeGenerators.Cpp
 					}
 
 					sb.Append(Indent + "tok = scanner.LookAhead({");
-					AppendTokenList(firstsExtended, sb);
+					AppendTokenList(firsts, sb);
 					sb.AppendLine("});" + Helper.AddComment("ZeroOrMore Rule"));
 					sb.AppendLine(Indent + "}");
 					break;
 				case RuleType.OneOrMore:
-					sb.AppendLine(Indent + "found = false;");
 					sb.AppendLine(Indent + "do {" + Helper.AddComment("OneOrMore Rule"));
 
 					for (int i = 0; i < r.Rules.Count; i++)
@@ -132,18 +126,10 @@ namespace TinyPG.CodeGenerators.Cpp
 					}
 
 					firsts = r.GetFirstTerminals();
-					firstsExtended = CollectExpectedTokens(rules, index + 1);
-					firstsExtended.AddRange(firsts);
-					sb.AppendLine(Indent + Helper.Indent1 + "if(!found) {");
-					sb.Append(Indent + Helper.Indent2 + "tok = scanner.LookAhead({");
+					
+					sb.Append(Indent + "	tok = scanner.LookAhead({");
 					AppendTokenList(firsts, sb);
 					sb.AppendLine("});" + Helper.AddComment("OneOrMore Rule"));
-					sb.AppendLine(Indent + Helper.Indent1 + "found = true;");
-					sb.AppendLine(Indent + Helper.Indent1 + "} else {");
-					sb.Append(Indent + Helper.Indent2 + "tok = scanner.LookAhead({");
-					AppendTokenList(firstsExtended, sb);
-					sb.AppendLine("});" + Helper.AddComment("OneOrMore Rule"));
-					sb.AppendLine(Indent + Helper.Indent1 + "}");
 					sb.Append(Indent + "} while (");
 					AppendTokenCondition(firsts, sb, Indent);
 					sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
@@ -188,33 +174,20 @@ namespace TinyPG.CodeGenerators.Cpp
 					{
 						foreach (TerminalSymbol s in r.Rules[i].GetFirstTerminals())
 						{
-							sb.AppendLine(Indent + Helper.Indent1 + "case TokenType::" + s.Name + ":");
+							sb.AppendLine(Indent + "	case TokenType::" + s.Name + ":");
 						}
 						sb.Append(GenerateProductionRuleCode(r.Rules, i, indent + 2));
-						sb.AppendLine(Indent + Helper.Indent2 + "break;");
+						sb.AppendLine(Indent + "		break;");
 					}
-					sb.AppendLine(Indent + Helper.Indent1 + "default:");
-					sb.AppendLine(Indent + Helper.Indent2 + "tree->Errors.push_back(ParseError(\"Unexpected token '\" + replace(tok.Text, \"\\n\", \"\") + \"' found. Expected " + expectedTokens + ".\", 0x0002, tok));");
-					sb.AppendLine(Indent + Helper.Indent2 + "break;");
+					sb.AppendLine(Indent + "	default:");
+					sb.AppendLine(Indent + "		tree->Errors.push_back(ParseError(\"Unexpected token '\" + replace(tok.Text, \"\\n\", \"\") + \"' found. Expected " + expectedTokens + ".\", 0x0002, tok));");
+					sb.AppendLine(Indent + "		break;");
 					sb.AppendLine(Indent + "}" + Helper.AddComment("Choice Rule"));
 					break;
 				default:
 					break;
 			}
 			return sb.ToString();
-		}
-
-		private Symbols CollectExpectedTokens(Rules rules, int index)
-		{
-			var symbols = new Symbols();
-			for (int i = index; i < rules.Count; i++)
-			{
-				rules[i].DetermineFirstTerminals(symbols);
-				if (rules[i].Type != RuleType.ZeroOrMore &&
-					rules[i].Type != RuleType.Option)
-					break;
-			}
-			return symbols;
 		}
 
 		private void AppendTokenList(Symbols symbols, StringBuilder sb, List<string> tokenNames = null)

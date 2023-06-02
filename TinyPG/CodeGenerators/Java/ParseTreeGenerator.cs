@@ -30,10 +30,10 @@ namespace TinyPG.CodeGenerators.Java
 			// build non terminal tokens
 			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
-				evalsymbols.AppendLine("				case " + s.Name + ":");
-				evalsymbols.AppendLine("					Value = Eval" + s.Name + "(tree, paramlist);");
-				//evalsymbols.AppendLine("					Value = Token.Text;");
-				evalsymbols.AppendLine("					break;");
+				evalsymbols.AppendLine("			case " + s.Name + ":");
+				evalsymbols.AppendLine("				Value = Eval" + s.Name + "(tree, paramlist);");
+				//evalsymbols.AppendLine("				Value = Token.Text;");
+				evalsymbols.AppendLine("				break;");
 
 				string returnType = "object";
 				if (!string.IsNullOrEmpty(s.ReturnType))
@@ -41,8 +41,8 @@ namespace TinyPG.CodeGenerators.Java
 				string defaultReturnValue = "default("+returnType+")";
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault))
 					defaultReturnValue = s.ReturnTypeDefault;
-				evalmethods.AppendLine("		protected " + returnType + " Eval" + s.Name + "(ParseTree tree, Object... paramlist)");
-				evalmethods.AppendLine("		{");
+				evalmethods.AppendLine("	protected " + returnType + " Eval" + s.Name + "(ParseTree tree, Object... paramlist)");
+				evalmethods.AppendLine("	{");
 				if (s.CodeBlock != null)
 				{
 					// paste user code here
@@ -51,15 +51,15 @@ namespace TinyPG.CodeGenerators.Java
 				else
 				{
 					if (s.Name == "Start") // return a nice warning message from root object.
-						evalmethods.AppendLine("			return "+defaultReturnValue+"; //\"Could not interpret input; no semantics implemented.\";");
+						evalmethods.AppendLine("		return "+defaultReturnValue+"; //\"Could not interpret input; no semantics implemented.\";");
 					else
-						evalmethods.AppendLine("			for (ParseNode node : getNodes())\r\n" +
-											   "				node.Eval(tree, paramlist);\r\n" +
-											   "			return "+defaultReturnValue+";");
+						evalmethods.AppendLine("		for (ParseNode node : getNodes())\r\n" +
+											   "			node.Eval(tree, paramlist);\r\n" +
+											   "		return "+defaultReturnValue+";");
 
 					// otherwise simply not implemented!
 				}
-				evalmethods.AppendLine("		}\r\n");
+				evalmethods.AppendLine("	}\r\n");
 			}
 
 			parsetree = parsetree.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);

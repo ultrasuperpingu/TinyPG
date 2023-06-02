@@ -3,7 +3,6 @@
 
 package <%Namespace%>;
 import java.util.ArrayList;
-import java.util.List;
 
 
 class ParseErrors extends <%ParseErrors%>

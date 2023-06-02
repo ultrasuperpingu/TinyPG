@@ -88,7 +88,6 @@ namespace <%Namespace%>
 
 		private void PrintNode(StringBuilder sb, ParseNode node, int indent)
 		{
-            
 			string space = "".PadLeft(indent, ' ');
 
 			sb.Append(space);
@@ -97,7 +96,7 @@ namespace <%Namespace%>
 			foreach (ParseNode n in node.Nodes)
 				PrintNode(sb, n, indent + 2);
 		}
-        
+
 		/// <summary>
 		/// this is the entry point for executing and evaluating the parse tree.
 		/// </summary>
@@ -208,6 +207,5 @@ namespace <%Namespace%>
 
 <%ParseTreeCustomCode%>
 	}
-    
 	#endregion ParseTree
 }
