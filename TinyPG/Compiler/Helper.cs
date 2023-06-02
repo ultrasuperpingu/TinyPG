@@ -85,12 +85,17 @@ namespace System.Text
 			}
 			else
 			{
+				//TODO: change regex for string in grammar
+				// it seams to be verbatim string event if
+				// leading @ is not present...
 				v = v.Substring(1, v.Length - 2);
 				v = v.Replace(@"\r\n", "\r\n");
 				v = v.Replace(@"\n", "\n");
 				v = v.Replace(@"\r", "\r");
 				v = v.Replace(@"\t", "\t");
+				v = v.Replace(@"\""", "\"");
 				//TODO: other escape
+				v = v.Replace(@"\\", @"\");
 			}
 			return v;
 		}

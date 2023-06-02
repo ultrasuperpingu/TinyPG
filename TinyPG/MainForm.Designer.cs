@@ -56,8 +56,10 @@
 			this.examplesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.expressionEvaluatorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.codeblocksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.theTinyPGGrammarHighlighterV12ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.calculatorVBTSM = new System.Windows.Forms.ToolStripMenuItem();
 			this.calculatorJavaTSM = new System.Windows.Forms.ToolStripMenuItem();
+			this.calculatorCppTSM = new System.Windows.Forms.ToolStripMenuItem();
+			this.theTinyPGGrammarHighlighterV12ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.theTinyPGGrammarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.theTinyPGGrammarV10ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStrip = new System.Windows.Forms.StatusStrip();
@@ -76,6 +78,10 @@
 			this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
 			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.panelOutput = new System.Windows.Forms.Panel();
+			this.panelInput = new System.Windows.Forms.Panel();
+			this.textInput = new System.Windows.Forms.RichTextBox();
+			this.tinyExprEvalTSM = new System.Windows.Forms.ToolStripMenuItem();
+			this.headerEvaluator = new TinyPG.Controls.HeaderLabel();
 			this.tabOutput = new TinyPG.Controls.TabControlEx();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.textOutput = new System.Windows.Forms.RichTextBox();
@@ -84,19 +90,14 @@
 			this.tabPage3 = new System.Windows.Forms.TabPage();
 			this.regExControl = new TinyPG.Controls.RegExControl();
 			this.headerOutput = new TinyPG.Controls.HeaderLabel();
-			this.panelInput = new System.Windows.Forms.Panel();
-			this.textInput = new System.Windows.Forms.RichTextBox();
-			this.headerEvaluator = new TinyPG.Controls.HeaderLabel();
-			this.calculatorVBTSM = new System.Windows.Forms.ToolStripMenuItem();
-			this.calculatorCppTSM = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip.SuspendLayout();
 			this.statusStrip.SuspendLayout();
 			this.panelOutput.SuspendLayout();
+			this.panelInput.SuspendLayout();
 			this.tabOutput.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.tabPage2.SuspendLayout();
 			this.tabPage3.SuspendLayout();
-			this.panelInput.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip
@@ -109,7 +110,7 @@
             this.helpToolStripMenuItem});
 			this.menuStrip.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip.Name = "menuStrip";
-			this.menuStrip.Size = new System.Drawing.Size(1383, 28);
+			this.menuStrip.Size = new System.Drawing.Size(1383, 30);
 			this.menuStrip.TabIndex = 0;
 			this.menuStrip.Text = "menuStrip";
 			// 
@@ -124,7 +125,7 @@
             this.toolStripSeparator2,
             this.exitToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-			this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
+			this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
 			this.fileToolStripMenuItem.Text = "&File";
 			// 
 			// newToolStripMenuItem
@@ -183,7 +184,7 @@
             this.parsetreeToolStripMenuItem,
             this.expressionEvaluatorToolStripMenuItem});
 			this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-			this.viewToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
+			this.viewToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
 			this.viewToolStripMenuItem.Text = "&View";
 			// 
 			// regexToolToolStripMenuItem
@@ -228,7 +229,7 @@
             this.viewScannerToolStripMenuItem,
             this.viewParseTreeCodeToolStripMenuItem});
 			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(57, 24);
+			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(57, 26);
 			this.toolsToolStripMenuItem.Text = "&Build";
 			// 
 			// parseToolStripMenuItem
@@ -279,7 +280,7 @@
             this.aboutTinyParserGeneratorToolStripMenuItem,
             this.examplesToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
 			this.helpToolStripMenuItem.Text = "&Help";
 			// 
 			// aboutTinyParserGeneratorToolStripMenuItem
@@ -299,7 +300,8 @@
             this.calculatorCppTSM,
             this.theTinyPGGrammarHighlighterV12ToolStripMenuItem,
             this.theTinyPGGrammarToolStripMenuItem,
-            this.theTinyPGGrammarV10ToolStripMenuItem});
+            this.theTinyPGGrammarV10ToolStripMenuItem,
+            this.tinyExprEvalTSM});
 			this.examplesToolStripMenuItem.Name = "examplesToolStripMenuItem";
 			this.examplesToolStripMenuItem.Size = new System.Drawing.Size(277, 26);
 			this.examplesToolStripMenuItem.Text = "&Examples";
@@ -318,12 +320,12 @@
 			this.codeblocksToolStripMenuItem.Text = "Simple Expression calculator";
 			this.codeblocksToolStripMenuItem.Click += new System.EventHandler(this.codeblocksToolStripMenuItem_Click);
 			// 
-			// theTinyPGGrammarHighlighterV12ToolStripMenuItem
+			// calculatorVBTSM
 			// 
-			this.theTinyPGGrammarHighlighterV12ToolStripMenuItem.Name = "theTinyPGGrammarHighlighterV12ToolStripMenuItem";
-			this.theTinyPGGrammarHighlighterV12ToolStripMenuItem.Size = new System.Drawing.Size(313, 26);
-			this.theTinyPGGrammarHighlighterV12ToolStripMenuItem.Text = "Grammar Highlight";
-			this.theTinyPGGrammarHighlighterV12ToolStripMenuItem.Click += new System.EventHandler(this.theTinyPGGrammarHighlighterV12ToolStripMenuItem_Click);
+			this.calculatorVBTSM.Name = "calculatorVBTSM";
+			this.calculatorVBTSM.Size = new System.Drawing.Size(313, 26);
+			this.calculatorVBTSM.Text = "Simple Expression calculator VB";
+			this.calculatorVBTSM.Click += new System.EventHandler(this.calculatorVBTSM_Click);
 			// 
 			// calculatorJavaTSM
 			// 
@@ -331,6 +333,20 @@
 			this.calculatorJavaTSM.Size = new System.Drawing.Size(313, 26);
 			this.calculatorJavaTSM.Text = "Simple Expression calculator Java";
 			this.calculatorJavaTSM.Click += new System.EventHandler(this.calculatorJavaTSM_Click);
+			// 
+			// calculatorCppTSM
+			// 
+			this.calculatorCppTSM.Name = "calculatorCppTSM";
+			this.calculatorCppTSM.Size = new System.Drawing.Size(313, 26);
+			this.calculatorCppTSM.Text = "Simple Expression calculator CPP";
+			this.calculatorCppTSM.Click += new System.EventHandler(this.calculatorCppTSM_Click);
+			// 
+			// theTinyPGGrammarHighlighterV12ToolStripMenuItem
+			// 
+			this.theTinyPGGrammarHighlighterV12ToolStripMenuItem.Name = "theTinyPGGrammarHighlighterV12ToolStripMenuItem";
+			this.theTinyPGGrammarHighlighterV12ToolStripMenuItem.Size = new System.Drawing.Size(313, 26);
+			this.theTinyPGGrammarHighlighterV12ToolStripMenuItem.Text = "Grammar Highlight";
+			this.theTinyPGGrammarHighlighterV12ToolStripMenuItem.Click += new System.EventHandler(this.theTinyPGGrammarHighlighterV12ToolStripMenuItem_Click);
 			// 
 			// theTinyPGGrammarToolStripMenuItem
 			// 
@@ -431,10 +447,10 @@
 			this.textEditor.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.textEditor.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.textEditor.HideSelection = false;
-			this.textEditor.Location = new System.Drawing.Point(0, 28);
+			this.textEditor.Location = new System.Drawing.Point(0, 30);
 			this.textEditor.Margin = new System.Windows.Forms.Padding(4);
 			this.textEditor.Name = "textEditor";
-			this.textEditor.Size = new System.Drawing.Size(949, 516);
+			this.textEditor.Size = new System.Drawing.Size(949, 514);
 			this.textEditor.TabIndex = 3;
 			this.textEditor.Text = "";
 			this.textEditor.WordWrap = false;
@@ -458,10 +474,10 @@
 			// 
 			this.splitterRight.BackColor = System.Drawing.SystemColors.InactiveCaption;
 			this.splitterRight.Dock = System.Windows.Forms.DockStyle.Right;
-			this.splitterRight.Location = new System.Drawing.Point(949, 28);
+			this.splitterRight.Location = new System.Drawing.Point(949, 30);
 			this.splitterRight.Margin = new System.Windows.Forms.Padding(4);
 			this.splitterRight.Name = "splitterRight";
-			this.splitterRight.Size = new System.Drawing.Size(7, 741);
+			this.splitterRight.Size = new System.Drawing.Size(7, 739);
 			this.splitterRight.TabIndex = 7;
 			this.splitterRight.TabStop = false;
 			// 
@@ -485,11 +501,61 @@
 			this.panelOutput.Controls.Add(this.tabOutput);
 			this.panelOutput.Controls.Add(this.headerOutput);
 			this.panelOutput.Dock = System.Windows.Forms.DockStyle.Right;
-			this.panelOutput.Location = new System.Drawing.Point(956, 28);
+			this.panelOutput.Location = new System.Drawing.Point(956, 30);
 			this.panelOutput.Margin = new System.Windows.Forms.Padding(4);
 			this.panelOutput.Name = "panelOutput";
-			this.panelOutput.Size = new System.Drawing.Size(427, 741);
+			this.panelOutput.Size = new System.Drawing.Size(427, 739);
 			this.panelOutput.TabIndex = 8;
+			// 
+			// panelInput
+			// 
+			this.panelInput.Controls.Add(this.textInput);
+			this.panelInput.Controls.Add(this.headerEvaluator);
+			this.panelInput.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.panelInput.Location = new System.Drawing.Point(0, 550);
+			this.panelInput.Margin = new System.Windows.Forms.Padding(0);
+			this.panelInput.Name = "panelInput";
+			this.panelInput.Size = new System.Drawing.Size(949, 219);
+			this.panelInput.TabIndex = 9;
+			// 
+			// textInput
+			// 
+			this.textInput.AcceptsTab = true;
+			this.textInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.textInput.DetectUrls = false;
+			this.textInput.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textInput.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.textInput.HideSelection = false;
+			this.textInput.Location = new System.Drawing.Point(0, 25);
+			this.textInput.Margin = new System.Windows.Forms.Padding(4);
+			this.textInput.Name = "textInput";
+			this.textInput.Size = new System.Drawing.Size(949, 194);
+			this.textInput.TabIndex = 2;
+			this.textInput.Text = "";
+			this.textInput.WordWrap = false;
+			this.textInput.SelectionChanged += new System.EventHandler(this.textInput_SelectionChanged);
+			this.textInput.Enter += new System.EventHandler(this.textInput_Enter);
+			this.textInput.Leave += new System.EventHandler(this.textInput_Leave);
+			// 
+			// tinyExprEvalTSM
+			// 
+			this.tinyExprEvalTSM.Name = "tinyExprEvalTSM";
+			this.tinyExprEvalTSM.Size = new System.Drawing.Size(313, 26);
+			this.tinyExprEvalTSM.Text = "Tiny Expression Evaluator";
+			this.tinyExprEvalTSM.Click += new System.EventHandler(this.tinyExprEvalTSM_Click);
+			// 
+			// headerEvaluator
+			// 
+			this.headerEvaluator.Dock = System.Windows.Forms.DockStyle.Top;
+			this.headerEvaluator.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.headerEvaluator.ForeColor = System.Drawing.SystemColors.GrayText;
+			this.headerEvaluator.Location = new System.Drawing.Point(0, 0);
+			this.headerEvaluator.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.headerEvaluator.Name = "headerEvaluator";
+			this.headerEvaluator.Size = new System.Drawing.Size(949, 25);
+			this.headerEvaluator.TabIndex = 3;
+			this.headerEvaluator.Text = "Expression Evaluator";
+			this.headerEvaluator.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// tabOutput
 			// 
@@ -504,7 +570,7 @@
 			this.tabOutput.Name = "tabOutput";
 			this.tabOutput.Padding = new System.Drawing.Point(10, 3);
 			this.tabOutput.SelectedIndex = 0;
-			this.tabOutput.Size = new System.Drawing.Size(427, 716);
+			this.tabOutput.Size = new System.Drawing.Size(427, 714);
 			this.tabOutput.TabIndex = 6;
 			this.tabOutput.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabOutput_Selected);
 			// 
@@ -515,7 +581,7 @@
 			this.tabPage1.Margin = new System.Windows.Forms.Padding(4);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(4);
-			this.tabPage1.Size = new System.Drawing.Size(419, 687);
+			this.tabPage1.Size = new System.Drawing.Size(419, 685);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Output";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -530,7 +596,7 @@
 			this.textOutput.Margin = new System.Windows.Forms.Padding(4);
 			this.textOutput.Name = "textOutput";
 			this.textOutput.ReadOnly = true;
-			this.textOutput.Size = new System.Drawing.Size(411, 679);
+			this.textOutput.Size = new System.Drawing.Size(411, 677);
 			this.textOutput.TabIndex = 6;
 			this.textOutput.Text = "";
 			this.textOutput.WordWrap = false;
@@ -593,63 +659,6 @@
 			this.headerOutput.Text = "Output";
 			this.headerOutput.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// panelInput
-			// 
-			this.panelInput.Controls.Add(this.textInput);
-			this.panelInput.Controls.Add(this.headerEvaluator);
-			this.panelInput.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panelInput.Location = new System.Drawing.Point(0, 550);
-			this.panelInput.Margin = new System.Windows.Forms.Padding(0);
-			this.panelInput.Name = "panelInput";
-			this.panelInput.Size = new System.Drawing.Size(949, 219);
-			this.panelInput.TabIndex = 9;
-			// 
-			// textInput
-			// 
-			this.textInput.AcceptsTab = true;
-			this.textInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.textInput.DetectUrls = false;
-			this.textInput.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.textInput.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.textInput.HideSelection = false;
-			this.textInput.Location = new System.Drawing.Point(0, 25);
-			this.textInput.Margin = new System.Windows.Forms.Padding(4);
-			this.textInput.Name = "textInput";
-			this.textInput.Size = new System.Drawing.Size(949, 194);
-			this.textInput.TabIndex = 2;
-			this.textInput.Text = "";
-			this.textInput.WordWrap = false;
-			this.textInput.SelectionChanged += new System.EventHandler(this.textInput_SelectionChanged);
-			this.textInput.Enter += new System.EventHandler(this.textInput_Enter);
-			this.textInput.Leave += new System.EventHandler(this.textInput_Leave);
-			// 
-			// headerEvaluator
-			// 
-			this.headerEvaluator.Dock = System.Windows.Forms.DockStyle.Top;
-			this.headerEvaluator.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.headerEvaluator.ForeColor = System.Drawing.SystemColors.GrayText;
-			this.headerEvaluator.Location = new System.Drawing.Point(0, 0);
-			this.headerEvaluator.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.headerEvaluator.Name = "headerEvaluator";
-			this.headerEvaluator.Size = new System.Drawing.Size(949, 25);
-			this.headerEvaluator.TabIndex = 3;
-			this.headerEvaluator.Text = "Expression Evaluator";
-			this.headerEvaluator.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// calculatorVBTSM
-			// 
-			this.calculatorVBTSM.Name = "calculatorVBTSM";
-			this.calculatorVBTSM.Size = new System.Drawing.Size(313, 26);
-			this.calculatorVBTSM.Text = "Simple Expression calculator VB";
-			this.calculatorVBTSM.Click += new System.EventHandler(this.calculatorVBTSM_Click);
-			// 
-			// calculatorCppTSM
-			// 
-			this.calculatorCppTSM.Name = "calculatorCppTSM";
-			this.calculatorCppTSM.Size = new System.Drawing.Size(313, 26);
-			this.calculatorCppTSM.Text = "Simple Expression calculator CPP";
-			this.calculatorCppTSM.Click += new System.EventHandler(this.calculatorCppTSM_Click);
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -672,11 +681,11 @@
 			this.statusStrip.ResumeLayout(false);
 			this.statusStrip.PerformLayout();
 			this.panelOutput.ResumeLayout(false);
+			this.panelInput.ResumeLayout(false);
 			this.tabOutput.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
 			this.tabPage2.ResumeLayout(false);
 			this.tabPage3.ResumeLayout(false);
-			this.panelInput.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -743,5 +752,6 @@
 		private System.Windows.Forms.ToolStripMenuItem calculatorJavaTSM;
 		private System.Windows.Forms.ToolStripMenuItem calculatorVBTSM;
 		private System.Windows.Forms.ToolStripMenuItem calculatorCppTSM;
+		private System.Windows.Forms.ToolStripMenuItem tinyExprEvalTSM;
 	}
 }

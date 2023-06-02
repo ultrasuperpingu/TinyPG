@@ -468,7 +468,10 @@ namespace TinyPG
 		{
 			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\GrammarHighlighter v1.3.tpg");
 		}
-
+		private void tinyExprEvalTSM_Click(object sender, EventArgs e)
+		{
+			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\TinyExpEval.tpg");
+		}
 		private void textOutput_LinkClicked(object sender, LinkClickedEventArgs e)
 		{
 			try
@@ -840,6 +843,7 @@ namespace TinyPG
 				statusLine.Text = "-";
 			}
 		}
+
 
 		#endregion
 
