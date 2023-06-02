@@ -115,11 +115,9 @@ class ParseNode<%IParseNode%>
 	<%ITokenGet%>
 	public ArrayList<ParseNode> getNodes() { return nodes;}
 	<%INodesGet%>
-	//[XmlIgnore] // avoid circular references when serializing
 	public ParseNode Parent;
 	public Token Token; // the token/rule
 
-	//[XmlIgnore] // skip redundant text (is part of Token)
 	public String getText() { // text to display in parse tree 
 		return text;
 	}
@@ -138,6 +136,23 @@ class ParseNode<%IParseNode%>
 		this.Token = token;
 		this.text = text;
 		this.nodes = new ArrayList<ParseNode>();
+	}
+	protected boolean IsTokenPresent(TokenType type, int index)
+	{
+		if (index < 0) return false;
+		// left to right
+		for (ParseNode node : nodes)
+		{
+			if (node.Token.Type == type)
+			{
+				index--;
+				if (index < 0)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	protected Object GetValue(ParseTree tree, TokenType type, int index)

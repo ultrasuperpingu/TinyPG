@@ -7,8 +7,7 @@ namespace TinyPG.CodeGenerators.CSharp
 {
 	public class ParseTreeGenerator : BaseGenerator, ICodeGenerator
 	{
-		internal ParseTreeGenerator()
-			: base("ParseTree.cs")
+		internal ParseTreeGenerator() : base("ParseTree.cs")
 		{
 		}
 

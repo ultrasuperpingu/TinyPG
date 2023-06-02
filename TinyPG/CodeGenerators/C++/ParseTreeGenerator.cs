@@ -17,10 +17,10 @@ namespace TinyPG.CodeGenerators.Cpp
 
 		public string Generate(Grammar Grammar, bool Debug)
 		{
-			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
-				return null;
 			if (Debug)
 				throw new Exception("Cpp cannot be generated in debug mode");
+			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
+				return null;
 
 			// copy the parse tree file (optionally)
 			string parsetree = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
@@ -203,7 +203,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
 				match = var.Match(codeblock);
 			}
-			codeblock = "			" + codeblock.Replace("\n", "\r\n		");
+			codeblock = Helper.Indent3 + codeblock.Replace("\n", "\r\n" + Helper.Indent2);
 			return codeblock;
 		}
 	}

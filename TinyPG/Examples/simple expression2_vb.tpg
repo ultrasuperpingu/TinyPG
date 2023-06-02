@@ -48,7 +48,7 @@ AddExpr -> MultExpr (PLUSMINUS MultExpr)* : Double
 { 
 	Dim Value As Double = Convert.ToDouble($MultExpr)
 	Dim i As Double = 1
-	While $MultExpr[i] IsNot Nothing
+	While ?MultExpr[i]
 		Dim sign As String = $PLUSMINUS[i-1].ToString()
 		If sign = "+" Then
 			Value += Convert.ToDouble($MultExpr[i])
@@ -64,7 +64,7 @@ MultExpr -> Atom (MULTDIV Atom)* : Double
 {
 	Dim Value As Double = Convert.ToDouble($Atom)
 	Dim i As Double = 1
-	While $Atom[i] IsNot Nothing
+	While ?Atom[i]
 		Dim sign As String = $MULTDIV[i-1].ToString()
 		If sign = "*" Then
 			Value *= Convert.ToDouble($Atom[i])
@@ -79,9 +79,9 @@ MultExpr -> Atom (MULTDIV Atom)* : Double
 
 Atom -> NUMBER |  BROPEN AddExpr BRCLOSE | ID : Double
 {
-	If $NUMBER IsNot Nothing Then
+	If ?NUMBER Then
 		Return $NUMBER
-	ElseIf $ID IsNot Nothing
+	ElseIf ?ID
 		Return Me.GetVarValue($ID.ToString())
 	Else 
 		Return $AddExpr

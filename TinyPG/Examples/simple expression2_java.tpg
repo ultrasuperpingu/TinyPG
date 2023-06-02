@@ -56,13 +56,13 @@ AddExpr -> MultExpr (PLUSMINUS MultExpr)* : int
 { 
 	int Value = (int)$MultExpr;
 	int i = 1;
-	while ($MultExpr[i] != null)
+	while (?MultExpr[i])
 	{
 		String sign = $PLUSMINUS[i-1].toString();
 		if (sign.equals("+"))
-			Value += (int)($MultExpr[i++]);
+			Value += (int)$MultExpr[i++];
 		else 
-			Value -= (int)($MultExpr[i++]);
+			Value -= (int)$MultExpr[i++];
 	}
 
 	return Value; 
@@ -72,21 +72,24 @@ MultExpr -> Atom (MULTDIV Atom)* : int
 { 
 	int Value = (int)$Atom;
 	int i = 1;
-	while ($Atom[i] != null)
+	while (?Atom[i])
 	{
 		String sign = $MULTDIV[i-1].toString();
 		if (sign.equals("*"))
-			Value *= (int)($Atom[i++]);
+			Value *= (int)$Atom[i++];
 		else 
-			Value /= (int)($Atom[i++]);
+			Value /= (int)$Atom[i++];
 	}
 	return Value; 
 };
 
 Atom -> NUMBER | BROPEN AddExpr BRCLOSE | ID : int
 {
-	if ($NUMBER != null) return Integer.parseInt($NUMBER.toString());
-	if ($ID != null) return getVarValue($ID.toString());
-	else return (int)$AddExpr; 
+	if (?NUMBER)
+		return Integer.parseInt($NUMBER.toString());
+	if (?ID)
+		return getVarValue($ID.toString());
+	else
+		return (int)$AddExpr; 
 };
 
