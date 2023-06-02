@@ -192,14 +192,9 @@ namespace TinyPG.Compiler
 			GrammarNode node = (GrammarNode)paramlist[2];
 
 			string key = node.Nodes[0].Token.Text;
-			// TODO (partially done):Manage escape sequences and @ correctly (probably need to modify string def in BNF Grammar)
-			//string value = node.Nodes[2].Token.Text.Substring(1, node.Nodes[2].Token.Text.Length - 2);
-			//if (value.StartsWith("\""))
-			//	value = value.Substring(1);
+			
 			string value = node.Nodes[2].Token.Text;
-			value = Helper.Unverbatim(value);
-			value = value.Substring(1, node.Nodes[2].Token.Text.Length - 2);
-
+			value = Helper.Unescape(value);
 
 			directive[key] = value;
 

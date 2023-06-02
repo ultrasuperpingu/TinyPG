@@ -100,6 +100,8 @@ namespace TinyPG.Compiler
 			compilerparams.ReferencedAssemblies.Add("System.Windows.Forms.dll");
 			compilerparams.ReferencedAssemblies.Add("System.Drawing.dll");
 			compilerparams.ReferencedAssemblies.Add("System.Xml.dll");
+			compilerparams.ReferencedAssemblies.Add("System.Core.dll");
+			compilerparams.ReferencedAssemblies.Add("System.Linq.dll"); 
 
 			// reference this assembly to share interfaces (for debugging only)
 

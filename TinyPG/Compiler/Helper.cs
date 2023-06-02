@@ -66,13 +66,31 @@ namespace System.Text
 			return "";
 #endif
 		}
-		public static string Unverbatim(string v)
+		public static string Unverbatim(this string v)
 		{
 			if (v[0] == '@')
 			{
 				v = v.Substring(2, v.Length - 3);
 				v = v.Replace(@"\", @"\\");
 				v = "\"" + v.Replace(@"""", "\\\"") + "\"";
+			}
+			return v;
+		}
+		public static string Unescape(string v)
+		{
+			if (v[0] == '@')
+			{
+				v = v.Substring(2, v.Length - 3);
+				v = v.Replace(@"""""", @"""");
+			}
+			else
+			{
+				v = v.Substring(1, v.Length - 2);
+				v = v.Replace(@"\r\n", "\r\n");
+				v = v.Replace(@"\n", "\n");
+				v = v.Replace(@"\r", "\r");
+				v = v.Replace(@"\t", "\t");
+				//TODO: other escape
 			}
 			return v;
 		}
