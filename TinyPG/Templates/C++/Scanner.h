@@ -190,7 +190,6 @@ namespace <%Namespace%>
 				scantokens = std::vector<TokenType>(expectedtokens);
 				scantokens.insert(scantokens.end(), expectedtokens.begin(), expectedtokens.end());
 				scantokens.insert(scantokens.end(), SkipList.begin(), SkipList.end());
-				//scantokens.AddRange(SkipList);
 			}
 
 			do
@@ -207,9 +206,8 @@ namespace <%Namespace%>
 					std::regex r = Patterns[scantokens[i]];
 					std::smatch m;
 					std::regex_search(input, m, r);
-					//Match m = r.Match(input);
+					
 					auto matchLen = std::distance(m[0].first, m[0].second);
-					//if (m.Success && m.Index == 0 && ((m.Length > len) || (scantokens[i] < index && m.Length == len )))
 					if (!m.empty() && m[0].first == input.begin() && ((matchLen > len) || (scantokens[i] < index && matchLen == len)))
 					{
 						len = matchLen;
@@ -237,7 +235,6 @@ namespace <%Namespace%>
 				if (tok.StartPos < Input.length())
 					tok.Column = tok.StartPos - Input.find_last_of('\n', tok.StartPos);
 
-				//if (SkipList.Contains(tok.Type))
 				if (contains(SkipList, tok.Type))
 				{
 					startpos = tok.EndPos;
@@ -251,10 +248,8 @@ namespace <%Namespace%>
 					// only assign to non-skipped tokens
 					tok.Skipped = Skipped; // assign prior skips to this token
 					Skipped = std::vector<Token>(); //reset skips
-					//Skipped = new List<Token>(); //reset skips
 				}
 			}
-			//while (SkipList.Contains(tok.Type));
 			while (contains(SkipList, tok.Type));
 
 			LookAheadToken = tok;

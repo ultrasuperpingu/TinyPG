@@ -159,16 +159,26 @@ namespace TinyPG.CodeGenerators.CSharp
 						firstsExtended = CollectExpectedTokens(rules, index + 1);
 						firstsExtended.AddRange(firsts);
 					}
-					sb.AppendLine(Indent + "	if(!found) {");
-					sb.Append(    Indent + "		tok = scanner.LookAhead(");
-					AppendTokenList(firsts, sb);
-					sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
-					sb.AppendLine(Indent + "		found = true;");
-					sb.AppendLine(Indent + "	} else {");
-					sb.Append(    Indent + "		tok = scanner.LookAhead(");
-					AppendTokenList(firstsExtended, sb);
-					sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
-					sb.AppendLine(Indent + "	}");
+					
+					if (KindOfLL2)
+					{
+						sb.AppendLine(Indent + "	if(!found) {");
+						sb.Append    (Indent + "		tok = scanner.LookAhead(");
+						AppendTokenList(firsts, sb);
+						sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
+						sb.AppendLine(Indent + "		found = true;");
+						sb.AppendLine(Indent + "	} else {");
+						sb.Append    (Indent + "		tok = scanner.LookAhead(");
+						AppendTokenList(firstsExtended, sb);
+						sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
+						sb.AppendLine(Indent + "	}");
+					}
+					else
+					{
+						sb.Append(Indent + "	tok = scanner.LookAhead(");
+						AppendTokenList(firsts, sb);
+						sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
+					}
 					sb.Append(    Indent + "} while (");
 					AppendTokenCondition(firsts, sb, Indent);
 					sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
