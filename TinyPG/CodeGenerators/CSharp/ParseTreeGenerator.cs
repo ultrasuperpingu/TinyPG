@@ -101,7 +101,7 @@ namespace TinyPG.CodeGenerators.CSharp
 			string codeblock = nts.CodeBlock;
 			if (nts == null) return "";
 
-			Regex var = new Regex(@"\$(?<var>[a-zA-Z_0-9]+)(\[(?<index>[^]]+)\])?", RegexOptions.Compiled);
+			Regex var = new Regex(@"(?<eval>\$|\?)(?<var>[a-zA-Z_0-9]+)(\[(?<index>[^]]+)\])?", RegexOptions.Compiled);
 
 			Symbols symbols = nts.DetermineProductionSymbols();
 
@@ -112,44 +112,24 @@ namespace TinyPG.CodeGenerators.CSharp
 				Symbol s = symbols.Find(match.Groups["var"].Value);
 				if (s == null)
 				{
-					//TODO: handle error situation
-					//Errors.Add("Variable $" + match.Groups["var"].Value + " cannot be matched.");
-					break; // error situation
+					continue; // error situation
 				}
 				string indexer = "0";
 				if (match.Groups["index"].Value.Length > 0)
 				{
 					indexer = match.Groups["index"].Value;
 				}
-
-				string replacement = "this.GetValue(tree, TokenType." + s.Name + ", " + indexer + ")";
-
-				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
-				match = var.Match(codeblock);
-			}
-			
-			var = new Regex(@"\?(?<var>[a-zA-Z_0-9]+)(\[(?<index>[^]]+)\])?", RegexOptions.Compiled);
-			match = var.Match(codeblock);
-			while (match.Success)
-			{
-				Symbol s = symbols.Find(match.Groups["var"].Value);
-				if (s == null)
-				{
-					//TODO: handle error situation
-					//Errors.Add("Variable $" + match.Groups["var"].Value + " cannot be matched.");
-					break; // error situation
-				}
-				string indexer = "0";
-				if (match.Groups["index"].Value.Length > 0)
-				{
-					indexer = match.Groups["index"].Value;
-				}
-
-				string replacement = "this.IsTokenPresent(TokenType." + s.Name + ", " + indexer + ")";
+				bool eval = match.Groups["eval"].Value == "$";
+				string replacement;
+				if (eval)
+					replacement = "this.GetValue(tree, TokenType." + s.Name + ", " + indexer + ")";
+				else
+					replacement = "this.IsTokenPresent(TokenType." + s.Name + ", " + indexer + ")";
 
 				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
 				match = var.Match(codeblock);
 			}
+
 			codeblock = Helper.Indent3 + codeblock.Replace("\n", "\r\n" + Helper.Indent2);
 			return codeblock;
 		}
