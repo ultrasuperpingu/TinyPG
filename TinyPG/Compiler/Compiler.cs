@@ -20,6 +20,7 @@ using System.Windows.Forms;
 
 namespace TinyPG.Compiler
 {
+
 	public class Compiler
 	{
 		private Grammar Grammar;
@@ -69,29 +70,41 @@ namespace TinyPG.Compiler
 			IsParsed = false;
 			IsCompiled = false;
 			Errors = new List<string>();
-			if (grammar == null) throw new ArgumentNullException("grammar", "Grammar may not be null");
+			if (grammar == null)
+				throw new ArgumentNullException("grammar", "Grammar may not be null");
 
 			Grammar = grammar;
 			grammar.Preprocess();
 			IsParsed = true;
 
-			BuildCode();
-			if (Errors.Count == 0)
+			if (BuildCode())
 				IsCompiled = true;
 		}
 
 		/// <summary>
 		/// once the grammar compiles correctly, the code can be built.
 		/// </summary>
-		private void BuildCode()
+		private bool BuildCode()
 		{
+			bool result = false;
 			string language = Grammar.Directives["TinyPG"]["Language"];
 			CodeDom.CompilerResults Result;
 			CodeDom.CodeDomProvider provider = CodeGeneratorFactory.CreateCodeDomProvider(language);
+			string templatePathSave = Grammar.Directives["TinyPG"]["TemplatePath"];
+			GenerateDebugMode debugMode = GenerateDebugMode.DebugSelf;
+			int ignoreError = 0;
 			if (provider == null)
 			{
-				Errors.Add("Can't compile " + language + " project.");
-				return;
+				Errors.Add("Can't compile " + language + " project. " + Environment.NewLine +
+					"Compiling with C# : Eval will not be performed and the parsing result is not " + Environment.NewLine +
+					"garantee to be the same than the generated " + language + " sources.");
+				language = "csharp";
+				Grammar.Directives["TinyPG"]["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
+							System.IO.Path.Combine("Templates", "C#") + System.IO.Path.DirectorySeparatorChar;
+				provider = CodeGeneratorFactory.CreateCodeDomProvider(language);
+				debugMode = GenerateDebugMode.DebugOther;
+				ignoreError++;
+				//return;
 			}
 			System.CodeDom.Compiler.CompilerParameters compilerparams = new System.CodeDom.Compiler.CompilerParameters();
 			compilerparams.GenerateInMemory = true;
@@ -118,21 +131,26 @@ namespace TinyPG.Compiler
 					generator.FileName = d["FileName"];
 
 				if (generator != null && d["Generate"].ToLower() == "true")
-					sources.Add(generator.Generate(Grammar, true));
+					sources.Add(generator.Generate(Grammar, debugMode));
 			}
 
 			if (sources.Count > 0)
 			{
 				Result = provider.CompileAssemblyFromSource(compilerparams, sources.ToArray());
 
-				if (Result.Errors.Count > 0)
+				if (Result.Errors.Count > ignoreError)
 				{
 					foreach (CodeDom.CompilerError o in Result.Errors)
 						Errors.Add(o.ErrorNumber.ToString() + " (" + o.Line.ToString()+"," + o.Column.ToString()+"): " + o.ErrorText);
 				}
 				else
+				{
 					assembly = Result.CompiledAssembly;
+					result = true;
+				}
 			}
+			Grammar.Directives["TinyPG"]["TemplatePath"] = templatePathSave;
+			return result;
 		}
 
 		/// <summary>

@@ -10,7 +10,7 @@ namespace TinyPG.CodeGenerators.VBNet
 		{
 		}
 
-		public string Generate(Grammar Grammar, bool Debug)
+		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
@@ -27,7 +27,7 @@ namespace TinyPG.CodeGenerators.VBNet
 			}
 
 			parser = parser.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
-			if (Debug)
+			if (Debug != GenerateDebugMode.None)
 			{
 				parser = parser.Replace(@"<%Imports%>", "Imports TinyPG.Debug");
 				parser = parser.Replace(@"<%Namespace%>", "TinyPG.Debug");

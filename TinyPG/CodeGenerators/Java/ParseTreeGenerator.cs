@@ -14,9 +14,9 @@ namespace TinyPG.CodeGenerators.Java
 		{
 		}
 
-		public string Generate(Grammar Grammar, bool Debug)
+		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
-			if (Debug)
+			if (Debug != GenerateDebugMode.None)
 				throw new Exception("Java cannot be generated in debug mode");
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;

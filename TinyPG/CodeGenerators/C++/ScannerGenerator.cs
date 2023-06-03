@@ -12,13 +12,13 @@ namespace TinyPG.CodeGenerators.Cpp
 		{
 		}
 
-		public string Generate(Grammar Grammar, bool Debug)
+		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
+			if (Debug != GenerateDebugMode.None)
+				throw new Exception("Cpp cannot be generated in debug mode");
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
-			if (Debug)
-				throw new Exception("Cpp cannot be generated in debug mode");
-
+			
 			string scanner = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
 
 			int counter = 2;

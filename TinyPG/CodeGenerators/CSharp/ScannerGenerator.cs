@@ -12,7 +12,7 @@ namespace TinyPG.CodeGenerators.CSharp
 		{
 		}
 
-		public string Generate(Grammar Grammar, bool Debug)
+		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
@@ -75,7 +75,7 @@ namespace TinyPG.CodeGenerators.CSharp
 			scanner = scanner.Replace(@"<%RegExps%>", regexps.ToString());
 			scanner = scanner.Replace(@"<%TokenType%>", tokentype.ToString());
 
-			if (Debug)
+			if (Debug != GenerateDebugMode.None)
 			{
 				scanner = scanner.Replace(@"<%Namespace%>", "TinyPG.Debug");
 				scanner = scanner.Replace(@"<%IToken%>", " : TinyPG.Debug.IToken");

@@ -17,7 +17,7 @@ namespace TinyPG
 			this.grammar = grammar;
 		}
 
-		public void Generate(bool debug)
+		public void Generate(bool debug = false)
 		{
 			ICodeGenerator generator;
 
@@ -35,7 +35,7 @@ namespace TinyPG
 				{
 					File.WriteAllText(
 						Path.Combine(grammar.GetOutputPath(), generator.FileName),
-						generator.Generate(grammar, debug));
+						generator.Generate(grammar, debug? GenerateDebugMode.DebugSelf: GenerateDebugMode.None));
 				}
 			}
 

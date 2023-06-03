@@ -2,6 +2,7 @@
 using System.IO;
 using TinyPG.Compiler;
 using System.Text.RegularExpressions;
+using System;
 
 namespace TinyPG.CodeGenerators.CSharp
 {
@@ -10,12 +11,12 @@ namespace TinyPG.CodeGenerators.CSharp
 		internal ParseTreeGenerator() : base("ParseTree.cs")
 		{
 		}
-
-		public string Generate(Grammar Grammar, bool Debug)
+		private bool isDebugOther;
+		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
-
+			isDebugOther = Debug == GenerateDebugMode.DebugOther;
 			// copy the parse tree file (optionally)
 			string parsetree = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
 
@@ -31,14 +32,14 @@ namespace TinyPG.CodeGenerators.CSharp
 				evalsymbols.AppendLine("				break;");
 
 				string returnType = "object";
-				if (!string.IsNullOrEmpty(s.ReturnType))
+				if (!string.IsNullOrEmpty(s.ReturnType) && !isDebugOther)
 					returnType = s.ReturnType;
 				string defaultReturnValue = "default("+returnType+")";
-				if (!string.IsNullOrEmpty(s.ReturnTypeDefault))
+				if (!string.IsNullOrEmpty(s.ReturnTypeDefault) && !isDebugOther)
 					defaultReturnValue = s.ReturnTypeDefault;
 				evalmethods.AppendLine("		protected virtual " + returnType + " Eval" + s.Name + "(ParseTree tree, params object[] paramlist)");
 				evalmethods.AppendLine("		{");
-				if (s.CodeBlock != null)
+				if (s.CodeBlock != null && !isDebugOther)
 				{
 					// paste user code here
 					evalmethods.AppendLine(FormatCodeBlock(s));
@@ -58,7 +59,7 @@ namespace TinyPG.CodeGenerators.CSharp
 			}
 
 			parsetree = parsetree.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
-			if (Debug)
+			if (Debug != GenerateDebugMode.None)
 			{
 				parsetree = parsetree.Replace(@"<%Namespace%>", "TinyPG.Debug");
 				parsetree = parsetree.Replace(@"<%ParseError%>", " : TinyPG.Debug.IParseError");
@@ -69,7 +70,14 @@ namespace TinyPG.CodeGenerators.CSharp
 
 				string inodes = "public List<IParseNode> INodes {get { return nodes.ConvertAll<IParseNode>( new Converter<ParseNode, IParseNode>( delegate(ParseNode n) { return (IParseNode)n; })); }}\r\n\r\n";
 				parsetree = parsetree.Replace(@"<%INodesGet%>", inodes);
-				parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
+				if (Debug == GenerateDebugMode.DebugSelf)
+				{
+					parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
+				}
+				else
+				{
+					parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", "");
+				}
 			}
 			else
 			{
@@ -85,7 +93,6 @@ namespace TinyPG.CodeGenerators.CSharp
 
 			parsetree = parsetree.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
 			parsetree = parsetree.Replace(@"<%VirtualEvalMethods%>", evalmethods.ToString());
-
 			return parsetree;
 		}
 

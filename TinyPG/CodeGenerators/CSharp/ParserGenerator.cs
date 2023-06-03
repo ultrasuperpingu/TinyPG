@@ -12,7 +12,7 @@ namespace TinyPG.CodeGenerators.CSharp
 		{
 		}
 		private bool KindOfLL2 = false;
-		public string Generate(Grammar Grammar, bool Debug)
+		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
@@ -29,7 +29,7 @@ namespace TinyPG.CodeGenerators.CSharp
 			}
 
 			parser = parser.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
-			if (Debug)
+			if (Debug != GenerateDebugMode.None)
 			{
 				parser = parser.Replace(@"<%Namespace%>", "TinyPG.Debug");
 				parser = parser.Replace(@"<%IParser%>", " : TinyPG.Debug.IParser");

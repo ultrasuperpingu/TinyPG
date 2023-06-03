@@ -773,7 +773,10 @@ namespace TinyPG
 
 				XmlDocument doc = new XmlDocument();
 				doc.Load(configfile);
-				openFileDialog.InitialDirectory = doc["AppSettings"]["OpenFilePath"].Attributes[0].Value;
+				var ofp = doc["AppSettings"]["OpenFilePath"].Attributes[0].Value;
+				if (string.IsNullOrEmpty(ofp))
+					ofp = @".\Examples";
+				openFileDialog.InitialDirectory = ofp;
 				saveFileDialog.InitialDirectory = doc["AppSettings"]["SaveFilePath"].Attributes[0].Value;
 				GrammarFile = doc["AppSettings"]["GrammarFile"].Attributes[0].Value;
 

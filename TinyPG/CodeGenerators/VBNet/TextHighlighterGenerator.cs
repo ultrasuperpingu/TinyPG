@@ -12,7 +12,7 @@ namespace TinyPG.CodeGenerators.VBNet
 		{
 		}
 
-		public string Generate(Grammar Grammar, bool Debug)
+		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
@@ -64,7 +64,7 @@ namespace TinyPG.CodeGenerators.VBNet
 			generatedtext = generatedtext.Replace(@"<%RtfColorPalette%>", colors.ToString());
 			generatedtext = generatedtext.Replace(@"<%TextHighlighterCustomCode%>", Grammar.Directives["TextHighlighter"]["CustomCode"]);
 
-			if (Debug)
+			if (Debug != GenerateDebugMode.None)
 			{
 				generatedtext = generatedtext.Replace(@"<%Namespace%>", "TinyPG.Debug");
 			}

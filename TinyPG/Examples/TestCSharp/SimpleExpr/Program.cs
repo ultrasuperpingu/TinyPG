@@ -11,6 +11,9 @@ namespace TinyExprEval
 		public static void Main(string[] Args)
 		{
 			Parser p = new Parser(new Scanner());
+			var tree = p.Parse("5*3+12/3");
+			Console.WriteLine(tree.Eval());
+			Console.ReadLine();
 		}
 	}
 }

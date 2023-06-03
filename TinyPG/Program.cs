@@ -118,14 +118,14 @@ namespace TinyPG
 		{
 			this.output.AppendLine("Building code...");
 			compiler.Compile(grammar);
+			foreach (string err in compiler.Errors)
+				this.output.AppendLine(err);
 			if (!compiler.IsCompiled)
 			{
-				foreach (string err in compiler.Errors)
-					this.output.AppendLine(err);
 				this.output.AppendLine("Compilation contains errors, could not compile.");
 			}
 
-			new GeneratedFilesWriter(grammar).Generate(false);
+			new GeneratedFilesWriter(grammar).Generate();
 
 			return compiler.IsCompiled;
 		}
