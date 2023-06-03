@@ -142,27 +142,11 @@ namespace <%Namespace%>
 			this.text = text;
 			this.nodes = new List<ParseNode>();
 		}
-		protected virtual bool IsTokenPresent(TokenType type, int index)
-		{
-			if (index < 0) return false;
-			// left to right
-			foreach (ParseNode node in nodes)
-			{
-				if (node.Token.Type == type)
-				{
-					index--;
-					if (index < 0)
-					{
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-		protected virtual string GetTerminalValue(TokenType type, int index)
+
+		protected virtual ParseNode GetTokenNode(TokenType type, int index)
 		{
 			if (index < 0)
-				return "";
+				return null;
 			// left to right
 			foreach (ParseNode node in nodes)
 			{
@@ -171,12 +155,27 @@ namespace <%Namespace%>
 					index--;
 					if (index < 0)
 					{
-						return node.Token.Text;
+						return node;
 					}
 				}
 			}
 			return null;
 		}
+
+		protected virtual bool IsTokenPresent(TokenType type, int index)
+		{
+			ParseNode node = GetTokenNode(type, index);
+			return node != null;
+		}
+
+		protected virtual string GetTerminalValue(TokenType type, int index)
+		{
+			ParseNode node = GetTokenNode(type, index);
+			if (node != null)
+				return node.Token.Text;
+			return null;
+		}
+
 		protected object GetValue(ParseTree tree, TokenType type, int index)
 		{
 			return GetValue(tree, type, ref index);

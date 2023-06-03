@@ -50,7 +50,7 @@
 [Skip] 		WHITESPACE  	-> @"\s+";
 
 Start -> (AddExpr)? EOF : int default(0)
-{ return (int)$AddExpr; };
+{ return $AddExpr; };
 
 AddExpr -> MultExpr (PLUSMINUS MultExpr)* : int default(0)
 { 

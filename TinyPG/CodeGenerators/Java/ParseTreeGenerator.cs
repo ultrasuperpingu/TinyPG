@@ -63,21 +63,9 @@ namespace TinyPG.CodeGenerators.Java
 				evalmethods.AppendLine("	protected " + returnType + " Get" + s.Name + "Value(ParseTree tree, int index)");
 				evalmethods.AppendLine("	{");
 				evalmethods.AppendLine("		" + returnType + " o = "+defaultReturnValue+";");
-				evalmethods.AppendLine("		if (index < 0)");
-				evalmethods.AppendLine("			return o;");
-				evalmethods.AppendLine("		// left to right");
-				evalmethods.AppendLine("		for (ParseNode node : nodes)");
-				evalmethods.AppendLine("		{");
-				evalmethods.AppendLine("			if (node.Token.Type == TokenType."+s.Name+")");
-				evalmethods.AppendLine("			{");
-				evalmethods.AppendLine("				index--;");
-				evalmethods.AppendLine("				if (index < 0)");
-				evalmethods.AppendLine("				{");
-				evalmethods.AppendLine("					o = node.Eval"+s.Name+"(tree);");
-				evalmethods.AppendLine("					break;");
-				evalmethods.AppendLine("				}");
-				evalmethods.AppendLine("			}");
-				evalmethods.AppendLine("		}");
+				evalmethods.AppendLine("		ParseNode node = GetTokenNode(TokenType." + s.Name + ", index);");
+				evalmethods.AppendLine("		if (node != null)");
+				evalmethods.AppendLine("			o = node.Eval"+s.Name+"(tree);");
 				evalmethods.AppendLine("		return o;");
 				evalmethods.AppendLine("	}\r\n");
 			}

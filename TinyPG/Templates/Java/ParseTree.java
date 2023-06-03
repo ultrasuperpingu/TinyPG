@@ -137,27 +137,10 @@ class ParseNode<%IParseNode%>
 		this.text = text;
 		this.nodes = new ArrayList<ParseNode>();
 	}
-	protected boolean IsTokenPresent(TokenType type, int index)
-	{
-		if (index < 0) return false;
-		// left to right
-		for (ParseNode node : nodes)
-		{
-			if (node.Token.Type == type)
-			{
-				index--;
-				if (index < 0)
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	protected String GetTerminalValue(TokenType type, int index)
+	protected ParseNode GetTokenNode(TokenType type, int index)
 	{
 		if (index < 0)
-			return "";
+			return null;
 		// left to right
 		for (ParseNode node : nodes)
 		{
@@ -166,12 +149,26 @@ class ParseNode<%IParseNode%>
 				index--;
 				if (index < 0)
 				{
-					return node.Token.getText();
+					return node;
 				}
 			}
 		}
 		return null;
 	}
+
+	protected boolean IsTokenPresent(TokenType type, int index)
+	{
+		ParseNode node = GetTokenNode(type, index);
+		return node != null;
+	}
+	protected String GetTerminalValue(TokenType type, int index)
+	{
+		ParseNode node = GetTokenNode(type, index);
+		if (node != null)
+			return node.Token.getText();
+		return null;
+	}
+
 	protected Object GetValue(ParseTree tree, TokenType type, int index)
 	{
 		return GetValue(tree, type, new int[]{ index });
