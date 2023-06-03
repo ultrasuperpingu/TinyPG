@@ -7,8 +7,7 @@ namespace TinyPG.CodeGenerators.VBNet
 {
 	public class ScannerGenerator : BaseGenerator, ICodeGenerator
 	{
-		internal ScannerGenerator()
-			: base("Scanner.vb")
+		internal ScannerGenerator() : base("Scanner.vb")
 		{
 		}
 
@@ -50,7 +49,19 @@ namespace TinyPG.CodeGenerators.VBNet
 				string vbexpr = s.Expression.ToString();
 				if (vbexpr.StartsWith("@"))
 					vbexpr = vbexpr.Substring(1);
-				regexps.Append("			regex = new Regex(" + vbexpr + ", RegexOptions.Compiled)\r\n");
+				string RegexCompiled = null;
+				Grammar.Directives.Find("TinyPG").TryGetValue("RegexCompiled", out RegexCompiled);
+
+				regexps.Append("			regex = new Regex(" + vbexpr + ", RegexOptions.None");
+
+				if (RegexCompiled == null || RegexCompiled.ToLower().Equals("true"))
+					regexps.Append(" & RegexOptions.Compiled");
+
+				if (s.Attributes.ContainsKey("IgnoreCase"))
+					regexps.Append(" & RegexOptions.IgnoreCase");
+
+				regexps.Append(")\r\n");
+
 				regexps.Append("			Patterns.Add(TokenType." + s.Name + ", regex)\r\n");
 				regexps.Append("			Tokens.Add(TokenType." + s.Name + ")\r\n\r\n");
 

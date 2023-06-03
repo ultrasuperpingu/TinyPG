@@ -255,8 +255,19 @@ namespace TinyPG.Compiler
 
 			DirectoryInfo dir = new DirectoryInfo(folder + Path.DirectorySeparatorChar);
 			if (!dir.Exists)
-				Directory.CreateDirectory(folder);
-			
+			{
+				try
+				{
+					Directory.CreateDirectory(folder);
+				}
+				catch(Exception e)
+				{
+					Console.WriteLine("Can't create directory " +  folder + ": " + e.Message);
+				}
+			}
+			if (!dir.Exists)
+				return null;
+
 			return folder;
 		}
 

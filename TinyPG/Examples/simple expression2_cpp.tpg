@@ -6,7 +6,7 @@
 //void main() {
 //	TinyPG::Scanner s = TinyPG::Scanner();
 //	TinyPG::Parser p = TinyPG::Parser(s);
-//	auto tree = p.Parse("(5 + 3) / 5 * (3 - 2)");
+//	auto tree = p.Parse("(_5 + 3) / _15 * (3 - 2)");
 //	std::map<std::string, int> context;
 //	context.insert(std::pair<std::string, int>("_5", 5));
 //	context.insert(std::pair<std::string, int>("_15", 15));

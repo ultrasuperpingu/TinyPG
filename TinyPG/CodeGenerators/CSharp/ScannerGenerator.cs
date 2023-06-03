@@ -7,8 +7,7 @@ namespace TinyPG.CodeGenerators.CSharp
 {
 	public class ScannerGenerator : BaseGenerator, ICodeGenerator
 	{
-		internal ScannerGenerator()
-			: base("Scanner.cs")
+		internal ScannerGenerator() : base("Scanner.cs")
 		{
 		}
 

@@ -188,7 +188,7 @@ namespace TinyPG.Compiler
 
 		protected override object EvalNameValue(ParseTree tree, params object[] paramlist)
 		{
-			Grammar grammer = (Grammar)paramlist[0];
+			Grammar grammar = (Grammar)paramlist[0];
 			Directive directive = (Directive)paramlist[1];
 			GrammarNode node = (GrammarNode)paramlist[2];
 
@@ -211,11 +211,11 @@ namespace TinyPG.Compiler
 					names.Add("RegexCompiled");
 
 					if (key == "TemplatePath")
-						if (grammer.GetTemplatePath() == null)
+						if (grammar.GetTemplatePath() == null)
 							tree.Errors.Add(new ParseError("Template path '" + value + "' does not exist", 0x1060, node.Nodes[2]));
 
 					if (key == "OutputPath")
-						if (grammer.GetOutputPath() == null)
+						if (grammar.GetOutputPath() == null)
 							tree.Errors.Add(new ParseError("Output path '" + value + "' does not exist", 0x1061, node.Nodes[2]));
 
 					if (key == "Language")
@@ -235,8 +235,9 @@ namespace TinyPG.Compiler
 			}
 
 			if (!names.Contains(key))
+			{
 				tree.Errors.Add(new ParseError("Directive attribute '" + key + "' is not supported", 0x1034, node.Nodes[0]));
-
+			}
 			return null;
 		}
 
