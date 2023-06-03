@@ -1,19 +1,83 @@
 //@TinyPG - a Tiny Parser Generator v1.5
-//Copyright © Herre Kuijpers 2008-2010
+//Copyright © Herre Kuijpers 2008-2010, modified by ultrasuperpingu 2023
 //Simple expression - example of an mathematical expression parser
 
-<% @TinyPG Language="vb" %>
+// The TinyPG Directive allows to specify the following parameters:
+// * Language: c#, cs, csharp, vb, vb.net, vbnet, visualbasic,
+// 		 java, cpp, c++ (case insensitive). Default is C#.
+// * Namespace: The namespace of the generated code. This can't be empty. Default is TinyPG.
+// * OutputPath: The directory where the generated files will be produced. Default is ".".
+// * TemplatePath: The directory where the template files used for generation will be found.
+//			The default value is language dependant but will be in {ExeFileDir}\Template\{Language}
+// * RegexCompiled: For .net languages, specify if the Regex are instanciated with the RegexOption.Compiled option. Default is true.
+<% @TinyPG Language="C#" Namespace="TinyPG.SimpleExpr" OutputPath="." RegexCompiled="true" %>
 
+// The Parser Directive allows to specify the following parameters:
+// * Generate: Is the parser has to be generated. Default is true.
+// * FileName: The filename of the generated code. This can't be empty. Default is the template filename (ie Parser.{language file extension}).
+// * CustomCode: Custom code to be included in the body of the Parser class. Default is "".
+<% @Parser Generate="true" FileName="Parser.cs" %>
+// The ParseTree Directive allows to specify the following parameters:
+// * Generate: Is the parser tree file (which contains evaluation code or is the base class for it) has to be generated. Default is true.
+// * FileName: The filename of the generated code. This can't be empty. Default is the template filename (ie ParseTree.{language file extension}).
+// * CustomCode: Custom code to be included in the body of the Parser class. Default is "".
+<% @ParseTree Generate="true" FileName="ParseTree.cs" %>
+// The Scanner Directive allows to specify the following parameters:
+// * Generate: Is the scanner file has to be generated. Default is true.
+// * FileName: The filename of the generated code. This can't be empty. Default is the template filename (ie Scanner.{language file extension}).
+// * CustomCode: Custom code to be included in the body of the Scanner class. Default is "".
+<% @Scanner Generate="true" FileName="Scanner.cs" %>
+// The TextHighlighter Directive (not allowed in none .net languages for now) allows to specify the following parameters:
+// * Generate: Is the text highlighter file has to be generated. Default is false.
+// * FileName: The filename of the generated code. This can't be empty. Default is the template filename (ie TextHighlighter.{language file extension}).
+// * CustomCode: Custom code to be included in the body of the Scanner class. Default is "".
+<% @TextHighlighter Generate="true" FileName="Scanner.cs" %>
+
+// Terminal rules:
+//  The terminal rules are specified with the following syntax:
+//    [Attribute] TokenName -> Regex;
+//      * Attribute: Optional attribute. A attribute name which can optionally be followed by parameters (ie. AttributeName(Param1, Param2, ...).
+//                   The attribute is specified between square brackets. All the accepted attributes are described thereafter.
+//      * TokenName: the name of the rule. By convention, it is recommanded to use UPPERCASE.
+//      * Regex: the regex to match for the terminal symbol, specified with a verbatim string.
+//               Leading @ is optional but even without it, the string will be interpreted as verbatim.
+
+// The Color attribute (allowed on terminal terms), specify the color (integer rgb format) of the token in the text highlighter (used in the Expression Evaluator window).
+[Color(15,15,180)]
 NUMBER 	-> @"[0-9]+";
-PLUSMINUS 	-> @"(\+|-)";
-MULTDIV 	-> @"\*|/";
-BROPEN 	->  @"\(";
-BRCLOSE 	->  @"\)";
-EOF         -> @"^$";
+// The IgnoreCase attribute add the RegexOption.IgnoreCase to the regex creation option for this terminal term.. Can't be used on non terminal rules.
+[IgnoreCase]
+[Color(15,180,15)]
+PLUSMINUS	->	@"(\+|-)";
+[Color(15,180,15)]
+MULTDIV	->	@"\*|/";
+[Color(180,15,15)]
+BROPEN		->	@"\(";
+[Color(180,15,15)]
+BRCLOSE	-> 	@"\)";
+EOF		->	@"^$";
 
+// The Skip attribute tells the parser to ignore this token. Can't be used on non terminal rules.
 [Skip] WHITESPACE  -> @"\s+";
 
-Start 		-> (AddExpr)? EOF;
-AddExpr 	-> MultExpr (PLUSMINUS MultExpr)*;
-MultExpr 	-> Atom (MULTDIV Atom)*;
+
+// Terminal rules:
+//  The terminal rules are specified with the following syntax:
+//    RuleName -> Rule : ReturnTypeName default(DefaultValue);
+//
+//      * RuleName: the name of the rule. By convention, it is recommanded to use CamelCase.
+//      * Rule: BNF syntax rule.
+//      * ReturnTypeName: the return type of the rule. This is optional (ie. "RuleName -> Rule;" is a valid rule).
+//                        Default is object or equivalent for most language. C++ default is void*.
+//      * DefaultValue: the optional (ie. "RuleName -> Rule : ReturnType;" is a valid rule) default return value of the rule.
+//                      Default is null or equivalent in most language.
+//
+//  An optional code block containing custom code to evaluate the rule can be supplied to the end of the rule.
+//    See simple expression2.tpg to have examples of this.
+
+
+// Start is by convention the main rule to be matched by the parser.
+Start 		-> (AddExpr)? EOF : int default(5);
+AddExpr 	-> MultExpr (PLUSMINUS MultExpr)* : int;
+MultExpr 	-> Atom (MULTDIV Atom)* : List<string>;
 Atom 		-> NUMBER | BROPEN AddExpr BRCLOSE;
