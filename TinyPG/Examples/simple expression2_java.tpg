@@ -49,47 +49,47 @@
 
 [Skip] 		WHITESPACE  	-> @"\s+";
 
-Start -> (AddExpr)? EOF : int
-{ return (int)$AddExpr; };      
+Start -> (AddExpr)? EOF : int default(0)
+{ return (int)$AddExpr; };
 
-AddExpr -> MultExpr (PLUSMINUS MultExpr)* : int
+AddExpr -> MultExpr (PLUSMINUS MultExpr)* : int default(0)
 { 
-	int Value = (int)$MultExpr;
+	int Value = $MultExpr;
 	int i = 1;
 	while (?MultExpr[i])
 	{
-		String sign = $PLUSMINUS[i-1].toString();
+		String sign = $PLUSMINUS[i-1];
 		if (sign.equals("+"))
-			Value += (int)$MultExpr[i++];
+			Value += $MultExpr[i++];
 		else 
-			Value -= (int)$MultExpr[i++];
+			Value -= $MultExpr[i++];
 	}
 
 	return Value; 
 };
 
-MultExpr -> Atom (MULTDIV Atom)* : int
+MultExpr -> Atom (MULTDIV Atom)* : int default(0)
 { 
-	int Value = (int)$Atom;
+	int Value = $Atom;
 	int i = 1;
 	while (?Atom[i])
 	{
 		String sign = $MULTDIV[i-1].toString();
 		if (sign.equals("*"))
-			Value *= (int)$Atom[i++];
+			Value *= $Atom[i++];
 		else 
-			Value /= (int)$Atom[i++];
+			Value /= $Atom[i++];
 	}
 	return Value; 
 };
 
-Atom -> NUMBER | BROPEN AddExpr BRCLOSE | ID : int
+Atom -> NUMBER | BROPEN AddExpr BRCLOSE | ID : int default(0)
 {
 	if (?NUMBER)
-		return Integer.parseInt($NUMBER.toString());
+		return Integer.parseInt($NUMBER);
 	if (?ID)
-		return getVarValue($ID.toString());
+		return getVarValue($ID);
 	else
-		return (int)$AddExpr; 
+		return $AddExpr; 
 };
 

@@ -154,7 +154,24 @@ class ParseNode<%IParseNode%>
 		}
 		return false;
 	}
-
+	protected String GetTerminalValue(TokenType type, int index)
+	{
+		if (index < 0)
+			return "";
+		// left to right
+		for (ParseNode node : nodes)
+		{
+			if (node.Token.Type == type)
+			{
+				index--;
+				if (index < 0)
+				{
+					return node.Token.getText();
+				}
+			}
+		}
+		return null;
+	}
 	protected Object GetValue(ParseTree tree, TokenType type, int index)
 	{
 		return GetValue(tree, type, new int[]{ index });

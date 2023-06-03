@@ -38,7 +38,8 @@ namespace <%Namespace%>
 		
 		inline virtual bool IsTokenPresent(TokenType type, int index)
 		{
-			if (index < 0) return false;
+			if (index < 0)
+				return false;
 			// left to right
 			for (ParseNode* node : Nodes)
 			{
@@ -52,6 +53,25 @@ namespace <%Namespace%>
 				 }
 			}
 			return false;
+		}
+		
+		inline virtual std::string GetTerminalValue(TokenType type, int index)
+		{
+			if (index < 0)
+				return "";
+			// left to right
+			for (ParseNode* node : Nodes)
+			{
+				if (node->TokenVal.Type == type)
+				{
+					index--;
+					if (index < 0)
+					{
+						return node->TokenVal.Text;
+					}
+				}
+			}
+			return "";
 		}
 
 		/*inline void* GetValue(const ParseTree& tree, TokenType type, int index)

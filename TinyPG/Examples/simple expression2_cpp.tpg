@@ -62,9 +62,9 @@ AddExpr -> MultExpr (PLUSMINUS MultExpr)* : int default(0)
 	{
 		std::string sign = $PLUSMINUS[i-1];
 		if (sign == "+")
-			Value += (int)($MultExpr[i++]);
+			Value += $MultExpr[i++];
 		else 
-			Value -= (int)($MultExpr[i++]);
+			Value -= $MultExpr[i++];
 	}
 
 	return Value; 
@@ -78,17 +78,19 @@ MultExpr -> Atom (MULTDIV Atom)* : int default(0)
 	{
 		std::string sign = $MULTDIV[i-1];
 		if (sign == "*")
-			Value *= (int)($Atom[i++]);
+			Value *= $Atom[i++];
 		else 
-			Value /= (int)($Atom[i++]);
+			Value /= $Atom[i++];
 	}
 	return Value; 
 };
 
 Atom -> NUMBER | BROPEN AddExpr BRCLOSE | ID : int default(0)
 {
-	if (?NUMBER) return std::stoi($NUMBER);
-	if (?ID) return getVarValue($ID);
-	else return $AddExpr; 
+	if (?NUMBER)
+		return std::stoi($NUMBER);
+	if (?ID)
+		return getVarValue($ID);
+	return $AddExpr; 
 };
 

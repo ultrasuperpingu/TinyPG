@@ -76,7 +76,13 @@ namespace System.Text
 			}
 			return v;
 		}
-		public static string Unescape(string v)
+		public static string UnescapeVerbatim(this string v)
+		{
+			if (v[0] != '@')
+				v='@' + v;
+			return Unescape(v);
+		}
+		public static string Unescape(this string v)
 		{
 			if (v[0] == '@')
 			{
@@ -121,6 +127,10 @@ namespace System.Text
 		public static string FixNewLines(this string input)
 		{
 			// Inefficient way to do it...
+			// Maybe try:
+			// r = new Regex("(?<!\r)\n");
+			// r = new Regex("\r(?!\n)");
+
 			return input.Replace("\r\n", "\n").Replace('\r','\n').Replace("\n", Environment.NewLine); ;
 		}
 	}

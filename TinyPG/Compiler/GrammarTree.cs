@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using TinyPG.Highlighter;
 
 namespace TinyPG.Compiler
 {
@@ -194,7 +195,7 @@ namespace TinyPG.Compiler
 			string key = node.Nodes[0].Token.Text;
 			
 			string value = node.Nodes[2].Token.Text;
-			value = Helper.Unescape(value);
+			value = value.UnescapeVerbatim().FixNewLines();
 
 			directive[key] = value;
 

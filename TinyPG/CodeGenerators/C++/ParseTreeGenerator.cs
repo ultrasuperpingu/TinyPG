@@ -28,48 +28,6 @@ namespace TinyPG.CodeGenerators.Cpp
 			StringBuilder evalsymbols = new StringBuilder();
 			StringBuilder evalmethods = new StringBuilder();
 
-			foreach (TerminalSymbol s in Grammar.GetTerminals())
-			{
-				/*evalmethods.AppendLine("		inline virtual bool IsToken" + s.Name + "Present(int index)");
-				evalmethods.AppendLine("		{");
-				evalmethods.AppendLine("			if (index < 0) return false;");
-				evalmethods.AppendLine("			// left to right");
-				evalmethods.AppendLine("			for (ParseNode* node : Nodes)");
-				evalmethods.AppendLine("			{");
-				evalmethods.AppendLine("				if (node->TokenVal.Type == TokenType::"+s.Name+")");
-				evalmethods.AppendLine("			    {");
-				evalmethods.AppendLine("			        index--;");
-				evalmethods.AppendLine("			        if (index < 0)");
-				evalmethods.AppendLine("			        {");
-				evalmethods.AppendLine("						return true;");
-				evalmethods.AppendLine("			        }");
-				evalmethods.AppendLine("			    }");
-				evalmethods.AppendLine("			}");
-				evalmethods.AppendLine("			return false;");
-				evalmethods.AppendLine("		}\r\n");*/
-
-				string returnType = "std::string";
-				evalmethods.AppendLine("		inline virtual " + returnType + " Get" + s.Name + "Value(const ParseTree& tree, int index)");
-				evalmethods.AppendLine("		{");
-				evalmethods.AppendLine("			" + returnType + " o = \"\";");
-				evalmethods.AppendLine("			if (index < 0) return o;");
-				evalmethods.AppendLine("			// left to right");
-				evalmethods.AppendLine("			for (ParseNode* node : Nodes)");
-				evalmethods.AppendLine("			{");
-				evalmethods.AppendLine("				if (node->TokenVal.Type == TokenType::"+s.Name+")");
-				evalmethods.AppendLine("				{");
-				evalmethods.AppendLine("					index--;");
-				evalmethods.AppendLine("					if (index < 0)");
-				evalmethods.AppendLine("					{");
-				evalmethods.AppendLine("						o =  node->TokenVal.Text;");
-				evalmethods.AppendLine("						break;");
-				evalmethods.AppendLine("					}");
-				evalmethods.AppendLine("				}");
-				evalmethods.AppendLine("			}");
-				evalmethods.AppendLine("			return o;");
-				evalmethods.AppendLine("		}\r\n");
-			}
-
 			// build non terminal tokens
 			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
@@ -108,7 +66,8 @@ namespace TinyPG.CodeGenerators.Cpp
 				evalmethods.AppendLine("		inline virtual " + returnType + " Get" + s.Name + "Value(const ParseTree& tree, int index)");
 				evalmethods.AppendLine("		{");
 				evalmethods.AppendLine("			" + returnType + " o = "+defaultReturnValue+";");
-				evalmethods.AppendLine("			if (index < 0) return o;");
+				evalmethods.AppendLine("			if (index < 0)");
+				evalmethods.AppendLine("				return o;");
 				evalmethods.AppendLine("			// left to right");
 				evalmethods.AppendLine("			for (ParseNode* node : Nodes)");
 				evalmethods.AppendLine("			{");
@@ -174,10 +133,21 @@ namespace TinyPG.CodeGenerators.Cpp
 				}
 				bool eval = match.Groups["eval"].Value == "$";
 				string replacement;
-				if(eval)
-					replacement = "this->Get"+s.Name+"Value(tree, " + indexer + ")";
+				if (eval)
+				{
+					if(s is TerminalSymbol)
+					{
+						replacement = "this->GetTerminalValue(TokenType::" + s.Name + ", " + indexer + ")";
+					}
+					else
+					{
+						replacement = "this->Get"+s.Name+"Value(tree, " + indexer + ")";
+					}
+				}
 				else
+				{
 					replacement = "this->IsTokenPresent(TokenType::" + s.Name + ", " + indexer + ")";
+				}
 				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
 				match = var.Match(codeblock);
 			}

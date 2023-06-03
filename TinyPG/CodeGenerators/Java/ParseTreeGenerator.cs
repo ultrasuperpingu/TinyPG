@@ -38,7 +38,7 @@ namespace TinyPG.CodeGenerators.Java
 				string returnType = "object";
 				if (!string.IsNullOrEmpty(s.ReturnType))
 					returnType = s.ReturnType;
-				string defaultReturnValue = "default("+returnType+")";
+				string defaultReturnValue = "null";
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault))
 					defaultReturnValue = s.ReturnTypeDefault;
 				evalmethods.AppendLine("	protected " + returnType + " Eval" + s.Name + "(ParseTree tree, Object... paramlist)");
@@ -59,6 +59,26 @@ namespace TinyPG.CodeGenerators.Java
 
 					// otherwise simply not implemented!
 				}
+				evalmethods.AppendLine("	}\r\n");
+				evalmethods.AppendLine("	protected " + returnType + " Get" + s.Name + "Value(ParseTree tree, int index)");
+				evalmethods.AppendLine("	{");
+				evalmethods.AppendLine("		" + returnType + " o = "+defaultReturnValue+";");
+				evalmethods.AppendLine("		if (index < 0)");
+				evalmethods.AppendLine("			return o;");
+				evalmethods.AppendLine("		// left to right");
+				evalmethods.AppendLine("		for (ParseNode node : nodes)");
+				evalmethods.AppendLine("		{");
+				evalmethods.AppendLine("			if (node.Token.Type == TokenType."+s.Name+")");
+				evalmethods.AppendLine("			{");
+				evalmethods.AppendLine("				index--;");
+				evalmethods.AppendLine("				if (index < 0)");
+				evalmethods.AppendLine("				{");
+				evalmethods.AppendLine("					o = node.Eval"+s.Name+"(tree);");
+				evalmethods.AppendLine("					break;");
+				evalmethods.AppendLine("				}");
+				evalmethods.AppendLine("			}");
+				evalmethods.AppendLine("		}");
+				evalmethods.AppendLine("		return o;");
 				evalmethods.AppendLine("	}\r\n");
 			}
 
@@ -107,14 +127,23 @@ namespace TinyPG.CodeGenerators.Java
 				{
 					indexer = match.Groups["index"].Value;
 				}
-
 				bool eval = match.Groups["eval"].Value == "$";
 				string replacement;
 				if (eval)
-					replacement = "this.GetValue(tree, TokenType." + s.Name + ", " + indexer + ")";
+				{
+					if(s is TerminalSymbol)
+					{
+						replacement = "this.GetTerminalValue(TokenType." + s.Name + ", " + indexer + ")";
+					}
+					else
+					{
+						replacement = "this.Get"+s.Name+"Value(tree, " + indexer + ")";
+					}
+				}
 				else
+				{
 					replacement = "this.IsTokenPresent(TokenType." + s.Name + ", " + indexer + ")";
-
+				}
 				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
 				match = var.Match(codeblock);
 			}

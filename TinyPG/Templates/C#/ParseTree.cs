@@ -159,6 +159,24 @@ namespace <%Namespace%>
 			}
 			return false;
 		}
+		protected virtual string GetTerminalValue(TokenType type, int index)
+		{
+			if (index < 0)
+				return "";
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == type)
+				{
+					index--;
+					if (index < 0)
+					{
+						return node.Token.Text;
+					}
+				}
+			}
+			return null;
+		}
 		protected object GetValue(ParseTree tree, TokenType type, int index)
 		{
 			return GetValue(tree, type, ref index);
