@@ -22,12 +22,12 @@ namespace TinyPG
 		public int CurrentPosition;
 		public List<Token> Skipped; // tokens that were skipped
 		public Dictionary<TokenType, Regex> Patterns;
-   
+
 		private Token LookAheadToken;
 		private List<TokenType> Tokens;
 		private List<TokenType> SkipList; // tokens to be skipped
 
-    public Scanner()
+	public Scanner()
 		{
 			Regex regex;
 			Patterns = new Dictionary<TokenType, Regex>();

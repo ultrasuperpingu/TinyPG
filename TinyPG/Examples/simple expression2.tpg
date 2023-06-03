@@ -15,7 +15,7 @@
 				if(context == null && this.Parent != null) {
 					return Parent.Context;
 				}
-				return null;
+				return context;
 			}
 			set
 			{
@@ -39,7 +39,7 @@
 
 [Skip] 		WHITESPACE  	-> @"\s+";
 
-Start -> (AddExpr)? EOF : int
+Start -> AddExpr EOF : int
 { return $AddExpr; };
 
 AddExpr -> MultExpr (PLUSMINUS MultExpr)* : int
@@ -75,10 +75,10 @@ MultExpr -> Atom (MULTDIV Atom)* : int
 
 Atom -> NUMBER | BROPEN AddExpr BRCLOSE | ID : int
 {
-	if (?NUMBER != null)
+	if (?NUMBER)
 		return Convert.ToInt32($NUMBER);
 	if (?ID)
 		return GetVarValue($ID);
-	else return $AddExpr; 
+	return $AddExpr; 
 };
 

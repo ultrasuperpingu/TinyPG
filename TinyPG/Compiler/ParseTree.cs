@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
+using System.Globalization;
+using System.Linq;
 
 namespace TinyPG
 {
@@ -88,7 +90,6 @@ namespace TinyPG
 
 		private void PrintNode(StringBuilder sb, ParseNode node, int indent)
 		{
-            
 			string space = "".PadLeft(indent, ' ');
 
 			sb.Append(space);
@@ -97,7 +98,7 @@ namespace TinyPG
 			foreach (ParseNode n in node.Nodes)
 				PrintNode(sb, n, indent + 2);
 		}
-        
+
 		/// <summary>
 		/// this is the entry point for executing and evaluating the parse tree.
 		/// </summary>
@@ -141,7 +142,41 @@ namespace TinyPG
 			this.text = text;
 			this.nodes = new List<ParseNode>();
 		}
-
+		protected virtual bool IsTokenPresent(TokenType type, int index)
+		{
+			if (index < 0) return false;
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == type)
+				{
+					index--;
+					if (index < 0)
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		protected virtual string GetTerminalValue(TokenType type, int index)
+		{
+			if (index < 0)
+				return "";
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == type)
+				{
+					index--;
+					if (index < 0)
+					{
+						return node.Token.Text;
+					}
+				}
+			}
+			return null;
+		}
 		protected object GetValue(ParseTree tree, TokenType type, int index)
 		{
 			return GetValue(tree, type, ref index);
@@ -226,90 +261,341 @@ namespace TinyPG
 
 		protected virtual object EvalStart(ParseTree tree, params object[] paramlist)
 		{
-			return "Could not interpret input; no semantics implemented.";
+			return default(object); //"Could not interpret input; no semantics implemented.";
+		}
+
+		protected virtual object GetStartValue(ParseTree tree, int index)
+		{
+			object o = default(object);
+			if (index < 0)
+				return o;
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == TokenType.Start)
+				{
+					index--;
+					if (index < 0)
+					{
+						o = node.EvalStart(tree, null);
+						break;
+					}
+				}
+			}
+			return o;
 		}
 
 		protected virtual object EvalDirective(ParseTree tree, params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
 				node.Eval(tree, paramlist);
-			return null;
+			return default(object);
+		}
+
+		protected virtual object GetDirectiveValue(ParseTree tree, int index)
+		{
+			object o = default(object);
+			if (index < 0)
+				return o;
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == TokenType.Directive)
+				{
+					index--;
+					if (index < 0)
+					{
+						o = node.EvalDirective(tree, null);
+						break;
+					}
+				}
+			}
+			return o;
 		}
 
 		protected virtual object EvalNameValue(ParseTree tree, params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
 				node.Eval(tree, paramlist);
-			return null;
+			return default(object);
+		}
+
+		protected virtual object GetNameValueValue(ParseTree tree, int index)
+		{
+			object o = default(object);
+			if (index < 0)
+				return o;
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == TokenType.NameValue)
+				{
+					index--;
+					if (index < 0)
+					{
+						o = node.EvalNameValue(tree, null);
+						break;
+					}
+				}
+			}
+			return o;
 		}
 
 		protected virtual object EvalExtProduction(ParseTree tree, params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
 				node.Eval(tree, paramlist);
-			return null;
+			return default(object);
+		}
+
+		protected virtual object GetExtProductionValue(ParseTree tree, int index)
+		{
+			object o = default(object);
+			if (index < 0)
+				return o;
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == TokenType.ExtProduction)
+				{
+					index--;
+					if (index < 0)
+					{
+						o = node.EvalExtProduction(tree, null);
+						break;
+					}
+				}
+			}
+			return o;
 		}
 
 		protected virtual object EvalAttribute(ParseTree tree, params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
 				node.Eval(tree, paramlist);
-			return null;
+			return default(object);
+		}
+
+		protected virtual object GetAttributeValue(ParseTree tree, int index)
+		{
+			object o = default(object);
+			if (index < 0)
+				return o;
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == TokenType.Attribute)
+				{
+					index--;
+					if (index < 0)
+					{
+						o = node.EvalAttribute(tree, null);
+						break;
+					}
+				}
+			}
+			return o;
 		}
 
 		protected virtual object EvalParams(ParseTree tree, params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
 				node.Eval(tree, paramlist);
-			return null;
+			return default(object);
+		}
+
+		protected virtual object GetParamsValue(ParseTree tree, int index)
+		{
+			object o = default(object);
+			if (index < 0)
+				return o;
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == TokenType.Params)
+				{
+					index--;
+					if (index < 0)
+					{
+						o = node.EvalParams(tree, null);
+						break;
+					}
+				}
+			}
+			return o;
 		}
 
 		protected virtual object EvalParam(ParseTree tree, params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
 				node.Eval(tree, paramlist);
-			return null;
+			return default(object);
+		}
+
+		protected virtual object GetParamValue(ParseTree tree, int index)
+		{
+			object o = default(object);
+			if (index < 0)
+				return o;
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == TokenType.Param)
+				{
+					index--;
+					if (index < 0)
+					{
+						o = node.EvalParam(tree, null);
+						break;
+					}
+				}
+			}
+			return o;
 		}
 
 		protected virtual object EvalProduction(ParseTree tree, params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
 				node.Eval(tree, paramlist);
-			return null;
+			return default(object);
+		}
+
+		protected virtual object GetProductionValue(ParseTree tree, int index)
+		{
+			object o = default(object);
+			if (index < 0)
+				return o;
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == TokenType.Production)
+				{
+					index--;
+					if (index < 0)
+					{
+						o = node.EvalProduction(tree, null);
+						break;
+					}
+				}
+			}
+			return o;
 		}
 
 		protected virtual object EvalRule(ParseTree tree, params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
 				node.Eval(tree, paramlist);
-			return null;
+			return default(object);
+		}
+
+		protected virtual object GetRuleValue(ParseTree tree, int index)
+		{
+			object o = default(object);
+			if (index < 0)
+				return o;
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == TokenType.Rule)
+				{
+					index--;
+					if (index < 0)
+					{
+						o = node.EvalRule(tree, null);
+						break;
+					}
+				}
+			}
+			return o;
 		}
 
 		protected virtual object EvalSubrule(ParseTree tree, params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
 				node.Eval(tree, paramlist);
-			return null;
+			return default(object);
+		}
+
+		protected virtual object GetSubruleValue(ParseTree tree, int index)
+		{
+			object o = default(object);
+			if (index < 0)
+				return o;
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == TokenType.Subrule)
+				{
+					index--;
+					if (index < 0)
+					{
+						o = node.EvalSubrule(tree, null);
+						break;
+					}
+				}
+			}
+			return o;
 		}
 
 		protected virtual object EvalConcatRule(ParseTree tree, params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
 				node.Eval(tree, paramlist);
-			return null;
+			return default(object);
+		}
+
+		protected virtual object GetConcatRuleValue(ParseTree tree, int index)
+		{
+			object o = default(object);
+			if (index < 0)
+				return o;
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == TokenType.ConcatRule)
+				{
+					index--;
+					if (index < 0)
+					{
+						o = node.EvalConcatRule(tree, null);
+						break;
+					}
+				}
+			}
+			return o;
 		}
 
 		protected virtual object EvalSymbol(ParseTree tree, params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
 				node.Eval(tree, paramlist);
-			return null;
+			return default(object);
+		}
+
+		protected virtual object GetSymbolValue(ParseTree tree, int index)
+		{
+			object o = default(object);
+			if (index < 0)
+				return o;
+			// left to right
+			foreach (ParseNode node in nodes)
+			{
+				if (node.Token.Type == TokenType.Symbol)
+				{
+					index--;
+					if (index < 0)
+					{
+						o = node.EvalSymbol(tree, null);
+						break;
+					}
+				}
+			}
+			return o;
 		}
 
 
 
 
 	}
-    
 	#endregion ParseTree
 }

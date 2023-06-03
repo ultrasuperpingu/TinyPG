@@ -47,7 +47,6 @@ namespace TinyPG
 		{
 			Token tok;
 			ParseNode n;
-			bool found;
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Start), "Start");
 			parent.Nodes.Add(node);
 
@@ -57,7 +56,7 @@ namespace TinyPG
 			while (tok.Type == TokenType.DIRECTIVEOPEN)
 			{
 				ParseDirective(node); // NonTerminal Rule: Directive
-			tok = scanner.LookAhead(TokenType.SQUAREOPEN, TokenType.IDENTIFIER, TokenType.EOF, TokenType.DIRECTIVEOPEN); // ZeroOrMore Rule
+			tok = scanner.LookAhead(TokenType.DIRECTIVEOPEN); // ZeroOrMore Rule
 			}
 
 			 // Concat Rule
@@ -66,7 +65,7 @@ namespace TinyPG
 			    || tok.Type == TokenType.IDENTIFIER)
 			{
 				ParseExtProduction(node); // NonTerminal Rule: ExtProduction
-			tok = scanner.LookAhead(TokenType.EOF, TokenType.SQUAREOPEN, TokenType.IDENTIFIER); // ZeroOrMore Rule
+			tok = scanner.LookAhead(TokenType.SQUAREOPEN, TokenType.IDENTIFIER); // ZeroOrMore Rule
 			}
 
 			 // Concat Rule
@@ -86,7 +85,6 @@ namespace TinyPG
 		{
 			Token tok;
 			ParseNode n;
-			bool found;
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Directive), "Directive");
 			parent.Nodes.Add(node);
 
@@ -116,7 +114,7 @@ namespace TinyPG
 			while (tok.Type == TokenType.IDENTIFIER)
 			{
 				ParseNameValue(node); // NonTerminal Rule: NameValue
-			tok = scanner.LookAhead(TokenType.DIRECTIVECLOSE, TokenType.IDENTIFIER); // ZeroOrMore Rule
+			tok = scanner.LookAhead(TokenType.IDENTIFIER); // ZeroOrMore Rule
 			}
 
 			 // Concat Rule
@@ -136,7 +134,6 @@ namespace TinyPG
 		{
 			Token tok;
 			ParseNode n;
-			bool found;
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.NameValue), "NameValue");
 			parent.Nodes.Add(node);
 
@@ -178,7 +175,6 @@ namespace TinyPG
 		{
 			Token tok;
 			ParseNode n;
-			bool found;
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.ExtProduction), "ExtProduction");
 			parent.Nodes.Add(node);
 
@@ -188,7 +184,7 @@ namespace TinyPG
 			while (tok.Type == TokenType.SQUAREOPEN)
 			{
 				ParseAttribute(node); // NonTerminal Rule: Attribute
-			tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.SQUAREOPEN); // ZeroOrMore Rule
+			tok = scanner.LookAhead(TokenType.SQUAREOPEN); // ZeroOrMore Rule
 			}
 
 			 // Concat Rule
@@ -201,7 +197,6 @@ namespace TinyPG
 		{
 			Token tok;
 			ParseNode n;
-			bool found;
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Attribute), "Attribute");
 			parent.Nodes.Add(node);
 
@@ -279,7 +274,6 @@ namespace TinyPG
 		{
 			Token tok;
 			ParseNode n;
-			bool found;
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Params), "Params");
 			parent.Nodes.Add(node);
 
@@ -314,7 +308,6 @@ namespace TinyPG
 		{
 			Token tok;
 			ParseNode n;
-			bool found;
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Param), "Param");
 			parent.Nodes.Add(node);
 
@@ -373,7 +366,6 @@ namespace TinyPG
 		{
 			Token tok;
 			ParseNode n;
-			bool found;
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Production), "Production");
 			parent.Nodes.Add(node);
 
@@ -509,7 +501,6 @@ namespace TinyPG
 		{
 			Token tok;
 			ParseNode n;
-			bool found;
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Rule), "Rule");
 			parent.Nodes.Add(node);
 
@@ -542,7 +533,6 @@ namespace TinyPG
 		{
 			Token tok;
 			ParseNode n;
-			bool found;
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Subrule), "Subrule");
 			parent.Nodes.Add(node);
 
@@ -577,19 +567,12 @@ namespace TinyPG
 		{
 			Token tok;
 			ParseNode n;
-			bool found;
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.ConcatRule), "ConcatRule");
 			parent.Nodes.Add(node);
 
-			found = false;
 			do { // OneOrMore Rule
 				ParseSymbol(node); // NonTerminal Rule: Symbol
-				if(!found) {
-					tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.BRACKETOPEN); // OneOrMore Rule
-				found = true;
-				} else {
-					tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.BRACKETOPEN); // OneOrMore Rule
-				}
+				tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.BRACKETOPEN); // OneOrMore Rule
 			} while (tok.Type == TokenType.IDENTIFIER
 			    || tok.Type == TokenType.BRACKETOPEN); // OneOrMore Rule
 
@@ -600,7 +583,6 @@ namespace TinyPG
 		{
 			Token tok;
 			ParseNode n;
-			bool found;
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Symbol), "Symbol");
 			parent.Nodes.Add(node);
 
