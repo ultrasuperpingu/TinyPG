@@ -166,9 +166,9 @@ Namespace <%Namespace%>
 			m_nodes = New List(Of ParseNode)()
 		End Sub
 
-		Protected Function IsTokenPresent(ByVal type As TokenType, ByVal index As Integer) As Boolean
+		Protected Function GetTokenNode(ByVal type As TokenType, ByVal index As Integer) As ParseNode
 			If index < 0 Then
-				Return False
+				Return Nothing
 			End If
 
 			' left to right
@@ -176,11 +176,24 @@ Namespace <%Namespace%>
 				If node.Token.Type = type Then
 					System.Math.Max(System.Threading.Interlocked.Decrement(index), index + 1)
 					If index < 0 Then
-						Return True
+						Return node
 					End If
 				End If
 			Next
-			Return False
+			Return Nothing
+		End Function
+
+		Protected Function IsTokenPresent(ByVal type As TokenType, ByVal index As Integer) As Boolean
+			Dim node As ParseNode = GetTokenNode(type, index)
+			Return node IsNot Nothing
+		End Function
+
+		Protected Function GetTerminalValue(ByVal type As TokenType, ByVal index As Integer) As String
+			Dim node As ParseNode = GetTokenNode(type, index)
+			If node IsNot Nothing
+				Return node.Token.Text
+			End If
+			Return Nothing
 		End Function
 
 		Protected Function GetValue(ByVal tree As ParseTree, ByVal type As TokenType, ByVal index As Integer) As Object

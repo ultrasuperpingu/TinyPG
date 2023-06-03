@@ -10,12 +10,12 @@ namespace TinyPG.CodeGenerators.VBNet
 		internal ParseTreeGenerator() : base("ParseTree.vb")
 		{
 		}
-
+		private bool isDebugOther;
 		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
-
+			isDebugOther = Debug == GenerateDebugMode.DebugOther;
 			// copy the parse tree file (optionally)
 			string parsetree = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
 
@@ -23,27 +23,41 @@ namespace TinyPG.CodeGenerators.VBNet
 			StringBuilder evalmethods = new StringBuilder();
 
 			// build non terminal tokens
-			foreach (Symbol s in Grammar.GetNonTerminals())
+			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
 				evalsymbols.AppendLine("				Case TokenType." + s.Name + "");
 				evalsymbols.AppendLine("					Value = Eval" + s.Name + "(tree, paramlist)");
 				evalsymbols.AppendLine("					Exit Select");
 
-				evalmethods.AppendLine("		Protected Overridable Function Eval" + s.Name + "(ByVal tree As ParseTree, ByVal ParamArray paramlist As Object()) As Object");
-				if (s.CodeBlock != null)
+				string returnType = "Object";
+				if (!string.IsNullOrEmpty(s.ReturnType) && !isDebugOther)
+					returnType = s.ReturnType;
+				string defaultReturnValue = "Nothing";
+				if (!string.IsNullOrEmpty(s.ReturnTypeDefault) && !isDebugOther)
+					defaultReturnValue = s.ReturnTypeDefault;
+				evalmethods.AppendLine("		Protected Overridable Function Eval" + s.Name + "(ByVal tree As ParseTree, ByVal ParamArray paramlist As Object()) As " + returnType);
+				if (s.CodeBlock != null && !isDebugOther)
 				{
 					// paste user code here
-					evalmethods.AppendLine(FormatCodeBlock(s as NonTerminalSymbol));
+					evalmethods.AppendLine(FormatCodeBlock(s));
 				}
 				else
 				{
 					if (s.Name == "Start") // return a nice warning message from root object.
-						evalmethods.AppendLine("			Return \"Could not interpret input; no semantics implemented.\"");
+						evalmethods.AppendLine("			Return "+defaultReturnValue+"; //\"Could not interpret input; no semantics implemented.\"");
 					else
 						evalmethods.AppendLine("			Throw New NotImplementedException()");
 
 					// otherwise simply not implemented!
 				}
+				evalmethods.AppendLine("		End Function\r\n");
+				evalmethods.AppendLine("		Protected Overridable Function Get" + s.Name + "Value(tree As ParseTree, index As Integer) As " + returnType);
+				evalmethods.AppendLine("			Dim o As " + returnType + " = "+defaultReturnValue+"");
+				evalmethods.AppendLine("			Dim node As ParseNode = GetTokenNode(TokenType." + s.Name + ", index)");
+				evalmethods.AppendLine("			If node IsNot Nothing");
+				evalmethods.AppendLine("				o = node.Eval"+s.Name+"(tree)");
+				evalmethods.AppendLine("			End If");
+				evalmethods.AppendLine("			Return o");
 				evalmethods.AppendLine("		End Function\r\n");
 			}
 
@@ -144,14 +158,23 @@ namespace TinyPG.CodeGenerators.VBNet
 				{
 					indexer = match.Groups["index"].Value;
 				}
-
 				bool eval = match.Groups["eval"].Value == "$";
 				string replacement;
 				if (eval)
-					replacement = "Me.GetValue(tree, TokenType." + s.Name + ", " + indexer + ")";
+				{
+					if(s is TerminalSymbol)
+					{
+						replacement = "Me.GetTerminalValue(TokenType." + s.Name + ", " + indexer + ")";
+					}
+					else
+					{
+						replacement = "Me.Get"+ s.Name + "Value(tree, " + indexer + ")";
+					}
+				}
 				else
+				{
 					replacement = "Me.IsTokenPresent(TokenType." + s.Name + ", " + indexer + ")";
-
+				}
 				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
 				match = var.Match(codeblock);
 			}

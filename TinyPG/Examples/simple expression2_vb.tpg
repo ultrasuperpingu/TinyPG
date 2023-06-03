@@ -82,7 +82,7 @@ Atom -> NUMBER |  BROPEN AddExpr BRCLOSE | ID : Double
 	If ?NUMBER Then
 		Return $NUMBER
 	ElseIf ?ID
-		Return Me.GetVarValue($ID.ToString())
+		Return Me.GetVarValue($ID)
 	Else 
 		Return $AddExpr
 	End If
