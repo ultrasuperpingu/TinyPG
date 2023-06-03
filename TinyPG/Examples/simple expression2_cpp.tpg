@@ -52,7 +52,7 @@
 [Skip] 		WHITESPACE  	-> @"\s+";
 
 Start -> (AddExpr)? EOF_ : int default(0)
-{ return (int)$AddExpr; };      
+{ return $AddExpr; };      
 
 AddExpr -> MultExpr (PLUSMINUS MultExpr)* : int default(0)
 { 
@@ -72,7 +72,7 @@ AddExpr -> MultExpr (PLUSMINUS MultExpr)* : int default(0)
 
 MultExpr -> Atom (MULTDIV Atom)* : int default(0)
 { 
-	int Value = (int)$Atom;
+	int Value = $Atom;
 	int i = 1;
 	while ($Atom[i] != NULL)
 	{

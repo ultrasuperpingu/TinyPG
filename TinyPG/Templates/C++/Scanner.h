@@ -155,7 +155,7 @@ namespace <%Namespace%>
 			LookAheadToken = Token::Empty; // reset lookahead token, so scanning will continue
 			StartPos = tok.EndPos;
 			EndPos = tok.EndPos; // set the tokenizer to the new scan position
-			CurrentLine = tok.Line + (tok.Text.length() - replace(tok.Text,"\n", "").length());
+			CurrentLine = tok.Line + (int) (tok.Text.length() - replace(tok.Text,"\n", "").length());
 			CurrentFile = tok.File;
 			return tok;
 		}
@@ -207,7 +207,7 @@ namespace <%Namespace%>
 					std::smatch m;
 					std::regex_search(input, m, r);
 					
-					auto matchLen = std::distance(m[0].first, m[0].second);
+					int matchLen = (int) std::distance(m[0].first, m[0].second);
 					if (!m.empty() && m[0].first == input.begin() && ((matchLen > len) || (scantokens[i] < index && matchLen == len)))
 					{
 						len = matchLen;
@@ -233,13 +233,13 @@ namespace <%Namespace%>
 				tok.File = currentFile;
 				tok.Line = currentline;
 				if (tok.StartPos < Input.length())
-					tok.Column = tok.StartPos - Input.find_last_of('\n', tok.StartPos);
+					tok.Column = tok.StartPos - (int) Input.find_last_of('\n', tok.StartPos);
 
 				if (contains(SkipList, tok.Type))
 				{
 					startpos = tok.EndPos;
 					endpos = tok.EndPos;
-					currentline = tok.Line + (tok.Text.length() - replace(tok.Text, "\n", "").length());
+					currentline = tok.Line + (int) (tok.Text.length() - replace(tok.Text, "\n", "").length());
 					currentFile = tok.File;
 					Skipped.push_back(tok);
 				}

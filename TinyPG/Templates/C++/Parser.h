@@ -14,42 +14,51 @@ namespace <%Namespace%>
 	private:
 		Scanner& scanner;
 		ParseTree* tree;
-
+		ParseTree* instanciatedTree;
+		inline void DeleteTree()
+		{
+			if (instanciatedTree != NULL)
+			{
+				delete instanciatedTree;
+				instanciatedTree = NULL;
+			}
+		}
 	public:
-		inline Parser(Scanner& scanner) : scanner(scanner), tree(NULL)
+		inline Parser(Scanner& scanner) : scanner(scanner), tree(NULL), instanciatedTree(NULL)
 		{
 		}
 
 		virtual inline ~Parser()
 		{
-			if (tree != NULL)
-			{
-				delete tree;
-				tree = NULL;
-			}
+			DeleteTree();
 		}
 
-
-		inline <%IParseTree%> Parse(std::string input)
+		inline <%IParseTree%>* Parse(std::string input)
 		{
-			return Parse(input, "", new ParseTree());
+			DeleteTree();
+			instanciatedTree = new ParseTree();
+			return Parse(input, "", instanciatedTree);
 		}
 
-		inline <%IParseTree%> Parse(std::string input, std::string fileName)
+		inline <%IParseTree%>* Parse(std::string input, std::string fileName)
 		{
+			DeleteTree();
+			instanciatedTree = new ParseTree();
 			return Parse(input, fileName, new ParseTree());
 		}
 
-		inline <%IParseTree%>& Parse(std::string input, std::string fileName, ParseTree* tree)
+		inline <%IParseTree%>* Parse(std::string input, std::string fileName, ParseTree* tree)
 		{
 			scanner.Init(input, fileName);
-
+			if (tree != instanciatedTree)
+				DeleteTree();
 			this->tree = tree;
 			ParseStart(tree);
 			tree->Skipped = scanner.Skipped;
 
-			return *tree;
+			return tree;
 		}
+
 
 <%ParseNonTerminals%>
 

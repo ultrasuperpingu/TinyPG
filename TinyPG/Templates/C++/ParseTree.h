@@ -35,30 +35,19 @@ namespace <%Namespace%>
 			this->Text = text;
 			//this->nodes = new List<ParseNode>();
 		}
-		
-		inline virtual bool IsTokenPresent(TokenType type, int index)
+
+		inline virtual ~ParseNode()
 		{
-			if (index < 0)
-				return false;
-			// left to right
 			for (ParseNode* node : Nodes)
 			{
-				if (node->TokenVal.Type == type)
-				 {
-					index--;
-					if (index < 0)
-					{
-						return true;
-					}
-				 }
+				delete node;
 			}
-			return false;
 		}
-		
-		inline virtual std::string GetTerminalValue(TokenType type, int index)
+
+		inline virtual ParseNode* GetTokenNode(TokenType type, int index)
 		{
 			if (index < 0)
-				return "";
+				return NULL;
 			// left to right
 			for (ParseNode* node : Nodes)
 			{
@@ -67,10 +56,23 @@ namespace <%Namespace%>
 					index--;
 					if (index < 0)
 					{
-						return node->TokenVal.Text;
+						return node;
 					}
 				}
 			}
+			return NULL;
+		}
+		inline virtual bool IsTokenPresent(TokenType type, int index)
+		{
+			ParseNode* node = GetTokenNode(type, index);
+			return node != NULL;
+		}
+		
+		inline virtual std::string GetTerminalValue(TokenType type, int index)
+		{
+			ParseNode* node = GetTokenNode(type, index);
+			if (node != NULL)
+				return node->TokenVal.Text;
 			return "";
 		}
 
@@ -139,7 +141,7 @@ namespace <%Namespace%>
 
 		
 		// just for the sake of serialization
-		inline ParseError()
+		inline ParseError() : ParseError("", 0, "", 0, 0, 0, 0)
 		{
 		}
 
@@ -189,7 +191,7 @@ namespace <%Namespace%>
 		
 		virtual inline ~ParseTree()
 		{
-			//CleanupChildren();
+			// Cleanup Children done in parent class
 		}
 
 		inline std::string PrintTree()
@@ -218,9 +220,10 @@ namespace <%Namespace%>
 		/// </summary>
 		/// <param name="paramlist">additional optional input parameters</param>
 		/// <returns>the output of the evaluation function</returns>
+		// TODO: template the class and/or use std::any
 		/*inline void* Eval(std::vector<void*> paramlist)
 		{
-			return Nodes[0]->Eval(*this, paramlist);
+			return Nodes[0]->EvalStart(*this, paramlist);
 		}*/
 	};
  

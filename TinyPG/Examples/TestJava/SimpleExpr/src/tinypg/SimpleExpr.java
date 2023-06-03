@@ -17,8 +17,9 @@ public class SimpleExpr {
         HashMap<String,Integer> context=new HashMap<>();
         context.put("_5",5);
         context.put("_15",15);
+        context.put("test",2);
         Parser p=new Parser(new Scanner());
-        ParseTree tree = p.Parse("_5*3+_15/2");
+        ParseTree tree = p.Parse("_5*3+_15/(2*test)");
         tree.setContext(context);
         System.out.println(tree.Eval());
     }
