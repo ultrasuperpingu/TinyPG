@@ -18,16 +18,15 @@ These are the new features and fixes we have added to the original code:
  - New features:
    - Added Java and C++ support.
    - Command line building of parsers.
-   - Support RegexCompiled option to don't use RegexOptions.Compiled in Scanner regexs
    - Support for `[IgnoreCase]` flag on terminal symbols.
- - Fix and small improvements:
-   - `ParseError` now has correct line numbers and the IDE will now display the error line number in the output.
-   - Regex tool now updates live without flicker.
-   - IDE expression evaluator now include line and column numbers in errors.
-   - Unexpected token errors now display the offending character.
-   - We now always show the list of expected tokens on errors.
-   - Syntax highlighting now supports `var` keyword.
-   - IDE now uses C# 8.x compiler when testing the generated parser code.
+   - Support RegexCompiled option to don't use RegexOptions.Compiled in Scanner regexs
+ - Fixes and small improvements:
+   - Fix `ParseError` line numbers and reports it in the IDE.
+   - Fix Regex tool updates flickering.
+   - Display the offending character on Unexpected token errors.
+   - Display the list of expected tokens on errors.
+   - Supports `var` keyword in syntax highlighting.
+   - Upgraded to C# 8.x.
 
 ### Downloads
 
