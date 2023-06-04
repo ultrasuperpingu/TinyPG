@@ -147,7 +147,6 @@
     <Content Include="Templates\C++\Parser.h">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="app.config" />
     <None Include="Examples\BNFGrammar 1.5.tpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
