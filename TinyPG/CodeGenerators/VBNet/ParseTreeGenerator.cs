@@ -43,12 +43,8 @@ namespace TinyPG.CodeGenerators.VBNet
 				}
 				else
 				{
-					if (s.Name == "Start") // return a nice warning message from root object.
-						evalmethods.AppendLine("			Return "+defaultReturnValue+"; //\"Could not interpret input; no semantics implemented.\"");
-					else
-						evalmethods.AppendLine("			Throw New NotImplementedException()");
-
 					// otherwise simply not implemented!
+					evalmethods.AppendLine("			Throw New NotImplementedException(\"Could not interpret input; no semantics implemented.\")");
 				}
 				evalmethods.AppendLine("		End Function\r\n");
 				evalmethods.AppendLine("		Protected Overridable Function Get" + s.Name + "Value(tree As ParseTree, index As Integer) As " + returnType);

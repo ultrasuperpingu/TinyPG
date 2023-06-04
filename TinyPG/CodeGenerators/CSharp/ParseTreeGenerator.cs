@@ -47,18 +47,10 @@ namespace TinyPG.CodeGenerators.CSharp
 				}
 				else
 				{
-					if (s.Name == "Start") // return a nice warning message from root object.
-						evalmethods.AppendLine("			return "+defaultReturnValue+"; //\"Could not interpret input; no semantics implemented.\";");
-					else
-						evalmethods.AppendLine("			foreach (ParseNode node in Nodes)\r\n" +
-											   "				node.Eval(tree, paramlist);\r\n" +
-											   "			return "+defaultReturnValue+";");
-
 					// otherwise simply not implemented!
+					evalmethods.AppendLine("			throw new NotImplementedException(\"Could not interpret input; no semantics implemented.\");");
 				}
 				evalmethods.AppendLine("		}\r\n");
-				
-				
 				evalmethods.AppendLine("		protected virtual " + returnType + " Get" + s.Name + "Value(ParseTree tree, int index)");
 				evalmethods.AppendLine("		{");
 				evalmethods.AppendLine("			" + returnType + " o = "+defaultReturnValue+";");

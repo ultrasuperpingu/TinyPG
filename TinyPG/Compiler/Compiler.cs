@@ -227,6 +227,10 @@ namespace TinyPG.Compiler
 						output += "\r\nResult: " + (compilerresult.Value == null ? "null" : compilerresult.Value.ToString());
 					}
 				}
+				catch (NotImplementedException exc)
+				{
+					output += "\r\n" + exc.Message;
+				}
 				catch (Exception exc)
 				{
 					output += "\r\nException occurred: " + exc.Message;
