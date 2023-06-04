@@ -31,4 +31,5 @@ These are the new features and fixes we have added to the original code:
 ### Downloads
 
 The latest source code can be found in [zip form here](https://github.com/ultrasuperpingu/TinyPG/archive/master.zip).
+The lastest build can be found [in the releases page](https://github.com/ultrasuperpingu/TinyPG/releases/latest).
 
