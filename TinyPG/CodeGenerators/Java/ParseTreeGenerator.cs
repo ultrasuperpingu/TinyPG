@@ -35,7 +35,7 @@ namespace TinyPG.CodeGenerators.Java
 				//evalsymbols.AppendLine("				Value = Token.Text;");
 				evalsymbols.AppendLine("				break;");
 
-				string returnType = "object";
+				string returnType = "Object";
 				if (!string.IsNullOrEmpty(s.ReturnType))
 					returnType = s.ReturnType;
 				string defaultReturnValue = "null";
@@ -50,13 +50,7 @@ namespace TinyPG.CodeGenerators.Java
 				}
 				else
 				{
-					if (s.Name == "Start") // return a nice warning message from root object.
-						evalmethods.AppendLine("		return "+defaultReturnValue+"; //\"Could not interpret input; no semantics implemented.\";");
-					else
-						evalmethods.AppendLine("		for (ParseNode node : getNodes())\r\n" +
-											   "			node.Eval(tree, paramlist);\r\n" +
-											   "		return "+defaultReturnValue+";");
-
+					evalmethods.AppendLine("		throw new UnsupportedOperationException(\"Could not interpret input; no semantics implemented.\");");
 					// otherwise simply not implemented!
 				}
 				evalmethods.AppendLine("	}\r\n");
