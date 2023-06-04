@@ -51,13 +51,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				}
 				else
 				{
-					if (s.Name == "Start") // return a nice warning message from root object.
-						evalmethods.AppendLine("			return "+defaultReturnValue+"; //\"Could not interpret input; no semantics implemented.\";");
-					else
-						evalmethods.AppendLine("			for (ParseNode* node : Nodes)\r\n" +
-											   "				node->Eval(tree, paramlist);\r\n" +
-											   "			return "+defaultReturnValue+";");
-
+					evalmethods.AppendLine("			throw std::exception(\"Could not interpret input; no semantics implemented.\");");
 					// otherwise simply not implemented!
 				}
 				evalmethods.AppendLine("		}\r\n");
@@ -65,11 +59,10 @@ namespace TinyPG.CodeGenerators.Cpp
 				
 				evalmethods.AppendLine("		inline virtual " + returnType + " Get" + s.Name + "Value(const ParseTree& tree, int index, const std::vector<void*>& paramlist)");
 				evalmethods.AppendLine("		{");
-				evalmethods.AppendLine("			" + returnType + " o = "+defaultReturnValue+";");
 				evalmethods.AppendLine("			ParseNode* node = GetTokenNode(TokenType::" + s.Name + ", index);");
 				evalmethods.AppendLine("			if (node != NULL)");
-				evalmethods.AppendLine("				o = node->Eval"+s.Name+"(tree, paramlist);");
-				evalmethods.AppendLine("			return o;");
+				evalmethods.AppendLine("				return node->Eval"+s.Name+"(tree, paramlist);");
+				evalmethods.AppendLine("			throw std::exception(\"No "+ s.Name+"[index] found.\");");
 				evalmethods.AppendLine("		}\r\n");
 			}
 

@@ -383,9 +383,7 @@ namespace TinyPG.Compiler
 					// beautify the codeblock format
 					codeblock = codeblock.Substring(1, codeblock.Length - 3).Trim();
 					nts.CodeBlock = codeblock;
-
 				}
-
 			}
 			return g;
 		}

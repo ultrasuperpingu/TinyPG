@@ -59,7 +59,7 @@ namespace <%Namespace%>
 			return tree;
 		}
 
-
+	protected:
 <%ParseNonTerminals%>
 
 <%ParserCustomCode%>
