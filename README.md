@@ -1,7 +1,7 @@
 TinyPG
 ======
 
-The unofficial fork of the Tiny Parser Generator by Herre Kuijpers, then forked by [SickheadGames](https://github.com/SickheadGames/TinyPG).
+The unofficial fork of the Tiny Parser Generator by Herre Kuijpers by [SickheadGames](https://github.com/SickheadGames/TinyPG), then forked here.
 
 It is an LL(1) recursive descent parser generator written in C# which can generate a scanner, parser, and parsetree file in either C#, VB, Java or C++ code.
 
