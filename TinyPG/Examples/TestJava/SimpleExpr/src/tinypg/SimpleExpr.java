@@ -19,9 +19,10 @@ public class SimpleExpr {
         context.put("_15",15);
         context.put("test",2);
         Parser p=new Parser(new Scanner());
-        ParseTree tree = p.Parse("_5*3+_15/(2*test)");
+        String input = "_5*3+_15/(2*test)";
+        ParseTree tree = p.Parse(input);
         tree.setContext(context);
-        System.out.println(tree.Eval());
+        System.out.println(input +" = " + tree.Eval());
     }
     
 }

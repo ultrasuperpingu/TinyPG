@@ -52,7 +52,7 @@ namespace <%Namespace%>
 		std::string Text;
 
 		std::vector<Token> Skipped;
-		void* Value;
+		void* Value; // is it really used??
 
 		TokenType Type;
 
@@ -67,7 +67,7 @@ namespace <%Namespace%>
 			StartPos = start;
 			EndPos = end;
 			Text = ""; // must initialize with empty string, may cause null reference exceptions otherwise
-			Value = NULL;
+			Value = NULL; // is it really used??
 		}
 
 		inline void UpdateRange(Token token)
@@ -120,12 +120,12 @@ namespace <%Namespace%>
 <%RegExps%>
 		}
 
-		inline void Init(std::string input)
+		inline void Init(const std::string& input)
 		{
 			Init(input, "");
 		}
 
-		inline void Init(std::string input, std::string fileName)
+		inline void Init(const std::string& input, const std::string& fileName)
 		{
 			this->Input = input;
 			StartPos = 0;
@@ -149,7 +149,7 @@ namespace <%Namespace%>
 		/// and will advance the scan on the input string
 		/// </summary>
 		/// <returns></returns>
-		inline Token Scan(std::vector<TokenType> expectedtokens)
+		inline Token Scan(const std::vector<TokenType>& expectedtokens)
 		{
 			Token tok = LookAhead(expectedtokens); // temporarely retrieve the lookahead
 			LookAheadToken = Token::Empty; // reset lookahead token, so scanning will continue
@@ -164,7 +164,7 @@ namespace <%Namespace%>
 		/// returns token with longest best match
 		/// </summary>
 		/// <returns></returns>
-		inline Token LookAhead(std::vector<TokenType> expectedtokens)
+		inline Token LookAhead(const std::vector<TokenType>& expectedtokens)
 		{
 			int i;
 			int startpos = StartPos;

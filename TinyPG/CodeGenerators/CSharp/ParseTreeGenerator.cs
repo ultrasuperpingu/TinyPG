@@ -51,12 +51,12 @@ namespace TinyPG.CodeGenerators.CSharp
 					evalmethods.AppendLine("			throw new NotImplementedException(\"Could not interpret input; no semantics implemented.\");");
 				}
 				evalmethods.AppendLine("		}\r\n");
-				evalmethods.AppendLine("		protected virtual " + returnType + " Get" + s.Name + "Value(ParseTree tree, int index)");
+				evalmethods.AppendLine("		protected virtual " + returnType + " Get" + s.Name + "Value(ParseTree tree, int index, params object[] paramlist )");
 				evalmethods.AppendLine("		{");
 				evalmethods.AppendLine("			" + returnType + " o = "+defaultReturnValue+";");
 				evalmethods.AppendLine("			ParseNode node = GetTokenNode(TokenType." + s.Name + ", index);");
 				evalmethods.AppendLine("			if (node != null)");
-				evalmethods.AppendLine("				o = node.Eval"+s.Name+"(tree);");
+				evalmethods.AppendLine("				o = node.Eval"+s.Name+"(tree, paramlist);");
 				evalmethods.AppendLine("			return o;");
 				evalmethods.AppendLine("		}\r\n");
 			}
@@ -139,7 +139,7 @@ namespace TinyPG.CodeGenerators.CSharp
 					}
 					else
 					{
-						replacement = "this.Get"+s.Name+"Value(tree, " + indexer + ")";
+						replacement = "this.Get"+s.Name+"Value(tree, " + indexer + ", paramlist)";
 					}
 				}
 				else

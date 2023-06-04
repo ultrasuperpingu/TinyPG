@@ -122,8 +122,11 @@ public class Scanner
 			{
 				Pattern  r = Patterns.get(scantokens.get(i));
 				Matcher m = r.matcher(input);
+				//c# code for reference
 				//if (m.Success && m.Index == 0 && ((m.Length > len) || (scantokens[i] < index && m.Length == len )))
-				if (m.find() && m.start() == 0 && ((m.end() - m.start() > len) || (tokenTypeList.indexOf(scantokens.get(i)) < index && m.end() - m.start() == len )))
+				//changed "m.find() && m.start() == 0" to "m.lookingAt()" for optimization
+				//if (m.find() && m.start() == 0 && ((m.end() - m.start() > len) || (tokenTypeList.indexOf(scantokens.get(i)) < index && m.end() - m.start() == len )))
+				if (m.lookingAt() && ((m.end() - m.start() > len) || (tokenTypeList.indexOf(scantokens.get(i)) < index && m.end() - m.start() == len )))
 				{
 					len = m.end() - m.start();
 					index = tokenTypeList.indexOf(scantokens.get(i));
@@ -190,7 +193,6 @@ class Token<%IToken%>
 	public String getFile() { 
 		return file; 
 	}
-	
 	public void setFile(String value) {
 		file = value;
 	}
@@ -198,7 +200,6 @@ class Token<%IToken%>
 	public int getLine() { 
 		return line;
 	}
-	
 	public void setLine(int value) {
 		line = value;
 	}
@@ -206,7 +207,6 @@ class Token<%IToken%>
 	public int getColumn() {
 		return column;
 	}
-
 	public void setColumn(int value) {
 		column = value;
 	}
@@ -217,7 +217,6 @@ class Token<%IToken%>
 	public int getStartPos() { 
 		return startpos;
 	}
-	
 	public void setStartPos(int value)
 	{
 		startpos = value;
@@ -239,7 +238,6 @@ class Token<%IToken%>
 	public String getText() { 
 		return text;
 	}
-	
 	public void setText(String value)
 	{
 		text = value;
@@ -251,11 +249,11 @@ class Token<%IToken%>
 	public void setSkipped(ArrayList<Token> value) {
 		skipped = value;
 	}
-	
+
+	// is it really used??
 	public Object getValue() { 
 		return value; 
 	}
-	
 	public void setValue(Object value) {
 		this.value = value;
 	}

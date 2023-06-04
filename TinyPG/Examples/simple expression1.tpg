@@ -72,7 +72,7 @@ EOF		->	@"^$";
 //      * DefaultValue: the optional (ie. "RuleName -> Rule : ReturnType;" is a valid rule) default return value of the rule.
 //                      Default is null or equivalent in most language.
 //
-//  An optional code block containing custom code to evaluate the rule can be supplied to the end of the rule.
+//  An optional code block containing custom code to evaluate the rule can be supplied at the end of the rule.
 //    See simple expression2.tpg to have examples of this.
 
 

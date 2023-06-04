@@ -7,8 +7,9 @@ Module Program
         context.Add("_5", 5)
         context.Add("_15", 15)
         Dim p = New Parser(New Scanner())
-        Dim tree = p.Parse("_5*3+_15/2")
+        Dim input = "_5*3+_15/2"
+        Dim tree = p.Parse(input)
         tree.Context = context
-        Console.WriteLine(tree.Eval())
+        Console.WriteLine(input + " = " + tree.Eval().ToString)
     End Sub
 End Module

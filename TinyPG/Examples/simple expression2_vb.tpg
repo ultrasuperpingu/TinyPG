@@ -30,15 +30,15 @@
 			End If
 		End Function
 " %>
-			EOF           -> @"^\s*$";
-[Color(255, 0, 0)] 	NUMBER        -> @"[0-9]+";
-[Color(255, 0, 0)] 	ID            -> @"[a-zA-Z_][a-zA-Z0-9_]*";
-[Color(0, 0, 255)] 	PLUSMINUS     -> @"(\+|-)";
-[Color(0, 0, 255)] 	MULTDIV       -> @"\*|/";
-[Color(0, 0, 255)] 	BROPEN        -> @"\(";
-[Color(0, 0, 255)] 	BRCLOSE       -> @"\)";
+				EOF           -> @"^\s*$";
+[Color(255, 0, 0)] 		NUMBER        -> @"[0-9]+";
+[Color(0, 127, 0)] 		ID            -> @"[a-zA-Z_][a-zA-Z0-9_]*";
+[Color(0, 0, 255)] 		PLUSMINUS     -> @"(\+|-)";
+[Color(0, 0, 255)] 		MULTDIV       -> @"\*|/";
+[Color(127, 0, 127)] 	BROPEN        -> @"\(";
+[Color(127, 0, 127)] 	BRCLOSE       -> @"\)";
 
-[Skip] 		WHITESPACE    -> @"\s+";
+[Skip] 			WHITESPACE    -> @"\s+";
 
 Start -> (AddExpr)? EOF
 { Return $AddExpr };      

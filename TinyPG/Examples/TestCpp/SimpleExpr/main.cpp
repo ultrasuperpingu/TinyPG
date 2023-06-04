@@ -5,7 +5,7 @@ int main()
 {
 	TinyPG::Scanner s = TinyPG::Scanner();
 	TinyPG::Parser p = TinyPG::Parser(s);
-	std::string expr = "(_5 + 3) + _15 / (4 - 2)";
+	std::string expr = "(_5 * 3) + _15 / (4 - 2)";
 	TinyPG::ParseTree* tree = p.Parse(expr);
 	std::map<std::string, int> context;
 	context.insert(std::pair<std::string, int>("_5", 5));
@@ -17,6 +17,6 @@ int main()
 		std::cerr << "error: " << tree->Errors[i].Line << ","<< tree->Errors[i].Column<< " : " << tree->Errors[i].Message << std::endl;
 	}
 	if(tree->Errors.size() == 0)
-		std::cerr << expr << " = " << tree->Nodes[0]->EvalStart(*tree, {}) << std::endl;
+		std::cerr << expr << " = " << tree->Eval<int>({}) << std::endl;
 	return 0;
 }

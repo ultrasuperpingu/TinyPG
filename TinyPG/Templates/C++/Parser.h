@@ -33,21 +33,21 @@ namespace <%Namespace%>
 			DeleteTree();
 		}
 
-		inline <%IParseTree%>* Parse(std::string input)
+		inline <%IParseTree%>* Parse(const std::string& input)
 		{
 			DeleteTree();
 			instanciatedTree = new ParseTree();
 			return Parse(input, "", instanciatedTree);
 		}
 
-		inline <%IParseTree%>* Parse(std::string input, std::string fileName)
+		inline <%IParseTree%>* Parse(const std::string& input, const std::string& fileName)
 		{
 			DeleteTree();
 			instanciatedTree = new ParseTree();
 			return Parse(input, fileName, new ParseTree());
 		}
 
-		inline <%IParseTree%>* Parse(std::string input, std::string fileName, ParseTree* tree)
+		inline <%IParseTree%>* Parse(const std::string& input, const std::string& fileName, ParseTree* tree)
 		{
 			scanner.Init(input, fileName);
 			if (tree != instanciatedTree)

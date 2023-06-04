@@ -47,11 +47,11 @@ namespace TinyPG.CodeGenerators.VBNet
 					evalmethods.AppendLine("			Throw New NotImplementedException(\"Could not interpret input; no semantics implemented.\")");
 				}
 				evalmethods.AppendLine("		End Function\r\n");
-				evalmethods.AppendLine("		Protected Overridable Function Get" + s.Name + "Value(tree As ParseTree, index As Integer) As " + returnType);
+				evalmethods.AppendLine("		Protected Overridable Function Get" + s.Name + "Value(tree As ParseTree, index As Integer, ByVal ParamArray paramlist As Object()) As " + returnType);
 				evalmethods.AppendLine("			Dim o As " + returnType + " = "+defaultReturnValue+"");
 				evalmethods.AppendLine("			Dim node As ParseNode = GetTokenNode(TokenType." + s.Name + ", index)");
 				evalmethods.AppendLine("			If node IsNot Nothing");
-				evalmethods.AppendLine("				o = node.Eval"+s.Name+"(tree)");
+				evalmethods.AppendLine("				o = node.Eval"+s.Name+"(tree, paramlist)");
 				evalmethods.AppendLine("			End If");
 				evalmethods.AppendLine("			Return o");
 				evalmethods.AppendLine("		End Function\r\n");
@@ -164,7 +164,7 @@ namespace TinyPG.CodeGenerators.VBNet
 					}
 					else
 					{
-						replacement = "Me.Get"+ s.Name + "Value(tree, " + indexer + ")";
+						replacement = "Me.Get"+ s.Name + "Value(tree, " + indexer + ", paramlist)";
 					}
 				}
 				else

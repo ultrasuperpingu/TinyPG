@@ -10,6 +10,7 @@ namespace <%Namespace%>
 	class ParseTree;
 	class ParseNode<%IParseNode%>
 	{
+		friend class ParseTree;
 		protected:
 		<%ITokenGet%>
 		public:
@@ -122,7 +123,7 @@ namespace <%Namespace%>
 			}
 			return Value;
 		}*/
-
+		protected:
 <%VirtualEvalMethods%>
 
 <%ParseTreeCustomCode%>
@@ -220,11 +221,12 @@ namespace <%Namespace%>
 		/// </summary>
 		/// <param name="paramlist">additional optional input parameters</param>
 		/// <returns>the output of the evaluation function</returns>
-		// TODO: template the class and/or use std::any
-		/*inline void* Eval(std::vector<void*> paramlist)
+		// TODO: template the class (not the method) and/or use std::any
+		template<typename T>
+		inline T Eval(const std::vector<void*>& paramlist)
 		{
 			return Nodes[0]->EvalStart(*this, paramlist);
-		}*/
+		}
 	};
  
 }
