@@ -177,12 +177,12 @@ namespace TinyPG
 			}
 			return null;
 		}
-		protected object GetValue(ParseTree tree, TokenType type, int index)
+		protected object GetValue(TokenType type, int index, params object[] paramlist)
 		{
-			return GetValue(tree, type, ref index);
+			return GetValue(type, ref index, paramlist);
 		}
 
-		protected object GetValue(ParseTree tree, TokenType type, ref int index)
+		protected object GetValue(TokenType type, ref int index, params object[] paramlist)
 		{
 			object o = null;
 			if (index < 0) return o;
@@ -195,7 +195,7 @@ namespace TinyPG
 					index--;
 					if (index < 0)
 					{
-						o = node.Eval(tree);
+						o = node.Eval(paramlist);
 						break;
 					}
 				}
@@ -209,47 +209,47 @@ namespace TinyPG
 		/// <param name="tree">the parsetree itself</param>
 		/// <param name="paramlist">optional input parameters</param>
 		/// <returns>a partial result of the evaluation</returns>
-		internal object Eval(ParseTree tree, params object[] paramlist)
+		internal object Eval(params object[] paramlist)
 		{
 			object Value = null;
 
 			switch (Token.Type)
 			{
 				case TokenType.Start:
-					Value = EvalStart(tree, paramlist);
+					Value = EvalStart(paramlist);
 				break;
 				case TokenType.Directive:
-					Value = EvalDirective(tree, paramlist);
+					Value = EvalDirective(paramlist);
 				break;
 				case TokenType.NameValue:
-					Value = EvalNameValue(tree, paramlist);
+					Value = EvalNameValue(paramlist);
 				break;
 				case TokenType.ExtProduction:
-					Value = EvalExtProduction(tree, paramlist);
+					Value = EvalExtProduction(paramlist);
 				break;
 				case TokenType.Attribute:
-					Value = EvalAttribute(tree, paramlist);
+					Value = EvalAttribute(paramlist);
 				break;
 				case TokenType.Params:
-					Value = EvalParams(tree, paramlist);
+					Value = EvalParams(paramlist);
 				break;
 				case TokenType.Param:
-					Value = EvalParam(tree, paramlist);
+					Value = EvalParam(paramlist);
 				break;
 				case TokenType.Production:
-					Value = EvalProduction(tree, paramlist);
+					Value = EvalProduction(paramlist);
 				break;
 				case TokenType.Rule:
-					Value = EvalRule(tree, paramlist);
+					Value = EvalRule(paramlist);
 				break;
 				case TokenType.Subrule:
-					Value = EvalSubrule(tree, paramlist);
+					Value = EvalSubrule(paramlist);
 				break;
 				case TokenType.ConcatRule:
-					Value = EvalConcatRule(tree, paramlist);
+					Value = EvalConcatRule(paramlist);
 				break;
 				case TokenType.Symbol:
-					Value = EvalSymbol(tree, paramlist);
+					Value = EvalSymbol(paramlist);
 				break;
 
 				default:
@@ -259,12 +259,12 @@ namespace TinyPG
 			return Value;
 		}
 
-		protected virtual object EvalStart(ParseTree tree, params object[] paramlist)
+		protected virtual object EvalStart(params object[] paramlist)
 		{
 			return default(object); //"Could not interpret input; no semantics implemented.";
 		}
 
-		protected virtual object GetStartValue(ParseTree tree, int index)
+		protected virtual object GetStartValue(int index)
 		{
 			object o = default(object);
 			if (index < 0)
@@ -277,7 +277,7 @@ namespace TinyPG
 					index--;
 					if (index < 0)
 					{
-						o = node.EvalStart(tree, null);
+						o = node.EvalStart();
 						break;
 					}
 				}
@@ -285,14 +285,14 @@ namespace TinyPG
 			return o;
 		}
 
-		protected virtual object EvalDirective(ParseTree tree, params object[] paramlist)
+		protected virtual object EvalDirective(params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
-				node.Eval(tree, paramlist);
+				node.Eval(paramlist);
 			return default(object);
 		}
 
-		protected virtual object GetDirectiveValue(ParseTree tree, int index)
+		protected virtual object GetDirectiveValue(int index)
 		{
 			object o = default(object);
 			if (index < 0)
@@ -305,7 +305,7 @@ namespace TinyPG
 					index--;
 					if (index < 0)
 					{
-						o = node.EvalDirective(tree, null);
+						o = node.EvalDirective();
 						break;
 					}
 				}
@@ -313,14 +313,14 @@ namespace TinyPG
 			return o;
 		}
 
-		protected virtual object EvalNameValue(ParseTree tree, params object[] paramlist)
+		protected virtual object EvalNameValue(params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
-				node.Eval(tree, paramlist);
+				node.Eval(paramlist);
 			return default(object);
 		}
 
-		protected virtual object GetNameValueValue(ParseTree tree, int index)
+		protected virtual object GetNameValueValue(int index)
 		{
 			object o = default(object);
 			if (index < 0)
@@ -333,7 +333,7 @@ namespace TinyPG
 					index--;
 					if (index < 0)
 					{
-						o = node.EvalNameValue(tree, null);
+						o = node.EvalNameValue();
 						break;
 					}
 				}
@@ -341,14 +341,14 @@ namespace TinyPG
 			return o;
 		}
 
-		protected virtual object EvalExtProduction(ParseTree tree, params object[] paramlist)
+		protected virtual object EvalExtProduction(params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
-				node.Eval(tree, paramlist);
+				node.Eval(paramlist);
 			return default(object);
 		}
 
-		protected virtual object GetExtProductionValue(ParseTree tree, int index)
+		protected virtual object GetExtProductionValue(int index)
 		{
 			object o = default(object);
 			if (index < 0)
@@ -361,7 +361,7 @@ namespace TinyPG
 					index--;
 					if (index < 0)
 					{
-						o = node.EvalExtProduction(tree, null);
+						o = node.EvalExtProduction();
 						break;
 					}
 				}
@@ -369,14 +369,14 @@ namespace TinyPG
 			return o;
 		}
 
-		protected virtual object EvalAttribute(ParseTree tree, params object[] paramlist)
+		protected virtual object EvalAttribute(params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
-				node.Eval(tree, paramlist);
+				node.Eval(paramlist);
 			return default(object);
 		}
 
-		protected virtual object GetAttributeValue(ParseTree tree, int index)
+		protected virtual object GetAttributeValue(int index)
 		{
 			object o = default(object);
 			if (index < 0)
@@ -389,7 +389,7 @@ namespace TinyPG
 					index--;
 					if (index < 0)
 					{
-						o = node.EvalAttribute(tree, null);
+						o = node.EvalAttribute();
 						break;
 					}
 				}
@@ -397,14 +397,14 @@ namespace TinyPG
 			return o;
 		}
 
-		protected virtual object EvalParams(ParseTree tree, params object[] paramlist)
+		protected virtual object EvalParams(params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
-				node.Eval(tree, paramlist);
+				node.Eval(paramlist);
 			return default(object);
 		}
 
-		protected virtual object GetParamsValue(ParseTree tree, int index)
+		protected virtual object GetParamsValue(int index)
 		{
 			object o = default(object);
 			if (index < 0)
@@ -417,7 +417,7 @@ namespace TinyPG
 					index--;
 					if (index < 0)
 					{
-						o = node.EvalParams(tree, null);
+						o = node.EvalParams();
 						break;
 					}
 				}
@@ -425,14 +425,14 @@ namespace TinyPG
 			return o;
 		}
 
-		protected virtual object EvalParam(ParseTree tree, params object[] paramlist)
+		protected virtual object EvalParam(params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
-				node.Eval(tree, paramlist);
+				node.Eval(paramlist);
 			return default(object);
 		}
 
-		protected virtual object GetParamValue(ParseTree tree, int index)
+		protected virtual object GetParamValue(int index)
 		{
 			object o = default(object);
 			if (index < 0)
@@ -445,7 +445,7 @@ namespace TinyPG
 					index--;
 					if (index < 0)
 					{
-						o = node.EvalParam(tree, null);
+						o = node.EvalParam();
 						break;
 					}
 				}
@@ -453,14 +453,14 @@ namespace TinyPG
 			return o;
 		}
 
-		protected virtual object EvalProduction(ParseTree tree, params object[] paramlist)
+		protected virtual object EvalProduction(params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
-				node.Eval(tree, paramlist);
+				node.Eval(paramlist);
 			return default(object);
 		}
 
-		protected virtual object GetProductionValue(ParseTree tree, int index)
+		protected virtual object GetProductionValue(int index)
 		{
 			object o = default(object);
 			if (index < 0)
@@ -473,7 +473,7 @@ namespace TinyPG
 					index--;
 					if (index < 0)
 					{
-						o = node.EvalProduction(tree, null);
+						o = node.EvalProduction();
 						break;
 					}
 				}
@@ -481,14 +481,14 @@ namespace TinyPG
 			return o;
 		}
 
-		protected virtual object EvalRule(ParseTree tree, params object[] paramlist)
+		protected virtual object EvalRule(params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
-				node.Eval(tree, paramlist);
+				node.Eval(paramlist);
 			return default(object);
 		}
 
-		protected virtual object GetRuleValue(ParseTree tree, int index)
+		protected virtual object GetRuleValue(int index)
 		{
 			object o = default(object);
 			if (index < 0)
@@ -501,7 +501,7 @@ namespace TinyPG
 					index--;
 					if (index < 0)
 					{
-						o = node.EvalRule(tree, null);
+						o = node.EvalRule();
 						break;
 					}
 				}
@@ -509,14 +509,14 @@ namespace TinyPG
 			return o;
 		}
 
-		protected virtual object EvalSubrule(ParseTree tree, params object[] paramlist)
+		protected virtual object EvalSubrule(params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
-				node.Eval(tree, paramlist);
+				node.Eval(paramlist);
 			return default(object);
 		}
 
-		protected virtual object GetSubruleValue(ParseTree tree, int index)
+		protected virtual object GetSubruleValue(int index)
 		{
 			object o = default(object);
 			if (index < 0)
@@ -529,7 +529,7 @@ namespace TinyPG
 					index--;
 					if (index < 0)
 					{
-						o = node.EvalSubrule(tree, null);
+						o = node.EvalSubrule();
 						break;
 					}
 				}
@@ -537,14 +537,14 @@ namespace TinyPG
 			return o;
 		}
 
-		protected virtual object EvalConcatRule(ParseTree tree, params object[] paramlist)
+		protected virtual object EvalConcatRule(params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
-				node.Eval(tree, paramlist);
+				node.Eval(paramlist);
 			return default(object);
 		}
 
-		protected virtual object GetConcatRuleValue(ParseTree tree, int index)
+		protected virtual object GetConcatRuleValue(int index)
 		{
 			object o = default(object);
 			if (index < 0)
@@ -557,7 +557,7 @@ namespace TinyPG
 					index--;
 					if (index < 0)
 					{
-						o = node.EvalConcatRule(tree, null);
+						o = node.EvalConcatRule();
 						break;
 					}
 				}
@@ -565,14 +565,14 @@ namespace TinyPG
 			return o;
 		}
 
-		protected virtual object EvalSymbol(ParseTree tree, params object[] paramlist)
+		protected virtual object EvalSymbol(params object[] paramlist)
 		{
 			foreach (ParseNode node in Nodes)
-				node.Eval(tree, paramlist);
+				node.Eval(paramlist);
 			return default(object);
 		}
 
-		protected virtual object GetSymbolValue(ParseTree tree, int index)
+		protected virtual object GetSymbolValue(int index)
 		{
 			object o = default(object);
 			if (index < 0)
@@ -585,7 +585,7 @@ namespace TinyPG
 					index--;
 					if (index < 0)
 					{
-						o = node.EvalSymbol(tree, null);
+						o = node.EvalSymbol();
 						break;
 					}
 				}
