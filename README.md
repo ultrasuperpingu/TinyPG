@@ -15,18 +15,19 @@ The source code is licensed under the [Code Project Open License (CPOL)
 ### Features & Fixes
 
 These are the new features and fixes we have added to the original code:
-
- - Support for `[IgnoreCase]` flag on terminal symbols.
- - Syntax highlighting now supports `var` keyword.
- - `ParseError` now has correct line numbers and the IDE will now display the error line number in the output.
- - Regex tool now updates live without flicker.
- - Production rules without a code block will by default evaluate their sub-rules.
- - IDE now uses C# 3.x compiler when testing the generated parser code.
- - Command line building of parsers.
- - IDE expression evaluator now include line and column numbers in errors.
- - Unexpected token errors now display the offending character.
- - We now always show the list of expected tokens on errors.
- - Added Java and C++ support.
+ - New features:
+   - Added Java and C++ support.
+   - Command line building of parsers.
+   - Support RegexCompiled option to don't use RegexOptions.Compiled in Scanner regexs
+   - Support for `[IgnoreCase]` flag on terminal symbols.
+ - Fix and small improvements:
+   - `ParseError` now has correct line numbers and the IDE will now display the error line number in the output.
+   - Regex tool now updates live without flicker.
+   - IDE expression evaluator now include line and column numbers in errors.
+   - Unexpected token errors now display the offending character.
+   - We now always show the list of expected tokens on errors.
+   - Syntax highlighting now supports `var` keyword.
+   - IDE now uses C# 8.x compiler when testing the generated parser code.
 
 ### Downloads
 
