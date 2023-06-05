@@ -31,7 +31,7 @@ namespace TinyPG.CodeGenerators.Java
 			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
 				evalsymbols.AppendLine("			case " + s.Name + ":");
-				evalsymbols.AppendLine("				Value = Eval" + s.Name + "(tree, paramlist);");
+				evalsymbols.AppendLine("				Value = Eval" + s.Name + "(paramlist);");
 				//evalsymbols.AppendLine("				Value = Token.Text;");
 				evalsymbols.AppendLine("				break;");
 
@@ -41,7 +41,7 @@ namespace TinyPG.CodeGenerators.Java
 				string defaultReturnValue = "null";
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault))
 					defaultReturnValue = s.ReturnTypeDefault;
-				evalmethods.AppendLine("	protected " + returnType + " Eval" + s.Name + "(ParseTree tree, Object... paramlist)");
+				evalmethods.AppendLine("	protected " + returnType + " Eval" + s.Name + "(Object... paramlist)");
 				evalmethods.AppendLine("	{");
 				if (s.CodeBlock != null)
 				{
@@ -54,12 +54,12 @@ namespace TinyPG.CodeGenerators.Java
 					// otherwise simply not implemented!
 				}
 				evalmethods.AppendLine("	}\r\n");
-				evalmethods.AppendLine("	protected " + returnType + " Get" + s.Name + "Value(ParseTree tree, int index, Object... paramlist)");
+				evalmethods.AppendLine("	protected " + returnType + " Get" + s.Name + "Value(int index, Object... paramlist)");
 				evalmethods.AppendLine("	{");
 				evalmethods.AppendLine("		" + returnType + " o = "+defaultReturnValue+";");
 				evalmethods.AppendLine("		ParseNode node = GetTokenNode(TokenType." + s.Name + ", index);");
 				evalmethods.AppendLine("		if (node != null)");
-				evalmethods.AppendLine("			o = node.Eval"+s.Name+"(tree, paramlist);");
+				evalmethods.AppendLine("			o = node.Eval"+s.Name+"(paramlist);");
 				evalmethods.AppendLine("		return o;");
 				evalmethods.AppendLine("	}\r\n");
 			}
@@ -119,7 +119,7 @@ namespace TinyPG.CodeGenerators.Java
 					}
 					else
 					{
-						replacement = "this.Get"+s.Name+"Value(tree, " + indexer + ", paramlist)";
+						replacement = "this.Get"+s.Name+"Value(" + indexer + ", paramlist)";
 					}
 				}
 				else

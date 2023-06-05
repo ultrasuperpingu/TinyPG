@@ -11,11 +11,12 @@ namespace TinyExprEval
 		public static void Main(string[] Args)
 		{
 			Parser p = new Parser(new Scanner());
-			var tree = p.Parse("5*3+12/(1+2*test)");
+			string input = "5*3+12/(1+2*test)";
+			var tree = p.Parse(input);
 			Dictionary<string, int> context = new Dictionary<string, int>();
 			context["test"]=2;
 			tree.Context = context;
-			Console.WriteLine(tree.Eval());
+			Console.WriteLine(input + " = " + tree.Eval());
 			Console.ReadLine();
 		}
 	}

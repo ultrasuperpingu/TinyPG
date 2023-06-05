@@ -10,8 +10,7 @@ namespace TinyPG.CodeGenerators.Cpp
 {
 	public class ParseTreeGenerator : BaseGenerator, ICodeGenerator
 	{
-		internal ParseTreeGenerator()
-			: base("ParseTree.h")
+		internal ParseTreeGenerator() : base("ParseTree.h")
 		{
 		}
 
@@ -32,7 +31,7 @@ namespace TinyPG.CodeGenerators.Cpp
 			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
 				evalsymbols.AppendLine("				case TokenType::" + s.Name + ":");
-				evalsymbols.AppendLine("					Value = Eval" + s.Name + "(tree, paramlist);");
+				evalsymbols.AppendLine("					Value = Eval" + s.Name + "(paramlist);");
 				//evalsymbols.AppendLine("					Value = Token.Text;");
 				evalsymbols.AppendLine("					break;");
 
@@ -42,7 +41,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				string defaultReturnValue = "NULL";
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault))
 					defaultReturnValue = s.ReturnTypeDefault;
-				evalmethods.AppendLine("		inline virtual " + returnType + " Eval" + s.Name + "(const ParseTree& tree, const std::vector<void*>& paramlist)");
+				evalmethods.AppendLine("		inline virtual " + returnType + " Eval" + s.Name + "(const std::vector<void*>& paramlist)");
 				evalmethods.AppendLine("		{");
 				if (s.CodeBlock != null)
 				{
@@ -57,11 +56,11 @@ namespace TinyPG.CodeGenerators.Cpp
 				evalmethods.AppendLine("		}\r\n");
 				
 				
-				evalmethods.AppendLine("		inline virtual " + returnType + " Get" + s.Name + "Value(const ParseTree& tree, int index, const std::vector<void*>& paramlist)");
+				evalmethods.AppendLine("		inline virtual " + returnType + " Get" + s.Name + "Value(int index, const std::vector<void*>& paramlist)");
 				evalmethods.AppendLine("		{");
 				evalmethods.AppendLine("			ParseNode* node = GetTokenNode(TokenType::" + s.Name + ", index);");
 				evalmethods.AppendLine("			if (node != NULL)");
-				evalmethods.AppendLine("				return node->Eval"+s.Name+"(tree, paramlist);");
+				evalmethods.AppendLine("				return node->Eval"+s.Name+"(paramlist);");
 				evalmethods.AppendLine("			throw std::exception(\"No "+ s.Name+"[index] found.\");");
 				evalmethods.AppendLine("		}\r\n");
 			}
@@ -122,7 +121,7 @@ namespace TinyPG.CodeGenerators.Cpp
 					}
 					else
 					{
-						replacement = "this->Get"+s.Name+"Value(tree, " + indexer + ", paramlist)";
+						replacement = "this->Get"+s.Name+"Value(" + indexer + ", paramlist)";
 					}
 				}
 				else

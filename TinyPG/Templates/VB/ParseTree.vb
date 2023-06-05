@@ -119,7 +119,7 @@ Namespace <%Namespace%>
 		''' <param name="paramlist">additional optional input parameters</param>
 		''' <returns>the output of the evaluation function</returns>
 		Public Overloads Function Eval(ByVal ParamArray paramlist As Object()) As Object<%ImplementsIParseTreeEval%>
-		Return Nodes(0).Eval(Me, paramlist)
+		Return Nodes(0).Eval(paramlist)
 		End Function
 	End Class
 #End Region
@@ -196,11 +196,11 @@ Namespace <%Namespace%>
 			Return Nothing
 		End Function
 
-		Protected Function GetValue(ByVal tree As ParseTree, ByVal type As TokenType, ByVal index As Integer) As Object
-			Return GetValueByRef(tree, type, index)
+		Protected Function GetValue(ByVal type As TokenType, ByVal index As Integer, ByVal ParamArray paramlist As Object()) As Object
+			Return GetValueByRef(type, index, paramlist)
 		End Function
 
-		Protected Function GetValueByRef(ByVal tree As ParseTree, ByVal type As TokenType, ByRef index As Integer) As Object
+		Protected Function GetValueByRef(ByVal type As TokenType, ByRef index As Integer, ByVal ParamArray paramlist As Object()) As Object
 			Dim o As Object = Nothing
 			If index < 0 Then
 				Return o
@@ -211,7 +211,7 @@ Namespace <%Namespace%>
 				If node.Token.Type = type Then
 					System.Math.Max(System.Threading.Interlocked.Decrement(index), index + 1)
 					If index < 0 Then
-						o = node.Eval(tree)
+						o = node.Eval(paramlist)
 						Exit For
 					End If
 				End If
@@ -225,7 +225,7 @@ Namespace <%Namespace%>
 		''' <param name="tree">the parsetree itself</param>
 		''' <param name="paramlist">optional input parameters</param>
 		''' <returns>a partial result of the evaluation</returns>
-		Friend Function Eval(ByVal tree As ParseTree, ByVal ParamArray paramlist As Object()) As Object
+		Friend Function Eval(ByVal ParamArray paramlist As Object()) As Object
 			Dim Value As Object = Nothing
 
 			Select Case Token.Type

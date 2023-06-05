@@ -169,12 +169,12 @@ class ParseNode<%IParseNode%>
 		return null;
 	}
 
-	protected Object GetValue(ParseTree tree, TokenType type, int index)
+	protected Object GetValue(TokenType type, int index, Object... paramlist)
 	{
-		return GetValue(tree, type, new int[]{ index });
+		return GetValue(type, new int[]{ index }, paramlist);
 	}
 
-	protected Object GetValue(ParseTree tree, TokenType type, int[] index)
+	protected Object GetValue(TokenType type, int[] index, Object... paramlist)
 	{
 		Object o = null;
 		if (index[0] < 0) return o;
@@ -187,7 +187,7 @@ class ParseNode<%IParseNode%>
 				index[0]--;
 				if (index[0] < 0)
 				{
-					o = node.Eval(tree);
+					o = node.Eval(paramlist);
 					break;
 				}
 			}
@@ -201,7 +201,7 @@ class ParseNode<%IParseNode%>
 	/// <param name="tree">the parsetree itself</param>
 	/// <param name="paramlist">optional input parameters</param>
 	/// <returns>a partial result of the evaluation</returns>
-	public Object Eval(ParseTree tree, Object... paramlist)
+	public Object Eval(Object... paramlist)
 	{
 		Object Value = null;
 

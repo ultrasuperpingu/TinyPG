@@ -225,7 +225,7 @@ namespace <%Namespace%>
 		template<typename T>
 		inline T Eval(const std::vector<void*>& paramlist)
 		{
-			return Nodes[0]->EvalStart(*this, paramlist);
+			return Nodes[0]->EvalStart(paramlist);
 		}
 	};
  

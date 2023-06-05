@@ -58,7 +58,7 @@ AddExpr -> MultExpr (PLUSMINUS MultExpr)* : int default(0)
 { 
 	int Value = $MultExpr;
 	int i = 1;
-	while ($MultExpr[i] != NULL)
+	while (?MultExpr[i])
 	{
 		std::string sign = $PLUSMINUS[i-1];
 		if (sign == "+")
@@ -74,7 +74,7 @@ MultExpr -> Atom (MULTDIV Atom)* : int default(0)
 { 
 	int Value = $Atom;
 	int i = 1;
-	while ($Atom[i] != NULL)
+	while (?Atom[i])
 	{
 		std::string sign = $MULTDIV[i-1];
 		if (sign == "*")

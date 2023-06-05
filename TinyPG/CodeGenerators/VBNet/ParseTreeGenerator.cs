@@ -26,7 +26,7 @@ namespace TinyPG.CodeGenerators.VBNet
 			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
 				evalsymbols.AppendLine("				Case TokenType." + s.Name + "");
-				evalsymbols.AppendLine("					Value = Eval" + s.Name + "(tree, paramlist)");
+				evalsymbols.AppendLine("					Value = Eval" + s.Name + "(paramlist)");
 				evalsymbols.AppendLine("					Exit Select");
 
 				string returnType = "Object";
@@ -35,7 +35,7 @@ namespace TinyPG.CodeGenerators.VBNet
 				string defaultReturnValue = "Nothing";
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault) && !isDebugOther)
 					defaultReturnValue = s.ReturnTypeDefault;
-				evalmethods.AppendLine("		Protected Overridable Function Eval" + s.Name + "(ByVal tree As ParseTree, ByVal ParamArray paramlist As Object()) As " + returnType);
+				evalmethods.AppendLine("		Protected Overridable Function Eval" + s.Name + "(ByVal ParamArray paramlist As Object()) As " + returnType);
 				if (s.CodeBlock != null && !isDebugOther)
 				{
 					// paste user code here
@@ -47,11 +47,11 @@ namespace TinyPG.CodeGenerators.VBNet
 					evalmethods.AppendLine("			Throw New NotImplementedException(\"Could not interpret input; no semantics implemented.\")");
 				}
 				evalmethods.AppendLine("		End Function\r\n");
-				evalmethods.AppendLine("		Protected Overridable Function Get" + s.Name + "Value(tree As ParseTree, index As Integer, ByVal ParamArray paramlist As Object()) As " + returnType);
+				evalmethods.AppendLine("		Protected Overridable Function Get" + s.Name + "Value(index As Integer, ByVal ParamArray paramlist As Object()) As " + returnType);
 				evalmethods.AppendLine("			Dim o As " + returnType + " = "+defaultReturnValue+"");
 				evalmethods.AppendLine("			Dim node As ParseNode = GetTokenNode(TokenType." + s.Name + ", index)");
 				evalmethods.AppendLine("			If node IsNot Nothing");
-				evalmethods.AppendLine("				o = node.Eval"+s.Name+"(tree, paramlist)");
+				evalmethods.AppendLine("				o = node.Eval"+s.Name+"(paramlist)");
 				evalmethods.AppendLine("			End If");
 				evalmethods.AppendLine("			Return o");
 				evalmethods.AppendLine("		End Function\r\n");
@@ -164,7 +164,7 @@ namespace TinyPG.CodeGenerators.VBNet
 					}
 					else
 					{
-						replacement = "Me.Get"+ s.Name + "Value(tree, " + indexer + ", paramlist)";
+						replacement = "Me.Get"+ s.Name + "Value(" + indexer + ", paramlist)";
 					}
 				}
 				else

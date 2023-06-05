@@ -28,7 +28,7 @@ namespace TinyPG.CodeGenerators.CSharp
 			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
 				evalsymbols.AppendLine("				case TokenType." + s.Name + ":");
-				evalsymbols.AppendLine("					Value = Eval" + s.Name + "(tree, paramlist);");
+				evalsymbols.AppendLine("					Value = Eval" + s.Name + "(paramlist);");
 				//evalsymbols.AppendLine("					Value = Token.Text;");
 				evalsymbols.AppendLine("				break;");
 
@@ -38,7 +38,7 @@ namespace TinyPG.CodeGenerators.CSharp
 				string defaultReturnValue = "default("+returnType+")";
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault) && !isDebugOther)
 					defaultReturnValue = s.ReturnTypeDefault;
-				evalmethods.AppendLine("		protected virtual " + returnType + " Eval" + s.Name + "(ParseTree tree, params object[] paramlist)");
+				evalmethods.AppendLine("		protected virtual " + returnType + " Eval" + s.Name + "(params object[] paramlist)");
 				evalmethods.AppendLine("		{");
 				if (s.CodeBlock != null && !isDebugOther)
 				{
@@ -51,12 +51,12 @@ namespace TinyPG.CodeGenerators.CSharp
 					evalmethods.AppendLine("			throw new NotImplementedException(\"Could not interpret input; no semantics implemented.\");");
 				}
 				evalmethods.AppendLine("		}\r\n");
-				evalmethods.AppendLine("		protected virtual " + returnType + " Get" + s.Name + "Value(ParseTree tree, int index, params object[] paramlist )");
+				evalmethods.AppendLine("		protected virtual " + returnType + " Get" + s.Name + "Value(int index, params object[] paramlist )");
 				evalmethods.AppendLine("		{");
 				evalmethods.AppendLine("			" + returnType + " o = "+defaultReturnValue+";");
 				evalmethods.AppendLine("			ParseNode node = GetTokenNode(TokenType." + s.Name + ", index);");
 				evalmethods.AppendLine("			if (node != null)");
-				evalmethods.AppendLine("				o = node.Eval"+s.Name+"(tree, paramlist);");
+				evalmethods.AppendLine("				o = node.Eval"+s.Name+"(paramlist);");
 				evalmethods.AppendLine("			return o;");
 				evalmethods.AppendLine("		}\r\n");
 			}
@@ -139,7 +139,7 @@ namespace TinyPG.CodeGenerators.CSharp
 					}
 					else
 					{
-						replacement = "this.Get"+s.Name+"Value(tree, " + indexer + ", paramlist)";
+						replacement = "this.Get"+s.Name+"Value(" + indexer + ", paramlist)";
 					}
 				}
 				else
