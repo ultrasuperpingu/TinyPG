@@ -178,7 +178,7 @@ namespace <%Namespace%>
 
 		protected object GetValue(TokenType type, int index, params object[] paramlist)
 		{
-			return GetValue(type, ref index);
+			return GetValue(type, ref index, paramlist);
 		}
 
 		protected object GetValue(TokenType type, ref int index, params object[] paramlist)

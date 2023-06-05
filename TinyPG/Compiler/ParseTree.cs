@@ -142,27 +142,11 @@ namespace TinyPG
 			this.text = text;
 			this.nodes = new List<ParseNode>();
 		}
-		protected virtual bool IsTokenPresent(TokenType type, int index)
-		{
-			if (index < 0) return false;
-			// left to right
-			foreach (ParseNode node in nodes)
-			{
-				if (node.Token.Type == type)
-				{
-					index--;
-					if (index < 0)
-					{
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-		protected virtual string GetTerminalValue(TokenType type, int index)
+
+		protected virtual ParseNode GetTokenNode(TokenType type, int index)
 		{
 			if (index < 0)
-				return "";
+				return null;
 			// left to right
 			foreach (ParseNode node in nodes)
 			{
@@ -171,12 +155,27 @@ namespace TinyPG
 					index--;
 					if (index < 0)
 					{
-						return node.Token.Text;
+						return node;
 					}
 				}
 			}
 			return null;
 		}
+
+		protected virtual bool IsTokenPresent(TokenType type, int index)
+		{
+			ParseNode node = GetTokenNode(type, index);
+			return node != null;
+		}
+
+		protected virtual string GetTerminalValue(TokenType type, int index)
+		{
+			ParseNode node = GetTokenNode(type, index);
+			if (node != null)
+				return node.Token.Text;
+			return null;
+		}
+
 		protected object GetValue(TokenType type, int index, params object[] paramlist)
 		{
 			return GetValue(type, ref index, paramlist);
@@ -261,335 +260,169 @@ namespace TinyPG
 
 		protected virtual object EvalStart(params object[] paramlist)
 		{
-			return default(object); //"Could not interpret input; no semantics implemented.";
+			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetStartValue(int index)
+		protected virtual object GetStartValue(int index, params object[] paramlist )
 		{
 			object o = default(object);
-			if (index < 0)
-				return o;
-			// left to right
-			foreach (ParseNode node in nodes)
-			{
-				if (node.Token.Type == TokenType.Start)
-				{
-					index--;
-					if (index < 0)
-					{
-						o = node.EvalStart();
-						break;
-					}
-				}
-			}
+			ParseNode node = GetTokenNode(TokenType.Start, index);
+			if (node != null)
+				o = node.EvalStart(paramlist);
 			return o;
 		}
 
 		protected virtual object EvalDirective(params object[] paramlist)
 		{
-			foreach (ParseNode node in Nodes)
-				node.Eval(paramlist);
-			return default(object);
+			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetDirectiveValue(int index)
+		protected virtual object GetDirectiveValue(int index, params object[] paramlist )
 		{
 			object o = default(object);
-			if (index < 0)
-				return o;
-			// left to right
-			foreach (ParseNode node in nodes)
-			{
-				if (node.Token.Type == TokenType.Directive)
-				{
-					index--;
-					if (index < 0)
-					{
-						o = node.EvalDirective();
-						break;
-					}
-				}
-			}
+			ParseNode node = GetTokenNode(TokenType.Directive, index);
+			if (node != null)
+				o = node.EvalDirective(paramlist);
 			return o;
 		}
 
 		protected virtual object EvalNameValue(params object[] paramlist)
 		{
-			foreach (ParseNode node in Nodes)
-				node.Eval(paramlist);
-			return default(object);
+			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetNameValueValue(int index)
+		protected virtual object GetNameValueValue(int index, params object[] paramlist )
 		{
 			object o = default(object);
-			if (index < 0)
-				return o;
-			// left to right
-			foreach (ParseNode node in nodes)
-			{
-				if (node.Token.Type == TokenType.NameValue)
-				{
-					index--;
-					if (index < 0)
-					{
-						o = node.EvalNameValue();
-						break;
-					}
-				}
-			}
+			ParseNode node = GetTokenNode(TokenType.NameValue, index);
+			if (node != null)
+				o = node.EvalNameValue(paramlist);
 			return o;
 		}
 
 		protected virtual object EvalExtProduction(params object[] paramlist)
 		{
-			foreach (ParseNode node in Nodes)
-				node.Eval(paramlist);
-			return default(object);
+			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetExtProductionValue(int index)
+		protected virtual object GetExtProductionValue(int index, params object[] paramlist )
 		{
 			object o = default(object);
-			if (index < 0)
-				return o;
-			// left to right
-			foreach (ParseNode node in nodes)
-			{
-				if (node.Token.Type == TokenType.ExtProduction)
-				{
-					index--;
-					if (index < 0)
-					{
-						o = node.EvalExtProduction();
-						break;
-					}
-				}
-			}
+			ParseNode node = GetTokenNode(TokenType.ExtProduction, index);
+			if (node != null)
+				o = node.EvalExtProduction(paramlist);
 			return o;
 		}
 
 		protected virtual object EvalAttribute(params object[] paramlist)
 		{
-			foreach (ParseNode node in Nodes)
-				node.Eval(paramlist);
-			return default(object);
+			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetAttributeValue(int index)
+		protected virtual object GetAttributeValue(int index, params object[] paramlist )
 		{
 			object o = default(object);
-			if (index < 0)
-				return o;
-			// left to right
-			foreach (ParseNode node in nodes)
-			{
-				if (node.Token.Type == TokenType.Attribute)
-				{
-					index--;
-					if (index < 0)
-					{
-						o = node.EvalAttribute();
-						break;
-					}
-				}
-			}
+			ParseNode node = GetTokenNode(TokenType.Attribute, index);
+			if (node != null)
+				o = node.EvalAttribute(paramlist);
 			return o;
 		}
 
 		protected virtual object EvalParams(params object[] paramlist)
 		{
-			foreach (ParseNode node in Nodes)
-				node.Eval(paramlist);
-			return default(object);
+			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetParamsValue(int index)
+		protected virtual object GetParamsValue(int index, params object[] paramlist )
 		{
 			object o = default(object);
-			if (index < 0)
-				return o;
-			// left to right
-			foreach (ParseNode node in nodes)
-			{
-				if (node.Token.Type == TokenType.Params)
-				{
-					index--;
-					if (index < 0)
-					{
-						o = node.EvalParams();
-						break;
-					}
-				}
-			}
+			ParseNode node = GetTokenNode(TokenType.Params, index);
+			if (node != null)
+				o = node.EvalParams(paramlist);
 			return o;
 		}
 
 		protected virtual object EvalParam(params object[] paramlist)
 		{
-			foreach (ParseNode node in Nodes)
-				node.Eval(paramlist);
-			return default(object);
+			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetParamValue(int index)
+		protected virtual object GetParamValue(int index, params object[] paramlist )
 		{
 			object o = default(object);
-			if (index < 0)
-				return o;
-			// left to right
-			foreach (ParseNode node in nodes)
-			{
-				if (node.Token.Type == TokenType.Param)
-				{
-					index--;
-					if (index < 0)
-					{
-						o = node.EvalParam();
-						break;
-					}
-				}
-			}
+			ParseNode node = GetTokenNode(TokenType.Param, index);
+			if (node != null)
+				o = node.EvalParam(paramlist);
 			return o;
 		}
 
 		protected virtual object EvalProduction(params object[] paramlist)
 		{
-			foreach (ParseNode node in Nodes)
-				node.Eval(paramlist);
-			return default(object);
+			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetProductionValue(int index)
+		protected virtual object GetProductionValue(int index, params object[] paramlist )
 		{
 			object o = default(object);
-			if (index < 0)
-				return o;
-			// left to right
-			foreach (ParseNode node in nodes)
-			{
-				if (node.Token.Type == TokenType.Production)
-				{
-					index--;
-					if (index < 0)
-					{
-						o = node.EvalProduction();
-						break;
-					}
-				}
-			}
+			ParseNode node = GetTokenNode(TokenType.Production, index);
+			if (node != null)
+				o = node.EvalProduction(paramlist);
 			return o;
 		}
 
 		protected virtual object EvalRule(params object[] paramlist)
 		{
-			foreach (ParseNode node in Nodes)
-				node.Eval(paramlist);
-			return default(object);
+			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetRuleValue(int index)
+		protected virtual object GetRuleValue(int index, params object[] paramlist )
 		{
 			object o = default(object);
-			if (index < 0)
-				return o;
-			// left to right
-			foreach (ParseNode node in nodes)
-			{
-				if (node.Token.Type == TokenType.Rule)
-				{
-					index--;
-					if (index < 0)
-					{
-						o = node.EvalRule();
-						break;
-					}
-				}
-			}
+			ParseNode node = GetTokenNode(TokenType.Rule, index);
+			if (node != null)
+				o = node.EvalRule(paramlist);
 			return o;
 		}
 
 		protected virtual object EvalSubrule(params object[] paramlist)
 		{
-			foreach (ParseNode node in Nodes)
-				node.Eval(paramlist);
-			return default(object);
+			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetSubruleValue(int index)
+		protected virtual object GetSubruleValue(int index, params object[] paramlist )
 		{
 			object o = default(object);
-			if (index < 0)
-				return o;
-			// left to right
-			foreach (ParseNode node in nodes)
-			{
-				if (node.Token.Type == TokenType.Subrule)
-				{
-					index--;
-					if (index < 0)
-					{
-						o = node.EvalSubrule();
-						break;
-					}
-				}
-			}
+			ParseNode node = GetTokenNode(TokenType.Subrule, index);
+			if (node != null)
+				o = node.EvalSubrule(paramlist);
 			return o;
 		}
 
 		protected virtual object EvalConcatRule(params object[] paramlist)
 		{
-			foreach (ParseNode node in Nodes)
-				node.Eval(paramlist);
-			return default(object);
+			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetConcatRuleValue(int index)
+		protected virtual object GetConcatRuleValue(int index, params object[] paramlist )
 		{
 			object o = default(object);
-			if (index < 0)
-				return o;
-			// left to right
-			foreach (ParseNode node in nodes)
-			{
-				if (node.Token.Type == TokenType.ConcatRule)
-				{
-					index--;
-					if (index < 0)
-					{
-						o = node.EvalConcatRule();
-						break;
-					}
-				}
-			}
+			ParseNode node = GetTokenNode(TokenType.ConcatRule, index);
+			if (node != null)
+				o = node.EvalConcatRule(paramlist);
 			return o;
 		}
 
 		protected virtual object EvalSymbol(params object[] paramlist)
 		{
-			foreach (ParseNode node in Nodes)
-				node.Eval(paramlist);
-			return default(object);
+			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetSymbolValue(int index)
+		protected virtual object GetSymbolValue(int index, params object[] paramlist )
 		{
 			object o = default(object);
-			if (index < 0)
-				return o;
-			// left to right
-			foreach (ParseNode node in nodes)
-			{
-				if (node.Token.Type == TokenType.Symbol)
-				{
-					index--;
-					if (index < 0)
-					{
-						o = node.EvalSymbol();
-						break;
-					}
-				}
-			}
+			ParseNode node = GetTokenNode(TokenType.Symbol, index);
+			if (node != null)
+				o = node.EvalSymbol(paramlist);
 			return o;
 		}
 

@@ -341,7 +341,7 @@ namespace TinyPG
 		private int startpos;
 		private int endpos;
 		private string text;
-		private object value;
+		private object value; // is it really used??
 
 		// contains all prior skipped symbols
 		private List<Token> skipped;
@@ -384,6 +384,7 @@ namespace TinyPG
 			get { return skipped;} 
 			set { skipped = value; }
 		}
+		// is it really used??
 		public object Value { 
 			get { return value;} 
 			set { this.value = value; }
@@ -403,7 +404,7 @@ namespace TinyPG
 			startpos = start;
 			endpos = end;
 			Text = ""; // must initialize with empty string, may cause null reference exceptions otherwise
-			Value = null;
+			Value = null; // is it really used??
 		}
 
 		public void UpdateRange(Token token)

@@ -109,3 +109,5 @@ Backup*/
 UpgradeLog*.XML
 /TinyPG/.vs
 /test
+/TinyPG/Examples/TestJava/SimpleExpr/nbproject/private/
+/TinyPG/Examples/TestJava/SimpleExpr/build/
