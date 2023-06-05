@@ -18,7 +18,7 @@ These are the new features and fixes we have added to the original code:
    - Added Java and C++ support.
    - Command line building of parsers.
    - Support for `[IgnoreCase]` flag on terminal symbols.
-   - Support RegexCompiled option to don't use RegexOptions.Compiled in Scanner regexs
+   - Support `RegexCompiled` option to don't use `RegexOptions.Compiled` in Scanner regexs
  - Fixes and small improvements:
    - Fix `ParseError` line numbers and reports it in the IDE.
    - Fix Regex tool updates flickering.
