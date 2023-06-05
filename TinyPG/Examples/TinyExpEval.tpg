@@ -498,8 +498,9 @@ Start -> (Expression)? EOF_
 };
 
 //expressions
-Function			-> FUNCTION BRACKETOPEN Params? BRACKETCLOSE
+Function	-> FUNCTION BRACKETOPEN Params? BRACKETCLOSE
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	ParseNode funcNode = this.nodes[0];
 	ParseNode paramNode = this.nodes[2];
 
@@ -545,6 +546,7 @@ Function			-> FUNCTION BRACKETOPEN Params? BRACKETCLOSE
 };
 PrimaryExpression		-> Function | Variable | Literal | ParenthesizedExpression // recheck
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	TokenType type = this.nodes[0].Token.Type;
 	if (type == TokenType.Function)
 		return $Function;
@@ -567,6 +569,7 @@ UnaryExpression		-> PrimaryExpression
 				   | MINUS UnaryExpression
 				   | NOT UnaryExpression
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	TokenType type = this.nodes[0].Token.Type;
 	if (type == TokenType.PrimaryExpression)
 		return $PrimaryExpression;
@@ -601,6 +604,7 @@ UnaryExpression		-> PrimaryExpression
 
 PowerExpression		-> UnaryExpression (POWER UnaryExpression)* //ok
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $UnaryExpression[0];
 
 	// IMPORTANT: scanning and calculating the power is done from Left to Right.
@@ -619,6 +623,7 @@ PowerExpression		-> UnaryExpression (POWER UnaryExpression)* //ok
 };
 MultiplicativeExpression	-> PowerExpression ((ASTERIKS | SLASH | PERCENT) PowerExpression)* // ok
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $PowerExpression;
 	for (int i = 1; i < nodes.Count; i+=2 )
 	{
@@ -636,6 +641,7 @@ MultiplicativeExpression	-> PowerExpression ((ASTERIKS | SLASH | PERCENT) PowerE
 };
 AdditiveExpression		-> MultiplicativeExpression ((PLUS | MINUS) MultiplicativeExpression)*
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $MultiplicativeExpression[0];
 	for (int i = 1; i < nodes.Count; i += 2)
 	{
@@ -651,6 +657,7 @@ AdditiveExpression		-> MultiplicativeExpression ((PLUS | MINUS) MultiplicativeEx
 }; 
 ConcatEpression 		-> AdditiveExpression (AMP AdditiveExpression)*
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $AdditiveExpression[0];
 	for (int i = 1; i < nodes.Count; i += 2)
 	{
@@ -663,6 +670,7 @@ ConcatEpression 		-> AdditiveExpression (AMP AdditiveExpression)*
 };
 RelationalExpression		-> ConcatEpression ((LESSTHAN | LESSEQUAL | GREATERTHAN | GREATEREQUAL) ConcatEpression)?
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $ConcatEpression[0];
 	for (int i = 1; i < nodes.Count; i += 2)
 	{
@@ -699,6 +707,7 @@ RelationalExpression		-> ConcatEpression ((LESSTHAN | LESSEQUAL | GREATERTHAN | 
 };
 EqualityExpression		-> RelationalExpression ((EQUAL | NOTEQUAL) RelationalExpression)*
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $RelationalExpression[0];
 	for (int i = 1; i < nodes.Count; i += 2)
 	{
@@ -713,6 +722,7 @@ EqualityExpression		-> RelationalExpression ((EQUAL | NOTEQUAL) RelationalExpres
 };
 ConditionalAndExpression	-> EqualityExpression (AMPAMP EqualityExpression)*  //ok
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $EqualityExpression[0];
 	for (int i = 1; i < nodes.Count; i += 2)
 	{
@@ -725,6 +735,7 @@ ConditionalAndExpression	-> EqualityExpression (AMPAMP EqualityExpression)*  //o
 };
 ConditionalOrExpression 	-> ConditionalAndExpression (PIPEPIPE ConditionalAndExpression)* //ok
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $ConditionalAndExpression[0];
 	for (int i = 1; i < nodes.Count; i += 2)
 	{
@@ -737,6 +748,7 @@ ConditionalOrExpression 	-> ConditionalAndExpression (PIPEPIPE ConditionalAndExp
 };
 AssignmentExpression		-> ConditionalOrExpression (QUESTIONMARK AssignmentExpression COLON AssignmentExpression)? // ok
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $ConditionalOrExpression;
 	if (nodes.Count >= 5 && result is bool 
 		&& nodes[1].Token.Type == TokenType.QUESTIONMARK
@@ -751,6 +763,7 @@ AssignmentExpression		-> ConditionalOrExpression (QUESTIONMARK AssignmentExpress
 };
 Expression		 	-> AssignmentExpression? (ASSIGN AssignmentExpression)?
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	// if only left hand side available, this is not an assignment, simple evaluate expression
 	if (nodes.Count == 1)                 
 		return $AssignmentExpression[0]; // return the result
@@ -834,6 +847,7 @@ Expression		 	-> AssignmentExpression? (ASSIGN AssignmentExpression)?
 //literals
 Params				-> Expression (SEMICOLON Expression)*
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	List<object> parameters = new List<object>();
 	for (int i = 0; i < nodes.Count; i += 2)
 	{
@@ -847,6 +861,7 @@ Params				-> Expression (SEMICOLON Expression)*
 };
 Literal 			-> BOOLEANLITERAL | IntegerLiteral | RealLiteral | StringLiteral
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	TokenType type = this.nodes[0].Token.Type;
 	if (type == TokenType.StringLiteral)
 		return $StringLiteral;
@@ -864,7 +879,8 @@ Literal 			-> BOOLEANLITERAL | IntegerLiteral | RealLiteral | StringLiteral
 	return null;
 };
 IntegerLiteral 		-> DECIMALINTEGERLITERAL | HEXINTEGERLITERAL
- {
+{
+	ParseTree tree = paramlist[0] as ParseTree;
 	if ($DECIMALINTEGERLITERAL != null)
 		return Convert.ToDouble($DECIMALINTEGERLITERAL);
 	if ($HEXINTEGERLITERAL != null)
@@ -878,6 +894,7 @@ IntegerLiteral 		-> DECIMALINTEGERLITERAL | HEXINTEGERLITERAL
 };
 RealLiteral 			-> REALLITERAL
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	if ($REALLITERAL != null)
 	{
 		string val = string.Format(CultureInfo.InvariantCulture, "{0}", $REALLITERAL);
@@ -888,6 +905,7 @@ RealLiteral 			-> REALLITERAL
 };
 StringLiteral			-> STRINGLITERAL
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	if ($STRINGLITERAL != null)
 	{
 		string r = (string)$STRINGLITERAL;
@@ -900,6 +918,7 @@ StringLiteral			-> STRINGLITERAL
 };
 Variable 			-> VARIABLE
 {
+	ParseTree tree = paramlist[0] as ParseTree;
 	if (tree.Context == null)
 	{
 		tree.Errors.Add(new ParseError("No context defined", 1041, this));
