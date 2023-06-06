@@ -76,23 +76,23 @@ namespace TinyPG.CodeGenerators.VBNet
 			scanner = scanner.Replace(@"<%SkipList%>", skiplist.ToString());
 			scanner = scanner.Replace(@"<%RegExps%>", regexps.ToString());
 			scanner = scanner.Replace(@"<%TokenType%>", tokentype.ToString());
-
+			scanner = scanner.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 			if (Debug != GenerateDebugMode.None)
 			{
 				scanner = scanner.Replace(@"<%Imports%>", "Imports TinyPG.Debug");
-				scanner = scanner.Replace(@"<%Namespace%>", "TinyPG.Debug");
-				scanner = scanner.Replace(@"<%IToken%>", "\r\n        Implements IToken");
-				scanner = scanner.Replace(@"<%ImplementsITokenStartPos%>", " Implements IToken.StartPos");
-				scanner = scanner.Replace(@"<%ImplementsITokenEndPos%>", " Implements IToken.EndPos");
-				scanner = scanner.Replace(@"<%ImplementsITokenLength%>", " Implements IToken.Length");
-				scanner = scanner.Replace(@"<%ImplementsITokenText%>", " Implements IToken.Text");
-				scanner = scanner.Replace(@"<%ImplementsITokenToString%>", " Implements IToken.ToString");
+				//scanner = scanner.Replace(@"<%Namespace%>", "TinyPG.Debug");
+				scanner = scanner.Replace(@"<%IToken%>", "\r\n        Implements TinyPG.Debug.IToken");
+				scanner = scanner.Replace(@"<%ImplementsITokenStartPos%>", " Implements TinyPG.Debug.IToken.StartPos");
+				scanner = scanner.Replace(@"<%ImplementsITokenEndPos%>", " Implements TinyPG.Debug.IToken.EndPos");
+				scanner = scanner.Replace(@"<%ImplementsITokenLength%>", " Implements TinyPG.Debug.IToken.Length");
+				scanner = scanner.Replace(@"<%ImplementsITokenText%>", " Implements TinyPG.Debug.IToken.Text");
+				scanner = scanner.Replace(@"<%ImplementsITokenToString%>", " Implements TinyPG.Debug.IToken.ToString");
 				scanner = scanner.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
 			}
 			else
 			{
 				scanner = scanner.Replace(@"<%Imports%>", "");
-				scanner = scanner.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+				//scanner = scanner.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				scanner = scanner.Replace(@"<%IToken%>", "");
 				scanner = scanner.Replace(@"<%ImplementsITokenStartPos%>", "");
 				scanner = scanner.Replace(@"<%ImplementsITokenEndPos%>", "");

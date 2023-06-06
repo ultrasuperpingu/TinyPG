@@ -152,7 +152,7 @@ namespace TinyPG.Compiler
 						string filename = "Unknown ("+System.IO.Path.GetFileName(o.FileName)+")";
 						while (index < sources.Count)
 						{
-							var indexF = o.FileName.IndexOf("."+index+".cs");
+							var indexF = o.FileName.IndexOf("."+index+".");
 							if(indexF >= 0)
 								filename = sourcesFile[index];
 							index++;
