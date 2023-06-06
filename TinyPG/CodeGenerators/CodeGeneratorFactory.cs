@@ -38,6 +38,10 @@ namespace TinyPG.CodeGenerators
 
 		public static ICodeGenerator CreateGenerator(string generator, string language)
 		{
+			if(generator == "Compile")
+			{
+				return new CompileIncludeGenerator();
+			}
 			switch (GetSupportedLanguage(language))
 			{
 				// set the default templates directory

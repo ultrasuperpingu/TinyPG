@@ -62,16 +62,17 @@ namespace TinyPG.CodeGenerators.CSharp
 			}
 
 			parsetree = parsetree.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
+			parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 			if (Debug != GenerateDebugMode.None)
 			{
-				parsetree = parsetree.Replace(@"<%Namespace%>", "TinyPG.Debug");
+				//parsetree = parsetree.Replace(@"<%Namespace%>", "TinyPG.Debug");
 				parsetree = parsetree.Replace(@"<%ParseError%>", " : TinyPG.Debug.IParseError");
 				parsetree = parsetree.Replace(@"<%ParseErrors%>", "List<TinyPG.Debug.IParseError>");
 				parsetree = parsetree.Replace(@"<%IParseTree%>", ", TinyPG.Debug.IParseTree");
 				parsetree = parsetree.Replace(@"<%IParseNode%>", " : TinyPG.Debug.IParseNode");
-				parsetree = parsetree.Replace(@"<%ITokenGet%>", "public IToken IToken { get {return (IToken)Token;} }");
+				parsetree = parsetree.Replace(@"<%ITokenGet%>", "public TinyPG.Debug.IToken IToken { get {return (TinyPG.Debug.IToken)Token;} }");
 
-				string inodes = "public List<IParseNode> INodes {get { return nodes.ConvertAll<IParseNode>( new Converter<ParseNode, IParseNode>( delegate(ParseNode n) { return (IParseNode)n; })); }}\r\n\r\n";
+				string inodes = "public List<TinyPG.Debug.IParseNode> INodes {get { return nodes.ConvertAll<TinyPG.Debug.IParseNode>( new Converter<ParseNode, TinyPG.Debug.IParseNode>( delegate(ParseNode n) { return (TinyPG.Debug.IParseNode)n; })); }}\r\n\r\n";
 				parsetree = parsetree.Replace(@"<%INodesGet%>", inodes);
 				if (Debug == GenerateDebugMode.DebugSelf)
 				{
@@ -84,7 +85,7 @@ namespace TinyPG.CodeGenerators.CSharp
 			}
 			else
 			{
-				parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+				//parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				parsetree = parsetree.Replace(@"<%ParseError%>", "");
 				parsetree = parsetree.Replace(@"<%ParseErrors%>", "List<ParseError>");
 				parsetree = parsetree.Replace(@"<%IParseTree%>", "");

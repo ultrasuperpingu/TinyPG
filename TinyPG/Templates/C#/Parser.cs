@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 // Disable unused variable warnings which
 // can happen during the parser generation.
-#pragma warning disable 168
+//#pragma warning disable 168
 
 namespace <%Namespace%>
 {
@@ -22,7 +22,7 @@ namespace <%Namespace%>
 			this.scanner = scanner;
 		}
 
-			public <%IParseTree%> Parse(string input)
+		public <%IParseTree%> Parse(string input)
 		{
 			return Parse(input, "", new ParseTree());
 		}

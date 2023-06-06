@@ -7,8 +7,7 @@ namespace TinyPG.CodeGenerators.CSharp
 {
 	public class TextHighlighterGenerator : BaseGenerator, ICodeGenerator
 	{
-		internal TextHighlighterGenerator()
-			: base("TextHighlighter.cs")
+		internal TextHighlighterGenerator() : base("TextHighlighter.cs")
 		{
 		}
 
@@ -27,9 +26,9 @@ namespace TinyPG.CodeGenerators.CSharp
 				if (!t.Attributes.ContainsKey("Color"))
 					continue;
 
-				tokens.AppendLine(Helper.Indent(5) + "case TokenType." + t.Name + ":");
-				tokens.AppendLine(Helper.Indent(6) + @"sb.Append(@""{{\cf" + colorindex + @" "");");
-				tokens.AppendLine(Helper.Indent(6) + "break;");
+				tokens.AppendLine(Helper.Indent(4) + "case TokenType." + t.Name + ":");
+				tokens.AppendLine(Helper.Indent(5) + @"sb.Append(@""{{\cf" + colorindex + @" "");");
+				tokens.AppendLine(Helper.Indent(5) + "break;");
 
 				int red = 0;
 				int green = 0;
@@ -63,14 +62,14 @@ namespace TinyPG.CodeGenerators.CSharp
 			generatedtext = generatedtext.Replace(@"<%HightlightTokens%>", tokens.ToString());
 			generatedtext = generatedtext.Replace(@"<%RtfColorPalette%>", colors.ToString());
 			generatedtext = generatedtext.Replace(@"<%TextHighlighterCustomCode%>", Grammar.Directives["TextHighlighter"]["CustomCode"]);
-
+			generatedtext = generatedtext.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 			if (Debug != GenerateDebugMode.None)
 			{
-				generatedtext = generatedtext.Replace(@"<%Namespace%>", "TinyPG.Debug");
+				//generatedtext = generatedtext.Replace(@"<%Namespace%>", "TinyPG.Debug");
 			}
 			else
 			{
-				generatedtext = generatedtext.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+				//generatedtext = generatedtext.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 			}
 
 			return generatedtext;

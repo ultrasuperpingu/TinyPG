@@ -123,6 +123,7 @@ namespace TinyPG.Compiler
 
 			// generate the code with debug interface enabled
 			List<string> sources = new List<string>();
+			List<string> sourcesFile = new List<string>();
 			ICodeGenerator generator;
 			foreach (Directive d in Grammar.Directives)
 			{
@@ -130,8 +131,11 @@ namespace TinyPG.Compiler
 				if (generator != null && d.ContainsKey("FileName"))
 					generator.FileName = d["FileName"];
 
-				if (generator != null && d["Generate"].ToLower() == "true")
+				if (generator != null && (d.Name == "Compile" || d["Generate"].ToLower() == "true"))
+				{
 					sources.Add(generator.Generate(Grammar, debugMode));
+					sourcesFile.Add(generator.FileName);
+				}
 			}
 
 			if (sources.Count > 0)
@@ -141,7 +145,20 @@ namespace TinyPG.Compiler
 				if (Result.Errors.Count > ignoreError)
 				{
 					foreach (CodeDom.CompilerError o in Result.Errors)
-						Errors.Add(o.ErrorNumber.ToString() + " (" + o.Line.ToString()+"," + o.Column.ToString()+"): " + o.ErrorText);
+					{
+						if (!o.IsWarning)
+							result = false;
+						int index = 0;
+						string filename = "Unknown ("+System.IO.Path.GetFileName(o.FileName)+")";
+						while (index < sources.Count)
+						{
+							var indexF = o.FileName.IndexOf("."+index+".cs");
+							if(indexF >= 0)
+								filename = sourcesFile[index];
+							index++;
+						}
+						Errors.Add((o.IsWarning?"Warning ":"Error ") + o.ErrorNumber.ToString() +";"+ filename + " (" + o.Line.ToString()+"," + o.Column.ToString()+"): " + o.ErrorText);
+					}
 				}
 				else
 				{
@@ -167,12 +184,13 @@ namespace TinyPG.Compiler
 		{
 			CompilerResult compilerresult = new CompilerResult();
 			string output = null;
-			if (assembly == null) return null;
+			if (assembly == null)
+				return null;
 
-			object scannerinstance = assembly.CreateInstance("TinyPG.Debug.Scanner");
+			object scannerinstance = assembly.CreateInstance(Grammar.Directives["TinyPG"]["Namespace"]+".Scanner");
 			Type scanner = scannerinstance.GetType();
 
-			object parserinstance = (IParser)assembly.CreateInstance("TinyPG.Debug.Parser", true, BindingFlags.CreateInstance, null, new object[] { scannerinstance }, null, null);
+			object parserinstance = (IParser)assembly.CreateInstance(Grammar.Directives["TinyPG"]["Namespace"]+".Parser", true, BindingFlags.CreateInstance, null, new object[] { scannerinstance }, null, null);
 			Type parsertype = parserinstance.GetType();
 
 			object treeinstance = parsertype.InvokeMember("Parse", BindingFlags.InvokeMethod, null, parserinstance, new object[] { input });
@@ -186,7 +204,7 @@ namespace TinyPG.Compiler
 			if (textHighlight != null && errors.Count == 0)
 			{
 				// try highlight the input text
-				object highlighterinstance = assembly.CreateInstance("TinyPG.Debug.TextHighlighter", true, BindingFlags.CreateInstance, null, new object[] { textHighlight, scannerinstance, parserinstance }, null, null);
+				object highlighterinstance = assembly.CreateInstance(Grammar.Directives["TinyPG"]["Namespace"]+".TextHighlighter", true, BindingFlags.CreateInstance, null, new object[] { textHighlight, scannerinstance, parserinstance }, null, null);
 				if (highlighterinstance != null)
 				{
 					output += "Highlighting input..." + "\r\n";

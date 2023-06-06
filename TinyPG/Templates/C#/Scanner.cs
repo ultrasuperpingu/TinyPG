@@ -97,8 +97,8 @@ namespace <%Namespace%>
 
 			// this prevents double scanning and matching
 			// increased performance
-			if (LookAheadToken != null 
-				&& LookAheadToken.Type != TokenType._UNDETERMINED_ 
+			if (LookAheadToken != null
+				&& LookAheadToken.Type != TokenType._UNDETERMINED_
 				&& LookAheadToken.Type != TokenType._NONE_) return LookAheadToken;
 
 			// if no scantokens specified, then scan for all of them (= backward compatible)
@@ -123,10 +123,10 @@ namespace <%Namespace%>
 				{
 					Regex r = Patterns[scantokens[i]];
 					Match m = r.Match(input);
-					if (m.Success && m.Index == 0 && ((m.Length > len) || (scantokens[i] < index && m.Length == len )))
+					if (m.Success && m.Index == 0 && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
 					{
 						len = m.Length;
-						index = scantokens[i];  
+						index = scantokens[i];
 					}
 				}
 
@@ -232,17 +232,11 @@ namespace <%Namespace%>
 			get { return skipped;} 
 			set { skipped = value; }
 		}
-		// is it really used??
-		public object Value { 
-			get { return value;} 
-			set { this.value = value; }
-		}
-
+		
 		[XmlAttribute]
 		public TokenType Type;
 
-		public Token()
-			: this(0, 0)
+		public Token() : this(0, 0)
 		{
 		}
 
@@ -251,8 +245,7 @@ namespace <%Namespace%>
 			Type = TokenType._UNDETERMINED_;
 			startpos = start;
 			endpos = end;
-			Text = ""; // must initialize with empty string, may cause null reference exceptions otherwise
-			Value = null; // is it really used??
+			Text = "";
 		}
 
 		public void UpdateRange(Token token)

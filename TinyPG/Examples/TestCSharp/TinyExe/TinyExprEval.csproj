@@ -47,10 +47,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context.cs" />
+    <Compile Include="Function.cs" />
+    <Compile Include="Functions.cs" />
+    <Compile Include="IParser.cs" />
+    <Compile Include="IParseTree.cs" />
+    <Compile Include="IToken.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="ParseTree.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Scanner.cs" />
+    <Compile Include="Variables.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

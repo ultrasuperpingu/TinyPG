@@ -188,7 +188,6 @@ class Token<%IToken%>
 	private int startpos;
 	private int endpos;
 	private String text;
-	private Object value;
 
 	public String getFile() { 
 		return file; 
@@ -250,14 +249,6 @@ class Token<%IToken%>
 		skipped = value;
 	}
 
-	// is it really used??
-	public Object getValue() { 
-		return value; 
-	}
-	public void setValue(Object value) {
-		this.value = value;
-	}
-
 	public TokenType Type;
 
 	public Token()
@@ -270,8 +261,7 @@ class Token<%IToken%>
 		Type = TokenType._UNDETERMINED_;
 		startpos = start;
 		endpos = end;
-		text = ""; // must initialize with empty string, may cause null reference exceptions otherwise
-		value = null;
+		text = "";
 	}
 
 	public void UpdateRange(Token token)

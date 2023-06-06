@@ -152,6 +152,10 @@ namespace TinyPG.Compiler
 				case "Scanner":
 				case "ParseTree":
 				case "TextHighlighter":
+					if (name == "TinyPG" && g.Directives.Count > 0)
+					{
+						tree.Errors.Add(new ParseError("Directive '" + name + "' should be the first directive declared", 0x1030, node.Nodes[1]));
+					}
 					if (g.Directives.Find(name) != null)
 					{
 						tree.Errors.Add(new ParseError("Directive '" + name + "' is already defined", 0x1030, node.Nodes[1]));
@@ -163,6 +167,20 @@ namespace TinyPG.Compiler
 						if (decl != null && decl.ContainsKey("Language"))
 						{
 							var lang=CodeGenerators.CodeGeneratorFactory.GetSupportedLanguage(decl["Language"]);
+							if (lang != CodeGenerators.SupportedLanguage.CSharp && lang != CodeGenerators.SupportedLanguage.VBNet)
+							{
+								tree.Errors.Add(new ParseError("Directive '" + name + "' is not supported with language " + decl["Language"], 0x1030, node.Nodes[1]));
+								return null;
+							}
+						}
+					}
+					break;
+				case "Compile":
+					{
+						var decl = g.Directives.Find("TinyPG");
+						if (decl != null && decl.ContainsKey("Language"))
+						{
+							var lang = CodeGenerators.CodeGeneratorFactory.GetSupportedLanguage(decl["Language"]);
 							if (lang != CodeGenerators.SupportedLanguage.CSharp && lang != CodeGenerators.SupportedLanguage.VBNet)
 							{
 								tree.Errors.Add(new ParseError("Directive '" + name + "' is not supported with language " + decl["Language"], 0x1030, node.Nodes[1]));
@@ -229,11 +247,13 @@ namespace TinyPG.Compiler
 				case "Scanner":
 				case "ParseTree":
 				case "TextHighlighter":
+				case "Compile":
 					names.Add("Generate");
 					names.Add("FileName");
 					names.Add("CustomCode");
 					break;
 				default:
+					// Unknow Directive already reported
 					return null;
 			}
 

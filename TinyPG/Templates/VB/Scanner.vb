@@ -144,7 +144,6 @@ Namespace <%Namespace%>
 		Private m_startPos As Integer
 		Private m_endPos As Integer
 		Private m_text As String
-		Private m_value As Object
 
 		' contains all prior skipped symbols
 		Private m_skipped As List(Of Token)
@@ -192,15 +191,6 @@ Namespace <%Namespace%>
 			End Set
 		End Property
 
-		Public Property Value() As Object
-			Get
-				Return m_value
-			End Get
-			Set(ByVal value As Object)
-				Me.m_value = value
-			End Set
-		End Property
-
 		<XmlAttribute()> _
 		Public Type As TokenType
 
@@ -213,8 +203,6 @@ Namespace <%Namespace%>
 			m_startPos = start
 			m_endPos = endPos
 			Text = ""
-			' must initialize with empty string, may cause null reference exceptions otherwise
-			Value = Nothing
 		End Sub
 
 		Public Sub UpdateRange(ByVal token As Token)

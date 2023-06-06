@@ -73,6 +73,7 @@
     <Compile Include="CodeGenerators\Java\ParserGenerator.cs" />
     <Compile Include="CodeGenerators\Java\ParseTreeGenerator.cs" />
     <Compile Include="CodeGenerators\Java\ScannerGenerator.cs" />
+    <Compile Include="CodeGenerators\CompileIncludeGenerator.cs" />
     <Compile Include="CodeGenerators\VBNet\ParserGenerator.cs" />
     <Compile Include="CodeGenerators\VBNet\ParseTreeGenerator.cs" />
     <Compile Include="CodeGenerators\VBNet\ScannerGenerator.cs" />

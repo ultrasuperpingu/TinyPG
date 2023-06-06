@@ -5,7 +5,7 @@
 // therefore the grammar must be lean and mean. This can be achieved by keeping the
 // parse structure as flat as possible.
 
-<% @TinyPG Namespace="TinyPG.Highlighter" Language="c#"  %>
+<% @TinyPG Namespace="TinyPG.Highlighter" Language="C#"  %>
 <% @TextHighlighter Generate="True" %>
 
 [Skip]			WHITESPACE		-> @"\s+";
@@ -16,8 +16,8 @@
 [Color(0, 128, 0)]	GRAMMARCOMMENTBLOCK 		-> @"/\*([^*]+|\*[^/])+(\*/)?";
 
 	
-[Color(255, 0, 0)]	DIRECTIVESTRING        -> @"@?\""(\""\""|[^\""])*(""|\n)";
-[Color(128, 0, 255)]	DIRECTIVEKEYWORD	-> @"^(@TinyPG|@Parser|@Scanner|@Grammar|@ParseTree|@TextHighlighter)";
+[Color(255, 0, 0)]	DIRECTIVESTRING	-> @"@?\""(\""\""|[^\""])*(""|\n)";
+[Color(128, 0, 255)]	DIRECTIVEKEYWORD	-> @"^(@TinyPG|@Parser|@Scanner|@Grammar|@ParseTree|@TextHighlighter|@Compile)";
 			DIRECTIVESYMBOL	-> @"^(@|(%[^>])|=|"")+?";
 			DIRECTIVENONKEYWORD	-> @"[^%@=""]+";
 [Color(128, 0, 128)]	DIRECTIVEOPEN		-> @"<%";

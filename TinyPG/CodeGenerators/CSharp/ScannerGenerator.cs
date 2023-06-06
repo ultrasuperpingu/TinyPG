@@ -29,15 +29,15 @@ namespace TinyPG.CodeGenerators.CSharp
 			}
 
 			// build system tokens
-			tokentype.AppendLine("\r\n			//Non terminal tokens:");
-			tokentype.AppendLine(Helper.Outline("_NONE_", 3, "= 0,", 5));
-			tokentype.AppendLine(Helper.Outline("_UNDETERMINED_", 3, "= 1,", 5));
+			tokentype.AppendLine("\r\n		//Non terminal tokens:");
+			tokentype.AppendLine(Helper.Outline("_NONE_", 2, "= 0,", 5));
+			tokentype.AppendLine(Helper.Outline("_UNDETERMINED_", 2, "= 1,", 5));
 
 			// build non terminal tokens
-			tokentype.AppendLine("\r\n			//Non terminal tokens:");
+			tokentype.AppendLine("\r\n		//Non terminal tokens:");
 			foreach (Symbol s in Grammar.GetNonTerminals())
 			{
-				tokentype.AppendLine(Helper.Outline(s.Name, 3, "= " + String.Format("{0:d},", counter), 5));
+				tokentype.AppendLine(Helper.Outline(s.Name, 2, "= " + String.Format("{0:d},", counter), 5));
 				counter++;
 			}
 
@@ -65,7 +65,7 @@ namespace TinyPG.CodeGenerators.CSharp
 				if (first) first = false;
 				else tokentype.AppendLine(",");
 
-				tokentype.Append(Helper.Outline(s.Name, 3, "= " + String.Format("{0:d}", counter), 5));
+				tokentype.Append(Helper.Outline(s.Name, 2, "= " + String.Format("{0:d}", counter), 5));
 				counter++;
 			}
 
@@ -73,16 +73,16 @@ namespace TinyPG.CodeGenerators.CSharp
 			scanner = scanner.Replace(@"<%SkipList%>", skiplist.ToString());
 			scanner = scanner.Replace(@"<%RegExps%>", regexps.ToString());
 			scanner = scanner.Replace(@"<%TokenType%>", tokentype.ToString());
-
+			scanner = scanner.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 			if (Debug != GenerateDebugMode.None)
 			{
-				scanner = scanner.Replace(@"<%Namespace%>", "TinyPG.Debug");
+				//scanner = scanner.Replace(@"<%Namespace%>", "TinyPG.Debug");
 				scanner = scanner.Replace(@"<%IToken%>", " : TinyPG.Debug.IToken");
 				scanner = scanner.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
 			}
 			else
 			{
-				scanner = scanner.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+				//scanner = scanner.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				scanner = scanner.Replace(@"<%IToken%>", "");
 				scanner = scanner.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
 			}

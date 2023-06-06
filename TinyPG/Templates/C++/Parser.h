@@ -8,7 +8,6 @@
 
 namespace <%Namespace%>
 {
-
 	class Parser <%IParser%>
 	{
 	private:

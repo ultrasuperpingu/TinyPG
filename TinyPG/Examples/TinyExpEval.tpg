@@ -5,430 +5,21 @@
 //Copyright © Herre Kuijpers 2008-2010
 //Simple expression calculator
 // https://www.codeproject.com/Articles/241830/a-Tiny-Expression-Evaluator
+
 <% @TinyPG Language="C#" OutputPath="TestCSharp\TinyExe" Namespace="TinyExe" RegexCompiled="True"%>
 
 // include text highlighting as part of the input window
 <% @TextHighlighter Generate="true" %>
+<% @Compile Generate="false" FileName="TestCSharp\TinyExe\Functions.cs" %>
+<% @Compile Generate="false" FileName="TestCSharp\TinyExe\Function.cs" %>
+<% @Compile Generate="false" FileName="TestCSharp\TinyExe\Variables.cs" %>
+<% @Compile Generate="false" FileName="TestCSharp\TinyExe\Context.cs" %>
+
 <% @ParseTree CustomCode=@"
 public delegate object FunctionDelegate(object[] parameters);
 
-public delegate object FunctionContextDelegate(object[] parameters, ContextClass context);
+public delegate object FunctionContextDelegate(object[] parameters, Context context);
 
-public abstract class Function
-{
-
-	/// <summary>
-	/// define the arguments of the dynamic function
-	/// </summary>
-	public Dictionary<string, object> Arguments { get; protected set; }
-
-	/// <summary>
-	/// name of the function
-	/// </summary>
-	public string Name { get; protected set; }
-
-	/// <summary>
-	/// minimum number of allowed parameters (default = 0)
-	/// </summary>
-	public int MaxParameters { get; protected set; }
-
-	/// <summary>
-	/// maximum number of allowed parameters (default = 0)
-	/// </summary>
-	public int MinParameters { get; protected set; }
-
-	public abstract object Eval(object[] parameters, ParseTree tree);
-
-}
-public class DynamicFunction : Function
-{
-	public static Dictionary<string, object> CloneVariables(Dictionary<string, object> v)
-	{
-		Dictionary<string, object> vars = new Dictionary<string, object>();
-		foreach (string key in v.Keys)
-			vars.Add(key, v[key]);
-
-		return vars;
-	}
-
-	private ParseNode Node;
-
-
-	public override object Eval(object[] parameters, ParseTree tree)
-	{
-
-		// create a new scope for the arguments
-		Dictionary<string, object> pars = CloneVariables(Arguments);
-		// now push a copy of the function arguments on the stack
-		tree.Context.PushScope(pars);
-
-		// assign the parameters to the current function scope variables            
-		int i = 0;
-		string[] keys = pars.Keys.ToArray();
-
-		foreach (string key in keys)
-			pars[key] = parameters[i++];
-
-		// execute the function here
-
-		object result = Node.Eval(tree, null);
-
-		// clean up the stack
-		tree.Context.PopScope();
-
-		return result;
-	}
-
-	public DynamicFunction(string name, ParseNode node, Dictionary<string, object> args, int minParameters, int maxParameters)
-	{
-		Node = node;
-		Arguments = args;
-		MinParameters = minParameters;
-		MaxParameters = maxParameters;
-	}
-}
-
-public class StaticFunction : Function
-{
-	/// <summary>
-	/// the actual function implementation
-	/// </summary>
-	public FunctionDelegate FunctionDelegate { get; private set; }
-
-	public FunctionContextDelegate FunctionContextDelegate { get; private set; }
-
-	public override object Eval(object[] parameters, ParseTree tree)
-	{
-		tree.Context.PushScope(null);
-
-		object result = null;
-		if (FunctionDelegate != null)
-			result = FunctionDelegate(parameters);
-		else if (FunctionContextDelegate != null)
-			result = FunctionContextDelegate(parameters, tree.Context);
-		tree.Context.PopScope();
-		return result;
-	}
-
-	public StaticFunction(string name, FunctionDelegate function, int minParameters, int maxParameters)
-	{
-		Name = name;
-		FunctionDelegate = function;
-		MinParameters = minParameters;
-		MaxParameters = maxParameters;
-		Arguments = new Dictionary<string, object>();
-	}
-
-	public StaticFunction(string name, FunctionContextDelegate function, int minParameters, int maxParameters)
-	{
-		Name = name;
-		FunctionContextDelegate = function;
-		MinParameters = minParameters;
-		MaxParameters = maxParameters;
-		Arguments = new Dictionary<string, object>();
-	}
-}
-public class Functions : Dictionary<string, Function>
-{
-	private static Functions defaultFunctions;
-	private Random crand = new Random();
-
-	public static Functions Defaults
-	{
-		get
-		{
-			if (defaultFunctions == null)
-			{
-				defaultFunctions = new Functions();
-				defaultFunctions.InitDefaults();
-			}
-			return defaultFunctions;
-		}
-	}
-
-	public void InitDefaults()
-	{
-
-		this.Add(""about"", new StaticFunction(""About"", delegate (object[] ps) { return ""@TinyExe - a Tiny Expression Evaluator v1.0\r\nby Herre Kuijpers - Copyright © 2011 under the CPOL license""; }, 0, 0));
-		this.Add(""help"", new StaticFunction(""Help"", Help, 0, 0));
-
-		// high precision functions
-		this.Add(""abs"", new StaticFunction(""Abs"", delegate (object[] ps) { return Math.Abs(Convert.ToDouble(ps[0])); }, 1, 1));
-		this.Add(""acos"", new StaticFunction(""Acos"", delegate (object[] ps) { return Math.Acos(Convert.ToDouble(ps[0])); }, 1, 1));
-		this.Add(""asin"", new StaticFunction(""Asin"", delegate (object[] ps) { return Math.Asin(Convert.ToDouble(ps[0])); }, 1, 1));
-
-		this.Add(""atan"", new StaticFunction(""Atan"", delegate (object[] ps) { return Math.Atan(Convert.ToDouble(ps[0])); }, 1, 1));
-		this.Add(""atan2"", new StaticFunction(""Atan2"", delegate (object[] ps) { return Math.Atan2(Convert.ToDouble(ps[0]), Convert.ToDouble(ps[1])); }, 2, 2));
-		this.Add(""ceiling"", new StaticFunction(""Ceiling"", delegate (object[] ps) { return Math.Ceiling(Convert.ToDouble(ps[0])); }, 1, 1));
-		this.Add(""cos"", new StaticFunction(""Cos"", delegate (object[] ps) { return Math.Cos(Convert.ToDouble(ps[0])); }, 1, 1));
-		this.Add(""cosh"", new StaticFunction(""Cosh"", delegate (object[] ps) { return Math.Cosh(Convert.ToDouble(ps[0])); }, 1, 1));
-		this.Add(""exp"", new StaticFunction(""Exp"", delegate (object[] ps) { return Math.Exp(Convert.ToDouble(ps[0])); }, 1, 1));
-		this.Add(""int"", new StaticFunction(""int"", delegate (object[] ps) { return (int)Math.Floor(Convert.ToDouble(ps[0])); }, 1, 1));
-		this.Add(""fact"", new StaticFunction(""Fact"", Fact, 1, 1)); // factorials 1*2*3*4...
-		this.Add(""floor"", new StaticFunction(""Floor"", delegate (object[] ps) { return Math.Floor(Convert.ToDouble(ps[0])); }, 1, 1));
-		this.Add(""log"", new StaticFunction(""Log"", Log, 1, 2)); // log allows 1 or 2 parameters
-		this.Add(""ln"", new StaticFunction(""Ln"", delegate (object[] ps) { return Math.Log(Convert.ToDouble(ps[0])); }, 1, 1));
-
-		this.Add(""pow"", new StaticFunction(""Pow"", delegate (object[] ps) { return Math.Pow(Convert.ToDouble(ps[0]), Convert.ToDouble(ps[1])); }, 2, 2));
-		this.Add(""round"", new StaticFunction(""Round"", delegate (object[] ps) { return Math.Round(Convert.ToDouble(ps[0])); }, 1, 1));
-		this.Add(""rand"", new StaticFunction(""Rand"", delegate (object[] ps) { return crand.Next(Convert.ToInt32(ps[0])); }, 1, 1));
-		this.Add(""sign"", new StaticFunction(""Sign"", delegate (object[] ps) { return Math.Sign(Convert.ToDouble(ps[0])); }, 1, 1));
-		this.Add(""sin"", new StaticFunction(""Sin"", delegate (object[] ps) { return Math.Sin(Convert.ToDouble(ps[0])); }, 1, 1));
-		this.Add(""sinh"", new StaticFunction(""Sinh"", delegate (object[] ps) { return Math.Sinh(Convert.ToDouble(ps[0])); }, 1, 1));
-		this.Add(""sqr"", new StaticFunction(""Sqr"", delegate (object[] ps) { return Convert.ToDouble(ps[0]) * Convert.ToDouble(ps[0]); }, 1, 1));
-		this.Add(""sqrt"", new StaticFunction(""Sqrt"", delegate (object[] ps) { return Math.Sqrt(Convert.ToDouble(ps[0])); }, 1, 1));
-#if !WINCE
-		this.Add(""trunc"", new StaticFunction(""Trunc"", delegate (object[] ps) { return Math.Truncate(Convert.ToDouble(ps[0])); }, 1, 1));
-#endif
-		// array functions
-		this.Add(""avg"", new StaticFunction(""Avg"", Avg, 1, int.MaxValue));
-		this.Add(""stdev"", new StaticFunction(""StDev"", StDev, 1, int.MaxValue));
-		this.Add(""var"", new StaticFunction(""Var"", Var, 1, int.MaxValue));
-		this.Add(""max"", new StaticFunction(""Max"", Max, 1, int.MaxValue));
-		this.Add(""median"", new StaticFunction(""Median"", Median, 1, int.MaxValue));
-		this.Add(""min"", new StaticFunction(""Min"", Min, 1, int.MaxValue));
-
-		//boolean functions
-		this.Add(""not"", new StaticFunction(""Not"", delegate (object[] ps) { return !Convert.ToBoolean(ps[0]); }, 1, 1));
-		this.Add(""if"", new StaticFunction(""If"", delegate (object[] ps) { return Convert.ToBoolean(ps[0]) ? ps[1] : ps[2]; }, 3, 3));
-		this.Add(""and"", new StaticFunction(""And"", delegate (object[] ps) { return Convert.ToBoolean(ps[0]) && Convert.ToBoolean(ps[1]); }, 2, 2));
-		this.Add(""or"", new StaticFunction(""Or"", delegate (object[] ps) { return Convert.ToBoolean(ps[0]) || Convert.ToBoolean(ps[1]); }, 2, 2));
-
-		// string functions
-		this.Add(""left"", new StaticFunction(""Left"", delegate (object[] ps)
-		{
-			int len = Convert.ToInt32(ps[1]) < ps[0].ToString().Length ? Convert.ToInt32(ps[1]) : ps[0].ToString().Length;
-			return ps[0].ToString().Substring(0, len);
-		}, 2, 2));
-
-		this.Add(""right"", new StaticFunction(""Right"", delegate (object[] ps)
-		{
-			int len = Convert.ToInt32(ps[1]) < ps[0].ToString().Length ? Convert.ToInt32(ps[1]) : ps[0].ToString().Length;
-			return ps[0].ToString().Substring(ps[0].ToString().Length - len, len);
-		}, 2, 2));
-
-		this.Add(""mid"", new StaticFunction(""Mid"", delegate (object[] ps)
-		{
-			int idx = Convert.ToInt32(ps[1]) < ps[0].ToString().Length ? Convert.ToInt32(ps[1]) : ps[0].ToString().Length;
-			int len = Convert.ToInt32(ps[2]) < ps[0].ToString().Length - idx ? Convert.ToInt32(ps[2]) : ps[0].ToString().Length - idx;
-			return ps[0].ToString().Substring(idx, len);
-		}, 3, 3));
-
-		this.Add(""hex"", new StaticFunction(""Hex"", delegate (object[] ps) { return String.Format(""0x{0:X}"", Convert.ToInt32(ps[0].ToString())); }, 1, 1));
-		this.Add(""format"", new StaticFunction(""Format"", delegate (object[] ps) { return string.Format(ps[0].ToString(), ps[1]); }, 2, 2));
-		this.Add(""len"", new StaticFunction(""Len"", delegate (object[] ps) { return Convert.ToDouble(ps[0].ToString().Length); }, 1, 1));
-		this.Add(""lower"", new StaticFunction(""Lower"", delegate (object[] ps) { return ps[0].ToString().ToLowerInvariant(); }, 1, 1));
-		this.Add(""upper"", new StaticFunction(""Upper"", delegate (object[] ps) { return ps[0].ToString().ToUpperInvariant(); }, 1, 1));
-		this.Add(""val"", new StaticFunction(""Val"", delegate (object[] ps) { return Convert.ToDouble(ps[0]); }, 1, 1));
-
-		this.Add(""rshift"", new StaticFunction(""rshift"", delegate (object[] ps) {
-			return Convert.ToInt32(ps[0]) >> Convert.ToInt32(ps[1]);
-		}, 2, 2));
-		this.Add(""lshift"", new StaticFunction(""lshift"", delegate (object[] ps) {
-			return Convert.ToInt32(ps[0]) << Convert.ToInt32(ps[1]);
-		}, 2, 2));
-		this.Add(""bitand"", new StaticFunction(""bitand"", delegate (object[] ps) {
-			return Convert.ToInt32(ps[0]) & Convert.ToInt32(ps[1]);
-		}, 2, 2));
-		this.Add(""bitor"", new StaticFunction(""bitor"", delegate (object[] ps) {
-			return Convert.ToInt32(ps[0]) | Convert.ToInt32(ps[1]);
-		}, 2, 2));
-		this.Add(""bitxor"", new StaticFunction(""bitxor"", delegate (object[] ps) {
-			return Convert.ToInt32(ps[0]) ^ Convert.ToInt32(ps[1]);
-		}, 2, 2));
-
-	}
-
-	private static object Avg(object[] ps)
-	{
-		double total = 0;
-		foreach (object o in ps)
-			total += Convert.ToDouble(o);
-
-		return total / ps.Length;
-	}
-
-	private static object Median(object[] ps)
-	{
-		object[] ordered = ps.OrderBy(o => Convert.ToDouble(o)).ToArray();
-
-		if (ordered.Length % 2 == 1)
-			return ordered[ordered.Length / 2];
-		else
-			return (Convert.ToDouble(ordered[ordered.Length / 2]) + Convert.ToDouble(ordered[ordered.Length / 2-1]))/2;
-	}
-
-	private static object Var(object[] ps)
-	{
-		double avg = Convert.ToDouble(Avg(ps));
-		double total = 0;
-		foreach (object o in ps)
-			total += (Convert.ToDouble(o) - avg) * (Convert.ToDouble(o) - avg);
-
-		return total / (ps.Length-1);
-	}
-
-	private static object StDev(object[] ps)
-	{
-		double var = Convert.ToDouble(Var(ps));
-		return Math.Sqrt(var);
-	}
-
-	private static object Log(object[] ps)
-	{
-		if (ps.Length == 1)
-			return Math.Log10(Convert.ToDouble(ps[0]));
-
-		if (ps.Length == 2)
-			return Math.Log(Convert.ToDouble(ps[0])) / Math.Log(Convert.ToDouble(ps[1]));
-
-		return null;
-	}
-
-	private static object Fact(object[] ps)
-	{
-		double total = 1;
-
-		for (int i = Convert.ToInt32(ps[0]); i > 1; i--)
-			total *= i;
-
-		return total;
-	}
-
-	private static object Max(object[] ps)
-	{
-		double max = double.MinValue;
-
-		foreach (object o in ps)
-		{
-			double val = Convert.ToDouble(o);
-			if (val > max)
-				max = val;
-		}
-		return max;
-	}
-
-	private static object Min(object[] ps)
-	{
-		double min = double.MaxValue;
-
-		foreach (object o in ps)
-		{
-			double val = Convert.ToDouble(o);
-			if (val < min)
-				min = val;
-		}
-		return min;
-	}
-
-	private static object Help(object[] ps)
-	{
-		StringBuilder help = new StringBuilder();
-		help.AppendLine(""Tiny Expression Evalutator can evaluate expression containing the following functions:"");
-		string[] keys = Functions.Defaults.Keys.OrderBy(s => s).ToArray();
-		foreach (string key in keys)
-		{
-			Function func = Functions.Defaults[key];
-			help.Append(func.Name + "" "");
-		}
-		return help.ToString();
-	}
-
-}
-
-public class ContextClass
-{
-	private static ContextClass defaultContext;
-	public static ContextClass Default
-	{
-		get
-		{
-			if (defaultContext == null)
-				defaultContext = new ContextClass();
-			return defaultContext;
-		}
-	}
-
-	// list of functions currently in scope during an evaluation
-	// note that this typically is NOT thread safe.
-
-	// contains a list of variables that is in scope. Scope is used only for DynamicFunctions (for now)
-	private List<Dictionary<string, object>> inScope;
-
-	public Functions Functions { get; private set; }
-	public Dictionary<string, object> Globals { get; private set; }
-
-	public int CurrentStackSize
-	{
-		get
-		{
-			return inScope.Count;
-		}
-	}
-
-	public Dictionary<string, object> CurrentScope
-	{
-		get
-		{
-			if (inScope.Count <= 0)
-				return null;
-
-			return inScope[inScope.Count-1];
-		}
-	}
-
-	public object GetScopeVariable(string key)
-	{
-		foreach (var scope in inScope.Reverse<Dictionary<string, object>>())
-		{
-			if (scope != null && scope.ContainsKey(key))
-				return scope[key];
-		}
-		return null;
-	}
-
-	public void PushScope(Dictionary<string, object> vars)
-	{
-		inScope.Add(vars);
-	}
-
-	public Dictionary<string, object> PopScope()
-	{
-		if (inScope.Count <= 0)
-			return null;
-
-		Dictionary<string, object> vars = inScope[inScope.Count-1];
-		inScope.RemoveAt(inScope.Count - 1);
-		return vars;
-	}
-
-	public ContextClass()
-	{
-		Reset();
-	}
-
-	public void Reset()
-	{
-		inScope = new List<Dictionary<string, object>>();
-		Functions = new Functions();
-		Globals = new Dictionary<string, object>();
-		Functions.InitDefaults();
-		Globals[""Pi""] = 3.1415926535897932384626433832795; // Math.Pi is not very precise
-		Globals[""E""] = 2.7182818284590452353602874713527;  // Math.E is not very precise either
-	}
-
-	/// <summary>
-	/// Thats not a Deep clone!
-	/// Functions and Globals are shared!
-	/// </summary>
-	public ContextClass Clone()
-	{
-		var c = new ContextClass();
-		c.Globals = this.Globals;
-		c.Functions = this.Functions;
-		return c;
-	}
-}
 
 // helper function to find access the function or variable
 private ParseNode GetFunctionOrVariable(ParseNode n)
@@ -443,7 +34,7 @@ private ParseNode GetFunctionOrVariable(ParseNode n)
 	// function or variable not found in branch
 	return null;
 }
-public ContextClass Context = new ContextClass();" %>
+public Context Context = new Context();" %>
 
 [Color(0, 0, 255)]
 BOOLEANLITERAL	-> @"true|false";
@@ -498,7 +89,7 @@ Start -> (Expression)? EOF_
 };
 
 //expressions
-Function	-> FUNCTION BRACKETOPEN Params? BRACKETCLOSE
+Function -> FUNCTION BRACKETOPEN Params? BRACKETCLOSE
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	ParseNode funcNode = this.nodes[0];
@@ -544,7 +135,7 @@ Function	-> FUNCTION BRACKETOPEN Params? BRACKETCLOSE
 	//Tracer.Trace("Func", "Eval "+func.Name+"("+ t_params + ") = "+fres);
 	return fres;
 };
-PrimaryExpression		-> Function | Variable | Literal | ParenthesizedExpression // recheck
+PrimaryExpression -> Function | Variable | Literal | ParenthesizedExpression // recheck
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	TokenType type = this.nodes[0].Token.Type;
@@ -560,11 +151,11 @@ PrimaryExpression		-> Function | Variable | Literal | ParenthesizedExpression //
 	tree.Errors.Add(new ParseError("Illegal EvalPrimaryExpression format", 1097, this));
 	return null;
 };
-ParenthesizedExpression	-> BRACKETOPEN Expression BRACKETCLOSE
+ParenthesizedExpression -> BRACKETOPEN Expression BRACKETCLOSE
 {
 	return $Expression;
 };
-UnaryExpression		-> PrimaryExpression
+UnaryExpression -> PrimaryExpression
 	    			   | PLUS UnaryExpression
 				   | MINUS UnaryExpression
 				   | NOT UnaryExpression
@@ -602,7 +193,7 @@ UnaryExpression		-> PrimaryExpression
 	return null;
 };
 
-PowerExpression		-> UnaryExpression (POWER UnaryExpression)* //ok
+PowerExpression -> UnaryExpression (POWER UnaryExpression)* //ok
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $UnaryExpression[0];
@@ -621,7 +212,7 @@ PowerExpression		-> UnaryExpression (POWER UnaryExpression)* //ok
 
 	return result;
 };
-MultiplicativeExpression	-> PowerExpression ((ASTERIKS | SLASH | PERCENT) PowerExpression)* // ok
+MultiplicativeExpression -> PowerExpression ((ASTERIKS | SLASH | PERCENT) PowerExpression)* // ok
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $PowerExpression;
@@ -639,7 +230,7 @@ MultiplicativeExpression	-> PowerExpression ((ASTERIKS | SLASH | PERCENT) PowerE
 
 	return result;
 };
-AdditiveExpression		-> MultiplicativeExpression ((PLUS | MINUS) MultiplicativeExpression)*
+AdditiveExpression -> MultiplicativeExpression ((PLUS | MINUS) MultiplicativeExpression)*
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $MultiplicativeExpression[0];
@@ -655,7 +246,7 @@ AdditiveExpression		-> MultiplicativeExpression ((PLUS | MINUS) MultiplicativeEx
 
 	return result;
 }; 
-ConcatEpression 		-> AdditiveExpression (AMP AdditiveExpression)*
+ConcatEpression -> AdditiveExpression (AMP AdditiveExpression)*
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $AdditiveExpression[0];
@@ -668,7 +259,7 @@ ConcatEpression 		-> AdditiveExpression (AMP AdditiveExpression)*
 	}
 	return result;
 };
-RelationalExpression		-> ConcatEpression ((LESSTHAN | LESSEQUAL | GREATERTHAN | GREATEREQUAL) ConcatEpression)?
+RelationalExpression -> ConcatEpression ((LESSTHAN | LESSEQUAL | GREATERTHAN | GREATEREQUAL) ConcatEpression)?
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $ConcatEpression[0];
@@ -705,7 +296,7 @@ RelationalExpression		-> ConcatEpression ((LESSTHAN | LESSEQUAL | GREATERTHAN | 
 	}
 	return result;
 };
-EqualityExpression		-> RelationalExpression ((EQUAL | NOTEQUAL) RelationalExpression)*
+EqualityExpression -> RelationalExpression ((EQUAL | NOTEQUAL) RelationalExpression)*
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $RelationalExpression[0];
@@ -720,7 +311,7 @@ EqualityExpression		-> RelationalExpression ((EQUAL | NOTEQUAL) RelationalExpres
 	}
 	return result;
 };
-ConditionalAndExpression	-> EqualityExpression (AMPAMP EqualityExpression)*  //ok
+ConditionalAndExpression -> EqualityExpression (AMPAMP EqualityExpression)*  //ok
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $EqualityExpression[0];
@@ -733,7 +324,7 @@ ConditionalAndExpression	-> EqualityExpression (AMPAMP EqualityExpression)*  //o
 	}
 	return result;
 };
-ConditionalOrExpression 	-> ConditionalAndExpression (PIPEPIPE ConditionalAndExpression)* //ok
+ConditionalOrExpression -> ConditionalAndExpression (PIPEPIPE ConditionalAndExpression)* //ok
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $ConditionalAndExpression[0];
@@ -746,7 +337,7 @@ ConditionalOrExpression 	-> ConditionalAndExpression (PIPEPIPE ConditionalAndExp
 	}
 	return result;
 };
-AssignmentExpression		-> ConditionalOrExpression (QUESTIONMARK AssignmentExpression COLON AssignmentExpression)? // ok
+AssignmentExpression -> ConditionalOrExpression (QUESTIONMARK AssignmentExpression COLON AssignmentExpression)? // ok
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	object result = $ConditionalOrExpression;
@@ -761,7 +352,7 @@ AssignmentExpression		-> ConditionalOrExpression (QUESTIONMARK AssignmentExpress
 	}
 	return result;
 };
-Expression		 	-> AssignmentExpression? (ASSIGN AssignmentExpression)?
+Expression -> AssignmentExpression? (ASSIGN AssignmentExpression)?
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	// if only left hand side available, this is not an assignment, simple evaluate expression
@@ -791,11 +382,10 @@ Expression		 	-> AssignmentExpression? (ASSIGN AssignmentExpression)?
 
 	if (v.Token.Type == TokenType.VARIABLE)
 	{
-
 		// simply overwrite any previous defnition
 		string key = v.Token.Text;
 		tree.Context.Globals[key] = $AssignmentExpression[1];
-		return null;
+		return tree.Context.Globals[key] ;
 	}
 	else if (v.Token.Type == TokenType.Function)
 	{
@@ -813,7 +403,7 @@ Expression		 	-> AssignmentExpression? (ASSIGN AssignmentExpression)?
 		// lets determine the input variables. 
 		// functions must be of te form f(x;y;z) = x+y*z;
 		// check the function parameters to be of type Variable, error otherwise
-		Dictionary<string, object> vars = new Dictionary<string, object>();
+		Variables vars = new Variables();
 		ParseNode paramsNode = v.Nodes[2];
 		if (paramsNode.Token.Type == TokenType.Params)
 		{   // function has parameters, so check if they are all variable declarations
@@ -836,16 +426,14 @@ Expression		 	-> AssignmentExpression? (ASSIGN AssignmentExpression)?
 		// nodes[2] will be evaluated at runtime when the function is executed.
 		DynamicFunction dynf = new DynamicFunction(key, nodes[2], vars, vars.Count, vars.Count);
 		tree.Context.Functions[key.ToLower()] = dynf;
-		return null;
+		return dynf;
 	}
 
-	
-
-	// in an assignment, dont return any result (basically void)
 	return null;
 };
+
 //literals
-Params				-> Expression (SEMICOLON Expression)*
+Params -> Expression (SEMICOLON Expression)*
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	List<object> parameters = new List<object>();
@@ -859,7 +447,7 @@ Params				-> Expression (SEMICOLON Expression)*
 	}
 	return parameters;
 };
-Literal 			-> BOOLEANLITERAL | IntegerLiteral | RealLiteral | StringLiteral
+Literal -> BOOLEANLITERAL | IntegerLiteral | RealLiteral | StringLiteral
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	TokenType type = this.nodes[0].Token.Type;
@@ -878,7 +466,7 @@ Literal 			-> BOOLEANLITERAL | IntegerLiteral | RealLiteral | StringLiteral
 	tree.Errors.Add(new ParseError("illegal Literal format", 1003, this));
 	return null;
 };
-IntegerLiteral 		-> DECIMALINTEGERLITERAL | HEXINTEGERLITERAL
+IntegerLiteral -> DECIMALINTEGERLITERAL | HEXINTEGERLITERAL
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	if ($DECIMALINTEGERLITERAL != null)
@@ -892,7 +480,7 @@ IntegerLiteral 		-> DECIMALINTEGERLITERAL | HEXINTEGERLITERAL
 	tree.Errors.Add(new ParseError("illegal IntegerLiteral format", 1002, this));
 	return null;
 };
-RealLiteral 			-> REALLITERAL
+RealLiteral -> REALLITERAL
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	if ($REALLITERAL != null)
@@ -903,7 +491,7 @@ RealLiteral 			-> REALLITERAL
 	tree.Errors.Add(new ParseError("illegal RealLiteral format", 1001, this));
 	return null;
 };
-StringLiteral			-> STRINGLITERAL
+StringLiteral -> STRINGLITERAL
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	if ($STRINGLITERAL != null)
@@ -916,7 +504,7 @@ StringLiteral			-> STRINGLITERAL
 	tree.Errors.Add(new ParseError("illegal StringLiteral format", 1000, this));
 	return string.Empty;
 };
-Variable 			-> VARIABLE
+Variable -> VARIABLE
 {
 	ParseTree tree = paramlist[0] as ParseTree;
 	if (tree.Context == null)

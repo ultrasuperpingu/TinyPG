@@ -124,7 +124,6 @@ namespace <%Namespace%>
 
 		private void Do(string text, int position)
 		{
-            
 			if (stateLocked != IntPtr.Zero) return;
 
 			UndoItem ua = new UndoItem(text, position, new Point(HScrollPos, VScrollPos));
@@ -193,7 +192,7 @@ namespace <%Namespace%>
 			Textbox.Select(item.Position, 0);
 			HScrollPos = item.ScrollPosition.X;
 			VScrollPos = item.ScrollPosition.Y;
-            
+
 			Unlock();
 		}
 
@@ -248,7 +247,7 @@ namespace <%Namespace%>
 			stateLocked = IntPtr.Zero;
 			Textbox.Invalidate();
 		}
-  
+
 		void textbox_KeyDown(object sender, KeyEventArgs e)
 		{
 			// undo/redo
@@ -263,7 +262,7 @@ namespace <%Namespace%>
 			if (stateLocked != IntPtr.Zero) return;
 
 			Do(Textbox.Rtf, Textbox.SelectionStart);
-            
+
 			HighlightText();
 		}
 
@@ -273,8 +272,8 @@ namespace <%Namespace%>
 
 			if (SwitchContext == null) return;
 			ParseNode newContext = GetCurrentContext();
-            
-			if (currentContext == null) 
+
+			if (currentContext == null)
 				currentContext = newContext;
 			if (newContext == null) return;
 
@@ -283,7 +282,6 @@ namespace <%Namespace%>
 				SwitchContext.Invoke(this, new ContextSwitchEventArgs(currentContext, newContext));
 				currentContext = newContext;
 			}
-            
 		}
 
 		/// <summary>
@@ -338,13 +336,15 @@ namespace <%Namespace%>
 
 			HighlighTextCore();
 
-			Textbox.Select(selstart,0);
+			Textbox.Select(selstart, 0);
 
 			HScrollPos = hscroll;
 			VScrollPos = vscroll;
 
 			Unlock();
 		}
+
+		public bool IsHighlighting { get; private set; }
 
 		/// <summary>
 		/// this method should be used only by HighlightText or RestoreState methods
@@ -372,11 +372,12 @@ namespace <%Namespace%>
 			AddRtfHeader(sb);
 			AddRtfEnd(sb);
 
+			IsHighlighting = true;
 			Textbox.Rtf = sb.ToString();
-
+			IsHighlighting = false;
 		}
 
-				/// <summary>
+		/// <summary>
 		/// added function to convert unicode characters in the stringbuilder to rtf unicode escapes
 		/// </summary>
 		public StringBuilder Unicode(StringBuilder sb)
@@ -386,7 +387,7 @@ namespace <%Namespace%>
 			for (i = 0; i <= sb.Length - 1; i++)
 			{
 				char c = sb[i];
-                
+
 				if ((int)c < 127)
 				{
 					uc.Append(c);
@@ -400,7 +401,7 @@ namespace <%Namespace%>
 		}
 
 		// thread start for the automatic highlighting
-		private static object treelock = new object();
+		public static object treelock = new object(); // made specifically public for TinyPG main form
 		private bool isDisposing;
 		private bool textChanged;
 		private string currentText;
@@ -435,7 +436,6 @@ namespace <%Namespace%>
 					else
 						Tree = _tree; // assign new tree
 				}
-                
 				Textbox.Invoke(new MethodInvoker(HighlightTextInternal));
 
 			}
@@ -453,7 +453,7 @@ namespace <%Namespace%>
 			{
 				if (node.Token.Skipped != null)
 				{
-					foreach(Token skiptoken in node.Token.Skipped)
+					foreach (Token skiptoken in node.Token.Skipped)
 					{
 						HighlightToken(skiptoken, sb);
 						sb.Append(skiptoken.Text.Replace(@"\", @"\\").Replace("{", @"\{").Replace("}", @"\}").Replace("\n", "\\par\n"));
@@ -470,7 +470,7 @@ namespace <%Namespace%>
 			}
 		}
 
-				/// <summary>
+		/// <summary>
 		/// inserts the RTF codes to highlight text blocks
 		/// </summary>
 		/// <param name="token">the token to highlight, will be appended to sb</param>
@@ -510,7 +510,7 @@ namespace <%Namespace%>
 			threadAutoHighlight.Join(1000);
 			if (threadAutoHighlight.IsAlive)
 				threadAutoHighlight.Abort();
-        }
+		}
 
 		#endregion
 <%TextHighlighterCustomCode%>

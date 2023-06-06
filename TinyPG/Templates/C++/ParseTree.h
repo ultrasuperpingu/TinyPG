@@ -77,12 +77,12 @@ namespace <%Namespace%>
 			return "";
 		}
 
-		/*inline void* GetValue(const ParseTree& tree, TokenType type, int index)
+		/*inline void* GetValue(TokenType type, int index, std::vector<void*> paramlist)
 		{
-			GetValueRefIndex(tree, type, index);
+			GetValueRefIndex(tree, type, index, paramlist);
 		}
 
-		inline void* GetValueRefIndex(const ParseTree& tree, TokenType type, int& index)
+		inline void* GetValueRefIndex(TokenType type, int& index, std::vector<void*> paramlist)
 		{
 			void* o = NULL;
 			if (index < 0) return o;
@@ -95,7 +95,7 @@ namespace <%Namespace%>
 					index--;
 					if (index < 0)
 					{
-						o = node->Eval(tree, {});
+						o = node->Eval(tree, paramlist);
 						break;
 					}
 				}
@@ -110,7 +110,7 @@ namespace <%Namespace%>
 		/// <param name="tree">the parsetree itself</param>
 		/// <param name="paramlist">optional input parameters</param>
 		/// <returns>a partial result of the evaluation</returns>
-		/*inline void* Eval(const ParseTree& tree, std::vector<void*> paramlist)
+		/*inline void* Eval(std::vector<void*> paramlist)
 		{
 			void* Value = NULL;
 

@@ -52,7 +52,6 @@ namespace <%Namespace%>
 		std::string Text;
 
 		std::vector<Token> Skipped;
-		void* Value; // is it really used??
 
 		TokenType Type;
 
@@ -66,8 +65,7 @@ namespace <%Namespace%>
 			Type = TokenType::_UNDETERMINED_;
 			StartPos = start;
 			EndPos = end;
-			Text = ""; // must initialize with empty string, may cause null reference exceptions otherwise
-			Value = NULL; // is it really used??
+			Text = "";
 		}
 
 		inline void UpdateRange(Token token)
