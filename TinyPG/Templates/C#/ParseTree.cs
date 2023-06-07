@@ -15,6 +15,22 @@ namespace <%Namespace%>
 	[Serializable]
 	public class ParseErrors : <%ParseErrors%>
 	{
+		public bool HasBlockingErrors
+		{
+			get { return Find(e => e.IsWarning == false) != null; }
+		}
+		public bool HasWarnings
+		{
+			get { return Find(e => e.IsWarning == true) != null; }
+		}
+		public <%ParseErrors%> Warnings
+		{
+			get { return FindAll(e => e.IsWarning == true); }
+		}
+		public <%ParseErrors%> BlockingErrors
+		{
+			get { return FindAll(e => e.IsWarning == false); }
+		}
 	}
 
 	[Serializable]
@@ -36,7 +52,7 @@ namespace <%Namespace%>
 		public int Position { get { return pos; } }
 		public int Length { get { return length; } }
 		public string Message { get { return message; } }
-		public string IsWarning { get { return IsWarning; } }
+		public bool IsWarning { get { return isWarning; } }
 
 		// just for the sake of serialization
 		public ParseError()

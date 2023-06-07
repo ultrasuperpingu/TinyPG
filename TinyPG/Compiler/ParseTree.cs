@@ -15,6 +15,22 @@ namespace TinyPG
 	[Serializable]
 	public class ParseErrors : List<ParseError>
 	{
+		public bool HaveBlockingErrors
+		{
+			get { return Find(e => e.IsWarning == false) != null; }
+		}
+		public bool HaveWarnings
+		{
+			get { return Find(e => e.IsWarning == true) != null; }
+		}
+		public List<ParseError> Warnings
+		{
+			get { return FindAll(e => e.IsWarning == true); }
+		}
+		public List<ParseError> BlockingErrors
+		{
+			get { return FindAll(e => e.IsWarning == false); }
+		}
 	}
 
 	[Serializable]
@@ -36,7 +52,7 @@ namespace TinyPG
 		public int Position { get { return pos; } }
 		public int Length { get { return length; } }
 		public string Message { get { return message; } }
-		public string IsWarning { get { return IsWarning; } }
+		public bool IsWarning { get { return isWarning; } }
 
 		// just for the sake of serialization
 		public ParseError()

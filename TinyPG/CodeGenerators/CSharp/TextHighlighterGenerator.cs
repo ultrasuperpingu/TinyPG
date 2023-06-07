@@ -63,14 +63,6 @@ namespace TinyPG.CodeGenerators.CSharp
 			generatedtext = generatedtext.Replace(@"<%RtfColorPalette%>", colors.ToString());
 			generatedtext = generatedtext.Replace(@"<%TextHighlighterCustomCode%>", Grammar.Directives["TextHighlighter"]["CustomCode"]);
 			generatedtext = generatedtext.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-			if (Debug != GenerateDebugMode.None)
-			{
-				//generatedtext = generatedtext.Replace(@"<%Namespace%>", "TinyPG.Debug");
-			}
-			else
-			{
-				//generatedtext = generatedtext.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-			}
 
 			return generatedtext;
 		}

@@ -64,6 +64,12 @@ Namespace <%Namespace%>
 			End Get
 		End Property
 
+		Public ReadOnly Property IsWarning() As Boolean<%ImplementsIParseErrorIsWarning%>
+			Get
+				Return m_isWarning
+			End Get
+		End Property
+
 		Public Sub New(ByVal message As String, ByVal code As Integer, ByVal tok As Token)
 			Me.New(message, code, 0, tok.StartPos, tok.StartPos, tok.Length, False)
 		End Sub

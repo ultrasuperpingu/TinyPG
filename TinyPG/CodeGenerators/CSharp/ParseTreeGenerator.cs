@@ -65,7 +65,6 @@ namespace TinyPG.CodeGenerators.CSharp
 			parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 			if (Debug != GenerateDebugMode.None)
 			{
-				//parsetree = parsetree.Replace(@"<%Namespace%>", "TinyPG.Debug");
 				parsetree = parsetree.Replace(@"<%ParseError%>", " : TinyPG.Debug.IParseError");
 				parsetree = parsetree.Replace(@"<%ParseErrors%>", "List<TinyPG.Debug.IParseError>");
 				parsetree = parsetree.Replace(@"<%IParseTree%>", ", TinyPG.Debug.IParseTree");
@@ -85,7 +84,6 @@ namespace TinyPG.CodeGenerators.CSharp
 			}
 			else
 			{
-				//parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				parsetree = parsetree.Replace(@"<%ParseError%>", "");
 				parsetree = parsetree.Replace(@"<%ParseErrors%>", "List<ParseError>");
 				parsetree = parsetree.Replace(@"<%IParseTree%>", "");

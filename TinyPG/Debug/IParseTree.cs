@@ -21,6 +21,7 @@ namespace TinyPG.Debug
 		int Position { get; }
 		int Length { get; }
 		string Message { get; }
+		bool IsWarning { get; }
 	}
 
 	public interface IParseTree : IParseNode

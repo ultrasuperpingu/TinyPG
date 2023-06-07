@@ -85,7 +85,7 @@ namespace TinyPG.CodeGenerators.VBNet
 				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorPosition%>", " Implements TinyPG.Debug.IParseError.Position");
 				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorLength%>", " Implements TinyPG.Debug.IParseError.Length");
 				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorMessage%>", " Implements TinyPG.Debug.IParseError.Message");
-
+				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorIsWarning%>", " Implements TinyPG.Debug.IParseError.IsWarning");
 				string inodes = "		Public Shared Function Node2INode(ByVal node As ParseNode) As TinyPG.Debug.IParseNode\r\n"
 									+ "			Return DirectCast(node, TinyPG.Debug.IParseNode)\r\n"
 									+ "		End Function\r\n\r\n"
@@ -117,6 +117,7 @@ namespace TinyPG.CodeGenerators.VBNet
 				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorPosition%>", "");
 				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorLength%>", "");
 				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorMessage%>", "");
+				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorIsWarning%>", "");
 				parsetree = parsetree.Replace(@"<%ImplementsIParseNodeText%>", "");
 				parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
 			}
