@@ -62,6 +62,7 @@
 			this.theTinyPGGrammarHighlighterV12ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.theTinyPGGrammarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.theTinyPGGrammarV10ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.tinyExprEvalTSM = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStrip = new System.Windows.Forms.StatusStrip();
 			this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -78,10 +79,6 @@
 			this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
 			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.panelOutput = new System.Windows.Forms.Panel();
-			this.panelInput = new System.Windows.Forms.Panel();
-			this.textInput = new System.Windows.Forms.RichTextBox();
-			this.tinyExprEvalTSM = new System.Windows.Forms.ToolStripMenuItem();
-			this.headerEvaluator = new TinyPG.Controls.HeaderLabel();
 			this.tabOutput = new TinyPG.Controls.TabControlEx();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.textOutput = new System.Windows.Forms.RichTextBox();
@@ -90,14 +87,19 @@
 			this.tabPage3 = new System.Windows.Forms.TabPage();
 			this.regExControl = new TinyPG.Controls.RegExControl();
 			this.headerOutput = new TinyPG.Controls.HeaderLabel();
+			this.panelInput = new System.Windows.Forms.Panel();
+			this.textInput = new System.Windows.Forms.RichTextBox();
+			this.headerEvaluator = new TinyPG.Controls.HeaderLabel();
+			this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			this.menuStrip.SuspendLayout();
 			this.statusStrip.SuspendLayout();
 			this.panelOutput.SuspendLayout();
-			this.panelInput.SuspendLayout();
 			this.tabOutput.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.tabPage2.SuspendLayout();
 			this.tabPage3.SuspendLayout();
+			this.panelInput.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip
@@ -110,7 +112,7 @@
             this.helpToolStripMenuItem});
 			this.menuStrip.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip.Name = "menuStrip";
-			this.menuStrip.Size = new System.Drawing.Size(1383, 30);
+			this.menuStrip.Size = new System.Drawing.Size(1383, 28);
 			this.menuStrip.TabIndex = 0;
 			this.menuStrip.Text = "menuStrip";
 			// 
@@ -120,19 +122,21 @@
             this.newToolStripMenuItem,
             this.openToolStripMenuItem,
             this.toolStripSeparator1,
+            this.findToolStripMenuItem,
+            this.toolStripSeparator3,
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.toolStripSeparator2,
             this.exitToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-			this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
+			this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
 			this.fileToolStripMenuItem.Text = "&File";
 			// 
 			// newToolStripMenuItem
 			// 
 			this.newToolStripMenuItem.Name = "newToolStripMenuItem";
 			this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-			this.newToolStripMenuItem.Size = new System.Drawing.Size(190, 26);
+			this.newToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
 			this.newToolStripMenuItem.Text = "&New";
 			this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
 			// 
@@ -140,39 +144,39 @@
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
 			this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(190, 26);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
 			this.openToolStripMenuItem.Text = "&Open...";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(187, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(221, 6);
 			// 
 			// saveToolStripMenuItem
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
 			this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(190, 26);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
 			this.saveToolStripMenuItem.Text = "&Save";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
 			// 
 			// saveAsToolStripMenuItem
 			// 
 			this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(190, 26);
+			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
 			this.saveAsToolStripMenuItem.Text = "Save &As...";
 			this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator2
 			// 
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(187, 6);
+			this.toolStripSeparator2.Size = new System.Drawing.Size(221, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(190, 26);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
 			this.exitToolStripMenuItem.Text = "E&xit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
@@ -184,7 +188,7 @@
             this.parsetreeToolStripMenuItem,
             this.expressionEvaluatorToolStripMenuItem});
 			this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-			this.viewToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
+			this.viewToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
 			this.viewToolStripMenuItem.Text = "&View";
 			// 
 			// regexToolToolStripMenuItem
@@ -229,7 +233,7 @@
             this.viewScannerToolStripMenuItem,
             this.viewParseTreeCodeToolStripMenuItem});
 			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(57, 26);
+			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(57, 24);
 			this.toolsToolStripMenuItem.Text = "&Build";
 			// 
 			// parseToolStripMenuItem
@@ -280,7 +284,7 @@
             this.aboutTinyParserGeneratorToolStripMenuItem,
             this.examplesToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
 			this.helpToolStripMenuItem.Text = "&Help";
 			// 
 			// aboutTinyParserGeneratorToolStripMenuItem
@@ -361,6 +365,13 @@
 			this.theTinyPGGrammarV10ToolStripMenuItem.Size = new System.Drawing.Size(313, 26);
 			this.theTinyPGGrammarV10ToolStripMenuItem.Text = "The TinyPG Grammar v1.5";
 			this.theTinyPGGrammarV10ToolStripMenuItem.Click += new System.EventHandler(this.theTinyPGGrammarV10ToolStripMenuItem_Click);
+			// 
+			// tinyExprEvalTSM
+			// 
+			this.tinyExprEvalTSM.Name = "tinyExprEvalTSM";
+			this.tinyExprEvalTSM.Size = new System.Drawing.Size(313, 26);
+			this.tinyExprEvalTSM.Text = "Tiny Expression Evaluator";
+			this.tinyExprEvalTSM.Click += new System.EventHandler(this.tinyExprEvalTSM_Click);
 			// 
 			// statusStrip
 			// 
@@ -447,10 +458,10 @@
 			this.textEditor.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.textEditor.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.textEditor.HideSelection = false;
-			this.textEditor.Location = new System.Drawing.Point(0, 30);
+			this.textEditor.Location = new System.Drawing.Point(0, 28);
 			this.textEditor.Margin = new System.Windows.Forms.Padding(4);
 			this.textEditor.Name = "textEditor";
-			this.textEditor.Size = new System.Drawing.Size(949, 514);
+			this.textEditor.Size = new System.Drawing.Size(949, 516);
 			this.textEditor.TabIndex = 3;
 			this.textEditor.Text = "";
 			this.textEditor.WordWrap = false;
@@ -474,10 +485,10 @@
 			// 
 			this.splitterRight.BackColor = System.Drawing.SystemColors.InactiveCaption;
 			this.splitterRight.Dock = System.Windows.Forms.DockStyle.Right;
-			this.splitterRight.Location = new System.Drawing.Point(949, 30);
+			this.splitterRight.Location = new System.Drawing.Point(949, 28);
 			this.splitterRight.Margin = new System.Windows.Forms.Padding(4);
 			this.splitterRight.Name = "splitterRight";
-			this.splitterRight.Size = new System.Drawing.Size(7, 739);
+			this.splitterRight.Size = new System.Drawing.Size(7, 741);
 			this.splitterRight.TabIndex = 7;
 			this.splitterRight.TabStop = false;
 			// 
@@ -501,61 +512,11 @@
 			this.panelOutput.Controls.Add(this.tabOutput);
 			this.panelOutput.Controls.Add(this.headerOutput);
 			this.panelOutput.Dock = System.Windows.Forms.DockStyle.Right;
-			this.panelOutput.Location = new System.Drawing.Point(956, 30);
+			this.panelOutput.Location = new System.Drawing.Point(956, 28);
 			this.panelOutput.Margin = new System.Windows.Forms.Padding(4);
 			this.panelOutput.Name = "panelOutput";
-			this.panelOutput.Size = new System.Drawing.Size(427, 739);
+			this.panelOutput.Size = new System.Drawing.Size(427, 741);
 			this.panelOutput.TabIndex = 8;
-			// 
-			// panelInput
-			// 
-			this.panelInput.Controls.Add(this.textInput);
-			this.panelInput.Controls.Add(this.headerEvaluator);
-			this.panelInput.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panelInput.Location = new System.Drawing.Point(0, 550);
-			this.panelInput.Margin = new System.Windows.Forms.Padding(0);
-			this.panelInput.Name = "panelInput";
-			this.panelInput.Size = new System.Drawing.Size(949, 219);
-			this.panelInput.TabIndex = 9;
-			// 
-			// textInput
-			// 
-			this.textInput.AcceptsTab = true;
-			this.textInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.textInput.DetectUrls = false;
-			this.textInput.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.textInput.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.textInput.HideSelection = false;
-			this.textInput.Location = new System.Drawing.Point(0, 25);
-			this.textInput.Margin = new System.Windows.Forms.Padding(4);
-			this.textInput.Name = "textInput";
-			this.textInput.Size = new System.Drawing.Size(949, 194);
-			this.textInput.TabIndex = 2;
-			this.textInput.Text = "";
-			this.textInput.WordWrap = false;
-			this.textInput.SelectionChanged += new System.EventHandler(this.textInput_SelectionChanged);
-			this.textInput.Enter += new System.EventHandler(this.textInput_Enter);
-			this.textInput.Leave += new System.EventHandler(this.textInput_Leave);
-			// 
-			// tinyExprEvalTSM
-			// 
-			this.tinyExprEvalTSM.Name = "tinyExprEvalTSM";
-			this.tinyExprEvalTSM.Size = new System.Drawing.Size(313, 26);
-			this.tinyExprEvalTSM.Text = "Tiny Expression Evaluator";
-			this.tinyExprEvalTSM.Click += new System.EventHandler(this.tinyExprEvalTSM_Click);
-			// 
-			// headerEvaluator
-			// 
-			this.headerEvaluator.Dock = System.Windows.Forms.DockStyle.Top;
-			this.headerEvaluator.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.headerEvaluator.ForeColor = System.Drawing.SystemColors.GrayText;
-			this.headerEvaluator.Location = new System.Drawing.Point(0, 0);
-			this.headerEvaluator.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.headerEvaluator.Name = "headerEvaluator";
-			this.headerEvaluator.Size = new System.Drawing.Size(949, 25);
-			this.headerEvaluator.TabIndex = 3;
-			this.headerEvaluator.Text = "Expression Evaluator";
-			this.headerEvaluator.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// tabOutput
 			// 
@@ -570,7 +531,7 @@
 			this.tabOutput.Name = "tabOutput";
 			this.tabOutput.Padding = new System.Drawing.Point(10, 3);
 			this.tabOutput.SelectedIndex = 0;
-			this.tabOutput.Size = new System.Drawing.Size(427, 714);
+			this.tabOutput.Size = new System.Drawing.Size(427, 716);
 			this.tabOutput.TabIndex = 6;
 			this.tabOutput.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabOutput_Selected);
 			// 
@@ -581,7 +542,7 @@
 			this.tabPage1.Margin = new System.Windows.Forms.Padding(4);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(4);
-			this.tabPage1.Size = new System.Drawing.Size(419, 685);
+			this.tabPage1.Size = new System.Drawing.Size(419, 687);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Output";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -596,7 +557,7 @@
 			this.textOutput.Margin = new System.Windows.Forms.Padding(4);
 			this.textOutput.Name = "textOutput";
 			this.textOutput.ReadOnly = true;
-			this.textOutput.Size = new System.Drawing.Size(411, 677);
+			this.textOutput.Size = new System.Drawing.Size(411, 679);
 			this.textOutput.TabIndex = 6;
 			this.textOutput.Text = "";
 			this.textOutput.WordWrap = false;
@@ -659,6 +620,62 @@
 			this.headerOutput.Text = "Output";
 			this.headerOutput.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
+			// panelInput
+			// 
+			this.panelInput.Controls.Add(this.textInput);
+			this.panelInput.Controls.Add(this.headerEvaluator);
+			this.panelInput.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.panelInput.Location = new System.Drawing.Point(0, 550);
+			this.panelInput.Margin = new System.Windows.Forms.Padding(0);
+			this.panelInput.Name = "panelInput";
+			this.panelInput.Size = new System.Drawing.Size(949, 219);
+			this.panelInput.TabIndex = 9;
+			// 
+			// textInput
+			// 
+			this.textInput.AcceptsTab = true;
+			this.textInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.textInput.DetectUrls = false;
+			this.textInput.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textInput.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.textInput.HideSelection = false;
+			this.textInput.Location = new System.Drawing.Point(0, 25);
+			this.textInput.Margin = new System.Windows.Forms.Padding(4);
+			this.textInput.Name = "textInput";
+			this.textInput.Size = new System.Drawing.Size(949, 194);
+			this.textInput.TabIndex = 2;
+			this.textInput.Text = "";
+			this.textInput.WordWrap = false;
+			this.textInput.SelectionChanged += new System.EventHandler(this.textInput_SelectionChanged);
+			this.textInput.Enter += new System.EventHandler(this.textInput_Enter);
+			this.textInput.Leave += new System.EventHandler(this.textInput_Leave);
+			// 
+			// headerEvaluator
+			// 
+			this.headerEvaluator.Dock = System.Windows.Forms.DockStyle.Top;
+			this.headerEvaluator.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.headerEvaluator.ForeColor = System.Drawing.SystemColors.GrayText;
+			this.headerEvaluator.Location = new System.Drawing.Point(0, 0);
+			this.headerEvaluator.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.headerEvaluator.Name = "headerEvaluator";
+			this.headerEvaluator.Size = new System.Drawing.Size(949, 25);
+			this.headerEvaluator.TabIndex = 3;
+			this.headerEvaluator.Text = "Expression Evaluator";
+			this.headerEvaluator.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// findToolStripMenuItem
+			// 
+			this.findToolStripMenuItem.Name = "findToolStripMenuItem";
+			this.findToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+			this.findToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.findToolStripMenuItem.Text = "&Find...";
+			this.findToolStripMenuItem.Click += new System.EventHandler(this.findToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(221, 6);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -681,11 +698,11 @@
 			this.statusStrip.ResumeLayout(false);
 			this.statusStrip.PerformLayout();
 			this.panelOutput.ResumeLayout(false);
-			this.panelInput.ResumeLayout(false);
 			this.tabOutput.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
 			this.tabPage2.ResumeLayout(false);
 			this.tabPage3.ResumeLayout(false);
+			this.panelInput.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -753,5 +770,7 @@
 		private System.Windows.Forms.ToolStripMenuItem calculatorVBTSM;
 		private System.Windows.Forms.ToolStripMenuItem calculatorCppTSM;
 		private System.Windows.Forms.ToolStripMenuItem tinyExprEvalTSM;
+		private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 	}
 }

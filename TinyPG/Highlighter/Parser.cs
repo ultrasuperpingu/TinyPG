@@ -168,14 +168,15 @@ namespace TinyPG.Highlighter
 			}
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.WHITESPACE, TokenType.DIRECTIVEKEYWORD, TokenType.DIRECTIVESYMBOL, TokenType.DIRECTIVENONKEYWORD, TokenType.DIRECTIVESTRING); // ZeroOrMore Rule
+			tok = scanner.LookAhead(TokenType.WHITESPACE, TokenType.DIRECTIVEKEYWORD, TokenType.DIRECTIVESYMBOL, TokenType.CODEBLOCKOPEN, TokenType.DIRECTIVENONKEYWORD, TokenType.DIRECTIVESTRING); // ZeroOrMore Rule
 			while (tok.Type == TokenType.WHITESPACE
 			    || tok.Type == TokenType.DIRECTIVEKEYWORD
 			    || tok.Type == TokenType.DIRECTIVESYMBOL
+			    || tok.Type == TokenType.CODEBLOCKOPEN
 			    || tok.Type == TokenType.DIRECTIVENONKEYWORD
 			    || tok.Type == TokenType.DIRECTIVESTRING)
 			{
-				tok = scanner.LookAhead(TokenType.WHITESPACE, TokenType.DIRECTIVEKEYWORD, TokenType.DIRECTIVESYMBOL, TokenType.DIRECTIVENONKEYWORD, TokenType.DIRECTIVESTRING); // Choice Rule
+				tok = scanner.LookAhead(TokenType.WHITESPACE, TokenType.DIRECTIVEKEYWORD, TokenType.DIRECTIVESYMBOL, TokenType.CODEBLOCKOPEN, TokenType.DIRECTIVENONKEYWORD, TokenType.DIRECTIVESTRING); // Choice Rule
 				switch (tok.Type)
 				{ // Choice Rule
 					case TokenType.WHITESPACE:
@@ -208,6 +209,9 @@ namespace TinyPG.Highlighter
 							return;
 						}
 						break;
+					case TokenType.CODEBLOCKOPEN:
+						ParseCodeBlock(node); // NonTerminal Rule: CodeBlock
+						break;
 					case TokenType.DIRECTIVENONKEYWORD:
 						tok = scanner.Scan(TokenType.DIRECTIVENONKEYWORD); // Terminal Rule: DIRECTIVENONKEYWORD
 						n = node.CreateNode(tok, tok.ToString() );
@@ -229,10 +233,10 @@ namespace TinyPG.Highlighter
 						}
 						break;
 					default:
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected WHITESPACE, DIRECTIVEKEYWORD, DIRECTIVESYMBOL, DIRECTIVENONKEYWORD, or DIRECTIVESTRING.", 0x0002, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected WHITESPACE, DIRECTIVEKEYWORD, DIRECTIVESYMBOL, CODEBLOCKOPEN, DIRECTIVENONKEYWORD, or DIRECTIVESTRING.", 0x0002, tok));
 						break;
 				} // Choice Rule
-			tok = scanner.LookAhead(TokenType.WHITESPACE, TokenType.DIRECTIVEKEYWORD, TokenType.DIRECTIVESYMBOL, TokenType.DIRECTIVENONKEYWORD, TokenType.DIRECTIVESTRING); // ZeroOrMore Rule
+			tok = scanner.LookAhead(TokenType.WHITESPACE, TokenType.DIRECTIVEKEYWORD, TokenType.DIRECTIVESYMBOL, TokenType.CODEBLOCKOPEN, TokenType.DIRECTIVENONKEYWORD, TokenType.DIRECTIVESTRING); // ZeroOrMore Rule
 			}
 
 			 // Concat Rule

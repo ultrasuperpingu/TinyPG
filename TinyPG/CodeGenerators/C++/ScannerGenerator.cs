@@ -7,8 +7,7 @@ namespace TinyPG.CodeGenerators.Cpp
 {
 	public class ScannerGenerator : BaseGenerator, ICodeGenerator
 	{
-		internal ScannerGenerator()
-			: base("Scanner.h")
+		internal ScannerGenerator() : base("Scanner.h")
 		{
 		}
 
@@ -59,8 +58,10 @@ namespace TinyPG.CodeGenerators.Cpp
 				regexps.Append("			Patterns.insert(std::pair<TokenType,std::regex>(TokenType::" + s.Name + ", regex));\r\n");
 				regexps.Append("			Tokens.push_back(TokenType::" + s.Name + ");\r\n\r\n");
 
-				if (first) first = false;
-				else tokentype.AppendLine(",");
+				if (first)
+					first = false;
+				else
+					tokentype.AppendLine(",");
 
 				tokentype.Append(Helper.Outline(s.Name, 3, "= " + string.Format("{0:d}", counter), 5));
 				counter++;

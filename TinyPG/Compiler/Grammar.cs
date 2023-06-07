@@ -27,7 +27,10 @@ namespace TinyPG.Compiler
 		{
 			return this.Find(delegate (Directive d) { return d.Name == name; });
 		}
-
+		public List<Directive> FindAll(string name)
+		{
+			return this.FindAll(delegate (Directive d) { return d.Name == name; });
+		}
 		public Directive this[string name]
 		{
 			get { return Find(name); }
@@ -224,6 +227,15 @@ namespace TinyPG.Compiler
 				d["Generate"] = "False"; // do NOT generate a text highlighter by default
 			if (!d.ContainsKey("CustomCode"))
 				d["CustomCode"] = ""; // no custom code by default
+
+			foreach(var cd in Directives.FindAll("Compile"))
+			{
+				if (!cd.ContainsKey("Generate"))
+					cd["Generate"] = "False"; // do NOT generate a text highlighter by default
+				if (!d.ContainsKey("CustomCode"))
+					cd["CustomCode"] = ""; // no custom code by default
+
+			}
 		}
 
 		public string GetTemplatePath()

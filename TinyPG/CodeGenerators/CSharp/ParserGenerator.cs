@@ -32,14 +32,12 @@ namespace TinyPG.CodeGenerators.CSharp
 			parser = parser.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 			if (Debug != GenerateDebugMode.None)
 			{
-				//parser = parser.Replace(@"<%Namespace%>", "TinyPG.Debug");
 				parser = parser.Replace(@"<%IParser%>", " : TinyPG.Debug.IParser");
 				parser = parser.Replace(@"<%IParseTree%>", "TinyPG.Debug.IParseTree");
 				parser = parser.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
 			}
 			else
 			{
-				//parser = parser.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				parser = parser.Replace(@"<%IParser%>", "");
 				parser = parser.Replace(@"<%IParseTree%>", "ParseTree");
 				parser = parser.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
@@ -101,7 +99,6 @@ namespace TinyPG.CodeGenerators.CSharp
 					sb.AppendLine(Indent + "Parse" + r.Symbol.Name + "(node);" + Helper.AddComment("NonTerminal Rule: " + r.Symbol.Name));
 					break;
 				case RuleType.Concat:
-
 					for (int i = 0; i < r.Rules.Count; i++)
 					{
 						sb.AppendLine();

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 // Disable unused variable warnings which
 // can happen during the parser generation.
-#pragma warning disable 168
+//#pragma warning disable 168
 
 namespace TinyPG
 {
@@ -22,7 +22,7 @@ namespace TinyPG
 			this.scanner = scanner;
 		}
 
-			public ParseTree Parse(string input)
+		public ParseTree Parse(string input)
 		{
 			return Parse(input, "", new ParseTree());
 		}
@@ -159,14 +159,33 @@ namespace TinyPG
 			}
 
 			 // Concat Rule
-			tok = scanner.Scan(TokenType.STRING); // Terminal Rule: STRING
-			n = node.CreateNode(tok, tok.ToString() );
-			node.Token.UpdateRange(tok);
-			node.Nodes.Add(n);
-			if (tok.Type != TokenType.STRING) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.STRING.ToString(), 0x1001, tok));
-				return;
-			}
+			tok = scanner.LookAhead(TokenType.STRING, TokenType.CODEBLOCK); // Choice Rule
+			switch (tok.Type)
+			{ // Choice Rule
+				case TokenType.STRING:
+					tok = scanner.Scan(TokenType.STRING); // Terminal Rule: STRING
+					n = node.CreateNode(tok, tok.ToString() );
+					node.Token.UpdateRange(tok);
+					node.Nodes.Add(n);
+					if (tok.Type != TokenType.STRING) {
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.STRING.ToString(), 0x1001, tok));
+						return;
+					}
+					break;
+				case TokenType.CODEBLOCK:
+					tok = scanner.Scan(TokenType.CODEBLOCK); // Terminal Rule: CODEBLOCK
+					n = node.CreateNode(tok, tok.ToString() );
+					node.Token.UpdateRange(tok);
+					node.Nodes.Add(n);
+					if (tok.Type != TokenType.CODEBLOCK) {
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.CODEBLOCK.ToString(), 0x1001, tok));
+						return;
+					}
+					break;
+				default:
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected STRING or CODEBLOCK.", 0x0002, tok));
+					break;
+			} // Choice Rule
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: NameValue

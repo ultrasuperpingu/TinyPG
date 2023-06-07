@@ -56,7 +56,7 @@ namespace TinyPG.CodeGenerators.Java
 
 			foreach (Rule rule in s.Rules)
 			{
-				sb.AppendLine(GenerateProductionRuleCode(s.Rules[0], 2));
+				sb.AppendLine(GenerateProductionRuleCode(s.Rules, 0, 2));
 			}
 
 			sb.AppendLine("		parent.Token.UpdateRange(node.Token);");
@@ -66,9 +66,9 @@ namespace TinyPG.CodeGenerators.Java
 		}
 
 		// generates the rule logic inside the method body
-		private string GenerateProductionRuleCode(Rule r, int indent)
+		private string GenerateProductionRuleCode(Rules rules, int index, int indent)
 		{
-			int i = 0;
+			Rule r = rules[index];
 			Symbols firsts = null;
 			StringBuilder sb = new StringBuilder();
 			string Indent = Helper.Indent(indent);
@@ -90,16 +90,15 @@ namespace TinyPG.CodeGenerators.Java
 					sb.AppendLine(Indent + "Parse" + r.Symbol.Name + "(node);" + Helper.AddComment("NonTerminal Rule: " + r.Symbol.Name));
 					break;
 				case RuleType.Concat:
-					foreach (Rule rule in r.Rules)
+					for (int i = 0; i < r.Rules.Count; i++)
 					{
 						sb.AppendLine();
 						sb.AppendLine(Indent + Helper.AddComment("Concat Rule"));
-						sb.Append(GenerateProductionRuleCode(rule, indent));
+						sb.Append(GenerateProductionRuleCode(r.Rules, i, indent));
 					}
 					break;
 				case RuleType.ZeroOrMore:
 					firsts = r.GetFirstTerminals();
-					i = 0;
 					sb.Append(Indent + "tok = scanner.LookAhead(");
 					AppendTokenList(firsts, sb);
 					sb.AppendLine(");" + Helper.AddComment("ZeroOrMore Rule"));
@@ -109,12 +108,11 @@ namespace TinyPG.CodeGenerators.Java
 					sb.AppendLine(")");
 					sb.AppendLine(Indent + "{");
 
-					foreach (Rule rule in r.Rules)
+					for (int i = 0; i < r.Rules.Count; i++)
 					{
-						sb.Append(GenerateProductionRuleCode(rule, indent + 1));
+						sb.Append(GenerateProductionRuleCode(r.Rules, i, indent + 1));
 					}
 
-					i = 0;
 					sb.Append(Indent + "tok = scanner.LookAhead(");
 					AppendTokenList(firsts, sb);
 					sb.AppendLine(");" + Helper.AddComment("ZeroOrMore Rule"));
@@ -123,37 +121,20 @@ namespace TinyPG.CodeGenerators.Java
 				case RuleType.OneOrMore:
 					sb.AppendLine(Indent + "do {" + Helper.AddComment("OneOrMore Rule"));
 
-					foreach (Rule rule in r.Rules)
+					for (int i = 0; i < r.Rules.Count; i++)
 					{
-						sb.Append(GenerateProductionRuleCode(rule, indent + 1));
+						sb.Append(GenerateProductionRuleCode(r.Rules, i, indent + 1));
 					}
 
-					i = 0;
 					firsts = r.GetFirstTerminals();
 					sb.Append(Indent + "    tok = scanner.LookAhead(");
-					foreach (TerminalSymbol s in firsts)
-					{
-						if (i == 0)
-							sb.Append("TokenType." + s.Name);
-						else
-							sb.Append(", TokenType." + s.Name);
-						i++;
-					}
+					AppendTokenList(firsts, sb);
 					sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
-
-					i = 0;
-					foreach (TerminalSymbol s in firsts)
-					{
-						if (i == 0)
-							sb.Append(Indent + "} while (tok.Type == TokenType." + s.Name);
-						else
-							sb.Append("\r\n" + Indent + "    || tok.Type == TokenType." + s.Name);
-						i++;
-					}
+					sb.Append(    Indent + "} while (");
+					AppendTokenCondition(firsts, sb, Indent);
 					sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
 					break;
 				case RuleType.Option:
-					i = 0;
 					firsts = r.GetFirstTerminals();
 					sb.Append(Indent + "tok = scanner.LookAhead(");
 					AppendTokenList(firsts, sb);
@@ -164,14 +145,13 @@ namespace TinyPG.CodeGenerators.Java
 					sb.AppendLine(")");
 					sb.AppendLine(Indent + "{");
 
-					foreach (Rule rule in r.Rules)
+					for (int i = 0; i < r.Rules.Count; i++)
 					{
-						sb.Append(GenerateProductionRuleCode(rule, indent + 1));
+						sb.Append(GenerateProductionRuleCode(r.Rules, i, indent + 1));
 					}
 					sb.AppendLine(Indent + "}");
 					break;
 				case RuleType.Choice:
-					i = 0;
 					firsts = r.GetFirstTerminals();
 					sb.Append(Indent + "tok = scanner.LookAhead(");
 					var tokens = new List<string>();
@@ -180,13 +160,13 @@ namespace TinyPG.CodeGenerators.Java
 
 					sb.AppendLine(Indent + "switch (tok.Type)");
 					sb.AppendLine(Indent + "{" + Helper.AddComment("Choice Rule"));
-					foreach (Rule rule in r.Rules)
+					for (int i = 0; i < r.Rules.Count; i++)
 					{
-						foreach (TerminalSymbol s in rule.GetFirstTerminals())
+						foreach (TerminalSymbol s in r.Rules[i].GetFirstTerminals())
 						{
 							sb.AppendLine(Indent + "	case " + s.Name + ":");
 						}
-						sb.Append(GenerateProductionRuleCode(rule, indent + 2));
+						sb.Append(GenerateProductionRuleCode(r.Rules, i, indent + 2));
 						sb.AppendLine(Indent + "		break;");
 					}
 					sb.AppendLine(Indent + "	default:");
@@ -216,6 +196,7 @@ namespace TinyPG.CodeGenerators.Java
 
 			return expectedTokens;
 		}
+
 		private void AppendTokenList(Symbols symbols, StringBuilder sb, List<string> tokenNames = null)
 		{
 			int i = 0;

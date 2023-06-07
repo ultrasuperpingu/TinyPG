@@ -302,7 +302,8 @@ namespace TinyPG
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			string newgrammarfile = OpenGrammar();
-			if (newgrammarfile == null) return;
+			if (newgrammarfile == null)
+				return;
 
 			if (IsDirty && GrammarFile != null)
 			{
@@ -313,6 +314,10 @@ namespace TinyPG
 			GrammarFile = newgrammarfile;
 			LoadGrammarFile();
 			SaveConfig();
+		}
+		private void findToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			// TODO: search dialog
 		}
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -480,9 +485,9 @@ namespace TinyPG
 				{
 					System.Diagnostics.Process.Start("http://www.codeproject.com/script/Articles/MemberArticles.aspx?amid=2192187");
 				}
-				else if (e.LinkText == "https://github.com/ultrasuperpingu/TinyPG")
+				else
 				{
-					System.Diagnostics.Process.Start("https://github.com/ultrasuperpingu/TinyPG");
+					System.Diagnostics.Process.Start(e.LinkText);
 				}
 			}
 			catch (Exception ex)
@@ -578,6 +583,25 @@ namespace TinyPG
 						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_COMMENTLINE] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.VB_COMMENTLINE];
 						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_KEYWORD] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.VB_KEYWORD];
 						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_NONKEYWORD] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.VB_NONKEYWORD];
+						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_TYPES] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_TYPES];
+						break;
+					case SupportedLanguage.Java:
+						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_STRING] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.JAVA_STRING];
+						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_SYMBOL] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.CS_SYMBOL];
+						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_COMMENTBLOCK] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.CS_COMMENTBLOCK];
+						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_COMMENTLINE] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.CS_COMMENTLINE];
+						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_KEYWORD] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.JAVA_KEYWORD];
+						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_NONKEYWORD] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.CS_NONKEYWORD];
+						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_TYPES] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.JAVA_TYPES];
+						break;
+					case SupportedLanguage.Cpp:
+						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_STRING] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.CPP_STRING];
+						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_SYMBOL] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.CS_SYMBOL];
+						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_COMMENTBLOCK] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.CS_COMMENTBLOCK];
+						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_COMMENTLINE] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.CS_COMMENTLINE];
+						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_KEYWORD] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.CPP_KEYWORD];
+						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_NONKEYWORD] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.CS_NONKEYWORD];
+						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_TYPES] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.CPP_TYPES];
 						break;
 					default:
 						highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.DOTNET_STRING] = highlighterScanner.Patterns[TinyPG.Highlighter.TokenType.CS_STRING];
@@ -604,14 +628,13 @@ namespace TinyPG
 
 		private void CompileGrammar(bool fallbackIfNeeded)
 		{
-
 			if (string.IsNullOrEmpty(GrammarFile))
 				SaveGrammarAs();
 
 			if (string.IsNullOrEmpty(GrammarFile))
 				return;
 
-			compiler = new TinyPG.Compiler.Compiler();
+			compiler = new Compiler.Compiler();
 			StringBuilder output = new StringBuilder();
 
 			// clear tree
@@ -640,7 +663,6 @@ namespace TinyPG
 			textOutput.Text = output.ToString();
 			textOutput.Select(textOutput.Text.Length, 0);
 			textOutput.ScrollToCaret();
-
 		}
 
 		private void AboutTinyPG()
@@ -662,7 +684,6 @@ namespace TinyPG
 			outputFloaty.Show();
 			tabOutput.SelectedIndex = 0;
 			textOutput.Text = about.ToString();
-
 		}
 
 		private void SetFormCaption()
@@ -670,13 +691,15 @@ namespace TinyPG
 			this.Text = "@TinyPG - a Tiny Parser Generator .Net";
 			if ((GrammarFile == null) || (!File.Exists(GrammarFile)))
 			{
-				if (IsDirty) this.Text += " *";
+				if (IsDirty)
+					this.Text += " *";
 				return;
 			}
 
 			string name = new FileInfo(GrammarFile).Name;
 			this.Text += " [" + name + "]";
-			if (IsDirty) this.Text += " *";
+			if (IsDirty)
+				this.Text += " *";
 		}
 
 		private void NewGrammar()
@@ -705,7 +728,8 @@ namespace TinyPG
 		}
 		private void LoadGrammarFile()
 		{
-			if (GrammarFile == null) return;
+			if (GrammarFile == null)
+				return;
 			if (!File.Exists(GrammarFile))
 			{
 				GrammarFile = null; // file does not exist anymore
@@ -715,7 +739,8 @@ namespace TinyPG
 			string folder = new FileInfo(GrammarFile).DirectoryName;
 			Directory.SetCurrentDirectory(folder);
 
-			textEditor.Text = File.ReadAllText(GrammarFile);
+			var content = File.ReadAllText(GrammarFile);
+			textEditor.Text = content;
 			textEditor.ClearUndo();
 			CompileGrammar(true);
 			textOutput.Text = "";
@@ -785,8 +810,9 @@ namespace TinyPG
 				else
 					LoadGrammarFile();
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
+				Console.WriteLine(e.Message);
 			}
 		}
 
@@ -846,6 +872,7 @@ namespace TinyPG
 				statusLine.Text = "-";
 			}
 		}
+
 
 
 		#endregion

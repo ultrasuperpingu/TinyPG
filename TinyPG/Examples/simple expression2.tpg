@@ -6,7 +6,7 @@
 // include text highlighting as part of the input window
 <% @TextHighlighter Generate="true" %>
 
-<% @ParseTree CustomCode="
+<% @ParseTree CustomCode={
 		protected System.Collections.Generic.Dictionary<string,int> context;
 		public System.Collections.Generic.Dictionary<string,int> Context
 		{
@@ -27,7 +27,7 @@
 		{
 			return Context == null?0:Context[id];
 		}
-" %>
+}; %>
 
 				EOF         	-> @"^\s*$";
 [Color(255, 0, 0)] 		NUMBER 	-> @"[0-9]+";

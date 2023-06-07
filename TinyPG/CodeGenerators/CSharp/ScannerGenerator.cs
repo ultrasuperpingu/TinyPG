@@ -62,8 +62,10 @@ namespace TinyPG.CodeGenerators.CSharp
 				regexps.Append("			Patterns.Add(TokenType." + s.Name + ", regex);\r\n");
 				regexps.Append("			Tokens.Add(TokenType." + s.Name + ");\r\n\r\n");
 
-				if (first) first = false;
-				else tokentype.AppendLine(",");
+				if (first)
+					first = false;
+				else
+					tokentype.AppendLine(",");
 
 				tokentype.Append(Helper.Outline(s.Name, 2, "= " + String.Format("{0:d}", counter), 5));
 				counter++;
@@ -76,13 +78,11 @@ namespace TinyPG.CodeGenerators.CSharp
 			scanner = scanner.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 			if (Debug != GenerateDebugMode.None)
 			{
-				//scanner = scanner.Replace(@"<%Namespace%>", "TinyPG.Debug");
 				scanner = scanner.Replace(@"<%IToken%>", " : TinyPG.Debug.IToken");
 				scanner = scanner.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
 			}
 			else
 			{
-				//scanner = scanner.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				scanner = scanner.Replace(@"<%IToken%>", "");
 				scanner = scanner.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
 			}

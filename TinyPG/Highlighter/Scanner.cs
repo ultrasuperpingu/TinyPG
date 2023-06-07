@@ -66,7 +66,7 @@ namespace TinyPG.Highlighter
 			Patterns.Add(TokenType.DIRECTIVESYMBOL, regex);
 			Tokens.Add(TokenType.DIRECTIVESYMBOL);
 
-			regex = new Regex(@"[^%@=""]+", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"[^%@=""{]+", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DIRECTIVENONKEYWORD, regex);
 			Tokens.Add(TokenType.DIRECTIVENONKEYWORD);
 
@@ -106,6 +106,14 @@ namespace TinyPG.Highlighter
 			Patterns.Add(TokenType.VB_KEYWORD, regex);
 			Tokens.Add(TokenType.VB_KEYWORD);
 
+			regex = new Regex(@"^(abstract|continue|for|new|switch|assert|default|goto|package|synchronized|boolean|do|if|private|this|break|double|implements|protected|throw|byte|else|import|public|throws|case|enum|instanceof|return|transient|catch|extends|int|short|try|char|final|interface|static|void|class|finally|long|strictfp|volatile|const|float|native|super|while)", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.JAVA_KEYWORD, regex);
+			Tokens.Add(TokenType.JAVA_KEYWORD);
+
+			regex = new Regex(@"^(alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|auto|bitand|bitor|bool|break|case|catch|char|char8_t|char16_t|char32_t|class|compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|default|delete|do|double|dynamic_cast|else|enum|explicit|export|extern|false|float|for|friend|goto|if|inline|int|long|mutable|namespace|new|noexcept|not|not_eq|NULL|nullptr|operator|or|or_eq|private|protected|public|reflexpr|register|reinterpret_cast|requires|return|short|signed|sizeof|static|static_assert|static_cast|struct|switch|synchronized|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|while|xor|xor_eq)", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.CPP_KEYWORD, regex);
+			Tokens.Add(TokenType.CPP_KEYWORD);
+
 			regex = new Regex(@"^(abstract|as|base|break|case|catch|checked|class|const|continue|decimal|default|delegate|double|do|else|enum|event|explicit|extern|false|finally|fixed|float|foreach|for|get|goto|if|implicit|interface|internal|int|in|is|lock|namespace|new|null|object|operator|out|override|params|partial|private|protected|public|readonly|ref|return|sealed|set|sizeof|stackalloc|static|struct|switch|throw|this|true|try|typeof|unchecked|unsafe|ushort|using|var|virtual|void|volatile|while)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DOTNET_KEYWORD, regex);
 			Tokens.Add(TokenType.DOTNET_KEYWORD);
@@ -113,6 +121,14 @@ namespace TinyPG.Highlighter
 			regex = new Regex(@"^(Array|AttributeTargets|AttributeUsageAttribute|Attribute|BitConverter|Boolean|Buffer|Byte|Char|CharEnumerator|CLSCompliantAttribute|ConsoleColor|ConsoleKey|ConsoleKeyInfo|ConsoleModifiers|ConsoleSpecialKey|Console|ContextBoundObject|ContextStaticAttribute|Converter|Convert|DateTimeKind|DateTimeOffset|DateTime|DayOfWeek|DBNull|Decimal|Delegate|Double|Enum|Environment.SpecialFolder|EnvironmentVariableTarget|Environment|EventArgs|EventHandler|Exception|FlagsAttribute|GCCollectionMode|GC|Guid|ICloneable|IComparable|IConvertible|ICustomFormatter|IDisposable|IEquatable|IFormatProvider|IFormattable|IndexOutOfRangeException|InsufficientMemoryException|Int16|Int32|Int64|IntPtr|InvalidCastException|InvalidOperationException|InvalidProgramException|MarshalByRefObject|Math|MidpointRounding|NotFiniteNumberException|NotImplementedException|NotSupportedException|Nullable|NullReferenceException|ObjectDisposedException|Object|ObsoleteAttribute|OperatingSystem|OutOfMemoryException|OverflowException|ParamArrayAttribute|PlatformID|PlatformNotSupportedException|Predicate|Random|SByte|SerializableAttribute|Single|StackOverflowException|StringComparer|StringComparison|StringSplitOptions|String|SystemException|TimeSpan|TimeZone|TypeCode|TypedReference|TypeInitializationException|Type|UInt16|UInt32|UInt64|UIntPtr|UnauthorizedAccessException|UnhandledExceptionEventArgs|UnhandledExceptionEventHandler|ValueType|Void|WeakReference|Comparer|Dictionary|EqualityComparer|ICollection|IComparer|IDictionary|IEnumerable|IEnumerator|IEqualityComparer|IList|KeyNotFoundException|KeyValuePair|List|ASCIIEncoding|Decoder|DecoderExceptionFallback|DecoderExceptionFallbackBuffer|DecoderFallback|DecoderFallbackBuffer|DecoderFallbackException|DecoderReplacementFallback|DecoderReplacementFallbackBuffer|EncoderExceptionFallback|EncoderExceptionFallbackBuffer|EncoderFallback|EncoderFallbackBuffer|EncoderFallbackException|EncoderReplacementFallback|EncoderReplacementFallbackBuffer|Encoder|EncodingInfo|Encoding|NormalizationForm|StringBuilder|UnicodeEncoding|UTF32Encoding|UTF7Encoding|UTF8Encoding)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DOTNET_TYPES, regex);
 			Tokens.Add(TokenType.DOTNET_TYPES);
+
+			regex = new Regex(@"^(Array|ArrayList|Hashmap|LocalDate|LocalTime|LocalDateTime|Matcher|Pattern|String|StringBuilder)", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.JAVA_TYPES, regex);
+			Tokens.Add(TokenType.JAVA_TYPES);
+
+			regex = new Regex(@"^(std::vector|std::list|std::map|std::cerr|std::cin|std::cout|std::string)", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.CPP_TYPES, regex);
+			Tokens.Add(TokenType.CPP_TYPES);
 
 			regex = new Regex(@"//[^\n]*\n?", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.CS_COMMENTLINE, regex);
@@ -133,6 +149,14 @@ namespace TinyPG.Highlighter
 			regex = new Regex(@"@?[""]([""][""]|[^\""\n])*[""]?", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.CS_STRING, regex);
 			Tokens.Add(TokenType.CS_STRING);
+
+			regex = new Regex(@"[""]([""][""]|[^\""\n])*[""]?", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.JAVA_STRING, regex);
+			Tokens.Add(TokenType.JAVA_STRING);
+
+			regex = new Regex(@"[""]([""][""]|[^\""\n])*[""]?", RegexOptions.None | RegexOptions.Compiled);
+			Patterns.Add(TokenType.CPP_STRING, regex);
+			Tokens.Add(TokenType.CPP_STRING);
 
 			regex = new Regex(@"'[^\n]*\n?", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.VB_COMMENTLINE, regex);
@@ -374,30 +398,36 @@ namespace TinyPG.Highlighter
 		ATTRIBUTECLOSE    = 22,
 		CS_KEYWORD        = 23,
 		VB_KEYWORD        = 24,
-		DOTNET_KEYWORD    = 25,
-		DOTNET_TYPES      = 26,
-		CS_COMMENTLINE    = 27,
-		CS_COMMENTBLOCK   = 28,
-		CS_SYMBOL         = 29,
-		CS_NONKEYWORD     = 30,
-		CS_STRING         = 31,
-		VB_COMMENTLINE    = 32,
-		VB_COMMENTBLOCK   = 33,
-		VB_SYMBOL         = 34,
-		VB_NONKEYWORD     = 35,
-		VB_STRING         = 36,
-		DOTNET_COMMENTLINE= 37,
-		DOTNET_COMMENTBLOCK= 38,
-		DOTNET_SYMBOL     = 39,
-		DOTNET_NONKEYWORD = 40,
-		DOTNET_STRING     = 41,
-		CODEBLOCKOPEN     = 42,
-		CODEBLOCKCLOSE    = 43,
-		GRAMMARKEYWORD    = 44,
-		GRAMMARARROW      = 45,
-		GRAMMARSYMBOL     = 46,
-		GRAMMARNONKEYWORD = 47,
-		GRAMMARSTRING     = 48
+		JAVA_KEYWORD      = 25,
+		CPP_KEYWORD       = 26,
+		DOTNET_KEYWORD    = 27,
+		DOTNET_TYPES      = 28,
+		JAVA_TYPES        = 29,
+		CPP_TYPES         = 30,
+		CS_COMMENTLINE    = 31,
+		CS_COMMENTBLOCK   = 32,
+		CS_SYMBOL         = 33,
+		CS_NONKEYWORD     = 34,
+		CS_STRING         = 35,
+		JAVA_STRING       = 36,
+		CPP_STRING        = 37,
+		VB_COMMENTLINE    = 38,
+		VB_COMMENTBLOCK   = 39,
+		VB_SYMBOL         = 40,
+		VB_NONKEYWORD     = 41,
+		VB_STRING         = 42,
+		DOTNET_COMMENTLINE= 43,
+		DOTNET_COMMENTBLOCK= 44,
+		DOTNET_SYMBOL     = 45,
+		DOTNET_NONKEYWORD = 46,
+		DOTNET_STRING     = 47,
+		CODEBLOCKOPEN     = 48,
+		CODEBLOCKCLOSE    = 49,
+		GRAMMARKEYWORD    = 50,
+		GRAMMARARROW      = 51,
+		GRAMMARSYMBOL     = 52,
+		GRAMMARNONKEYWORD = 53,
+		GRAMMARSTRING     = 54
 	}
 
 	public class Token
@@ -408,7 +438,6 @@ namespace TinyPG.Highlighter
 		private int startpos;
 		private int endpos;
 		private string text;
-		private object value; // is it really used??
 
 		// contains all prior skipped symbols
 		private List<Token> skipped;

@@ -353,10 +353,17 @@ namespace <%Namespace%>
 		{
 			//Tree = Parser.Parse(Textbox.Text);
 			StringBuilder sb = new StringBuilder();
-			if (Tree == null) return;
+			if (Tree == null)
+				return;
 
 			ParseNode start = Tree.Nodes[0];
 			HightlightNode(start, sb);
+			// on parsing errors, check if the tree represent all the file, otherwise, add the end unhighlighten
+			if (Tree.Errors.Count > 0 && Tree.Nodes[0].Token.EndPos+1 < currentText.Length)
+			{
+				var endtext = currentText.Substring(Tree.Nodes[0].Token.EndPos+1);
+				sb.Append(endtext.Replace(@"\", @"\\").Replace("{", @"\{").Replace("}", @"\}").Replace("\n", "\\par\n"));
+			}
 
 			// append any trailing skipped tokens that were scanned
 			foreach (Token skiptoken in Scanner.Skipped)

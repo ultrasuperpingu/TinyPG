@@ -353,10 +353,17 @@ namespace TinyPG.Highlighter
 		{
 			//Tree = Parser.Parse(Textbox.Text);
 			StringBuilder sb = new StringBuilder();
-			if (Tree == null) return;
+			if (Tree == null)
+				return;
 
 			ParseNode start = Tree.Nodes[0];
 			HightlightNode(start, sb);
+			// on parsing errors, check if the tree represent all the file, otherwise, add the end unhighlighten
+			if (Tree.Errors.Count > 0 && Tree.Nodes[0].Token.EndPos+1 < currentText.Length)
+			{
+				var endtext = currentText.Substring(Tree.Nodes[0].Token.EndPos+1);
+				sb.Append(endtext.Replace(@"\", @"\\").Replace("{", @"\{").Replace("}", @"\}").Replace("\n", "\\par\n"));
+			}
 
 			// append any trailing skipped tokens that were scanned
 			foreach (Token skiptoken in Scanner.Skipped)
@@ -506,53 +513,71 @@ namespace TinyPG.Highlighter
 				case TokenType.VB_KEYWORD:
 					sb.Append(@"{{\cf9 ");
 					break;
-				case TokenType.DOTNET_KEYWORD:
+				case TokenType.JAVA_KEYWORD:
 					sb.Append(@"{{\cf10 ");
 					break;
-				case TokenType.DOTNET_TYPES:
+				case TokenType.CPP_KEYWORD:
 					sb.Append(@"{{\cf11 ");
 					break;
-				case TokenType.CS_COMMENTLINE:
+				case TokenType.DOTNET_KEYWORD:
 					sb.Append(@"{{\cf12 ");
 					break;
-				case TokenType.CS_COMMENTBLOCK:
+				case TokenType.DOTNET_TYPES:
 					sb.Append(@"{{\cf13 ");
 					break;
-				case TokenType.CS_STRING:
+				case TokenType.JAVA_TYPES:
 					sb.Append(@"{{\cf14 ");
 					break;
-				case TokenType.VB_COMMENTLINE:
+				case TokenType.CPP_TYPES:
 					sb.Append(@"{{\cf15 ");
 					break;
-				case TokenType.VB_COMMENTBLOCK:
+				case TokenType.CS_COMMENTLINE:
 					sb.Append(@"{{\cf16 ");
 					break;
-				case TokenType.VB_STRING:
+				case TokenType.CS_COMMENTBLOCK:
 					sb.Append(@"{{\cf17 ");
 					break;
-				case TokenType.DOTNET_COMMENTLINE:
+				case TokenType.CS_STRING:
 					sb.Append(@"{{\cf18 ");
 					break;
-				case TokenType.DOTNET_COMMENTBLOCK:
+				case TokenType.JAVA_STRING:
 					sb.Append(@"{{\cf19 ");
 					break;
-				case TokenType.DOTNET_STRING:
+				case TokenType.CPP_STRING:
 					sb.Append(@"{{\cf20 ");
 					break;
-				case TokenType.CODEBLOCKOPEN:
+				case TokenType.VB_COMMENTLINE:
 					sb.Append(@"{{\cf21 ");
 					break;
-				case TokenType.CODEBLOCKCLOSE:
+				case TokenType.VB_COMMENTBLOCK:
 					sb.Append(@"{{\cf22 ");
 					break;
-				case TokenType.GRAMMARKEYWORD:
+				case TokenType.VB_STRING:
 					sb.Append(@"{{\cf23 ");
 					break;
-				case TokenType.GRAMMARARROW:
+				case TokenType.DOTNET_COMMENTLINE:
 					sb.Append(@"{{\cf24 ");
 					break;
-				case TokenType.GRAMMARSTRING:
+				case TokenType.DOTNET_COMMENTBLOCK:
 					sb.Append(@"{{\cf25 ");
+					break;
+				case TokenType.DOTNET_STRING:
+					sb.Append(@"{{\cf26 ");
+					break;
+				case TokenType.CODEBLOCKOPEN:
+					sb.Append(@"{{\cf27 ");
+					break;
+				case TokenType.CODEBLOCKCLOSE:
+					sb.Append(@"{{\cf28 ");
+					break;
+				case TokenType.GRAMMARKEYWORD:
+					sb.Append(@"{{\cf29 ");
+					break;
+				case TokenType.GRAMMARARROW:
+					sb.Append(@"{{\cf30 ");
+					break;
+				case TokenType.GRAMMARSTRING:
+					sb.Append(@"{{\cf31 ");
 					break;
 
 				default:
@@ -564,7 +589,7 @@ namespace TinyPG.Highlighter
 		// define the color palette to be used here
 		private void AddRtfHeader(StringBuilder sb)
 		{
-			sb.Insert(0, @"{\rtf1\ansi\deff0{\fonttbl{\f0\fnil\fcharset0 Consolas;}}{\colortbl;\red0\green128\blue0;\red0\green128\blue0;\red255\green0\blue0;\red128\green0\blue255;\red128\green0\blue128;\red128\green0\blue128;\red43\green145\blue202;\red0\green0\blue255;\red255\green0\blue0;\red0\green0\blue255;\red43\green145\blue202;\red0\green128\blue0;\red0\green128\blue0;\red163\green21\blue21;\red0\green128\blue0;\red0\green128\blue0;\red163\green21\blue21;\red0\green128\blue0;\red0\green128\blue0;\red163\green21\blue21;\red128\green0\blue128;\red128\green0\blue128;\red0\green0\blue255;\red128\green0\blue128;\red163\green21\blue21;}\viewkind4\uc1\pard\lang1033\f0\fs20");
+			sb.Insert(0, @"{\rtf1\ansi\deff0{\fonttbl{\f0\fnil\fcharset0 Consolas;}}{\colortbl;\red0\green128\blue0;\red0\green128\blue0;\red255\green0\blue0;\red128\green0\blue255;\red128\green0\blue128;\red128\green0\blue128;\red43\green145\blue202;\red0\green0\blue255;\red255\green0\blue0;\red0\green0\blue255;\red0\green0\blue255;\red0\green0\blue255;\red43\green145\blue202;\red43\green145\blue202;\red43\green145\blue202;\red0\green128\blue0;\red0\green128\blue0;\red163\green21\blue21;\red163\green21\blue21;\red163\green21\blue21;\red0\green128\blue0;\red0\green128\blue0;\red163\green21\blue21;\red0\green128\blue0;\red0\green128\blue0;\red163\green21\blue21;\red128\green0\blue128;\red128\green0\blue128;\red0\green0\blue255;\red128\green0\blue128;\red163\green21\blue21;}\viewkind4\uc1\pard\lang1033\f0\fs20");
 		}
 
 		private void AddRtfEnd(StringBuilder sb)

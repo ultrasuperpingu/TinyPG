@@ -15,10 +15,10 @@ namespace TinyPG.CodeGenerators.Java
 
 		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
-			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
-				return null;
 			if (Debug != GenerateDebugMode.None)
 				throw new Exception("Java cannot be generated in debug mode");
+			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
+				return null;
 
 			string scanner = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
 
@@ -32,7 +32,7 @@ namespace TinyPG.CodeGenerators.Java
 				skiplist.AppendLine("		SkipList.add(TokenType." + s.Name + ");");
 			}
 
-			// build system token
+			// build system tokens
 			tokentype.AppendLine("\r\n	//Non terminal tokens:");
 			tokentype.AppendLine(Helper.Outline("_NONE_", 1, ",", 4));
 			tokentype.AppendLine(Helper.Outline("_UNDETERMINED_", 1, ",", 4));
@@ -57,8 +57,10 @@ namespace TinyPG.CodeGenerators.Java
 				regexps.Append("		Patterns.put(TokenType." + s.Name + ", regex);\r\n");
 				regexps.Append("		Tokens.add(TokenType." + s.Name + ");\r\n\r\n");
 
-				if (first) first = false;
-				else tokentype.AppendLine(",");
+				if (first)
+					first = false;
+				else
+					tokentype.AppendLine(",");
 
 				tokentype.Append(Helper.Outline(s.Name, 1, "", 4));
 				counter++;

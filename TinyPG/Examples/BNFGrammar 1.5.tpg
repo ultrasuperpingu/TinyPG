@@ -44,7 +44,7 @@ COMMENTBLOCK      	-> @"/\*[^*]*\*+(?:[^/*][^*]*\*+)*/";
 // Production lines LL(1):
 Start             	-> Directive* ExtProduction* EOF;
 Directive 		-> DIRECTIVEOPEN IDENTIFIER NameValue* DIRECTIVECLOSE;
-NameValue		-> IDENTIFIER ASSIGN STRING;
+NameValue		-> IDENTIFIER ASSIGN (STRING|CODEBLOCK);
 ExtProduction     	-> Attribute* Production;
 Attribute	      	-> SQUAREOPEN IDENTIFIER ( BRACKETOPEN Params? BRACKETCLOSE )? SQUARECLOSE;
 Params			-> Param (COMMA Param)*;

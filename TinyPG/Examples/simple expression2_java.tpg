@@ -20,7 +20,7 @@
 // this is not supported in Java
 //<% @TextHighlighter Generate="true" %>
 
-<% @ParseTree CustomCode="
+<% @ParseTree CustomCode={
 	protected java.util.HashMap<String,Integer> context;
 	public java.util.HashMap<String,Integer> getContext() {
 		if(context == null && Parent != null)
@@ -37,7 +37,7 @@
 	public int getVarValue(String id) {
 		return getContext() == null?0:getContext().get(id);
 	}
-" %>
+}; %>
 
 			EOF         	-> @"^\s*$";
 [Color(255, 0, 0)] 	NUMBER 	-> @"[0-9]+";

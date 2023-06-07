@@ -204,8 +204,8 @@ namespace TinyPG
 
 			// this prevents double scanning and matching
 			// increased performance
-			if (LookAheadToken != null 
-				&& LookAheadToken.Type != TokenType._UNDETERMINED_ 
+			if (LookAheadToken != null
+				&& LookAheadToken.Type != TokenType._UNDETERMINED_
 				&& LookAheadToken.Type != TokenType._NONE_) return LookAheadToken;
 
 			// if no scantokens specified, then scan for all of them (= backward compatible)
@@ -230,10 +230,10 @@ namespace TinyPG
 				{
 					Regex r = Patterns[scantokens[i]];
 					Match m = r.Match(input);
-					if (m.Success && m.Index == 0 && ((m.Length > len) || (scantokens[i] < index && m.Length == len )))
+					if (m.Success && m.Index == 0 && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
 					{
 						len = m.Length;
-						index = scantokens[i];  
+						index = scantokens[i];
 					}
 				}
 
@@ -286,51 +286,51 @@ namespace TinyPG
 	public enum TokenType
 	{
 
-			//Non terminal tokens:
-			_NONE_           = 0,
-			_UNDETERMINED_   = 1,
+		//Non terminal tokens:
+		_NONE_            = 0,
+		_UNDETERMINED_    = 1,
 
-			//Non terminal tokens:
-			Start            = 2,
-			Directive        = 3,
-			NameValue        = 4,
-			ExtProduction    = 5,
-			Attribute        = 6,
-			Params           = 7,
-			Param            = 8,
-			Production       = 9,
-			Rule             = 10,
-			Subrule          = 11,
-			ConcatRule       = 12,
-			Symbol           = 13,
+		//Non terminal tokens:
+		Start             = 2,
+		Directive         = 3,
+		NameValue         = 4,
+		ExtProduction     = 5,
+		Attribute         = 6,
+		Params            = 7,
+		Param             = 8,
+		Production        = 9,
+		Rule              = 10,
+		Subrule           = 11,
+		ConcatRule        = 12,
+		Symbol            = 13,
 
 			//Terminal tokens:
-			BRACKETOPEN      = 14,
-			BRACKETCLOSE     = 15,
-			CODEBLOCK        = 16,
-			COMMA            = 17,
-			SQUAREOPEN       = 18,
-			SQUARECLOSE      = 19,
-			ASSIGN           = 20,
-			PIPE             = 21,
-			SEMICOLON        = 22,
-			COLON            = 23,
-			DEFAULT          = 24,
-			UNARYOPER        = 25,
-			IDENTIFIER       = 26,
-			TYPE             = 27,
-			INTEGER          = 28,
-			DOUBLE           = 29,
-			HEX              = 30,
-			ARROW            = 31,
-			DIRECTIVEOPEN    = 32,
-			DIRECTIVECLOSE   = 33,
-			EOF              = 34,
-			STRING           = 35,
-			DEFAULT_VALUE    = 36,
-			WHITESPACE       = 37,
-			COMMENTLINE      = 38,
-			COMMENTBLOCK     = 39
+		BRACKETOPEN       = 14,
+		BRACKETCLOSE      = 15,
+		CODEBLOCK         = 16,
+		COMMA             = 17,
+		SQUAREOPEN        = 18,
+		SQUARECLOSE       = 19,
+		ASSIGN            = 20,
+		PIPE              = 21,
+		SEMICOLON         = 22,
+		COLON             = 23,
+		DEFAULT           = 24,
+		UNARYOPER         = 25,
+		IDENTIFIER        = 26,
+		TYPE              = 27,
+		INTEGER           = 28,
+		DOUBLE            = 29,
+		HEX               = 30,
+		ARROW             = 31,
+		DIRECTIVEOPEN     = 32,
+		DIRECTIVECLOSE    = 33,
+		EOF               = 34,
+		STRING            = 35,
+		DEFAULT_VALUE     = 36,
+		WHITESPACE        = 37,
+		COMMENTLINE       = 38,
+		COMMENTBLOCK      = 39
 	}
 
 	public class Token
@@ -384,17 +384,11 @@ namespace TinyPG
 			get { return skipped;} 
 			set { skipped = value; }
 		}
-		// is it really used??
-		public object Value { 
-			get { return value;} 
-			set { this.value = value; }
-		}
-
+		
 		[XmlAttribute]
 		public TokenType Type;
 
-		public Token()
-			: this(0, 0)
+		public Token() : this(0, 0)
 		{
 		}
 
@@ -403,8 +397,7 @@ namespace TinyPG
 			Type = TokenType._UNDETERMINED_;
 			startpos = start;
 			endpos = end;
-			Text = ""; // must initialize with empty string, may cause null reference exceptions otherwise
-			Value = null; // is it really used??
+			Text = "";
 		}
 
 		public void UpdateRange(Token token)

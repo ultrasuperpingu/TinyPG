@@ -216,7 +216,15 @@ namespace TinyPG.Compiler
 			string key = node.Nodes[0].Token.Text;
 			
 			string value = node.Nodes[2].Token.Text;
-			value = value.UnescapeVerbatim().FixNewLines();
+			if (node.Nodes[2].Token.Type == TokenType.STRING)
+			{
+				value = value.UnescapeVerbatim().FixNewLines();
+			}
+			else
+			{
+				value = value.UnescapeVerbatim().FixNewLines();
+				value = value.Substring(0, value.Length-1);
+			}
 
 			directive[key] = value;
 
@@ -247,10 +255,12 @@ namespace TinyPG.Compiler
 				case "Scanner":
 				case "ParseTree":
 				case "TextHighlighter":
-				case "Compile":
 					names.Add("Generate");
 					names.Add("FileName");
 					names.Add("CustomCode");
+					break;
+				case "Compile":
+					names.Add("FileName");
 					break;
 				default:
 					// Unknow Directive already reported
@@ -385,6 +395,8 @@ namespace TinyPG.Compiler
 				if (nts != null)
 					nts.Rules.Add(r);
 
+				if (Nodes.Count < 4)
+					Console.WriteLine();
 				if (Nodes[3].Token.Type == TokenType.COLON)
 				{
 					nts.ReturnType = Nodes[4].Token.Text.ToString();

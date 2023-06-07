@@ -1,4 +1,4 @@
-// a Tiny Grammar Highlighter v1.3
+// a Tiny Grammar Highlighter v1.5
 // Copyright © Herre Kuijpers 2008-2012
 // this grammar is used to quickly scan for sections in the text to be highlighted
 // because real-time highlighting is required, the scan must be done in a few ms.
@@ -19,7 +19,7 @@
 [Color(255, 0, 0)]	DIRECTIVESTRING	-> @"@?\""(\""\""|[^\""])*(""|\n)";
 [Color(128, 0, 255)]	DIRECTIVEKEYWORD	-> @"^(@TinyPG|@Parser|@Scanner|@Grammar|@ParseTree|@TextHighlighter|@Compile)";
 			DIRECTIVESYMBOL	-> @"^(@|(%[^>])|=|"")+?";
-			DIRECTIVENONKEYWORD	-> @"[^%@=""]+";
+			DIRECTIVENONKEYWORD	-> @"[^%@=""{]+";
 [Color(128, 0, 128)]	DIRECTIVEOPEN		-> @"<%";
 [Color(128, 0, 128)]	DIRECTIVECLOSE	-> @"%>";
 
@@ -34,8 +34,13 @@
 // set the correct precedence for keywords here
 [Color(0, 0, 255)] 	CS_KEYWORD		-> @"^(abstract|as|base|break|case|catch|checked|class|const|continue|decimal|default|delegate|double|do|else|enum|event|explicit|extern|false|finally|fixed|float|foreach|for|get|goto|if|implicit|interface|internal|int|in|is|lock|namespace|new|null|object|operator|out|override|params|partial|private|protected|public|readonly|ref|return|sealed|set|sizeof|stackalloc|static|struct|switch|throw|this|true|try|typeof|unchecked|unsafe|ushort|using|var|virtual|void|volatile|while)";
 [Color(255, 0, 0)] 	VB_KEYWORD		-> @"^(AddHandler|AddressOf|Alias|AndAlso|And|Ansi|Assembly|As|Auto|Boolean|ByRef|Byte|ByVal|Call|Case|Catch|CBool|CByte|CChar|CDate|CDec|CDbl|Char|CInt|Class|CLng|CObj|Const|CShort|CSng|CStr|CType|Date|Decimal|Declare|Default|Delegate|Dim|DirectCast|Double|Do|Each|ElseIf|Else|End|Enum|Erase|Error|Event|Exit|False|Finally|For|Friend|Function|GetType|Get|GoSub|GoTo|Handles|If|Implements|Imports|Inherits|Integer|Interface|In|Is|Let|Lib|Like|Long|Loop|Me|Mod|Module|MustInherit|MustOverride|MyBase|MyClass|Namespace|New|Next|Nothing|NotInheritable|NotOverridable|Not|Object|On|Optional|Option|OrElse|Or|Overloads|Overridable|Overrides|ParamArray|Preserve|Private|Property|Protected|Public|RaiseEvent|ReadOnly|ReDim|REM|RemoveHandler|Resume|Return|Select|Set|Shadows|Shared|Short|Single|Static|Step|Stop|String|Structure|Sub|SyncLock|Then|Throw|To|True|Try|TypeOf|Unicode|Until|Variant|When|While|With|WithEvents|WriteOnly|Xor|Source)";
+[Color(0, 0, 255)] 	JAVA_KEYWORD		-> @"^(abstract|continue|for|new|switch|assert|default|goto|package|synchronized|boolean|do|if|private|this|break|double|implements|protected|throw|byte|else|import|public|throws|case|enum|instanceof|return|transient|catch|extends|int|short|try|char|final|interface|static|void|class|finally|long|strictfp|volatile|const|float|native|super|while)";
+[Color(0, 0, 255)] 	CPP_KEYWORD		-> @"^(alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|auto|bitand|bitor|bool|break|case|catch|char|char8_t|char16_t|char32_t|class|compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|default|delete|do|double|dynamic_cast|else|enum|explicit|export|extern|false|float|for|friend|goto|if|inline|int|long|mutable|namespace|new|noexcept|not|not_eq|NULL|nullptr|operator|or|or_eq|private|protected|public|reflexpr|register|reinterpret_cast|requires|return|short|signed|sizeof|static|static_assert|static_cast|struct|switch|synchronized|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|while|xor|xor_eq)";
 [Color(0, 0, 255)] 	DOTNET_KEYWORD	-> @"^(abstract|as|base|break|case|catch|checked|class|const|continue|decimal|default|delegate|double|do|else|enum|event|explicit|extern|false|finally|fixed|float|foreach|for|get|goto|if|implicit|interface|internal|int|in|is|lock|namespace|new|null|object|operator|out|override|params|partial|private|protected|public|readonly|ref|return|sealed|set|sizeof|stackalloc|static|struct|switch|throw|this|true|try|typeof|unchecked|unsafe|ushort|using|var|virtual|void|volatile|while)";
 [Color(43, 145, 202)] DOTNET_TYPES		-> @"^(Array|AttributeTargets|AttributeUsageAttribute|Attribute|BitConverter|Boolean|Buffer|Byte|Char|CharEnumerator|CLSCompliantAttribute|ConsoleColor|ConsoleKey|ConsoleKeyInfo|ConsoleModifiers|ConsoleSpecialKey|Console|ContextBoundObject|ContextStaticAttribute|Converter|Convert|DateTimeKind|DateTimeOffset|DateTime|DayOfWeek|DBNull|Decimal|Delegate|Double|Enum|Environment.SpecialFolder|EnvironmentVariableTarget|Environment|EventArgs|EventHandler|Exception|FlagsAttribute|GCCollectionMode|GC|Guid|ICloneable|IComparable|IConvertible|ICustomFormatter|IDisposable|IEquatable|IFormatProvider|IFormattable|IndexOutOfRangeException|InsufficientMemoryException|Int16|Int32|Int64|IntPtr|InvalidCastException|InvalidOperationException|InvalidProgramException|MarshalByRefObject|Math|MidpointRounding|NotFiniteNumberException|NotImplementedException|NotSupportedException|Nullable|NullReferenceException|ObjectDisposedException|Object|ObsoleteAttribute|OperatingSystem|OutOfMemoryException|OverflowException|ParamArrayAttribute|PlatformID|PlatformNotSupportedException|Predicate|Random|SByte|SerializableAttribute|Single|StackOverflowException|StringComparer|StringComparison|StringSplitOptions|String|SystemException|TimeSpan|TimeZone|TypeCode|TypedReference|TypeInitializationException|Type|UInt16|UInt32|UInt64|UIntPtr|UnauthorizedAccessException|UnhandledExceptionEventArgs|UnhandledExceptionEventHandler|ValueType|Void|WeakReference|Comparer|Dictionary|EqualityComparer|ICollection|IComparer|IDictionary|IEnumerable|IEnumerator|IEqualityComparer|IList|KeyNotFoundException|KeyValuePair|List|ASCIIEncoding|Decoder|DecoderExceptionFallback|DecoderExceptionFallbackBuffer|DecoderFallback|DecoderFallbackBuffer|DecoderFallbackException|DecoderReplacementFallback|DecoderReplacementFallbackBuffer|EncoderExceptionFallback|EncoderExceptionFallbackBuffer|EncoderFallback|EncoderFallbackBuffer|EncoderFallbackException|EncoderReplacementFallback|EncoderReplacementFallbackBuffer|Encoder|EncodingInfo|Encoding|NormalizationForm|StringBuilder|UnicodeEncoding|UTF32Encoding|UTF7Encoding|UTF8Encoding)";
+[Color(43, 145, 202)] JAVA_TYPES		-> @"^(Array|ArrayList|Hashmap|LocalDate|LocalTime|LocalDateTime|Matcher|Pattern|String|StringBuilder)";
+[Color(43, 145, 202)] CPP_TYPES		-> @"^(std::vector|std::list|std::map|std::cerr|std::cin|std::cout|std::string)";
+
 
 // define what c# codeblocks look like
 [Color(0, 128, 0)] 	CS_COMMENTLINE  	-> @"//[^\n]*\n?";
@@ -43,6 +48,8 @@
 			CS_SYMBOL		-> @"[^}]";
 			CS_NONKEYWORD		-> @"([^""\n\s/;.}\(\)\[\]]|/[^/*]|}[^;])+";
 [Color(163, 21, 21)]	CS_STRING     	-> @"@?[""]([""][""]|[^\""\n])*[""]?";
+[Color(163, 21, 21)]	JAVA_STRING     	-> @"[""]([""][""]|[^\""\n])*[""]?";
+[Color(163, 21, 21)]	CPP_STRING     	-> @"[""]([""][""]|[^\""\n])*[""]?";
 
 
 // define what VB codeblocks look like
@@ -74,18 +81,8 @@
 
 Start 			->  (CommentBlock | AttributeBlock | GrammarBlock | CodeBlock | DirectiveBlock)* EOF;
 CommentBlock		-> (GRAMMARCOMMENTLINE | GRAMMARCOMMENTBLOCK)+;
-DirectiveBlock	-> DIRECTIVEOPEN (WHITESPACE | DIRECTIVEKEYWORD | DIRECTIVESYMBOL | DIRECTIVENONKEYWORD | DIRECTIVESTRING )* DIRECTIVECLOSE?;
+DirectiveBlock	-> DIRECTIVEOPEN (WHITESPACE | DIRECTIVEKEYWORD | DIRECTIVESYMBOL | CodeBlock | DIRECTIVENONKEYWORD | DIRECTIVESTRING )* DIRECTIVECLOSE?;
 GrammarBlock		-> (GRAMMARSTRING | GRAMMARARROW | GRAMMARNONKEYWORD | GRAMMARKEYWORD | GRAMMARSYMBOL)+;
 AttributeBlock	-> ATTRIBUTEOPEN (ATTRIBUTEKEYWORD | ATTRIBUTENONKEYWORD | ATTRIBUTESYMBOL)* ATTRIBUTECLOSE?;
 CodeBlock		-> CODEBLOCKOPEN (DOTNET_COMMENTLINE | DOTNET_COMMENTBLOCK | DOTNET_TYPES | DOTNET_KEYWORD  | DOTNET_SYMBOL | DOTNET_STRING | DOTNET_NONKEYWORD)* CODEBLOCKCLOSE?;
-
-
-
-
-
-
-
-
-
-
 

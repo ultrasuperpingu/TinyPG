@@ -11,13 +11,32 @@ namespace TinyExprEval
 	{
 		public static void Main(string[] Args)
 		{
-			Parser p = new Parser(new Scanner());
-			var tree = p.Parse("5*cos(testInt)+testDouble");
-			tree.Context.Globals.Add("testDouble", 0.1);
-			tree.Context.Globals.Add("testInt", 5);
-			var res = tree.Eval();
-			Console.WriteLine(res);
-			Console.ReadLine();
+			Context context = new Context();
+			context.Globals.Add("testDouble", 0.1);
+			context.Globals.Add("testInt", 5);
+			Console.WriteLine("Enter an expression (empty to exit):");
+			string expression = "5*3+(testInt * testDouble)/2";
+			Console.WriteLine("> " + expression);
+			while (!string.IsNullOrEmpty(expression))
+			{
+				Parser p = new Parser(new Scanner());
+				var tree = p.Parse(expression);
+				if (tree.Errors.Count > 0)
+				{
+					foreach(var e in tree.Errors)
+					{
+						Console.WriteLine("Col " + e.Column + ": " + e.Message);
+					}
+				}
+				else
+				{
+					tree.Context = context;
+					var res = tree.Eval();
+					Console.WriteLine("< "+res);
+				}
+				Console.Write("> ");
+				expression = Console.ReadLine();
+			}
 		}
 	}
 }

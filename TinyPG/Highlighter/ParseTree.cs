@@ -106,7 +106,7 @@ namespace TinyPG.Highlighter
 		/// <returns>the output of the evaluation function</returns>
 		public object Eval(params object[] paramlist)
 		{
-			return Nodes[0].Eval(this, paramlist);
+			return Nodes[0].EvalNode(this, paramlist);
 		}
 	}
 
@@ -194,7 +194,7 @@ namespace TinyPG.Highlighter
 					index--;
 					if (index < 0)
 					{
-						o = node.Eval(paramlist);
+						o = node.EvalNode(paramlist);
 						break;
 					}
 				}
@@ -208,7 +208,7 @@ namespace TinyPG.Highlighter
 		/// <param name="tree">the parsetree itself</param>
 		/// <param name="paramlist">optional input parameters</param>
 		/// <returns>a partial result of the evaluation</returns>
-		internal object Eval(params object[] paramlist)
+		internal object EvalNode(params object[] paramlist)
 		{
 			object Value = null;
 

@@ -19,11 +19,11 @@
 // this is not supported in Cpp
 //<% @TextHighlighter Generate="true" %>
 
-<% @ParseTree CustomCode="
+<% @ParseTree CustomCode={
 	protected:
-	std::map<std::string,int>* context;
+	std::map<std::string, int>* context;
 	public:
-	std::map<std::string,int>* getContext() {
+	std::map<std::string, int>* getContext() {
 		if(context == NULL && Parent != NULL)
 		{
 			return Parent->getContext();
@@ -31,7 +31,7 @@
 		return context;
 	}
 
-	void setContext(std::map<std::string,int>* value) {
+	void setContext(std::map<std::string, int>* value) {
 		context = value;
 	}
 
@@ -39,7 +39,7 @@
 		//TODO: check variable exists
 		return getContext() == NULL?0:(*getContext())[id];
 	}
-" %>
+}; %>
 
 				EOF_         	-> @"^\s*$";
 [Color(255, 0, 0)] 		NUMBER 	-> @"[0-9]+";

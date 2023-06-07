@@ -50,8 +50,8 @@ namespace TinyPG.CodeGenerators.Java
 				}
 				else
 				{
-					evalmethods.AppendLine("		throw new UnsupportedOperationException(\"Could not interpret input; no semantics implemented.\");");
 					// otherwise simply not implemented!
+					evalmethods.AppendLine("		throw new UnsupportedOperationException(\"Could not interpret input; no semantics implemented.\");");
 				}
 				evalmethods.AppendLine("	}\r\n");
 				evalmethods.AppendLine("	protected " + returnType + " Get" + s.Name + "Value(int index, Object... paramlist)");

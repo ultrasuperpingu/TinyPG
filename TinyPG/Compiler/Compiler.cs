@@ -131,7 +131,7 @@ namespace TinyPG.Compiler
 				if (generator != null && d.ContainsKey("FileName"))
 					generator.FileName = d["FileName"];
 
-				if (generator != null && (d.Name == "Compile" || d["Generate"].ToLower() == "true"))
+				if (generator != null && (debugMode != GenerateDebugMode.None || d["Generate"].ToLower() == "true"))
 				{
 					sources.Add(generator.Generate(Grammar, debugMode));
 					sourcesFile.Add(generator.FileName);

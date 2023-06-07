@@ -9,32 +9,28 @@
 <% @TinyPG Language="C#" OutputPath="TestCSharp\TinyExe" Namespace="TinyExe" RegexCompiled="True"%>
 
 // include text highlighting as part of the input window
-<% @TextHighlighter Generate="true" %>
-<% @Compile Generate="false" FileName="TestCSharp\TinyExe\Functions.cs" %>
-<% @Compile Generate="false" FileName="TestCSharp\TinyExe\Function.cs" %>
-<% @Compile Generate="false" FileName="TestCSharp\TinyExe\Variables.cs" %>
-<% @Compile Generate="false" FileName="TestCSharp\TinyExe\Context.cs" %>
+<% @TextHighlighter Generate="false" %>
+<% @Compile FileName="TestCSharp\TinyExe\Functions.cs" %>
+<% @Compile FileName="TestCSharp\TinyExe\Function.cs" %>
+<% @Compile FileName="TestCSharp\TinyExe\Variables.cs" %>
+<% @Compile FileName="TestCSharp\TinyExe\Context.cs" %>
 
-<% @ParseTree CustomCode=@"
-public delegate object FunctionDelegate(object[] parameters);
+<% @ParseTree CustomCode={
+	// helper function to find access the function or variable
+	private ParseNode GetFunctionOrVariable(ParseNode n)
+	{
+		// found the right node, exit
+		if (n.Token.Type == TokenType.Function || n.Token.Type == TokenType.VARIABLE)
+			return n;
 
-public delegate object FunctionContextDelegate(object[] parameters, Context context);
+		if (n.Nodes.Count == 1) // search lower branch (left side only, may not contain other node branches)
+			return GetFunctionOrVariable(n.Nodes[0]);
 
-
-// helper function to find access the function or variable
-private ParseNode GetFunctionOrVariable(ParseNode n)
-{
-	// found the right node, exit
-	if (n.Token.Type == TokenType.Function || n.Token.Type == TokenType.VARIABLE)
-		return n;
-
-	if (n.Nodes.Count == 1) // search lower branch (left side only, may not contain other node branches)
-		return GetFunctionOrVariable(n.Nodes[0]);
-
-	// function or variable not found in branch
-	return null;
-}
-public Context Context = new Context();" %>
+		// function or variable not found in branch
+		return null;
+	}
+	public Context Context = new Context();
+}; %>
 
 [Color(0, 0, 255)]
 BOOLEANLITERAL	-> @"true|false";
