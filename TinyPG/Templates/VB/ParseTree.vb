@@ -26,6 +26,7 @@ Namespace <%Namespace%>
 		Private m_col As Integer
 		Private m_pos As Integer
 		Private m_length As Integer
+		Private m_isWarning As Boolean
 
 		Public ReadOnly Property Code() As Integer<%ImplementsIParseErrorCode%>
 			Get
@@ -64,16 +65,21 @@ Namespace <%Namespace%>
 		End Property
 
 		Public Sub New(ByVal message As String, ByVal code As Integer, ByVal tok As Token)
-			Me.New(message, code, 0, tok.StartPos, tok.StartPos, tok.Length)
+			Me.New(message, code, 0, tok.StartPos, tok.StartPos, tok.Length, False)
 		End Sub
 
-		Public Sub New(ByVal message As String, ByVal code As Integer, ByVal line As Integer, ByVal col As Integer, ByVal pos As Integer, ByVal length As Integer)
+		Public Sub New(ByVal message As String, ByVal code As Integer, ByVal tok As Token, ByVal isWarning As Boolean)
+			Me.New(message, code, 0, tok.StartPos, tok.StartPos, tok.Length, isWarning)
+		End Sub
+
+		Public Sub New(ByVal message As String, ByVal code As Integer, ByVal line As Integer, ByVal col As Integer, ByVal pos As Integer, ByVal length As Integer, ByVal isWarning As Boolean)
 			m_message = message
 			m_code = code
 			m_line = line
 			m_col = col
 			m_pos = pos
 			m_length = length
+			m_isWarning = isWarning
 		End Sub
 	End Class
 

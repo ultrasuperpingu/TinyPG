@@ -341,7 +341,6 @@ namespace TinyPG
 		private int startpos;
 		private int endpos;
 		private string text;
-		private object value; // is it really used??
 
 		// contains all prior skipped symbols
 		private List<Token> skipped;

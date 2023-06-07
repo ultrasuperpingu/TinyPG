@@ -27,6 +27,7 @@ namespace TinyPG
 		private int col;
 		private int pos;
 		private int length;
+		private bool isWarning;
 
 		public string File { get { return file; } }
 		public int Code { get { return code; } }
@@ -35,25 +36,26 @@ namespace TinyPG
 		public int Position { get { return pos; } }
 		public int Length { get { return length; } }
 		public string Message { get { return message; } }
+		public string IsWarning { get { return IsWarning; } }
 
 		// just for the sake of serialization
 		public ParseError()
 		{
 		}
 
-		public ParseError(string message, int code, ParseNode node) : this(message, code, node.Token)
+		public ParseError(string message, int code, ParseNode node, bool isWarning = false) : this(message, code, node.Token)
 		{
 		}
 
-		public ParseError(string message, int code, Token token) : this(message, code, token.File, token.Line, token.Column, token.StartPos, token.Length)
+		public ParseError(string message, int code, Token token, bool isWarning = false) : this(message, code, token.File, token.Line, token.Column, token.StartPos, token.Length, isWarning)
 		{
 		}
 
-		public ParseError(string message, int code) : this(message, code, string.Empty, 0, 0, 0, 0)
+		public ParseError(string message, int code, bool isWarning = false) : this(message, code, string.Empty, 0, 0, 0, 0, isWarning)
 		{
 		}
 
-		public ParseError(string message, int code, string file, int line, int col, int pos, int length)
+		public ParseError(string message, int code, string file, int line, int col, int pos, int length, bool isWarning = false)
 		{
 			this.file = file;
 			this.message = message;
@@ -62,6 +64,7 @@ namespace TinyPG
 			this.col = col;
 			this.pos = pos;
 			this.length = length;
+			this.isWarning = isWarning;
 		}
 	}
 
@@ -106,7 +109,7 @@ namespace TinyPG
 		/// <returns>the output of the evaluation function</returns>
 		public object Eval(params object[] paramlist)
 		{
-			return Nodes[0].Eval(this, paramlist);
+			return Nodes[0].EvalNode(this, paramlist);
 		}
 	}
 
@@ -194,7 +197,7 @@ namespace TinyPG
 					index--;
 					if (index < 0)
 					{
-						o = node.Eval(paramlist);
+						o = node.EvalNode(paramlist);
 						break;
 					}
 				}
@@ -208,7 +211,7 @@ namespace TinyPG
 		/// <param name="tree">the parsetree itself</param>
 		/// <param name="paramlist">optional input parameters</param>
 		/// <returns>a partial result of the evaluation</returns>
-		internal object Eval(params object[] paramlist)
+		internal object EvalNode(params object[] paramlist)
 		{
 			object Value = null;
 

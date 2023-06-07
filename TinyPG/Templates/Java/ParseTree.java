@@ -18,6 +18,7 @@ class ParseError<%ParseError%>
 	private int col;
 	private int pos;
 	private int length;
+	private boolean isWarning;
 	
 
 	public String getFile() { return file; }
@@ -27,6 +28,7 @@ class ParseError<%ParseError%>
 	public int getPosition() { return pos; }
 	public int getLength() { return length; }
 	public String getMessage() { return message; }
+	public boolean isWarning() { return isWarning; }
 
 	// just for the sake of serialization
 	public ParseError()
@@ -37,18 +39,32 @@ class ParseError<%ParseError%>
 	{
 		this(message, code, node.Token);
 	}
+	
+	public ParseError(String message, int code, ParseNode node, boolean isWarning)
+	{
+		this(message, code, node.Token, isWarning);
+	}
 
 	public ParseError(String message, int code, Token token)
 	{
-		this(message, code, token.getFile(), token.getLine(), token.getColumn(), token.getStartPos(), token.getLength());
+		this(message, code, token.getFile(), token.getLine(), token.getColumn(), token.getStartPos(), token.getLength(), false);
+	}
+	
+	public ParseError(String message, int code, Token token, boolean isWarning)
+	{
+		this(message, code, token.getFile(), token.getLine(), token.getColumn(), token.getStartPos(), token.getLength(), isWarning);
 	}
 
 	public ParseError(String message, int code)
 	{
-		this(message, code, "", 0, 0, 0, 0);
+		this(message, code, "", 0, 0, 0, 0, false);
 	}
-
-	public ParseError(String message, int code, String file, int line, int col, int pos, int length)
+	
+	public ParseError(String message, int code, boolean isWarning)
+	{
+		this(message, code, "", 0, 0, 0, 0, isWarning);
+	}
+	public ParseError(String message, int code, String file, int line, int col, int pos, int length, boolean isWarning)
 	{
 		this.file = file;
 		this.message = message;
@@ -57,6 +73,7 @@ class ParseError<%ParseError%>
 		this.col = col;
 		this.pos = pos;
 		this.length = length;
+		this.isWarning = isWarning;
 	}
 }
 

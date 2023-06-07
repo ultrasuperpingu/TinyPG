@@ -27,6 +27,7 @@ namespace <%Namespace%>
 		private int col;
 		private int pos;
 		private int length;
+		private bool isWarning;
 
 		public string File { get { return file; } }
 		public int Code { get { return code; } }
@@ -35,25 +36,26 @@ namespace <%Namespace%>
 		public int Position { get { return pos; } }
 		public int Length { get { return length; } }
 		public string Message { get { return message; } }
+		public string IsWarning { get { return IsWarning; } }
 
 		// just for the sake of serialization
 		public ParseError()
 		{
 		}
 
-		public ParseError(string message, int code, ParseNode node) : this(message, code, node.Token)
+		public ParseError(string message, int code, ParseNode node, bool isWarning = false) : this(message, code, node.Token)
 		{
 		}
 
-		public ParseError(string message, int code, Token token) : this(message, code, token.File, token.Line, token.Column, token.StartPos, token.Length)
+		public ParseError(string message, int code, Token token, bool isWarning = false) : this(message, code, token.File, token.Line, token.Column, token.StartPos, token.Length, isWarning)
 		{
 		}
 
-		public ParseError(string message, int code) : this(message, code, string.Empty, 0, 0, 0, 0)
+		public ParseError(string message, int code, bool isWarning = false) : this(message, code, string.Empty, 0, 0, 0, 0, isWarning)
 		{
 		}
 
-		public ParseError(string message, int code, string file, int line, int col, int pos, int length)
+		public ParseError(string message, int code, string file, int line, int col, int pos, int length, bool isWarning = false)
 		{
 			this.file = file;
 			this.message = message;
@@ -62,6 +64,7 @@ namespace <%Namespace%>
 			this.col = col;
 			this.pos = pos;
 			this.length = length;
+			this.isWarning = isWarning;
 		}
 	}
 

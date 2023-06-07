@@ -2,7 +2,7 @@
  * TinyEx in Java and C++
  * Update commented simple expression1.tpg comments to match last features
  * Write documentation
- * Add a IsWarning attribute in the ParseError class
+ * Make unsupported attributes and directive a warning (ParseError now have a IsWarning attribute).
  * Review C++ generated code and improve it (std::any as default???, more use of templates ???)
  * Separate implementation and declaration in C++
  * Make ParseXXX public and find a way for the ParseTree to return the correct type

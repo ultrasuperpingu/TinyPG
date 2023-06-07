@@ -139,26 +139,27 @@ namespace <%Namespace%>
 		int Column;
 		int Position;
 		int Length;
+		bool IsWarning;
 
 		
 		// just for the sake of serialization
-		inline ParseError() : ParseError("", 0, "", 0, 0, 0, 0)
+		inline ParseError() : ParseError("", 0, "", 0, 0, 0, 0, false)
 		{
 		}
 
-		inline ParseError(std::string message, int code, ParseNode& node) : ParseError(message, code, node.TokenVal)
+		inline ParseError(std::string message, int code, ParseNode& node, bool isWarning=false) : ParseError(message, code, node.TokenVal, isWarning)
 		{
 		}
 
-		inline ParseError(std::string message, int code, Token token) : ParseError(message, code, token.File, token.Line, token.Column, token.StartPos, token.Length)
+		inline ParseError(std::string message, int code, Token token, bool isWarning=false) : ParseError(message, code, token.File, token.Line, token.Column, token.StartPos, token.Length, isWarning)
 		{
 		}
 
-		inline ParseError(std::string message, int code) : ParseError(message, code, "", 0, 0, 0, 0)
+		inline ParseError(std::string message, int code, bool isWarning = false) : ParseError(message, code, "", 0, 0, 0, 0, isWarning)
 		{
 		}
 
-		inline ParseError(std::string message, int code, std::string file, int line, int col, int pos, int length)
+		inline ParseError(std::string message, int code, std::string file, int line, int col, int pos, int length, bool isWarning = false)
 		{
 			this->File = file;
 			this->Message = message;
@@ -167,6 +168,7 @@ namespace <%Namespace%>
 			this->Column = col;
 			this->Position = pos;
 			this->Length = length;
+			this->IsWarning = isWarning;
 		}
 	};
 	

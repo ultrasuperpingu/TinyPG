@@ -130,7 +130,7 @@ namespace TinyPG.Compiler
 			{
 				if (n.Token.Type == TokenType.ExtProduction)
 				{
-					n.Eval(tree, g);
+					n.EvalNode(tree, g);
 				}
 			}
 
@@ -276,7 +276,7 @@ namespace TinyPG.Compiler
 
 		protected override object EvalExtProduction(params object[] paramlist)
 		{
-			return Nodes[Nodes.Count - 1].Eval(paramlist);
+			return Nodes[Nodes.Count - 1].EvalNode(paramlist);
 		}
 
 		protected override object EvalAttribute(params object[] paramlist)
@@ -391,7 +391,7 @@ namespace TinyPG.Compiler
 				NonTerminalSymbol nts = g.Symbols.Find(Nodes[0].Token.Text) as NonTerminalSymbol;
 				if (nts == null)
 					tree.Errors.Add(new ParseError("Symbol '" + Nodes[0].Token.Text + "' is not declared. ", 0x1041, Nodes[0]));
-				Rule r = (Rule)Nodes[2].Eval(tree, g, nts);
+				Rule r = (Rule)Nodes[2].EvalNode(tree, g, nts);
 				if (nts != null)
 					nts.Rules.Add(r);
 
@@ -429,19 +429,19 @@ namespace TinyPG.Compiler
 
 		protected override object EvalRule(params object[] paramlist)
 		{
-			return Nodes[0].Eval(paramlist);
+			return Nodes[0].EvalNode(paramlist);
 		}
 
 		protected override object EvalSubrule(params object[] paramlist)
 		{
 			if (Nodes.Count == 1) // single symbol
-				return Nodes[0].Eval(paramlist);
+				return Nodes[0].EvalNode(paramlist);
 
 			Rule choiceRule = new Rule(RuleType.Choice);
 			// i+=2 to skip to the | symbols
 			for (int i = 0; i < Nodes.Count; i += 2)
 			{
-				Rule rule = (Rule)Nodes[i].Eval(paramlist);
+				Rule rule = (Rule)Nodes[i].EvalNode(paramlist);
 				choiceRule.Rules.Add(rule);
 			}
 
@@ -451,12 +451,12 @@ namespace TinyPG.Compiler
 		protected override object EvalConcatRule(params object[] paramlist)
 		{
 			if (Nodes.Count == 1) // single symbol
-				return Nodes[0].Eval(paramlist);
+				return Nodes[0].EvalNode(paramlist);
 
 			Rule concatRule = new Rule(RuleType.Concat);
 			for (int i = 0; i < Nodes.Count; i++)
 			{
-				Rule rule = (Rule)Nodes[i].Eval(paramlist);
+				Rule rule = (Rule)Nodes[i].EvalNode(paramlist);
 				concatRule.Rules.Add(rule);
 			}
 
@@ -478,7 +478,7 @@ namespace TinyPG.Compiler
 
 				if (Nodes[0].Token.Type == TokenType.BRACKETOPEN)
 				{
-					Rule rule = (Rule)Nodes[1].Eval(paramlist);
+					Rule rule = (Rule)Nodes[1].EvalNode(paramlist);
 					unaryRule.Rules.Add(rule);
 				}
 				else
@@ -503,7 +503,7 @@ namespace TinyPG.Compiler
 			if (Nodes[0].Token.Type == TokenType.BRACKETOPEN)
 			{
 				// create subrule syntax tree
-				return Nodes[1].Eval(paramlist);
+				return Nodes[1].EvalNode(paramlist);
 			}
 			else
 			{
