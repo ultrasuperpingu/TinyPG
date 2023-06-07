@@ -5,9 +5,6 @@
 // Generate VB code
 <% @TinyPG Language="VB" Namespace="TinyPG" OutputPath="TestVB\SimpleExpr\" %>
 
-// include text highlighting as part of the input window
-<% @TextHighlighter Generate="true" %>
-
 <% @ParseTree CustomCode={
 		Protected _context as System.Collections.Generic.Dictionary(Of String, Integer)
 		Public Property Context as System.Collections.Generic.Dictionary(Of String, Integer)

@@ -7,8 +7,7 @@ namespace TinyPG.CodeGenerators.VBNet
 {
 	public class TextHighlighterGenerator : BaseGenerator, ICodeGenerator
 	{
-		internal TextHighlighterGenerator()
-			: base("TextHighlighter.vb")
+		internal TextHighlighterGenerator() : base("TextHighlighter.vb")
 		{
 		}
 
@@ -63,15 +62,7 @@ namespace TinyPG.CodeGenerators.VBNet
 			generatedtext = generatedtext.Replace(@"<%HightlightTokens%>", tokens.ToString());
 			generatedtext = generatedtext.Replace(@"<%RtfColorPalette%>", colors.ToString());
 			generatedtext = generatedtext.Replace(@"<%TextHighlighterCustomCode%>", Grammar.Directives["TextHighlighter"]["CustomCode"]);
-
-			if (Debug != GenerateDebugMode.None)
-			{
-				generatedtext = generatedtext.Replace(@"<%Namespace%>", "TinyPG.Debug");
-			}
-			else
-			{
-				generatedtext = generatedtext.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-			}
+			generatedtext = generatedtext.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 
 			return generatedtext;
 		}

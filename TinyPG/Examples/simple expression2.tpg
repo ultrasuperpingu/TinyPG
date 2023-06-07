@@ -2,10 +2,7 @@
 //Copyright © Herre Kuijpers 2008-2010, modified by ultrasuperpingu 2023
 //Simple expression calculator
 <% @TinyPG Language="C#" Namespace="TinyPG" OutputPath=".\TestCSharp\SimpleExpr\" %>
-
-// include text highlighting as part of the input window
-<% @TextHighlighter Generate="true" %>
-
+<% @TextHighlighter Generate="True" %>
 <% @ParseTree CustomCode={
 		protected System.Collections.Generic.Dictionary<string,int> context;
 		public System.Collections.Generic.Dictionary<string,int> Context

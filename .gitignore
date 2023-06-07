@@ -111,3 +111,7 @@ UpgradeLog*.XML
 /test
 /TinyPG/Examples/TestJava/SimpleExpr/nbproject/private/
 /TinyPG/Examples/TestJava/SimpleExpr/build/
+/TinyPG/Examples/TestCpp/SimpleExpr/.vs
+/TinyPG/Examples/TestCSharp/TinyExe/.vs
+/TinyPG/Examples/TestCSharp/SimpleExpr/.vs
+/TinyPG/Examples/TestVB/SimpleExpr/.vs
