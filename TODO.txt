@@ -1,4 +1,3 @@
- * Make a Search functionality
  * TinyEx in Java and C++
  * Update commented simple expression1.tpg comments to match last features
  * Write documentation

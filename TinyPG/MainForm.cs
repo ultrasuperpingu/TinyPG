@@ -64,6 +64,7 @@ namespace TinyPG
 		// keep this event handler reference in a seperate object, so it can be
 		// unregistered on closing. this is required because the checker runs on a seperate thread
 		EventHandler syntaxUpdateChecker;
+		private string lastSearch;
 
 		#endregion
 
@@ -318,6 +319,18 @@ namespace TinyPG
 		private void findToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// TODO: search dialog
+			SearchDialog d = new SearchDialog();
+			d.SearchText = lastSearch;
+			if (d.ShowDialog() == DialogResult.OK)
+			{
+				var index = textEditor.Text.IndexOf(d.SearchText, textEditor.SelectionStart+textEditor.SelectionLength);
+				if (index >= 0)
+				{
+					textEditor.SelectionStart = index;
+					textEditor.SelectionLength = d.SearchText.Length;
+				}
+			}
+			lastSearch = d.SearchText;
 		}
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
