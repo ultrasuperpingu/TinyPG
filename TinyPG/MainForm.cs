@@ -318,7 +318,6 @@ namespace TinyPG
 		}
 		private void findToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			// TODO: search dialog
 			SearchDialog d = new SearchDialog();
 			d.SearchText = lastSearch;
 			if (d.ShowDialog() == DialogResult.OK)

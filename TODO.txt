@@ -1,5 +1,5 @@
- * TinyEx in Java and C++
- * Update commented simple expression1.tpg comments to match last features
+ * TinyExe in C++
+ * Update simple expression1.tpg comments to match last features
  * Write documentation
  * Make unsupported attributes and directive a warning (ParseError now have a IsWarning attribute).
  * Review C++ generated code and improve it (std::any as default???, more use of templates ???)
@@ -8,12 +8,13 @@
  * Remove Non terminal default return value (it will be useless once the ParseTree will be able to return the correct type)
  * Add string in addition to regex as TerminalSymbols for performances
  * Make C++, C# and VB searching for terminal token at the beginning of the parsed string only (Java lookingAt equivalent)
+ * Build dynamicly the example menu according to the files present in the directory
  
 Prospecting/Long Term:
  * Make Error Codes consistant
- * Add my backtracking parser as a possible implementation (instead of LL(1))
- * Add python and javascript generation
+ * Add my backtracking parser as a possible implementation (in addition to LL(1))
  * Add a Search (and SearchXXX) method (in addition to Parse (and ParseXXX)) in the Parser
+ * Add python and javascript generation
  * Port the code to Visual Source Code
  * Remove VB support
  

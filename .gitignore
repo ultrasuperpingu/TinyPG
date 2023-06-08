@@ -115,3 +115,5 @@ UpgradeLog*.XML
 /TinyPG/Examples/TestCSharp/TinyExe/.vs
 /TinyPG/Examples/TestCSharp/SimpleExpr/.vs
 /TinyPG/Examples/TestVB/SimpleExpr/.vs
+/TinyPG/Examples/TestJava/TinyExp/nbproject/private/
+/TinyPG/Examples/TestJava/TinyExe/build/
