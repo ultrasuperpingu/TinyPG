@@ -258,6 +258,7 @@ namespace TinyPG.Compiler
 					names.Add("Generate");
 					names.Add("FileName");
 					names.Add("CustomCode");
+					names.Add("HeaderCode");
 					break;
 				case "Compile":
 					names.Add("FileName");

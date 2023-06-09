@@ -193,6 +193,8 @@ namespace TinyPG.Compiler
 				d["Generate"] = "True"; // generate parser by default
 			if (!d.ContainsKey("CustomCode"))
 				d["CustomCode"] = ""; // no custom code by default
+			if (!d.ContainsKey("HeaderCode"))
+				d["HeaderCode"] = ""; // no header code by default
 
 
 			d = Directives.Find("Scanner");
@@ -205,6 +207,8 @@ namespace TinyPG.Compiler
 				d["Generate"] = "True"; // generate scanner by default
 			if (!d.ContainsKey("CustomCode"))
 				d["CustomCode"] = ""; // no custom code by default
+			if (!d.ContainsKey("HeaderCode"))
+				d["HeaderCode"] = ""; // no header code by default
 
 			d = Directives.Find("ParseTree");
 			if (d == null)
@@ -216,6 +220,8 @@ namespace TinyPG.Compiler
 				d["Generate"] = "True"; // generate parsetree by default
 			if (!d.ContainsKey("CustomCode"))
 				d["CustomCode"] = ""; // no custom code by default
+			if (!d.ContainsKey("HeaderCode"))
+				d["HeaderCode"] = ""; // no header code by default
 
 			d = Directives.Find("TextHighlighter");
 			if (d == null)
@@ -227,8 +233,10 @@ namespace TinyPG.Compiler
 				d["Generate"] = "False"; // do NOT generate a text highlighter by default
 			if (!d.ContainsKey("CustomCode"))
 				d["CustomCode"] = ""; // no custom code by default
+			if (!d.ContainsKey("HeaderCode"))
+				d["HeaderCode"] = ""; // no header code by default
 
-			foreach(var cd in Directives.FindAll("Compile"))
+			foreach (var cd in Directives.FindAll("Compile"))
 			{
 				if (!cd.ContainsKey("Generate"))
 					cd["Generate"] = "False"; // do NOT generate a text highlighter by default

@@ -1,4 +1,4 @@
-package TinyExe;
+package tinyexe;
 
 public class StaticFunction extends Function
 {

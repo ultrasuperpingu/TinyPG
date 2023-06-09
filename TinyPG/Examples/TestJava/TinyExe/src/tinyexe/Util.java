@@ -1,5 +1,9 @@
 
-package TinyExe;
+package tinyexe;
+
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 
 /**
  *
@@ -15,7 +19,15 @@ public class Util {
 		if(o instanceof Boolean boolean1)
             return boolean1?1.0:0.0;
 		if(o instanceof String)
-            return Double.valueOf(o.toString().replace(',', '.'));
+        {
+            NumberFormat format = NumberFormat.getInstance(Locale.US);
+            try {
+                Number number = format.parse(o.toString().replace(",", "."));
+                return number.doubleValue();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
 		return 0.0;
 	}
 	public static String ConvertToString(Object o)

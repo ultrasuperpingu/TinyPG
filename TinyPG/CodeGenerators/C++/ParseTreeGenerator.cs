@@ -35,13 +35,13 @@ namespace TinyPG.CodeGenerators.Cpp
 				//evalsymbols.AppendLine("					Value = Token.Text;");
 				evalsymbols.AppendLine("					break;");
 
-				string returnType = "void*";
+				string returnType = "std::any";
 				if (!string.IsNullOrEmpty(s.ReturnType))
 					returnType = s.ReturnType;
-				string defaultReturnValue = "NULL";
+				string defaultReturnValue = "std::any()";
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault))
 					defaultReturnValue = s.ReturnTypeDefault;
-				evalmethods.AppendLine("		inline virtual " + returnType + " Eval" + s.Name + "(const std::vector<void*>& paramlist)");
+				evalmethods.AppendLine("		inline virtual " + returnType + " Eval" + s.Name + "(const std::vector<std::any>& paramlist)");
 				evalmethods.AppendLine("		{");
 				if (s.CodeBlock != null)
 				{
@@ -56,7 +56,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				evalmethods.AppendLine("		}\r\n");
 				
 				
-				evalmethods.AppendLine("		inline virtual " + returnType + " Get" + s.Name + "Value(int index, const std::vector<void*>& paramlist)");
+				evalmethods.AppendLine("		inline virtual " + returnType + " Get" + s.Name + "Value(int index, const std::vector<std::any>& paramlist)");
 				evalmethods.AppendLine("		{");
 				evalmethods.AppendLine("			ParseNode* node = GetTokenNode(TokenType::" + s.Name + ", index);");
 				evalmethods.AppendLine("			if (node != NULL)");
@@ -74,6 +74,7 @@ namespace TinyPG.CodeGenerators.Cpp
 			parsetree = parsetree.Replace(@"<%ITokenGet%>", "");
 			parsetree = parsetree.Replace(@"<%INodesGet%>", "");
 			parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
+			parsetree = parsetree.Replace(@"<%HeaderCode%>", Grammar.Directives["ParseTree"]["HeaderCode"]);
 
 			parsetree = parsetree.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
 			parsetree = parsetree.Replace(@"<%VirtualEvalMethods%>", evalmethods.ToString());

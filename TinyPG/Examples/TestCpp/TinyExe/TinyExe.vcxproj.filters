@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{ca1a1fd1-da17-4a5f-8f9a-a2450e713200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{f0a8ef7e-96ff-4117-9728-2e1ab6067906}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Context.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DynamicFunction.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Function.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Functions.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parser.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ParseTree.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Scanner.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StaticFunction.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Variables.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Util.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\DynamicFunction.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StaticFunction.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Context.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,9 +1,9 @@
-package TinyExe;
+package tinyexe;
 
 /**
  *
  * @author ultrasuperpingu
  */
 public interface FunctionContextDelegate {   
-       Object invoke(Object[] parameters, Context context);
+    Object invoke(Object[] parameters, Context context);
 }

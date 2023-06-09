@@ -1,0 +1,519 @@
+//Tiny Parser Generator v1.5
+//Copyright © Herre Kuijpers 2008-2012, modify by ultrasuperpingu
+
+//@TinyPG - a Tiny Parser Generator v1.3
+//Copyright © Herre Kuijpers 2008-2010
+//Simple expression calculator
+// https://www.codeproject.com/Articles/241830/a-Tiny-Expression-Evaluator
+
+<% @TinyPG Language="Java" OutputPath="TestJava\TinyExe\src\tinyexe" Namespace="tinyexe" RegexCompiled="True"%>
+
+<% @ParseTree CustomCode={
+	// helper function to find access the function or variable
+	private ParseNode GetFunctionOrVariable(ParseNode n)
+	{
+		// found the right node, exit
+		if (n.Token.Type == TokenType.Function || n.Token.Type == TokenType.VARIABLE)
+			return n;
+
+		if (n.getNodes().size() == 1) // search lower branch (left side only, may not contain other node branches)
+			return GetFunctionOrVariable(n.getNodes().get(0));
+
+		// function or variable not found in branch
+		return null;
+	}
+
+	public Context Context = new Context();
+}; %>
+
+[Color(0, 0, 255)]
+BOOLEANLITERAL	-> @"true|false";
+[Color(255, 0, 0)]
+DECIMALINTEGERLITERAL-> @"[0-9]+(UL|Ul|uL|ul|LU|Lu|lU|lu|U|u|L|l)?";
+[Color(255, 0, 0)]
+REALLITERAL 		-> @"([0-9]+\.[0-9]+([eE][+-]?[0-9]+)?([fFdDMm]?)?)|(\.[0-9]+([eE][+-]?[0-9]+)?([fFdDMm]?)?)|([0-9]+([eE][+-]?[0-9]+)([fFdDMm]?)?)|([0-9]+([fFdDMm]?))";
+HEXINTEGERLITERAL	-> @"0(x|X)[0-9a-fA-F]+";
+[Color(155, 0, 0)]
+STRINGLITERAL		-> @"\""(\""\""|[^\""])*\"""; // shortcut implementation, not quite ready
+[Color(0, 80, 0)]
+FUNCTION		-> @"[a-zA-Z_][a-zA-Z0-9_]*(?=\s*\()"; // matches only when followed by (
+VARIABLE		-> @"[a-zA-Z_][a-zA-Z0-9_]*(?!\s*\()"; // matches only when NOT followed by (
+CONSTANT		-> @"(?i)pi|e";
+
+BRACEOPEN		-> @"\{\s*";
+BRACECLOSE		-> @"\s*}";
+BRACKETOPEN		-> @"\(\s*";
+BRACKETCLOSE		-> @"\s*\)";
+SEMICOLON		-> @";";
+PLUSPLUS		-> @"\+\+";
+MINUSMINUS		-> @"--";
+PIPEPIPE		-> @"\|\||or";
+AMPAMP			-> @"&&|and";
+AMP			-> @"&(?!&)"; // matches only when NOT followed by second &
+POWER			-> @"\^";
+PLUS			-> @"\+";
+MINUS			-> @"-";
+EQUAL			-> @"=";
+ASSIGN			-> @":=";
+NOTEQUAL		-> @"!=|<>";
+NOT			-> @"!";
+ASTERIKS		-> @"\*";
+SLASH			-> @"/";
+PERCENT		-> @"%";
+QUESTIONMARK		-> @"\?";
+COMMA			-> @",";
+LESSEQUAL		-> @"<=";
+GREATEREQUAL		-> @">=";
+LESSTHAN		-> @"<(?!>)"; // matches only when not followed by >
+GREATERTHAN		-> @">";
+COLON			-> @":";
+EOF_			-> @"^$";
+
+
+[Skip] WHITESPACE 	-> @"\s+";
+
+
+Start -> (Expression)? EOF_
+{
+	return $Expression;
+};
+
+//expressions
+Function -> FUNCTION BRACKETOPEN Params? BRACKETCLOSE
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	ParseNode funcNode = this.nodes.get(0);
+	ParseNode paramNode = this.nodes.get(2);
+
+	if (tree.Context == null)
+	{
+		tree.Errors.add(new ParseError("No context defined", 1041, this));
+		return null;
+	}
+	if (tree.Context.getCurrentStackSize() > 50)
+	{
+		tree.Errors.add(new ParseError("Stack overflow: " + funcNode.Token.getText() + "()", 1046, this));
+		return null;
+	}
+	String key = funcNode.Token.getText().toLowerCase();
+	if (!tree.Context.getFunctions().containsKey(key))
+	{
+		tree.Errors.add(new ParseError("Fuction not defined: " + funcNode.Token.getText() + "()", 1042, this));
+		return null;
+	}
+
+	// retrieves the function from declared functions
+	Function func = tree.Context.getFunctions().get(key);
+
+	// evaluate the function parameters
+	Object[] parameters = new Object[0];
+	if (paramNode.Token.Type == TokenType.Params)
+		parameters = ((ArrayList<Object>)paramNode.Eval(tree, paramlist)).toArray();
+	if (parameters.length < func.getMinParameters()) 
+	{
+		tree.Errors.add(new ParseError("At least " + func.getMinParameters() + " parameter(s) expected", 1043, this));
+		return null; // illegal number of parameters
+	}
+	else if (parameters.length > func.getMaxParameters())
+	{
+		tree.Errors.add(new ParseError("No more than " + func.getMaxParameters() + " parameter(s) expected", 1044, this));
+		return null; // illegal number of parameters
+	}
+	
+	var fres = func.Eval(parameters, tree);
+	//String t_params = String.Join("; ", parameters);
+	//Tracer.Trace("Func", "Eval "+func.Name+"("+ t_params + ") = "+fres);
+	return fres;
+};
+PrimaryExpression -> Function | Variable | Literal | ParenthesizedExpression // recheck
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	TokenType type = this.nodes.get(0).Token.Type;
+	if (type == TokenType.Function)
+		return $Function;
+	else if (type == TokenType.Literal)
+		return $Literal;
+	else if (type == TokenType.ParenthesizedExpression)
+		return $ParenthesizedExpression;
+	else if (type == TokenType.Variable)
+		return $Variable;
+
+	tree.Errors.add(new ParseError("Illegal EvalPrimaryExpression format", 1097, this));
+	return null;
+};
+ParenthesizedExpression -> BRACKETOPEN Expression BRACKETCLOSE
+{
+	return $Expression;
+};
+UnaryExpression -> PrimaryExpression
+	    			   | PLUS UnaryExpression
+				   | MINUS UnaryExpression
+				   | NOT UnaryExpression
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	TokenType type = this.nodes.get(0).Token.Type;
+	if (type == TokenType.PrimaryExpression)
+		return $PrimaryExpression;
+
+	if (type == TokenType.MINUS)
+	{
+		Object val = $UnaryExpression;
+		if (val instanceof Double)
+			return -((double)val);
+
+		tree.Errors.add(new ParseError("Illegal UnaryExpression format, cannot interpret minus " + val.toString(), 1095, this));
+		return null;
+	}
+	else if (type == TokenType.PLUS)
+	{
+		Object val = $UnaryExpression;
+		return val;
+	}
+	else if (type == TokenType.NOT)
+	{
+		Object val = $UnaryExpression[0];
+		if (val instanceof Boolean)
+			return !((boolean)val);
+
+		tree.Errors.add(new ParseError("Illegal UnaryExpression format, cannot interpret negate " + val.toString(), 1098, this));
+		return null;
+	}
+
+	tree.Errors.add(new ParseError("Illegal UnaryExpression format", 1099, this));
+	return null;
+};
+
+PowerExpression -> UnaryExpression (POWER UnaryExpression)* //ok
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	Object result = $UnaryExpression[0];
+
+	// IMPORTANT: scanning and calculating the power is done from Left to Right.
+	// this is conform the Excel evaluation of power, but not conform strict mathematical guidelines
+	// this means that a^b^c evaluates to (a^b)^c  (Excel uses the same kind of evaluation)
+	// stricly mathematical speaking a^b^c should evaluate to a^(b^c) (therefore calculating the powers from Right to Left)
+	for (int i = 1; i < nodes.size(); i += 2)
+	{
+		Token token = nodes.get(i).Token;
+		Object val = nodes.get(i+1).Eval(tree, paramlist);
+		if (token.Type == TokenType.POWER)
+			result = result = Math.pow((double)(result), (double)(val));
+	}
+
+	return result;
+};
+MultiplicativeExpression -> PowerExpression ((ASTERIKS | SLASH | PERCENT) PowerExpression)* // ok
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	Object result = $PowerExpression;
+	for (int i = 1; i < nodes.size(); i+=2 )
+	{
+		Token token = nodes.get(i).Token;
+		Object val = nodes.get(i+1).Eval(tree, paramlist);
+		if (token.Type == TokenType.ASTERIKS)
+			result = Util.ConvertToDouble(result) * Util.ConvertToDouble(val);
+		else if (token.Type == TokenType.SLASH)
+				result = Util.ConvertToDouble(result) / Util.ConvertToDouble(val);
+		else if (token.Type == TokenType.PERCENT)
+			result = Util.ConvertToDouble(result) % Util.ConvertToDouble(val);
+	}
+
+	return result;
+};
+AdditiveExpression -> MultiplicativeExpression ((PLUS | MINUS) MultiplicativeExpression)*
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	Object result = $MultiplicativeExpression[0];
+	for (int i = 1; i < nodes.size(); i += 2)
+	{
+		Token token = nodes.get(i).Token;
+		Object val = nodes.get(i+1).Eval(tree, paramlist);
+		if (token.Type == TokenType.PLUS)
+			result = Util.ConvertToDouble(result) + Util.ConvertToDouble(val);
+		else if (token.Type == TokenType.MINUS)
+			result = Util.ConvertToDouble(result) - Util.ConvertToDouble(val);
+	}
+
+	return result;
+}; 
+ConcatEpression -> AdditiveExpression (AMP AdditiveExpression)*
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	Object result = $AdditiveExpression[0];
+	for (int i = 1; i < nodes.size(); i += 2)
+	{
+		Token token = nodes.get(i).Token;
+		Object val = nodes.get(i+1).Eval(tree, paramlist);
+		if (token.Type == TokenType.AMP)
+			result = Util.ConvertToString(result) + Util.ConvertToString(val);
+	}
+	return result;
+};
+RelationalExpression -> ConcatEpression ((LESSTHAN | LESSEQUAL | GREATERTHAN | GREATEREQUAL) ConcatEpression)?
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	Object result = $ConcatEpression[0];
+	for (int i = 1; i < nodes.size(); i += 2)
+	{
+		Token token = nodes.get(i).Token;
+		Object val = nodes.get(i+1).Eval(tree, paramlist);
+
+		// compare as numbers
+		if (result instanceof Double && val instanceof Double)
+		{
+			if (token.Type == TokenType.LESSTHAN)
+				result = Util.ConvertToDouble(result) < Util.ConvertToDouble(val);
+			else if (token.Type == TokenType.LESSEQUAL)
+				result = Util.ConvertToDouble(result) <= Util.ConvertToDouble(val);
+			else if (token.Type == TokenType.GREATERTHAN)
+				result = Util.ConvertToDouble(result) > Util.ConvertToDouble(val);
+			else if (token.Type == TokenType.GREATEREQUAL)
+				result = Util.ConvertToDouble(result) >= Util.ConvertToDouble(val);
+		}
+		else // compare as strings
+		{
+			int comp = Util.ConvertToString(result).compareTo(Util.ConvertToString(val));
+			if (token.Type == TokenType.LESSTHAN)
+				result = comp < 0;
+			else if (token.Type == TokenType.LESSEQUAL)
+				result = comp <= 0;
+			else if (token.Type == TokenType.GREATERTHAN)
+				result = comp > 0;
+			else if (token.Type == TokenType.GREATEREQUAL)
+				result = comp >= 0;
+		}
+		
+	}
+	return result;
+};
+EqualityExpression -> RelationalExpression ((EQUAL | NOTEQUAL) RelationalExpression)*
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	Object result = $RelationalExpression[0];
+	for (int i = 1; i < nodes.size(); i += 2)
+	{
+		Token token = nodes.get(i).Token;
+		Object val = nodes.get(i+1).Eval(tree, paramlist);
+		if (token.Type == TokenType.EQUAL)
+			result = result.equals(val);
+		else if (token.Type == TokenType.NOTEQUAL)
+			result = !result.equals(val);
+	}
+	return result;
+};
+ConditionalAndExpression -> EqualityExpression (AMPAMP EqualityExpression)*
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	Object result = $EqualityExpression[0];
+	for (int i = 1; i < nodes.size(); i += 2)
+	{
+		Token token = nodes.get(i).Token;
+		Object val = nodes.get(i+1).Eval(tree, paramlist);
+		if (token.Type == TokenType.AMPAMP)
+			result = Util.ConvertToBoolean(result) && Util.ConvertToBoolean(val);
+	}
+	return result;
+};
+ConditionalOrExpression -> ConditionalAndExpression (PIPEPIPE ConditionalAndExpression)*
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	Object result = $ConditionalAndExpression[0];
+	for (int i = 1; i < nodes.size(); i += 2)
+	{
+		Token token = nodes.get(i).Token;
+		Object val = nodes.get(i+1).Eval(tree, paramlist);
+		if (token.Type == TokenType.PIPEPIPE)
+			result = Util.ConvertToBoolean(result) || Util.ConvertToBoolean(val);
+	}
+	return result;
+};
+AssignmentExpression -> ConditionalOrExpression (QUESTIONMARK AssignmentExpression COLON AssignmentExpression)?
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	Object result = $ConditionalOrExpression;
+	if (nodes.size() >= 5 && result instanceof Boolean
+		&& nodes.get(1).Token.Type == TokenType.QUESTIONMARK
+		&& nodes.get(3).Token.Type == TokenType.COLON)
+	{
+		if (Util.ConvertToBoolean(result))
+			result = nodes.get(2).Eval(tree, paramlist); // return 1st argument
+		else
+			result = nodes.get(4).Eval(tree, paramlist); // return 2nd argument
+	}
+	return result;
+};
+Expression -> AssignmentExpression? (ASSIGN AssignmentExpression)?
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	// if only left hand side available, this is not an assignment, simple evaluate expression
+	if (nodes.size() == 1)                 
+		return $AssignmentExpression[0]; // return the result
+
+	if (nodes.size() != 3)
+	{
+		tree.Errors.add(new ParseError("Illegal EvalExpression format", 1092, this));
+		return null;
+	}
+
+	// ok, this is an assignment so declare the function or variable
+	// assignment only allowed to function or to a variable
+	ParseNode v = GetFunctionOrVariable(nodes.get(0));
+	if (v == null)
+	{
+		tree.Errors.add(new ParseError("Can only assign to function or variable", 1020, this));
+		return null;
+	}
+
+	if (tree.Context == null)
+	{
+		tree.Errors.add(new ParseError("No context defined", 1041, this));
+		return null;
+	}
+
+	if (v.Token.Type == TokenType.VARIABLE)
+	{
+		// simply overwrite any previous defnition
+		String key = v.Token.getText();
+		tree.Context.getGlobals().put(key, $AssignmentExpression[1]);
+		return tree.Context.getGlobals().get(key) ;
+	}
+	else if (v.Token.Type == TokenType.Function)
+	{
+
+		String key = v.getNodes().get(0).Token.getText();
+
+		// function lookup is case insensitive
+		if (tree.Context.getFunctions().containsKey(key.toLowerCase()))
+			if (!(tree.Context.getFunctions().get(key.toLowerCase()) instanceof DynamicFunction))
+			{
+				tree.Errors.add(new ParseError("Built in functions cannot be overwritten", 1050, this));
+				return null;
+			}
+
+		// lets determine the input variables. 
+		// functions must be of te form f(x;y;z) = x+y*z;
+		// check the function parameters to be of type Variable, error otherwise
+		Variables vars = new Variables();
+		ParseNode paramsNode = v.getNodes().get(2);
+		if (paramsNode.Token.Type == TokenType.Params)
+		{   // function has parameters, so check if they are all variable declarations
+			for (int i = 0; i < paramsNode.getNodes().size(); i += 2)
+			{
+				ParseNode varNode = GetFunctionOrVariable(paramsNode.getNodes().get(i));
+				if (varNode == null || varNode.Token.Type != TokenType.VARIABLE)
+				{
+					tree.Errors.add(new ParseError("Function declaration may only contain variables", 1051, this));
+					return null;
+				}
+				// simply declare the variable, no need to evaluate the value of it at this point. 
+				// evaluation will be done when the function is executed
+				// note, variables are Case Sensitive (!)
+				vars.put(varNode.Token.getText(), null);
+			}
+		}
+		// we have all the info we need to know to declare the dynamicly defined function
+		// pass on nodes[2] which is the Right Hand Side (RHS) of the assignment
+		// nodes[2] will be evaluated at runtime when the function is executed.
+		DynamicFunction dynf = new DynamicFunction(key, nodes.get(2), vars, vars.size(), vars.size());
+		tree.Context.getFunctions().put(key.toLowerCase(), dynf);
+		return dynf;
+	}
+
+	return null;
+};
+
+//literals
+Params -> Expression (SEMICOLON Expression)*
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	ArrayList<Object> parameters = new ArrayList<Object>();
+	for (int i = 0; i < nodes.size(); i += 2)
+	{
+		if (nodes.get(i).Token.Type == TokenType.Expression)
+		{
+			Object val = nodes.get(i).Eval(tree, paramlist);
+			parameters.add(val);
+		}
+	}
+	return parameters;
+};
+Literal -> BOOLEANLITERAL | IntegerLiteral | RealLiteral | StringLiteral
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	TokenType type = this.nodes.get(0).Token.Type;
+	if (type == TokenType.StringLiteral)
+		return $StringLiteral;
+	else if (type == TokenType.IntegerLiteral)
+		return $IntegerLiteral;
+	else if (type == TokenType.RealLiteral)
+		return $RealLiteral;
+	else if (type == TokenType.BOOLEANLITERAL)
+	{
+		String val = $BOOLEANLITERAL.toString();
+		return Util.ConvertToBoolean(val);
+	}
+
+	tree.Errors.add(new ParseError("illegal Literal format", 1003, this));
+	return null;
+};
+IntegerLiteral -> DECIMALINTEGERLITERAL | HEXINTEGERLITERAL
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	if ($DECIMALINTEGERLITERAL != null)
+		return Util.ConvertToDouble($DECIMALINTEGERLITERAL);
+	if ($HEXINTEGERLITERAL != null)
+	{
+		String hex = $HEXINTEGERLITERAL.toString();
+		return Util.ConvertToDouble(Integer.decode(hex));
+	}
+
+	tree.Errors.add(new ParseError("illegal IntegerLiteral format", 1002, this));
+	return null;
+};
+RealLiteral -> REALLITERAL : Double
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	if ($REALLITERAL != null)
+	{
+		return Util.ConvertToDouble($REALLITERAL);
+	}
+	tree.Errors.add(new ParseError("illegal RealLiteral format", 1001, this));
+	return null;
+};
+StringLiteral -> STRINGLITERAL : String
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	if ($STRINGLITERAL != null)
+	{
+		String r = (String)$STRINGLITERAL;
+		r = r.substring(1, r.length() - 3); // strip quotes
+		return r;
+	}
+
+	tree.Errors.add(new ParseError("illegal StringLiteral format", 1000, this));
+	return "";
+};
+Variable -> VARIABLE
+{
+	ParseTree tree = (ParseTree)paramlist[0];
+	if (tree.Context == null)
+	{
+		tree.Errors.add(new ParseError("No context defined", 1041, this));
+		return null;
+	}
+
+	String key = (String)$VARIABLE;
+	// first check if the variable was declared in scope of a function
+	var scope_var = tree.Context.GetScopeVariable(key);
+	if(scope_var != null)
+		return scope_var;
+	
+	// if not in scope of a function
+	// next check if the variable was declared as a global variable
+	if (tree.Context.getGlobals() != null && tree.Context.getGlobals().containsKey(key))
+		return tree.Context.getGlobals().get(key);
+
+	//variable not found
+	tree.Errors.add(new ParseError("Variable not defined: " + key, 1039, this));
+	return null;
+};

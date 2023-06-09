@@ -1,4 +1,4 @@
-package TinyExe;
+package tinyexe;
 
 	//public delegate object FunctionDelegate(object[] parameters);
 

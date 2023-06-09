@@ -1,4 +1,4 @@
-package TinyExe;
+package tinyexe;
 
 public class Program
 {
@@ -28,7 +28,7 @@ public class Program
                 var res = tree.Eval();
                 System.out.println("< "+res);
             }
-            System.out.println("> ");
+            System.out.print("> ");
             expression = s.nextLine();
         }
     }

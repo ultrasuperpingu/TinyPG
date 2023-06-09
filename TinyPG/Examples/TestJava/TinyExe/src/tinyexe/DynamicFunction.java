@@ -1,4 +1,4 @@
-package TinyExe;
+package tinyexe;
 import java.lang.*;
 
 public class DynamicFunction extends Function
