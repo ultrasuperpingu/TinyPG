@@ -3,6 +3,7 @@
  * Write documentation
  * Make unsupported attributes and directive a warning (ParseError now have a IsWarning attribute).
  * Review C++ generated code and improve it (std::any as default???, more use of templates ???)
+ * Generate Token and TokenType in separate files
  * Separate implementation and declaration in C++
  * Make ParseXXX public and find a way for the ParseTree to return the correct type
  * Remove Non terminal default return value (it will be useless once the ParseTree will be able to return the correct type)
