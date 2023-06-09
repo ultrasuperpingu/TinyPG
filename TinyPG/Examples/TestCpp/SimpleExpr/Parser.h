@@ -14,49 +14,14 @@ namespace TinyPG
 		Scanner& scanner;
 		ParseTree* tree;
 		ParseTree* instanciatedTree;
-		inline void DeleteTree()
-		{
-			if (instanciatedTree != NULL)
-			{
-				delete instanciatedTree;
-				instanciatedTree = NULL;
-			}
-		}
+		void DeleteTree();
 	public:
-		inline Parser(Scanner& scanner) : scanner(scanner), tree(NULL), instanciatedTree(NULL)
-		{
-		}
+		Parser(Scanner& scanner);
+		virtual ~Parser();
 
-		virtual inline ~Parser()
-		{
-			DeleteTree();
-		}
-
-		inline ParseTree* Parse(const std::string& input)
-		{
-			DeleteTree();
-			instanciatedTree = new ParseTree();
-			return Parse(input, "", instanciatedTree);
-		}
-
-		inline ParseTree* Parse(const std::string& input, const std::string& fileName)
-		{
-			DeleteTree();
-			instanciatedTree = new ParseTree();
-			return Parse(input, fileName, new ParseTree());
-		}
-
-		inline ParseTree* Parse(const std::string& input, const std::string& fileName, ParseTree* tree)
-		{
-			scanner.Init(input, fileName);
-			if (tree != instanciatedTree)
-				DeleteTree();
-			this->tree = tree;
-			ParseStart(tree);
-			tree->Skipped = scanner.Skipped;
-
-			return tree;
-		}
+		ParseTree* Parse(const std::string& input);
+		ParseTree* Parse(const std::string& input, const std::string& fileName);
+		ParseTree* Parse(const std::string& input, const std::string& fileName, ParseTree* tree);
 
 	protected:
 		inline void ParseStart(ParseNode* parent) // NonTerminalSymbol: Start
@@ -225,4 +190,47 @@ namespace TinyPG
 
 	};
 
+	inline void Parser::DeleteTree()
+	{
+		if (instanciatedTree != NULL)
+		{
+			delete instanciatedTree;
+			instanciatedTree = NULL;
+		}
+	}
+
+	inline Parser::Parser(Scanner& scanner) : scanner(scanner), tree(NULL), instanciatedTree(NULL)
+	{
+	}
+
+	inline Parser::~Parser()
+	{
+		DeleteTree();
+	}
+
+	inline ParseTree* Parser::Parse(const std::string& input)
+	{
+		DeleteTree();
+		instanciatedTree = new ParseTree();
+		return Parse(input, "", instanciatedTree);
+	}
+
+	inline ParseTree* Parser::Parse(const std::string& input, const std::string& fileName)
+	{
+		DeleteTree();
+		instanciatedTree = new ParseTree();
+		return Parse(input, fileName, new ParseTree());
+	}
+
+	inline ParseTree* Parser::Parse(const std::string& input, const std::string& fileName, ParseTree* tree)
+	{
+		scanner.Init(input, fileName);
+		if (tree != instanciatedTree)
+			DeleteTree();
+		this->tree = tree;
+		ParseStart(tree);
+		tree->Skipped = scanner.Skipped;
+
+		return tree;
+	}
 }
