@@ -48,10 +48,10 @@ namespace TinyPG.CodeGenerators.Cpp
 			bool first = true;
 			foreach (TerminalSymbol s in Grammar.GetTerminals())
 			{
-				regexps.Append("			regex = std::regex(" + Helper.Unverbatim(s.Expression.ToString()) + ", std::regex_constants::ECMAScript");
+				regexps.Append("			regex = std::regex(" + Helper.Unverbatim(s.Expression.ToString()) + "");
 
 				if (s.Attributes.ContainsKey("IgnoreCase"))
-					regexps.Append(" | std::regex_constants::icase");
+					regexps.Append("std::regex_constants::icase");
 
 				regexps.Append(");\r\n");
 

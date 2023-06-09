@@ -1,4 +1,5 @@
 #include "../include/DynamicFunction.h"
+#include "../include/ParseTree.h"
 
 namespace TinyExe
 {

@@ -25,7 +25,8 @@ namespace TinyPG.CodeGenerators.Cpp
 			string parsetree = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
 
 			StringBuilder evalsymbols = new StringBuilder();
-			StringBuilder evalmethods = new StringBuilder();
+			StringBuilder evalMethodsDecl = new StringBuilder();
+			StringBuilder evalMethodsImpl = new StringBuilder();
 
 			// build non terminal tokens
 			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
@@ -41,28 +42,30 @@ namespace TinyPG.CodeGenerators.Cpp
 				string defaultReturnValue = "std::any()";
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault))
 					defaultReturnValue = s.ReturnTypeDefault;
-				evalmethods.AppendLine("		inline virtual " + returnType + " Eval" + s.Name + "(const std::vector<std::any>& paramlist)");
-				evalmethods.AppendLine("		{");
+				evalMethodsDecl.AppendLine("		virtual " + returnType + " Eval" + s.Name + "(const std::vector<std::any>& paramlist);");
+				evalMethodsImpl.AppendLine("	inline " + returnType + " ParseNode::Eval" + s.Name + "(const std::vector<std::any>& paramlist)");
+				evalMethodsImpl.AppendLine("	{");
 				if (s.CodeBlock != null)
 				{
 					// paste user code here
-					evalmethods.AppendLine(FormatCodeBlock(s));
+					evalMethodsImpl.AppendLine(FormatCodeBlock(s));
 				}
 				else
 				{
-					evalmethods.AppendLine("			throw std::exception(\"Could not interpret input; no semantics implemented.\");");
+					evalMethodsImpl.AppendLine("		throw std::exception(\"Could not interpret input; no semantics implemented.\");");
 					// otherwise simply not implemented!
 				}
-				evalmethods.AppendLine("		}\r\n");
-				
-				
-				evalmethods.AppendLine("		inline virtual " + returnType + " Get" + s.Name + "Value(int index, const std::vector<std::any>& paramlist)");
-				evalmethods.AppendLine("		{");
-				evalmethods.AppendLine("			ParseNode* node = GetTokenNode(TokenType::" + s.Name + ", index);");
-				evalmethods.AppendLine("			if (node != NULL)");
-				evalmethods.AppendLine("				return node->Eval"+s.Name+"(paramlist);");
-				evalmethods.AppendLine("			throw std::exception(\"No "+ s.Name+"[index] found.\");");
-				evalmethods.AppendLine("		}\r\n");
+				evalMethodsImpl.AppendLine("	}\r\n");
+
+
+				evalMethodsDecl.AppendLine("		virtual " + returnType + " Get" + s.Name + "Value(int index, const std::vector<std::any>& paramlist);");
+				evalMethodsImpl.AppendLine("	inline " + returnType + " ParseNode::Get" + s.Name + "Value(int index, const std::vector<std::any>& paramlist)");
+				evalMethodsImpl.AppendLine("	{");
+				evalMethodsImpl.AppendLine("		ParseNode* node = GetTokenNode(TokenType::" + s.Name + ", index);");
+				evalMethodsImpl.AppendLine("		if (node != NULL)");
+				evalMethodsImpl.AppendLine("			return node->Eval"+s.Name+"(paramlist);");
+				evalMethodsImpl.AppendLine("		throw std::exception(\"No "+ s.Name+"[index] found.\");");
+				evalMethodsImpl.AppendLine("	}\r\n");
 			}
 
 			parsetree = parsetree.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
@@ -77,8 +80,9 @@ namespace TinyPG.CodeGenerators.Cpp
 			parsetree = parsetree.Replace(@"<%HeaderCode%>", Grammar.Directives["ParseTree"]["HeaderCode"]);
 
 			parsetree = parsetree.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
-			parsetree = parsetree.Replace(@"<%VirtualEvalMethods%>", evalmethods.ToString());
-
+			parsetree = parsetree.Replace(@"<%VirtualEvalMethods%>", evalMethodsDecl.ToString());
+			parsetree = parsetree.Replace(@"<%VirtualEvalMethodsImpl%>", evalMethodsImpl.ToString());
+			
 			return parsetree;
 		}
 
@@ -133,7 +137,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				match = var.Match(codeblock);
 			}
 
-			codeblock = Helper.Indent3 + codeblock.Replace("\n", "\r\n" + Helper.Indent2);
+			codeblock = Helper.Indent2 + codeblock.Replace("\n", "\r\n" + Helper.Indent2);
 			return codeblock;
 		}
 	}

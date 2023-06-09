@@ -1,8 +1,11 @@
 #pragma once
+
 #include "Function.h"
-#include "ParseTree.h"
+
 namespace TinyExe
 {
+	class ParseTree;
+	class ParseNode;
 	class DynamicFunction : public Function
 	{
 	private:

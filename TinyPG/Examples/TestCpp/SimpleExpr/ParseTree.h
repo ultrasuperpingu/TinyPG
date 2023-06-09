@@ -139,83 +139,14 @@ namespace TinyPG
 			return Value;
 		}
 		protected:
-		inline virtual int EvalStart(const std::vector<std::any>& paramlist)
-		{
-			return this->GetAddExprValue(0, paramlist);
-		}
-
-		inline virtual int GetStartValue(int index, const std::vector<std::any>& paramlist)
-		{
-			ParseNode* node = GetTokenNode(TokenType::Start, index);
-			if (node != NULL)
-				return node->EvalStart(paramlist);
-			throw std::exception("No Start[index] found.");
-		}
-
-		inline virtual int EvalAddExpr(const std::vector<std::any>& paramlist)
-		{
-			int Value = this->GetMultExprValue(0, paramlist);
-			int i = 1;
-			while (this->IsTokenPresent(TokenType::MultExpr, i))
-			{
-				std::string sign = this->GetTerminalValue(TokenType::PLUSMINUS, i-1);
-				if (sign == "+")
-					Value += this->GetMultExprValue(i++, paramlist);
-				else 
-					Value -= this->GetMultExprValue(i++, paramlist);
-			}
-		
-			return Value;
-		}
-
-		inline virtual int GetAddExprValue(int index, const std::vector<std::any>& paramlist)
-		{
-			ParseNode* node = GetTokenNode(TokenType::AddExpr, index);
-			if (node != NULL)
-				return node->EvalAddExpr(paramlist);
-			throw std::exception("No AddExpr[index] found.");
-		}
-
-		inline virtual int EvalMultExpr(const std::vector<std::any>& paramlist)
-		{
-			int Value = this->GetAtomValue(0, paramlist);
-			int i = 1;
-			while (this->IsTokenPresent(TokenType::Atom, i))
-			{
-				std::string sign = this->GetTerminalValue(TokenType::MULTDIV, i-1);
-				if (sign == "*")
-					Value *= this->GetAtomValue(i++, paramlist);
-				else 
-					Value /= this->GetAtomValue(i++, paramlist);
-			}
-			return Value;
-		}
-
-		inline virtual int GetMultExprValue(int index, const std::vector<std::any>& paramlist)
-		{
-			ParseNode* node = GetTokenNode(TokenType::MultExpr, index);
-			if (node != NULL)
-				return node->EvalMultExpr(paramlist);
-			throw std::exception("No MultExpr[index] found.");
-		}
-
-		inline virtual int EvalAtom(const std::vector<std::any>& paramlist)
-		{
-			if (this->IsTokenPresent(TokenType::NUMBER, 0))
-				return std::stoi(this->GetTerminalValue(TokenType::NUMBER, 0));
-			if (this->IsTokenPresent(TokenType::ID, 0))
-				return getVarValue(this->GetTerminalValue(TokenType::ID, 0));
-			return this->GetAddExprValue(0, paramlist);
-		}
-
-		inline virtual int GetAtomValue(int index, const std::vector<std::any>& paramlist)
-		{
-			ParseNode* node = GetTokenNode(TokenType::Atom, index);
-			if (node != NULL)
-				return node->EvalAtom(paramlist);
-			throw std::exception("No Atom[index] found.");
-		}
-
+		virtual int EvalStart(const std::vector<std::any>& paramlist);
+		virtual int GetStartValue(int index, const std::vector<std::any>& paramlist);
+		virtual int EvalAddExpr(const std::vector<std::any>& paramlist);
+		virtual int GetAddExprValue(int index, const std::vector<std::any>& paramlist);
+		virtual int EvalMultExpr(const std::vector<std::any>& paramlist);
+		virtual int GetMultExprValue(int index, const std::vector<std::any>& paramlist);
+		virtual int EvalAtom(const std::vector<std::any>& paramlist);
+		virtual int GetAtomValue(int index, const std::vector<std::any>& paramlist);
 
 
 
@@ -342,5 +273,84 @@ namespace TinyPG
 			return Nodes[0]->EvalStart(paramlist);
 		}
 	};
- 
+
+	inline int ParseNode::EvalStart(const std::vector<std::any>& paramlist)
+	{
+		return this->GetAddExprValue(0, paramlist);
+	}
+
+	inline int ParseNode::GetStartValue(int index, const std::vector<std::any>& paramlist)
+	{
+		ParseNode* node = GetTokenNode(TokenType::Start, index);
+		if (node != NULL)
+			return node->EvalStart(paramlist);
+		throw std::exception("No Start[index] found.");
+	}
+
+	inline int ParseNode::EvalAddExpr(const std::vector<std::any>& paramlist)
+	{
+		int Value = this->GetMultExprValue(0, paramlist);
+			int i = 1;
+			while (this->IsTokenPresent(TokenType::MultExpr, i))
+			{
+				std::string sign = this->GetTerminalValue(TokenType::PLUSMINUS, i-1);
+				if (sign == "+")
+					Value += this->GetMultExprValue(i++, paramlist);
+				else 
+					Value -= this->GetMultExprValue(i++, paramlist);
+			}
+		
+			return Value;
+	}
+
+	inline int ParseNode::GetAddExprValue(int index, const std::vector<std::any>& paramlist)
+	{
+		ParseNode* node = GetTokenNode(TokenType::AddExpr, index);
+		if (node != NULL)
+			return node->EvalAddExpr(paramlist);
+		throw std::exception("No AddExpr[index] found.");
+	}
+
+	inline int ParseNode::EvalMultExpr(const std::vector<std::any>& paramlist)
+	{
+		int Value = this->GetAtomValue(0, paramlist);
+			int i = 1;
+			while (this->IsTokenPresent(TokenType::Atom, i))
+			{
+				std::string sign = this->GetTerminalValue(TokenType::MULTDIV, i-1);
+				if (sign == "*")
+					Value *= this->GetAtomValue(i++, paramlist);
+				else 
+					Value /= this->GetAtomValue(i++, paramlist);
+			}
+			return Value;
+	}
+
+	inline int ParseNode::GetMultExprValue(int index, const std::vector<std::any>& paramlist)
+	{
+		ParseNode* node = GetTokenNode(TokenType::MultExpr, index);
+		if (node != NULL)
+			return node->EvalMultExpr(paramlist);
+		throw std::exception("No MultExpr[index] found.");
+	}
+
+	inline int ParseNode::EvalAtom(const std::vector<std::any>& paramlist)
+	{
+		if (this->IsTokenPresent(TokenType::NUMBER, 0))
+				return std::stoi(this->GetTerminalValue(TokenType::NUMBER, 0));
+			if (this->IsTokenPresent(TokenType::ID, 0))
+				return getVarValue(this->GetTerminalValue(TokenType::ID, 0));
+			return this->GetAddExprValue(0, paramlist);
+	}
+
+	inline int ParseNode::GetAtomValue(int index, const std::vector<std::any>& paramlist)
+	{
+		ParseNode* node = GetTokenNode(TokenType::Atom, index);
+		if (node != NULL)
+			return node->EvalAtom(paramlist);
+		throw std::exception("No Atom[index] found.");
+	}
+
+
+
 }

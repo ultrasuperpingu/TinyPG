@@ -45,10 +45,10 @@ STRINGLITERAL		-> @"\""(\""\""|[^\""])*\"""; // shortcut implementation, not qui
 [Color(0, 80, 0)]
 FUNCTION		-> @"[a-zA-Z_][a-zA-Z0-9_]*(?=\s*\()"; // matches only when followed by (
 VARIABLE		-> @"[a-zA-Z_][a-zA-Z0-9_]*(?!\s*\()"; // matches only when NOT followed by (
-CONSTANT		-> @"(?i)pi|e";
+CONSTANT		-> @"pi|e";
 
-BRACEOPEN		-> @"{\s*";
-BRACECLOSE		-> @"\s*}";
+BRACEOPEN		-> @"\{\s*";
+BRACECLOSE		-> @"\s*\}";
 BRACKETOPEN		-> @"\(\s*";
 BRACKETCLOSE		-> @"\s*\)";
 SEMICOLON		-> @";";
@@ -162,7 +162,7 @@ UnaryExpression -> PrimaryExpression
 	if (type == TokenType::MINUS)
 	{
 		std::any val = $UnaryExpression;
-		if (val.has_value() && val.type().name() == "double")
+		if (val.has_value() && auto x = std::any_cast<int>(&val))
 			return -std::any_cast<double>(val);
 
 		tree->Errors.push_back(ParseError("Illegal UnaryExpression format, cannot interpret minus " + ConvertToString(val), 1095, this));
@@ -176,7 +176,7 @@ UnaryExpression -> PrimaryExpression
 	else if (type == TokenType::NOT)
 	{
 		std::any val = $UnaryExpression[0];
-		if (val.has_value() && val.type().name() == "bool")
+		if (val.has_value() && auto x = std::any_cast<bool>(&val))
 			return !std::any_cast<bool>(val);
 
 		tree->Errors.push_back(ParseError("Illegal UnaryExpression format, cannot interpret negate " + ConvertToString(val), 1098, this));
@@ -322,28 +322,28 @@ EqualityExpression -> RelationalExpression ((EQUAL | NOTEQUAL) RelationalExpress
 			}
 			else
 			{
-				if (result.type().name() == "bool")
+				if (auto x = std::any_cast<bool>(&val))
 				{
 					if (token.Type == TokenType::EQUAL)
 						result = std::any_cast<bool>(result) == std::any_cast<bool>(val);
 					else if (token.Type == TokenType::NOTEQUAL)
 						result = std::any_cast<bool>(result) != std::any_cast<bool>(val);
 				}
-				else if (result.type().name() == "double")
+				else if (auto x = std::any_cast<double>(&val))
 				{
 					if (token.Type == TokenType::EQUAL)
 						result = std::any_cast<double>(result) == std::any_cast<double>(val);
 					else if (token.Type == TokenType::NOTEQUAL)
 						result = std::any_cast<double>(result) != std::any_cast<double>(val);
 				}
-				else if (result.type().name() == "int")
+				else if (auto x = std::any_cast<int>(&val))
 				{
 					if (token.Type == TokenType::EQUAL)
 						result = std::any_cast<int>(result) == std::any_cast<int>(val);
 					else if (token.Type == TokenType::NOTEQUAL)
 						result = std::any_cast<int>(result) != std::any_cast<int>(val);
 				}
-				else if (result.type().name() == "std::string")
+				else if (auto x = std::any_cast<std::string>(&val))
 				{
 					if (token.Type == TokenType::EQUAL)
 						result = std::any_cast<std::string>(result) == std::any_cast<std::string>(val);
@@ -385,7 +385,7 @@ AssignmentExpression -> ConditionalOrExpression (QUESTIONMARK AssignmentExpressi
 {
 	ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 	std::any result = $ConditionalOrExpression;
-	if (Nodes.size() >= 5 && result.has_value() && result.type().name() == "bool" 
+	if (Nodes.size() >= 5 && result.has_value() && auto x = std::any_cast<int>(&val)
 		&& Nodes[1]->TokenVal.Type == TokenType::QUESTIONMARK
 		&& Nodes[3]->TokenVal.Type == TokenType::COLON)
 	{
