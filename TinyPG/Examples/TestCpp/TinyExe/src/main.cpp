@@ -1,11 +1,11 @@
 ﻿#include <iostream>
 #include <any>
-#include "../include/Parser.h"
-#include "../include/Context.h"
+#include "Parser.h"
+#include "Context.h"
 
 using namespace TinyExe;
 
-void main()
+int main()
 {
 	Context* context = new Context();
 	context->Globals.insert(std::make_pair("testDouble", 2.5));
@@ -32,6 +32,7 @@ void main()
 			std::cout << "< " << res << std::endl;
 		}
 		std::cout << "> ";
-		std::cin >> expression;
+		std::getline(std::cin, expression);
 	}
+	return 0;
 }

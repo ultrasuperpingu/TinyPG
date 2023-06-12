@@ -16,6 +16,7 @@ namespace TinyExe
 	class Function
 	{
 	public:
+		Function();
 		/// <summary>
 		/// define the arguments of the dynamic function
 		/// </summary>
@@ -40,8 +41,8 @@ namespace TinyExe
 
 	};
 
+	inline Function::Function() : Arguments(NULL), Name(""), MaxParameters(0), MinParameters(0)
+	{}
 
-
-	
 
 }

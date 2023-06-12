@@ -14,12 +14,9 @@ namespace TinyPG
 	class ParseNode
 	{
 		friend class ParseTree;
-	protected:
-		
 	public:
 		std::vector<ParseNode*> Nodes;
-		
-		//[XmlIgnore] // avoid circular references when serializing
+
 		ParseNode* Parent;
 		Token TokenVal; // the token/rule
 
@@ -115,13 +112,13 @@ namespace TinyPG
 
 		std::vector<Token> Skipped;
 
-		inline ParseTree();
+		ParseTree();
 		
-		virtual inline ~ParseTree();
+		virtual ~ParseTree();
 
-		inline std::string PrintTree();
+		std::string PrintTree();
 
-		inline void PrintNode(std::string& sb, ParseNode* node, int indent);
+		void PrintNode(std::string& sb, ParseNode* node, int indent);
 
 		/// <summary>
 		/// this is the entry point for executing and evaluating the parse tree.
@@ -130,7 +127,7 @@ namespace TinyPG
 		/// <returns>the output of the evaluation function</returns>
 		// TODO: template the class (not the method) and/or use std::any
 		template<typename T>
-		inline T Eval(const std::vector<std::any>& paramlist = {});
+		T Eval(const std::vector<std::any>& paramlist = {});
 	};
 
 	// ParseNode implementations
@@ -323,7 +320,6 @@ namespace TinyPG
 	{
 		TokenVal.Type = TokenType::Start;
 		TokenVal.Text = "Root";
-		//Errors = new ParseErrors();
 	}
 
 	inline ParseTree::~ParseTree()

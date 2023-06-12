@@ -22,7 +22,7 @@ namespace TinyExe
 		/// <returns></returns>
 		std::any Eval(std::vector<std::any> parameters, ParseTree* tree);
 
-		DynamicFunction(std::string name, ParseNode* node, Variables* args, int minParameters, int maxParameters);
+		DynamicFunction(const std::string& name, ParseNode* node, Variables* args, int minParameters, int maxParameters);
 	};
 
 }

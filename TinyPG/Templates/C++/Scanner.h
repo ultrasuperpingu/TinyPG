@@ -140,12 +140,8 @@ namespace <%Namespace%>
 	inline Scanner::Scanner()
 	{
 		std::regex regex;
-		//Patterns = new Dictionary<TokenType, Regex>();
-		//Tokens = new List<TokenType>();
 		LookAheadToken = Token::Empty;
-		//Skipped = new List<Token>();
-
-		//SkipList = new List<TokenType>();
+		
 <%SkipList%>
 <%RegExps%>
 	}

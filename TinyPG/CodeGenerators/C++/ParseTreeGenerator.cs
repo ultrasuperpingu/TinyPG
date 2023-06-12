@@ -70,12 +70,6 @@ namespace TinyPG.CodeGenerators.Cpp
 
 			parsetree = parsetree.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 			parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-			parsetree = parsetree.Replace(@"<%ParseError%>", "");
-			parsetree = parsetree.Replace(@"<%ParseErrors%>", "std::vector<ParseError>");
-			parsetree = parsetree.Replace(@"<%IParseTree%>", "");
-			parsetree = parsetree.Replace(@"<%IParseNode%>", "");
-			parsetree = parsetree.Replace(@"<%ITokenGet%>", "");
-			parsetree = parsetree.Replace(@"<%INodesGet%>", "");
 			parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
 			parsetree = parsetree.Replace(@"<%HeaderCode%>", Grammar.Directives["ParseTree"]["HeaderCode"]);
 

@@ -8,7 +8,7 @@
 
 namespace <%Namespace%>
 {
-	class Parser <%IParser%>
+	class Parser
 	{
 	private:
 		Scanner& scanner;
@@ -19,9 +19,9 @@ namespace <%Namespace%>
 		Parser(Scanner& scanner);
 		virtual ~Parser();
 
-		<%IParseTree%>* Parse(const std::string& input);
-		<%IParseTree%>* Parse(const std::string& input, const std::string& fileName);
-		<%IParseTree%>* Parse(const std::string& input, const std::string& fileName, ParseTree* tree);
+		ParseTree* Parse(const std::string& input);
+		ParseTree* Parse(const std::string& input, const std::string& fileName);
+		ParseTree* Parse(const std::string& input, const std::string& fileName, ParseTree* tree);
 
 	protected:
 <%ParseNonTerminals%>
@@ -47,21 +47,21 @@ namespace <%Namespace%>
 		DeleteTree();
 	}
 
-	inline <%IParseTree%>* Parser::Parse(const std::string& input)
+	inline ParseTree* Parser::Parse(const std::string& input)
 	{
 		DeleteTree();
 		instanciatedTree = new ParseTree();
 		return Parse(input, "", instanciatedTree);
 	}
 
-	inline <%IParseTree%>* Parser::Parse(const std::string& input, const std::string& fileName)
+	inline ParseTree* Parser::Parse(const std::string& input, const std::string& fileName)
 	{
 		DeleteTree();
 		instanciatedTree = new ParseTree();
 		return Parse(input, fileName, new ParseTree());
 	}
 
-	inline <%IParseTree%>* Parser::Parse(const std::string& input, const std::string& fileName, ParseTree* tree)
+	inline ParseTree* Parser::Parse(const std::string& input, const std::string& fileName, ParseTree* tree)
 	{
 		scanner.Init(input, fileName);
 		if (tree != instanciatedTree)

@@ -33,8 +33,6 @@ namespace TinyPG.CodeGenerators.Cpp
 
 			parser = parser.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 			parser = parser.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-			parser = parser.Replace(@"<%IParser%>", "");
-			parser = parser.Replace(@"<%IParseTree%>", "ParseTree");
 			parser = parser.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
 			parser = parser.Replace(@"<%ParseNonTerminals%>", parsers.ToString());
 			return parser;

@@ -5,7 +5,7 @@
 
 namespace TinyExe
 {
-	class StaticFunction : Function
+	class StaticFunction : public Function
 	{
 	protected:
 		/// <summary>
@@ -17,11 +17,11 @@ namespace TinyExe
 
 
 	public:
+		StaticFunction(const std::string& name, FunctionDelegate function, int minParameters, int maxParameters);
+		StaticFunction(const std::string& name, FunctionContextDelegate function, int minParameters, int maxParameters);
+
 		std::any Eval(std::vector<std::any> parameters, ParseTree* tree);
 
-		StaticFunction(std::string name, FunctionDelegate function, int minParameters, int maxParameters);
-
-		StaticFunction(std::string name, FunctionContextDelegate function, int minParameters, int maxParameters);
 	};
 
 }

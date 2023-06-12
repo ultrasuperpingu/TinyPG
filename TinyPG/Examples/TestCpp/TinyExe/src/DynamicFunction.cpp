@@ -1,5 +1,5 @@
-#include "../include/DynamicFunction.h"
-#include "../include/ParseTree.h"
+#include "DynamicFunction.h"
+#include "ParseTree.h"
 
 namespace TinyExe
 {
@@ -13,11 +13,10 @@ namespace TinyExe
 		// assign the parameters to the current function scope variables
 		int i = 0;
 		
-		for(auto it=pars->begin();it != pars->end();i++)
-			(*pars)[it->first] = parameters[i++];
+		for(auto it=pars->begin();it != pars->end();it++)
+			it->second = parameters[i++];
 
 		// execute the function here
-
 		std::any result = Node->Eval({ tree });
 
 		// clean up the stack
@@ -26,7 +25,7 @@ namespace TinyExe
 		return result;
 	}
 
-	DynamicFunction::DynamicFunction(std::string name, ParseNode* node, Variables* args, int minParameters, int maxParameters)
+	DynamicFunction::DynamicFunction(const std::string& name, ParseNode* node, Variables* args, int minParameters, int maxParameters)
 	{
 		Node = node;
 		Arguments = args;

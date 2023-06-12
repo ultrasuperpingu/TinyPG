@@ -162,8 +162,10 @@ UnaryExpression -> PrimaryExpression
 	if (type == TokenType::MINUS)
 	{
 		std::any val = $UnaryExpression;
-		if (val.has_value() && auto x = std::any_cast<int>(&val))
-			return -std::any_cast<double>(val);
+		if (auto x = std::any_cast<double>(&val))
+			return -*x;
+		if (auto x = std::any_cast<int>(&val))
+			return -*x;
 
 		tree->Errors.push_back(ParseError("Illegal UnaryExpression format, cannot interpret minus " + ConvertToString(val), 1095, this));
 		return NULL;
@@ -176,8 +178,8 @@ UnaryExpression -> PrimaryExpression
 	else if (type == TokenType::NOT)
 	{
 		std::any val = $UnaryExpression[0];
-		if (val.has_value() && auto x = std::any_cast<bool>(&val))
-			return !std::any_cast<bool>(val);
+		if (auto x = std::any_cast<bool>(&val))
+			return !(*x);
 
 		tree->Errors.push_back(ParseError("Illegal UnaryExpression format, cannot interpret negate " + ConvertToString(val), 1098, this));
 		return NULL;
@@ -385,7 +387,7 @@ AssignmentExpression -> ConditionalOrExpression (QUESTIONMARK AssignmentExpressi
 {
 	ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 	std::any result = $ConditionalOrExpression;
-	if (Nodes.size() >= 5 && result.has_value() && auto x = std::any_cast<int>(&val)
+	if (Nodes.size() >= 5 && result.has_value() && std::any_cast<int>(&result)
 		&& Nodes[1]->TokenVal.Type == TokenType::QUESTIONMARK
 		&& Nodes[3]->TokenVal.Type == TokenType::COLON)
 	{
@@ -437,13 +439,14 @@ Expression -> AssignmentExpression? (ASSIGN AssignmentExpression)?
 		std::string key = v->Nodes[0]->TokenVal.Text;
 
 		// function lookup is case insensitive
-		//if (containsKey(tree->Context->Functions, str_tolower(key)))
-			//if (!(tree->Context->Functions[str_tolower(key)].type().name() == "DynamicFunction"))
-			//{
-			//	tree->Errors.push_back(ParseError("Built in functions cannot be overwritten", 1050, this));
-			//	return std::any();
-			//}
-
+		if (containsKey(tree->Context->Functions, str_tolower(key)))
+		{
+			if (!(std::any_cast<DynamicFunction*>(&(tree->Context->Functions[str_tolower(key)]))))
+			{
+				tree->Errors.push_back(ParseError("Built in functions cannot be overwritten", 1050, this));
+				return std::any();
+			}
+		}
 		// lets determine the input variables. 
 		// functions must be of te form f(x;y;z) = x+y*z;
 		// check the function parameters to be of type Variable, error otherwise
@@ -468,7 +471,7 @@ Expression -> AssignmentExpression? (ASSIGN AssignmentExpression)?
 		// we have all the info we need to know to declare the dynamicly defined function
 		// pass on nodes[2] which is the Right Hand Side (RHS) of the assignment
 		// nodes[2] will be evaluated at runtime when the function is executed.
-		DynamicFunction* dynf = new DynamicFunction(key, Nodes[2], vars, vars->size(), vars->size());
+		DynamicFunction* dynf = new DynamicFunction(key, Nodes[2], vars, (int)vars->size(), (int)vars->size());
 		tree->Context->Functions[str_tolower(key)] = dynf;
 		return dynf;
 	}

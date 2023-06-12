@@ -13,25 +13,25 @@ namespace TinyPG
 	enum TokenType
 	{
 
-			//Non terminal tokens:
-			_NONE_           = 0,
-			_UNDETERMINED_   = 1,
+		//Non terminal tokens:
+		_NONE_            = 0,
+		_UNDETERMINED_    = 1,
 
-			//Non terminal tokens:
-			Start            = 2,
-			AddExpr          = 3,
-			MultExpr         = 4,
-			Atom             = 5,
+		//Non terminal tokens:
+		Start             = 2,
+		AddExpr           = 3,
+		MultExpr          = 4,
+		Atom              = 5,
 
-			//Terminal tokens:
-			EOF_             = 6,
-			NUMBER           = 7,
-			ID               = 8,
-			PLUSMINUS        = 9,
-			MULTDIV          = 10,
-			BROPEN           = 11,
-			BRCLOSE          = 12,
-			WHITESPACE       = 13
+		//Terminal tokens:
+		EOF_              = 6,
+		NUMBER            = 7,
+		ID                = 8,
+		PLUSMINUS         = 9,
+		MULTDIV           = 10,
+		BROPEN            = 11,
+		BRCLOSE           = 12,
+		WHITESPACE        = 13
 	};
 	
 
@@ -159,45 +159,41 @@ namespace TinyPG
 	inline Scanner::Scanner()
 	{
 		std::regex regex;
-		//Patterns = new Dictionary<TokenType, Regex>();
-		//Tokens = new List<TokenType>();
 		LookAheadToken = Token::Empty;
-		//Skipped = new List<Token>();
+		
+		SkipList.push_back(TokenType::WHITESPACE);
 
-		//SkipList = new List<TokenType>();
-			SkipList.push_back(TokenType::WHITESPACE);
+		regex = std::regex("^\\s*$");
+		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::EOF_, regex));
+		Tokens.push_back(TokenType::EOF_);
 
-			regex = std::regex("^\\s*$");
-			Patterns.insert(std::pair<TokenType,std::regex>(TokenType::EOF_, regex));
-			Tokens.push_back(TokenType::EOF_);
+		regex = std::regex("[0-9]+");
+		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::NUMBER, regex));
+		Tokens.push_back(TokenType::NUMBER);
 
-			regex = std::regex("[0-9]+");
-			Patterns.insert(std::pair<TokenType,std::regex>(TokenType::NUMBER, regex));
-			Tokens.push_back(TokenType::NUMBER);
+		regex = std::regex("[a-zA-Z_][a-zA-Z0-9_]*");
+		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::ID, regex));
+		Tokens.push_back(TokenType::ID);
 
-			regex = std::regex("[a-zA-Z_][a-zA-Z0-9_]*");
-			Patterns.insert(std::pair<TokenType,std::regex>(TokenType::ID, regex));
-			Tokens.push_back(TokenType::ID);
+		regex = std::regex("(\\+|-)");
+		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::PLUSMINUS, regex));
+		Tokens.push_back(TokenType::PLUSMINUS);
 
-			regex = std::regex("(\\+|-)");
-			Patterns.insert(std::pair<TokenType,std::regex>(TokenType::PLUSMINUS, regex));
-			Tokens.push_back(TokenType::PLUSMINUS);
+		regex = std::regex("\\*|/");
+		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::MULTDIV, regex));
+		Tokens.push_back(TokenType::MULTDIV);
 
-			regex = std::regex("\\*|/");
-			Patterns.insert(std::pair<TokenType,std::regex>(TokenType::MULTDIV, regex));
-			Tokens.push_back(TokenType::MULTDIV);
+		regex = std::regex("\\(");
+		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::BROPEN, regex));
+		Tokens.push_back(TokenType::BROPEN);
 
-			regex = std::regex("\\(");
-			Patterns.insert(std::pair<TokenType,std::regex>(TokenType::BROPEN, regex));
-			Tokens.push_back(TokenType::BROPEN);
+		regex = std::regex("\\)");
+		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::BRCLOSE, regex));
+		Tokens.push_back(TokenType::BRCLOSE);
 
-			regex = std::regex("\\)");
-			Patterns.insert(std::pair<TokenType,std::regex>(TokenType::BRCLOSE, regex));
-			Tokens.push_back(TokenType::BRCLOSE);
-
-			regex = std::regex("\\s+");
-			Patterns.insert(std::pair<TokenType,std::regex>(TokenType::WHITESPACE, regex));
-			Tokens.push_back(TokenType::WHITESPACE);
+		regex = std::regex("\\s+");
+		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::WHITESPACE, regex));
+		Tokens.push_back(TokenType::WHITESPACE);
 
 
 	}

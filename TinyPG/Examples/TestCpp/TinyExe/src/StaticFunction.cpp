@@ -1,13 +1,24 @@
-#include "../include/StaticFunction.h"
+#include "StaticFunction.h"
 
 namespace TinyExe
 {
-	/// <summary>
-	/// the actual function implementation
-	/// </summary>
-	//public FunctionDelegate FunctionDelegate{ get; private set; }
+	StaticFunction::StaticFunction(const std::string& name, FunctionDelegate function, int minParameters, int maxParameters)
+	{
+		Name = name;
+		functionDelegate = function;
+		MinParameters = minParameters;
+		MaxParameters = maxParameters;
+		Arguments = new Variables();
+	}
 
-	//public FunctionContextDelegate FunctionContextDelegate{ get; private set; }
+	StaticFunction::StaticFunction(const std::string& name, FunctionContextDelegate function, int minParameters, int maxParameters)
+	{
+		Name = name;
+		functionContextDelegate = function;
+		MinParameters = minParameters;
+		MaxParameters = maxParameters;
+		Arguments = new Variables();
+	}
 
 	std::any StaticFunction::Eval(std::vector<std::any> parameters, ParseTree* tree)
 	{
@@ -22,21 +33,4 @@ namespace TinyExe
 		return result;
 	}
 
-	StaticFunction::StaticFunction(std::string name, FunctionDelegate function, int minParameters, int maxParameters)
-	{
-		Name = name;
-		functionDelegate = function;
-		MinParameters = minParameters;
-		MaxParameters = maxParameters;
-		Arguments = new Variables();
-	}
-
-	StaticFunction::StaticFunction(std::string name, FunctionContextDelegate function, int minParameters, int maxParameters)
-	{
-		Name = name;
-		functionContextDelegate = function;
-		MinParameters = minParameters;
-		MaxParameters = maxParameters;
-		Arguments = new Variables();
-	}
 }

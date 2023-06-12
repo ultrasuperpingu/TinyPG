@@ -27,43 +27,43 @@ namespace TinyPG.CodeGenerators.Cpp
 
 			foreach (TerminalSymbol s in Grammar.SkipSymbols)
 			{
-				skiplist.AppendLine("			SkipList.push_back(TokenType::" + s.Name + ");");
+				skiplist.AppendLine("		SkipList.push_back(TokenType::" + s.Name + ");");
 			}
 
 			// build system tokens
-			tokentype.AppendLine("\r\n			//Non terminal tokens:");
-			tokentype.AppendLine(Helper.Outline("_NONE_", 3, "= 0,", 5));
-			tokentype.AppendLine(Helper.Outline("_UNDETERMINED_", 3, "= 1,", 5));
+			tokentype.AppendLine("\r\n		//Non terminal tokens:");
+			tokentype.AppendLine(Helper.Outline("_NONE_", 2, "= 0,", 5));
+			tokentype.AppendLine(Helper.Outline("_UNDETERMINED_", 2, "= 1,", 5));
 
 			// build non terminal tokens
-			tokentype.AppendLine("\r\n			//Non terminal tokens:");
+			tokentype.AppendLine("\r\n		//Non terminal tokens:");
 			foreach (Symbol s in Grammar.GetNonTerminals())
 			{
-				tokentype.AppendLine(Helper.Outline(s.Name, 3, "= " + string.Format("{0:d},", counter), 5));
+				tokentype.AppendLine(Helper.Outline(s.Name, 2, "= " + string.Format("{0:d},", counter), 5));
 				counter++;
 			}
 
 			// build terminal tokens
-			tokentype.AppendLine("\r\n			//Terminal tokens:");
+			tokentype.AppendLine("\r\n		//Terminal tokens:");
 			bool first = true;
 			foreach (TerminalSymbol s in Grammar.GetTerminals())
 			{
-				regexps.Append("			regex = std::regex(" + Helper.Unverbatim(s.Expression.ToString()) + "");
+				regexps.Append("		regex = std::regex(" + Helper.Unverbatim(s.Expression.ToString()) + "");
 
 				if (s.Attributes.ContainsKey("IgnoreCase"))
 					regexps.Append("std::regex_constants::icase");
 
 				regexps.Append(");\r\n");
 
-				regexps.Append("			Patterns.insert(std::pair<TokenType,std::regex>(TokenType::" + s.Name + ", regex));\r\n");
-				regexps.Append("			Tokens.push_back(TokenType::" + s.Name + ");\r\n\r\n");
+				regexps.Append("		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::" + s.Name + ", regex));\r\n");
+				regexps.Append("		Tokens.push_back(TokenType::" + s.Name + ");\r\n\r\n");
 
 				if (first)
 					first = false;
 				else
 					tokentype.AppendLine(",");
 
-				tokentype.Append(Helper.Outline(s.Name, 3, "= " + string.Format("{0:d}", counter), 5));
+				tokentype.Append(Helper.Outline(s.Name, 2, "= " + string.Format("{0:d}", counter), 5));
 				counter++;
 			}
 

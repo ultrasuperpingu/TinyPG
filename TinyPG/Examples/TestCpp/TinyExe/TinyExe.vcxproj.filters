@@ -50,7 +50,13 @@
     <ClCompile Include="src\StaticFunction.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="include\Context.cpp">
+    <ClCompile Include="src\Context.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Functions.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Variables.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

@@ -11,15 +11,12 @@
 namespace <%Namespace%>
 {
 	class ParseTree;
-	class ParseNode<%IParseNode%>
+	class ParseNode
 	{
 		friend class ParseTree;
-	protected:
-		<%ITokenGet%>
 	public:
 		std::vector<ParseNode*> Nodes;
-		<%INodesGet%>
-		//[XmlIgnore] // avoid circular references when serializing
+
 		ParseNode* Parent;
 		Token TokenVal; // the token/rule
 
@@ -53,7 +50,7 @@ namespace <%Namespace%>
 <%ParseTreeCustomCode%>
 	};
 	
-	class ParseError<%ParseError%>
+	class ParseError
 	{
 		public:
 		std::string File;
@@ -74,26 +71,26 @@ namespace <%Namespace%>
 
 	};
 	
-	class ParseErrors : public <%ParseErrors%>
+	class ParseErrors : public std::vector<ParseError>
 	{
 	};
 
 	
 	// rootlevel of the node tree
-	class ParseTree : public ParseNode<%IParseTree%>
+	class ParseTree : public ParseNode
 	{
 	public:
 		ParseErrors Errors;
 
 		std::vector<Token> Skipped;
 
-		inline ParseTree();
+		ParseTree();
 		
-		virtual inline ~ParseTree();
+		virtual ~ParseTree();
 
-		inline std::string PrintTree();
+		std::string PrintTree();
 
-		inline void PrintNode(std::string& sb, ParseNode* node, int indent);
+		void PrintNode(std::string& sb, ParseNode* node, int indent);
 
 		/// <summary>
 		/// this is the entry point for executing and evaluating the parse tree.
@@ -102,7 +99,7 @@ namespace <%Namespace%>
 		/// <returns>the output of the evaluation function</returns>
 		// TODO: template the class (not the method) and/or use std::any
 		template<typename T>
-		inline T Eval(const std::vector<std::any>& paramlist = {});
+		T Eval(const std::vector<std::any>& paramlist = {});
 	};
 
 	// ParseNode implementations
@@ -202,11 +199,10 @@ namespace <%Namespace%>
 
 <%VirtualEvalMethodsImpl%>
 
-	inline ParseTree::ParseTree() : ParseNode<%IParseTree%>(Token(), "ParseTree")
+	inline ParseTree::ParseTree() : ParseNode(Token(), "ParseTree")
 	{
 		TokenVal.Type = TokenType::Start;
 		TokenVal.Text = "Root";
-		//Errors = new ParseErrors();
 	}
 
 	inline ParseTree::~ParseTree()

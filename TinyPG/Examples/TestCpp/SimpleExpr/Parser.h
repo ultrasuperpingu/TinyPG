@@ -8,7 +8,7 @@
 
 namespace TinyPG
 {
-	class Parser 
+	class Parser
 	{
 	private:
 		Scanner& scanner;

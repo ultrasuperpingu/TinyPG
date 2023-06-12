@@ -55,6 +55,7 @@ namespace TinyExe
 		/// <summary>
 		/// Thats not a Deep clone!
 		/// Functions and Globals are shared!
+		/// Delete is not managed...
 		/// </summary>
 		Context* Clone();
 	};

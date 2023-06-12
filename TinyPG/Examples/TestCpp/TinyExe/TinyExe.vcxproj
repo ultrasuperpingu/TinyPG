@@ -26,17 +26,17 @@
     <ClInclude Include="include\Parser.h" />
     <ClInclude Include="include\ParseTree.h" />
     <ClInclude Include="include\Scanner.h" />
-    <ClInclude Include="include\StaticFunction.h">
-      <DeploymentContent>false</DeploymentContent>
-    </ClInclude>
+    <ClInclude Include="include\StaticFunction.h" />
     <ClInclude Include="include\Util.h" />
     <ClInclude Include="include\Variables.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="include\Context.cpp" />
+    <ClCompile Include="src\Context.cpp" />
     <ClCompile Include="src\DynamicFunction.cpp" />
+    <ClCompile Include="src\Functions.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\StaticFunction.cpp" />
+    <ClCompile Include="src\Variables.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -91,7 +91,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PublicIncludeDirectories>$(ProjectDir);$(ProjectDir)\include</PublicIncludeDirectories>
+    <PublicIncludeDirectories>$(ProjectDir)include</PublicIncludeDirectories>
+    <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -128,6 +129,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
