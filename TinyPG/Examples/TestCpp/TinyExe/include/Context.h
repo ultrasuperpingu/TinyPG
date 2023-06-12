@@ -9,8 +9,6 @@ namespace TinyExe
 {
 	class Context
 	{
-	private:
-		static Context defaultContext;
 	public:
 		static Context Default;
 
@@ -32,6 +30,8 @@ namespace TinyExe
 		/// </summary>
 		int CurrentStackSize;
 
+		Context();
+
 		Variables* getCurrentScope();
 
 		/// <summary>
@@ -44,8 +44,6 @@ namespace TinyExe
 		void PushScope(Variables* vars);
 
 		Variables* PopScope();
-
-		Context();
 
 		/// <summary>
 		/// resets the context to its defaults

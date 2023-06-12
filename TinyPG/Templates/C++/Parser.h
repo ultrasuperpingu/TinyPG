@@ -20,11 +20,10 @@ namespace <%Namespace%>
 		virtual ~Parser();
 
 		ParseTree* Parse(const std::string& input);
-		ParseTree* Parse(const std::string& input, const std::string& fileName);
-		ParseTree* Parse(const std::string& input, const std::string& fileName, ParseTree* tree);
+		ParseTree* Parse(const std::string& input, ParseTree* tree);
 
 	protected:
-<%ParseNonTerminals%>
+<%ParseNonTerminalsDecl%>
 
 <%ParserCustomCode%>
 	};
@@ -51,19 +50,12 @@ namespace <%Namespace%>
 	{
 		DeleteTree();
 		instanciatedTree = new ParseTree();
-		return Parse(input, "", instanciatedTree);
+		return Parse(input, new ParseTree());
 	}
 
-	inline ParseTree* Parser::Parse(const std::string& input, const std::string& fileName)
+	inline ParseTree* Parser::Parse(const std::string& input, ParseTree* tree)
 	{
-		DeleteTree();
-		instanciatedTree = new ParseTree();
-		return Parse(input, fileName, new ParseTree());
-	}
-
-	inline ParseTree* Parser::Parse(const std::string& input, const std::string& fileName, ParseTree* tree)
-	{
-		scanner.Init(input, fileName);
+		scanner.Init(input);
 		if (tree != instanciatedTree)
 			DeleteTree();
 		this->tree = tree;
@@ -72,4 +64,7 @@ namespace <%Namespace%>
 
 		return tree;
 	}
+
+<%ParseNonTerminalsImpl%>
+
 }

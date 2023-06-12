@@ -86,7 +86,6 @@ namespace TinyExe
 
 	public:
 		const static Token Empty;
-		std::string File;
 		int Line;
 		int Column;
 		int StartPos;
@@ -114,7 +113,6 @@ namespace TinyExe
 		std::string Input;
 		int StartPos = 0;
 		int EndPos = 0;
-		std::string CurrentFile;
 		int CurrentLine;
 		int CurrentColumn;
 		int CurrentPosition;
@@ -130,8 +128,6 @@ namespace TinyExe
 		Scanner();
 
 		void Init(const std::string& input);
-
-		void Init(const std::string& input, const std::string& fileName);
 
 		Token GetToken(TokenType type);
 
@@ -362,15 +358,9 @@ namespace TinyExe
 
 	inline void Scanner::Init(const std::string& input)
 	{
-		Init(input, "");
-	}
-
-	inline void Scanner::Init(const std::string& input, const std::string& fileName)
-	{
 		this->Input = input;
 		StartPos = 0;
 		EndPos = 0;
-		CurrentFile = fileName;
 		CurrentLine = 1;
 		CurrentColumn = 1;
 		CurrentPosition = 0;
@@ -396,7 +386,6 @@ namespace TinyExe
 		StartPos = tok.EndPos;
 		EndPos = tok.EndPos; // set the tokenizer to the new scan position
 		CurrentLine = tok.Line + (int)(tok.Text.length() - replace(tok.Text, "\n", "").length());
-		CurrentFile = tok.File;
 		return tok;
 	}
 
@@ -410,7 +399,6 @@ namespace TinyExe
 		int startpos = StartPos;
 		int endpos = EndPos;
 		int currentline = CurrentLine;
-		std::string currentFile = CurrentFile;
 		Token tok = Token::Empty;
 		std::vector<TokenType> scantokens;
 
@@ -470,7 +458,6 @@ namespace TinyExe
 			}
 
 			// Update the line and column count for error reporting.
-			tok.File = currentFile;
 			tok.Line = currentline;
 			if (tok.StartPos < Input.length())
 				tok.Column = tok.StartPos - (int)Input.find_last_of('\n', tok.StartPos);
@@ -480,7 +467,6 @@ namespace TinyExe
 				startpos = tok.EndPos;
 				endpos = tok.EndPos;
 				currentline = tok.Line + (int)(tok.Text.length() - replace(tok.Text, "\n", "").length());
-				currentFile = tok.File;
 				Skipped.push_back(tok);
 			}
 			else

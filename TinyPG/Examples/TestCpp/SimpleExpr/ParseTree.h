@@ -81,7 +81,6 @@ namespace TinyPG
 	class ParseError
 	{
 		public:
-		std::string File;
 		std::string Message;
 		int Code;
 		int Line;
@@ -95,7 +94,7 @@ namespace TinyPG
 		ParseError(std::string message, int code, ParseNode& node, bool isWarning = false);
 		ParseError(std::string message, int code, Token token, bool isWarning = false);
 		ParseError(std::string message, int code, bool isWarning = false);
-		ParseError(std::string message, int code, std::string file, int line, int col, int pos, int length, bool isWarning = false);
+		ParseError(std::string message, int code, int line, int col, int pos, int length, bool isWarning = false);
 
 	};
 	
@@ -142,7 +141,6 @@ namespace TinyPG
 	{
 		this->TokenVal = token;
 		this->Text = text;
-		//this->nodes = new List<ParseNode>();
 	}
 
 	inline ParseNode::~ParseNode()
@@ -354,7 +352,7 @@ namespace TinyPG
 		return Nodes[0]->EvalStart(paramlist);
 	}
 
-	inline ParseError::ParseError() : ParseError("", 0, "", 0, 0, 0, 0, false)
+	inline ParseError::ParseError() : ParseError("", 0, 0, 0, 0, 0, false)
 	{
 	}
 
@@ -362,17 +360,16 @@ namespace TinyPG
 	{
 	}
 
-	inline ParseError::ParseError(std::string message, int code, Token token, bool isWarning) : ParseError(message, code, token.File, token.Line, token.Column, token.StartPos, token.Length, isWarning)
+	inline ParseError::ParseError(std::string message, int code, Token token, bool isWarning) : ParseError(message, code, token.Line, token.Column, token.StartPos, token.Length, isWarning)
 	{
 	}
 
-	inline ParseError::ParseError(std::string message, int code, bool isWarning) : ParseError(message, code, "", 0, 0, 0, 0, isWarning)
+	inline ParseError::ParseError(std::string message, int code, bool isWarning) : ParseError(message, code, 0, 0, 0, 0, isWarning)
 	{
 	}
 
-	inline ParseError::ParseError(std::string message, int code, std::string file, int line, int col, int pos, int length, bool isWarning)
+	inline ParseError::ParseError(std::string message, int code, int line, int col, int pos, int length, bool isWarning)
 	{
-		this->File = file;
 		this->Message = message;
 		this->Code = code;
 		this->Line = line;
