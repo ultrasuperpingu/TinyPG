@@ -24,7 +24,7 @@ namespace <%Namespace%>
 		ParseTree* Parse(const std::string& input, const std::string& fileName, ParseTree* tree);
 
 	protected:
-<%ParseNonTerminals%>
+<%ParseNonTerminalsDecl%>
 
 <%ParserCustomCode%>
 	};
@@ -72,4 +72,7 @@ namespace <%Namespace%>
 
 		return tree;
 	}
+
+<%ParseNonTerminalsImpl%>
+
 }

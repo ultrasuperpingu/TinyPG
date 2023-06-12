@@ -21,20 +21,24 @@ namespace TinyPG.CodeGenerators.Cpp
 				return null;
 
 			// generate the parser file
-			StringBuilder parsers = new StringBuilder();
+			StringBuilder parserMethodsImpl = new StringBuilder();
+			StringBuilder parserMethodsDecl = new StringBuilder();
 			string parser = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
 
 			// build non terminal tokens
 			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
 				string method = GenerateParseMethod(s);
-				parsers.Append(method);
+				parserMethodsImpl.Append(method);
+
+				parserMethodsDecl.AppendLine("		void Parse" + s.Name + "(ParseNode* parent);");
 			}
 
 			parser = parser.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 			parser = parser.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 			parser = parser.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
-			parser = parser.Replace(@"<%ParseNonTerminals%>", parsers.ToString());
+			parser = parser.Replace(@"<%ParseNonTerminalsImpl%>", parserMethodsImpl.ToString());
+			parser = parser.Replace(@"<%ParseNonTerminalsDecl%>", parserMethodsDecl.ToString());
 			return parser;
 		}
 
@@ -42,21 +46,21 @@ namespace TinyPG.CodeGenerators.Cpp
 		private string GenerateParseMethod(NonTerminalSymbol s)
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.AppendLine("		inline void Parse" + s.Name + "(ParseNode* parent)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
-			sb.AppendLine("		{");
-			sb.AppendLine("			Token tok;");
-			sb.AppendLine("			ParseNode* n;");
-			sb.AppendLine("			ParseNode* node = parent->CreateNode(scanner.GetToken(TokenType::" + s.Name + "), \"" + s.Name + "\");");
-			sb.AppendLine("			parent->Nodes.push_back(node);");
+			sb.AppendLine("	inline void Parser::Parse" + s.Name + "(ParseNode* parent)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("	{");
+			sb.AppendLine("		Token tok;");
+			sb.AppendLine("		ParseNode* n;");
+			sb.AppendLine("		ParseNode* node = parent->CreateNode(scanner.GetToken(TokenType::" + s.Name + "), \"" + s.Name + "\");");
+			sb.AppendLine("		parent->Nodes.push_back(node);");
 			sb.AppendLine("");
 
 			if (s.Rules.Count == 1)
-				sb.AppendLine(GenerateProductionRuleCode(s.Rules, 0, 3));
+				sb.AppendLine(GenerateProductionRuleCode(s.Rules, 0, 2));
 			else
 				throw new Exception("Internal error");
 
-			sb.AppendLine("			parent->TokenVal.UpdateRange(node->TokenVal);");
-			sb.AppendLine("		}" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("		parent->TokenVal.UpdateRange(node->TokenVal);");
+			sb.AppendLine("	}" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
 			sb.AppendLine();
 			return sb.ToString();
 		}
