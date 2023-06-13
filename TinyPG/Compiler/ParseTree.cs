@@ -15,11 +15,11 @@ namespace TinyPG
 	[Serializable]
 	public class ParseErrors : List<ParseError>
 	{
-		public bool HaveBlockingErrors
+		public bool HasBlockingErrors
 		{
 			get { return Find(e => e.IsWarning == false) != null; }
 		}
-		public bool HaveWarnings
+		public bool HasWarnings
 		{
 			get { return Find(e => e.IsWarning == true) != null; }
 		}
@@ -36,7 +36,6 @@ namespace TinyPG
 	[Serializable]
 	public class ParseError
 	{
-		private string file;
 		private string message;
 		private int code;
 		private int line;
@@ -45,7 +44,6 @@ namespace TinyPG
 		private int length;
 		private bool isWarning;
 
-		public string File { get { return file; } }
 		public int Code { get { return code; } }
 		public int Line { get { return line; } }
 		public int Column { get { return col; } }
@@ -63,17 +61,16 @@ namespace TinyPG
 		{
 		}
 
-		public ParseError(string message, int code, Token token, bool isWarning = false) : this(message, code, token.File, token.Line, token.Column, token.StartPos, token.Length, isWarning)
+		public ParseError(string message, int code, Token token, bool isWarning = false) : this(message, code, token.Line, token.Column, token.StartPos, token.Length, isWarning)
 		{
 		}
 
-		public ParseError(string message, int code, bool isWarning = false) : this(message, code, string.Empty, 0, 0, 0, 0, isWarning)
+		public ParseError(string message, int code, bool isWarning = false) : this(message, code, 0, 0, 0, 0, isWarning)
 		{
 		}
 
-		public ParseError(string message, int code, string file, int line, int col, int pos, int length, bool isWarning = false)
+		public ParseError(string message, int code, int line, int col, int pos, int length, bool isWarning = false)
 		{
-			this.file = file;
 			this.message = message;
 			this.code = code;
 			this.line = line;

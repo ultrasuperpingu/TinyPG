@@ -154,11 +154,11 @@ namespace TinyPG.Compiler
 				case "TextHighlighter":
 					if (name == "TinyPG" && g.Directives.Count > 0)
 					{
-						tree.Errors.Add(new ParseError("Directive '" + name + "' should be the first directive declared", 0x1030, node.Nodes[1]));
+						tree.Errors.Add(new ParseError("Directive '" + name + "' should be the first directive declared", 0x1030, node.Nodes[1], true));
 					}
 					if (g.Directives.Find(name) != null)
 					{
-						tree.Errors.Add(new ParseError("Directive '" + name + "' is already defined", 0x1030, node.Nodes[1]));
+						tree.Errors.Add(new ParseError("Directive '" + name + "' is already defined", 0x1030, node.Nodes[1], true));
 						return null;
 					}
 					if (name == "TextHighlighter")
@@ -169,7 +169,7 @@ namespace TinyPG.Compiler
 							var lang=CodeGenerators.CodeGeneratorFactory.GetSupportedLanguage(decl["Language"]);
 							if (lang != CodeGenerators.SupportedLanguage.CSharp && lang != CodeGenerators.SupportedLanguage.VBNet)
 							{
-								tree.Errors.Add(new ParseError("Directive '" + name + "' is not supported with language " + decl["Language"], 0x1030, node.Nodes[1]));
+								tree.Errors.Add(new ParseError("Directive '" + name + "' is not supported with language " + decl["Language"], 0x1030, node.Nodes[1], true));
 								return null;
 							}
 						}
@@ -183,14 +183,14 @@ namespace TinyPG.Compiler
 							var lang = CodeGenerators.CodeGeneratorFactory.GetSupportedLanguage(decl["Language"]);
 							if (lang != CodeGenerators.SupportedLanguage.CSharp && lang != CodeGenerators.SupportedLanguage.VBNet)
 							{
-								tree.Errors.Add(new ParseError("Directive '" + name + "' is not supported with language " + decl["Language"], 0x1030, node.Nodes[1]));
+								tree.Errors.Add(new ParseError("Directive '" + name + "' is not supported with language " + decl["Language"], 0x1030, node.Nodes[1], true));
 								return null;
 							}
 						}
 					}
 					break;
 				default:
-					tree.Errors.Add(new ParseError("Directive '" + name + "' is not supported", 0x1031, node.Nodes[1]));
+					tree.Errors.Add(new ParseError("Directive '" + name + "' is not supported", 0x1031, node.Nodes[1], true));
 					break;
 			}
 
@@ -270,7 +270,7 @@ namespace TinyPG.Compiler
 
 			if (!names.Contains(key))
 			{
-				tree.Errors.Add(new ParseError("Directive attribute '" + key + "' is not supported", 0x1034, node.Nodes[0]));
+				tree.Errors.Add(new ParseError("Directive attribute '" + key + "' is not supported", 0x1034, node.Nodes[0], true));
 			}
 			return null;
 		}
@@ -289,7 +289,7 @@ namespace TinyPG.Compiler
 
 			if (symbol.Attributes.ContainsKey(node.Nodes[1].Token.Text))
 			{
-				tree.Errors.Add(new ParseError("Attribute already defined for this symbol: " + node.Nodes[1].Token.Text, 0x1039, node.Nodes[1]));
+				tree.Errors.Add(new ParseError("Attribute already defined for this symbol: " + node.Nodes[1].Token.Text, 0x1039, node.Nodes[1], true));
 				return null;
 			}
 
@@ -300,30 +300,30 @@ namespace TinyPG.Compiler
 					if (symbol is TerminalSymbol)
 						grammar.SkipSymbols.Add(symbol);
 					else
-						tree.Errors.Add(new ParseError("Attribute for non-terminal rule not allowed: " + node.Nodes[1].Token.Text, 0x1035, node));
+						tree.Errors.Add(new ParseError("Attribute Skip for non-terminal rule not allowed: " + node.Nodes[1].Token.Text, 0x1035, node, true));
 					break;
 				case "Color":
 					if (symbol is NonTerminalSymbol)
-						tree.Errors.Add(new ParseError("Attribute for non-terminal rule not allowed: " + node.Nodes[1].Token.Text, 0x1035, node));
+						tree.Errors.Add(new ParseError("Attribute Color for non-terminal rule not allowed: " + node.Nodes[1].Token.Text, 0x1035, node, true));
 
 					if (symbol.Attributes["Color"] == null || symbol.Attributes["Color"].Length != 1 && symbol.Attributes["Color"].Length != 3)
-						tree.Errors.Add(new ParseError("Attribute " + node.Nodes[1].Token.Text + " has too many or missing parameters", 0x103A, node.Nodes[1]));
+						tree.Errors.Add(new ParseError("Attribute " + node.Nodes[1].Token.Text + " has too many or missing parameters", 0x103A, node.Nodes[1], true));
 
 					for (int i = 0; symbol.Attributes["Color"] != null && i < symbol.Attributes["Color"].Length; i++)
 					{
 						if (symbol.Attributes["Color"][i] is string)
 						{
-							tree.Errors.Add(new ParseError("Parameter " + node.Nodes[3].Nodes[i * 2].Nodes[0].Token.Text + " is of incorrect type", 0x103A, node.Nodes[3].Nodes[i * 2].Nodes[0]));
+							tree.Errors.Add(new ParseError("Parameter " + node.Nodes[3].Nodes[i * 2].Nodes[0].Token.Text + " is of incorrect type", 0x103A, node.Nodes[3].Nodes[i * 2].Nodes[0], true));
 							break;
 						}
 					}
 					break;
 				case "IgnoreCase":
 					if (!(symbol is TerminalSymbol))
-						tree.Errors.Add(new ParseError("Attribute for non-terminal rule not allowed: " + node.Nodes[1].Token.Text, 0x1035, node));
+						tree.Errors.Add(new ParseError("Attribute IgnoreCase for non-terminal rule not allowed: " + node.Nodes[1].Token.Text, 0x1035, node, true));
 					break;
 				default:
-					tree.Errors.Add(new ParseError("Attribute not supported: " + node.Nodes[1].Token.Text, 0x1036, node.Nodes[1]));
+					tree.Errors.Add(new ParseError("Attribute not supported: " + node.Nodes[1].Token.Text, 0x1036, node.Nodes[1], true));
 					break;
 			}
 
@@ -367,7 +367,7 @@ namespace TinyPG.Compiler
 			}
 			catch (Exception)
 			{
-				tree.Errors.Add(new ParseError("Attribute parameter is not a valid value: " + node.Token.Text, 0x1038, node));
+				tree.Errors.Add(new ParseError("Attribute parameter is not a valid value: " + node.Token.Text, 0x1038, node, true));
 			}
 			return null;
 		}
@@ -396,8 +396,6 @@ namespace TinyPG.Compiler
 				if (nts != null)
 					nts.Rules.Add(r);
 
-				if (Nodes.Count < 4)
-					Console.WriteLine();
 				if (Nodes[3].Token.Type == TokenType.COLON)
 				{
 					nts.ReturnType = Nodes[4].Token.Text.ToString();
@@ -472,10 +470,14 @@ namespace TinyPG.Compiler
 			{
 				Rule unaryRule;
 				string oper = last.Token.Text.Trim();
-				if (oper == "*") unaryRule = new Rule(RuleType.ZeroOrMore);
-				else if (oper == "+") unaryRule = new Rule(RuleType.OneOrMore);
-				else if (oper == "?") unaryRule = new Rule(RuleType.Option);
-				else throw new NotImplementedException("unknown unary operator");
+				if (oper == "*")
+					unaryRule = new Rule(RuleType.ZeroOrMore);
+				else if (oper == "+")
+					unaryRule = new Rule(RuleType.OneOrMore);
+				else if (oper == "?")
+					unaryRule = new Rule(RuleType.Option);
+				else
+					throw new NotImplementedException("Internal error: unknown unary operator " + oper);
 
 				if (Nodes[0].Token.Type == TokenType.BRACKETOPEN)
 				{
@@ -527,7 +529,11 @@ namespace TinyPG.Compiler
 		/// <returns>a formated codeblock</returns>
 		private void ValidateCodeBlock(ParseTree tree, NonTerminalSymbol nts, ParseNode node)
 		{
-			if (nts == null) return;
+			// TODO: Check if this validation is really needed. An invalid Code block will result
+			//       in code which doesn't compile but is it to the parser to check the code
+			//       provided by the user...
+			if (nts == null)
+				return;
 			string codeblock = nts.CodeBlock;
 
 			Regex var = new Regex(@"\$(?<var>[a-zA-Z_0-9]+)(\[(?<index>[^]]+)\])?", RegexOptions.Compiled);
@@ -541,11 +547,11 @@ namespace TinyPG.Compiler
 				Symbol s = symbols.Find(match.Groups["var"].Value);
 				if (s == null)
 				{
-					tree.Errors.Add(new ParseError("Variable $" + match.Groups["var"].Value + " cannot be matched.", 0x1016, node.Token.File, node.Token.StartPos + match.Groups["var"].Index, node.Token.StartPos + match.Groups["var"].Index, node.Token.StartPos + match.Groups["var"].Index, match.Groups["var"].Length));
-					break; // error situation
+					tree.Errors.Add(new ParseError("Variable $" + match.Groups["var"].Value + " cannot be matched.", 0x1016, node.Token.StartPos + match.Groups["var"].Index, node.Token.StartPos + match.Groups["var"].Index, node.Token.StartPos + match.Groups["var"].Index, match.Groups["var"].Length, true));
+					//break; // error situation
+					// just a warning, the code will probably fail to compile, but generation should work
 				}
 			}
 		}
-
 	}
 }

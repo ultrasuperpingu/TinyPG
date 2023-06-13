@@ -139,6 +139,28 @@ namespace TinyPG
 			if (GrammarFile == null)
 				NewGrammar();
 
+			FillExampleMenu();
+		}
+
+		private void FillExampleMenu()
+		{
+			this.examplesToolStripMenuItem.DropDownItems.Clear();
+			var exeDir = Path.GetDirectoryName(Path.Combine(System.Reflection.Assembly.GetEntryAssembly().Location));
+			int i = 1;
+			foreach (var file in Directory.GetFiles(Path.Combine(exeDir,"Examples"), "*.tpg"))
+			{
+				if (file.StartsWith("_"))
+					continue;
+				var myFile = file;
+				var tsmi = new ToolStripMenuItem();
+				tsmi.Name = "exampleTSMI"+(i++);
+				tsmi.Size = new System.Drawing.Size(313, 26);
+				tsmi.Text = Path.GetFileName(myFile);
+				tsmi.Click += new System.EventHandler((sender, ea) => {
+					NotepadViewFile(myFile);
+				});
+				this.examplesToolStripMenuItem.DropDownItems.Add(tsmi);
+			}
 		}
 		#endregion Initialization
 
@@ -654,7 +676,7 @@ namespace TinyPG
 
 			Program prog = new Program(ManageParseError, output);
 			DateTime starttimer = DateTime.Now;
-			grammar = prog.ParseGrammar(textEditor.Text, GrammarFile);
+			grammar = prog.ParseGrammar(textEditor.Text);
 
 			if (grammar != null)
 			{

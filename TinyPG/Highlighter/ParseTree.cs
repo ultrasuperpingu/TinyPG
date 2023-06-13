@@ -15,53 +15,69 @@ namespace TinyPG.Highlighter
 	[Serializable]
 	public class ParseErrors : List<ParseError>
 	{
+		public bool HasBlockingErrors
+		{
+			get { return Find(e => e.IsWarning == false) != null; }
+		}
+		public bool HasWarnings
+		{
+			get { return Find(e => e.IsWarning == true) != null; }
+		}
+		public List<ParseError> Warnings
+		{
+			get { return FindAll(e => e.IsWarning == true); }
+		}
+		public List<ParseError> BlockingErrors
+		{
+			get { return FindAll(e => e.IsWarning == false); }
+		}
 	}
 
 	[Serializable]
 	public class ParseError
 	{
-		private string file;
 		private string message;
 		private int code;
 		private int line;
 		private int col;
 		private int pos;
 		private int length;
+		private bool isWarning;
 
-		public string File { get { return file; } }
 		public int Code { get { return code; } }
 		public int Line { get { return line; } }
 		public int Column { get { return col; } }
 		public int Position { get { return pos; } }
 		public int Length { get { return length; } }
 		public string Message { get { return message; } }
+		public bool IsWarning { get { return isWarning; } }
 
 		// just for the sake of serialization
 		public ParseError()
 		{
 		}
 
-		public ParseError(string message, int code, ParseNode node) : this(message, code, node.Token)
+		public ParseError(string message, int code, ParseNode node, bool isWarning = false) : this(message, code, node.Token)
 		{
 		}
 
-		public ParseError(string message, int code, Token token) : this(message, code, token.File, token.Line, token.Column, token.StartPos, token.Length)
+		public ParseError(string message, int code, Token token, bool isWarning = false) : this(message, code, token.Line, token.Column, token.StartPos, token.Length, isWarning)
 		{
 		}
 
-		public ParseError(string message, int code) : this(message, code, string.Empty, 0, 0, 0, 0)
+		public ParseError(string message, int code, bool isWarning = false) : this(message, code, 0, 0, 0, 0, isWarning)
 		{
 		}
 
-		public ParseError(string message, int code, string file, int line, int col, int pos, int length)
+		public ParseError(string message, int code, int line, int col, int pos, int length, bool isWarning = false)
 		{
-			this.file = file;
 			this.message = message;
 			this.code = code;
 			this.line = line;
 			this.col = col;
 			this.pos = pos;
 			this.length = length;
+			this.isWarning = isWarning;
 		}
 	}
 

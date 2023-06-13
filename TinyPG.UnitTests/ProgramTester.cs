@@ -62,7 +62,7 @@ namespace TinyPG.UnitTests
 				 .Append("Start -> ALL;");
 
 			Program prog = new Program(FailError, new StringBuilder(string.Empty));
-			Grammar grammar = prog.ParseGrammar(input.ToString(), "");
+			Grammar grammar = prog.ParseGrammar(input.ToString());
 			Assert.IsNotNull(grammar);
 		}
 
@@ -77,7 +77,7 @@ namespace TinyPG.UnitTests
 				 .Append("ALL -> @\".*Start -> ALL;");
 
 			Program prog = new Program(PassError, new StringBuilder(string.Empty));
-			Grammar grammar = prog.ParseGrammar(input.ToString(), "");
+			Grammar grammar = prog.ParseGrammar(input.ToString());
 			Assert.IsNull(grammar);
 		}
 

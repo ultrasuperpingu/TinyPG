@@ -36,7 +36,6 @@ namespace TinyExe
 	[Serializable]
 	public class ParseError
 	{
-		private string file;
 		private string message;
 		private int code;
 		private int line;
@@ -45,7 +44,6 @@ namespace TinyExe
 		private int length;
 		private bool isWarning;
 
-		public string File { get { return file; } }
 		public int Code { get { return code; } }
 		public int Line { get { return line; } }
 		public int Column { get { return col; } }
@@ -63,17 +61,16 @@ namespace TinyExe
 		{
 		}
 
-		public ParseError(string message, int code, Token token, bool isWarning = false) : this(message, code, token.File, token.Line, token.Column, token.StartPos, token.Length, isWarning)
+		public ParseError(string message, int code, Token token, bool isWarning = false) : this(message, code, token.Line, token.Column, token.StartPos, token.Length, isWarning)
 		{
 		}
 
-		public ParseError(string message, int code, bool isWarning = false) : this(message, code, string.Empty, 0, 0, 0, 0, isWarning)
+		public ParseError(string message, int code, bool isWarning = false) : this(message, code, 0, 0, 0, 0, isWarning)
 		{
 		}
 
-		public ParseError(string message, int code, string file, int line, int col, int pos, int length, bool isWarning = false)
+		public ParseError(string message, int code, int line, int col, int pos, int length, bool isWarning = false)
 		{
-			this.file = file;
 			this.message = message;
 			this.code = code;
 			this.line = line;
@@ -347,7 +344,7 @@ namespace TinyExe
 			// evaluate the function parameters
 			object[] parameters = new object[0];
 			if (paramNode.Token.Type == TokenType.Params)
-				parameters = (paramNode.Eval(tree, paramlist) as List<object>).ToArray();
+				parameters = (paramNode.EvalNode(tree, paramlist) as List<object>).ToArray();
 			if (parameters.Length < func.MinParameters) 
 			{
 				tree.Errors.Add(new ParseError("At least " + func.MinParameters.ToString() + " parameter(s) expected", 1043, this));
@@ -470,7 +467,7 @@ namespace TinyExe
 			for (int i = 1; i < nodes.Count; i += 2)
 			{
 				Token token = nodes[i].Token;
-				object val = nodes[i + 1].Eval(tree, paramlist);
+				object val = nodes[i + 1].EvalNode(tree, paramlist);
 				if (token.Type == TokenType.POWER)
 					result = Math.Pow(Convert.ToDouble(result), Convert.ToDouble(val));
 			}
@@ -494,7 +491,7 @@ namespace TinyExe
 			for (int i = 1; i < nodes.Count; i+=2 )
 			{
 				Token token = nodes[i].Token;
-				object val = nodes[i+1].Eval(tree, paramlist);
+				object val = nodes[i+1].EvalNode(tree, paramlist);
 				if (token.Type == TokenType.ASTERIKS)
 					result = Convert.ToDouble(result) * Convert.ToDouble(val);
 				else if (token.Type == TokenType.SLASH)
@@ -522,7 +519,7 @@ namespace TinyExe
 			for (int i = 1; i < nodes.Count; i += 2)
 			{
 				Token token = nodes[i].Token;
-				object val = nodes[i + 1].Eval(tree, paramlist);
+				object val = nodes[i + 1].EvalNode(tree, paramlist);
 				if (token.Type == TokenType.PLUS)
 					result = Convert.ToDouble(result) + Convert.ToDouble(val);
 				else if (token.Type == TokenType.MINUS)
@@ -548,7 +545,7 @@ namespace TinyExe
 			for (int i = 1; i < nodes.Count; i += 2)
 			{
 				Token token = nodes[i].Token;
-				object val = nodes[i + 1].Eval(tree, paramlist);
+				object val = nodes[i + 1].EvalNode(tree, paramlist);
 				if (token.Type == TokenType.AMP)
 					result = Convert.ToString(result) + Convert.ToString(val);
 			}
@@ -571,7 +568,7 @@ namespace TinyExe
 			for (int i = 1; i < nodes.Count; i += 2)
 			{
 				Token token = nodes[i].Token;
-				object val = nodes[i + 1].Eval(tree, paramlist);
+				object val = nodes[i + 1].EvalNode(tree, paramlist);
 		
 				// compare as numbers
 				if (result is double && val is double)
@@ -618,7 +615,7 @@ namespace TinyExe
 			for (int i = 1; i < nodes.Count; i += 2)
 			{
 				Token token = nodes[i].Token;
-				object val = nodes[i + 1].Eval(tree, paramlist);
+				object val = nodes[i + 1].EvalNode(tree, paramlist);
 				if (token.Type == TokenType.EQUAL)
 					result = object.Equals(result, val);
 				else if (token.Type == TokenType.NOTEQUAL)
@@ -643,7 +640,7 @@ namespace TinyExe
 			for (int i = 1; i < nodes.Count; i += 2)
 			{
 				Token token = nodes[i].Token;
-				object val = nodes[i + 1].Eval(tree, paramlist);
+				object val = nodes[i + 1].EvalNode(tree, paramlist);
 				if (token.Type == TokenType.AMPAMP)
 					result = Convert.ToBoolean(result) && Convert.ToBoolean(val);
 			}
@@ -666,7 +663,7 @@ namespace TinyExe
 			for (int i = 1; i < nodes.Count; i += 2)
 			{
 				Token token = nodes[i].Token;
-				object val = nodes[i + 1].Eval(tree, paramlist);
+				object val = nodes[i + 1].EvalNode(tree, paramlist);
 				if (token.Type == TokenType.PIPEPIPE)
 					result = Convert.ToBoolean(result) || Convert.ToBoolean(val);
 			}
@@ -691,9 +688,9 @@ namespace TinyExe
 				&& nodes[3].Token.Type == TokenType.COLON)
 			{
 				if (Convert.ToBoolean(result))
-					result = nodes[2].Eval(tree, paramlist); // return 1st argument
+					result = nodes[2].EvalNode(tree, paramlist); // return 1st argument
 				else
-					result = nodes[4].Eval(tree, paramlist); // return 2nd argumen
+					result = nodes[4].EvalNode(tree, paramlist); // return 2nd argumen
 			}
 			return result;
 		}
@@ -804,7 +801,7 @@ namespace TinyExe
 			{
 				if (nodes[i].Token.Type == TokenType.Expression)
 				{
-					object val = nodes[i].Eval(tree, paramlist);
+					object val = nodes[i].EvalNode(tree, paramlist);
 					parameters.Add(val);
 				}
 			}

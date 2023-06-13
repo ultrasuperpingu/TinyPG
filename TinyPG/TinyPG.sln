@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyPG", "TinyPG.csproj", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyPG.UnitTests", "..\TinyPG.UnitTests\TinyPG.UnitTests.csproj", "{F6842B95-BAAE-45AA-A9CA-A0F04C661FA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "..\Test\Test.csproj", "{270D63A5-5C58-460D-9CAB-B627864DF14C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,10 +29,6 @@ Global
 		{F6842B95-BAAE-45AA-A9CA-A0F04C661FA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6842B95-BAAE-45AA-A9CA-A0F04C661FA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6842B95-BAAE-45AA-A9CA-A0F04C661FA3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{270D63A5-5C58-460D-9CAB-B627864DF14C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{270D63A5-5C58-460D-9CAB-B627864DF14C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{270D63A5-5C58-460D-9CAB-B627864DF14C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{270D63A5-5C58-460D-9CAB-B627864DF14C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

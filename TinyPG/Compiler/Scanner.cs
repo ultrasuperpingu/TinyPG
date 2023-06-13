@@ -16,7 +16,6 @@ namespace TinyPG
 		public string Input;
 		public int StartPos = 0;
 		public int EndPos = 0;
-		public string CurrentFile;
 		public int CurrentLine;
 		public int CurrentColumn;
 		public int CurrentPosition;
@@ -149,15 +148,9 @@ namespace TinyPG
 
 		public void Init(string input)
 		{
-			Init(input, "");
-		}
-
-		public void Init(string input, string fileName)
-		{
 			this.Input = input;
 			StartPos = 0;
 			EndPos = 0;
-			CurrentFile = fileName;
 			CurrentLine = 1;
 			CurrentColumn = 1;
 			CurrentPosition = 0;
@@ -183,7 +176,6 @@ namespace TinyPG
 			StartPos = tok.EndPos;
 			EndPos = tok.EndPos; // set the tokenizer to the new scan position
 			CurrentLine = tok.Line + (tok.Text.Length - tok.Text.Replace("\n", "").Length);
-			CurrentFile = tok.File;
 			return tok;
 		}
 
@@ -197,7 +189,6 @@ namespace TinyPG
 			int startpos = StartPos;
 			int endpos = EndPos;
 			int currentline = CurrentLine;
-			string currentFile = CurrentFile;
 			Token tok = null;
 			List<TokenType> scantokens;
 
@@ -252,7 +243,6 @@ namespace TinyPG
 				}
 
 				// Update the line and column count for error reporting.
-				tok.File = currentFile;
 				tok.Line = currentline;
 				if (tok.StartPos < Input.Length)
 					tok.Column = tok.StartPos - Input.LastIndexOf('\n', tok.StartPos);
@@ -262,7 +252,6 @@ namespace TinyPG
 					startpos = tok.EndPos;
 					endpos = tok.EndPos;
 					currentline = tok.Line + (tok.Text.Length - tok.Text.Replace("\n", "").Length);
-					currentFile = tok.File;
 					Skipped.Add(tok);
 				}
 				else
@@ -335,7 +324,6 @@ namespace TinyPG
 
 	public class Token
 	{
-		private string file;
 		private int line;
 		private int column;
 		private int startpos;
@@ -344,11 +332,6 @@ namespace TinyPG
 
 		// contains all prior skipped symbols
 		private List<Token> skipped;
-
-		public string File { 
-			get { return file; } 
-			set { file = value; }
-		}
 
 		public int Line { 
 			get { return line; } 

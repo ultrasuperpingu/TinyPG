@@ -45,7 +45,7 @@ namespace TinyPG
 				DateTime starttimer = DateTime.Now;
 
 				Program prog = new Program(ManageParseError, output);
-				Grammar grammar = prog.ParseGrammar(File.ReadAllText(GrammarFilePath), Path.GetFileName(GrammarFilePath));
+				Grammar grammar = prog.ParseGrammar(File.ReadAllText(GrammarFilePath));
 
 				if (grammar != null)
 				{
@@ -85,13 +85,13 @@ namespace TinyPG
 			this.output = output;
 		}
 
-		public Grammar ParseGrammar(string input, string grammarFile)
+		public Grammar ParseGrammar(string input)
 		{
 			Grammar grammar = null;
 			Scanner scanner = new Scanner();
 			Parser parser = new Parser(scanner);
 
-			ParseTree tree = parser.Parse(input, grammarFile, new GrammarTree());
+			ParseTree tree = parser.Parse(input, new GrammarTree());
 
 			if (tree.Errors.Count > 0)
 			{

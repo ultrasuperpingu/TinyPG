@@ -1,14 +1,12 @@
  * TinyExe in C++ (WIP: almost working)
  * Update simple expression1.tpg comments to match last features
  * Write documentation
- * Make unsupported attributes and directive a warning (ParseError now have a IsWarning attribute).
  * Review C++ generated code and improve it (std::any as default???, more use of templates ???)
  * Make ParseXXX public and find a way for the ParseTree to return the correct type
  * Remove Non terminal default return value (it will be useless once the ParseTree will be able to return the correct type)
  * Generate Token and TokenType in separate files in Java
  * Add string in addition to regex as TerminalSymbols for performances
  * Make C++, C# and VB searching for terminal token at the beginning of the parsed string only (Java lookingAt equivalent)
- * Build dynamically the example menu according to the files present in the directory
  
 Prospecting/Long Term:
  * Make Error Codes consistant

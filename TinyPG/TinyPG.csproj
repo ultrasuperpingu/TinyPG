@@ -139,63 +139,12 @@
     <Compile Include="Compiler\Rule.cs" />
     <Compile Include="Compiler\Scanner.cs" />
     <Compile Include="Compiler\Symbol.cs" />
-    <Content Include="Templates\C++\Scanner.h">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Templates\**">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Templates\C++\ParseTree.h">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Examples\**">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Templates\C++\Parser.h">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="Examples\BNFGrammar 1.5.tpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Examples\BNFGrammar 1.3.tpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Examples\GrammarHighlighter v1.3.tpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Examples\GrammarHighlighter_vb.tpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Examples\simple expression1.tpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Examples\simple expression2.tpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Examples\simple expression2_vb.tpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Examples\simple expression2_java.tpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Examples\simple expression2_cpp.tpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Examples\TestCpp\SimpleExpr\SimpleExpr.vcxproj">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Examples\TestCpp\SimpleExpr\main.cpp">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Examples\TestCSharp\SimpleExpr\SimpleExpr.csproj">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Examples\TestCSharp\SimpleExpr\Program.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Examples\TestVB\SimpleExpr\SimpleExpr.vbproj">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Examples\TestVB\SimpleExpr\Program.vb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Examples\TestJava\SimpleExpr\src\tinypg\SimpleExpr.java">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Compile Include="Compiler\TerminalSymbol.cs" />
     <Compile Include="SearchDialog.cs">
       <SubType>Form</SubType>

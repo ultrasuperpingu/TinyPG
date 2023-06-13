@@ -36,7 +36,6 @@ namespace <%Namespace%>
 	[Serializable]
 	public class ParseError<%ParseError%>
 	{
-		private string file;
 		private string message;
 		private int code;
 		private int line;
@@ -45,7 +44,6 @@ namespace <%Namespace%>
 		private int length;
 		private bool isWarning;
 
-		public string File { get { return file; } }
 		public int Code { get { return code; } }
 		public int Line { get { return line; } }
 		public int Column { get { return col; } }
@@ -63,17 +61,16 @@ namespace <%Namespace%>
 		{
 		}
 
-		public ParseError(string message, int code, Token token, bool isWarning = false) : this(message, code, token.File, token.Line, token.Column, token.StartPos, token.Length, isWarning)
+		public ParseError(string message, int code, Token token, bool isWarning = false) : this(message, code, token.Line, token.Column, token.StartPos, token.Length, isWarning)
 		{
 		}
 
-		public ParseError(string message, int code, bool isWarning = false) : this(message, code, string.Empty, 0, 0, 0, 0, isWarning)
+		public ParseError(string message, int code, bool isWarning = false) : this(message, code, 0, 0, 0, 0, isWarning)
 		{
 		}
 
-		public ParseError(string message, int code, string file, int line, int col, int pos, int length, bool isWarning = false)
+		public ParseError(string message, int code, int line, int col, int pos, int length, bool isWarning = false)
 		{
-			this.file = file;
 			this.message = message;
 			this.code = code;
 			this.line = line;

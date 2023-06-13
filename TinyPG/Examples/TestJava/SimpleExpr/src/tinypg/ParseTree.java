@@ -18,28 +18,27 @@ class ParseErrors extends ArrayList<ParseError>
 	public ArrayList<ParseError> getWarnings()
 	{
 		ArrayList<ParseError> warnings = new ArrayList<>();
-        for(ParseError e : this)
-        {
-            if(e.isWarning())
-                warnings.add(e);
-        }
-        return warnings;
+		for(ParseError e : this)
+		{
+			if(e.isWarning())
+				warnings.add(e);
+		}
+		return warnings;
 	}
 	public ArrayList<ParseError> getBlockingErrors()
 	{
 		ArrayList<ParseError> warnings = new ArrayList<>();
-        for(ParseError e : this)
-        {
-            if(!e.isWarning())
-                warnings.add(e);
-        }
-        return warnings;
+		for(ParseError e : this)
+		{
+			if(!e.isWarning())
+				warnings.add(e);
+		}
+		return warnings;
 	}
 }
 
 class ParseError
 {
-	private String file;
 	private String message;
 	private int code;
 	private int line;
@@ -49,7 +48,6 @@ class ParseError
 	private boolean isWarning;
 	
 
-	public String getFile() { return file; }
 	public int getCode() { return code; }
 	public int getLine() { return line; }
 	public int getColumn() { return col; }
@@ -75,26 +73,25 @@ class ParseError
 
 	public ParseError(String message, int code, Token token)
 	{
-		this(message, code, token.getFile(), token.getLine(), token.getColumn(), token.getStartPos(), token.getLength(), false);
+		this(message, code, token.getLine(), token.getColumn(), token.getStartPos(), token.getLength(), false);
 	}
 	
 	public ParseError(String message, int code, Token token, boolean isWarning)
 	{
-		this(message, code, token.getFile(), token.getLine(), token.getColumn(), token.getStartPos(), token.getLength(), isWarning);
+		this(message, code, token.getLine(), token.getColumn(), token.getStartPos(), token.getLength(), isWarning);
 	}
 
 	public ParseError(String message, int code)
 	{
-		this(message, code, "", 0, 0, 0, 0, false);
+		this(message, code, 0, 0, 0, 0, false);
 	}
 	
 	public ParseError(String message, int code, boolean isWarning)
 	{
-		this(message, code, "", 0, 0, 0, 0, isWarning);
+		this(message, code, 0, 0, 0, 0, isWarning);
 	}
-	public ParseError(String message, int code, String file, int line, int col, int pos, int length, boolean isWarning)
+	public ParseError(String message, int code, int line, int col, int pos, int length, boolean isWarning)
 	{
-		this.file = file;
 		this.message = message;
 		this.code = code;
 		this.line = line;

@@ -24,17 +24,12 @@ namespace <%Namespace%>
 
 		public <%IParseTree%> Parse(string input)
 		{
-			return Parse(input, "", new ParseTree());
+			return Parse(input, new ParseTree());
 		}
 
-		public <%IParseTree%> Parse(string input, string fileName)
+		public <%IParseTree%> Parse(string input, ParseTree tree)
 		{
-			return Parse(input, fileName, new ParseTree());
-		}
-
-		public <%IParseTree%> Parse(string input, string fileName, ParseTree tree)
-		{
-			scanner.Init(input, fileName);
+			scanner.Init(input);
 
 			this.tree = tree;
 			ParseStart(tree);

@@ -14,7 +14,6 @@ public class Scanner
 	public String Input;
 	public int StartPos = 0;
 	public int EndPos = 0;
-	public String CurrentFile;
 	public int CurrentLine;
 	public int CurrentColumn;
 	public int CurrentPosition;
@@ -41,15 +40,9 @@ public class Scanner
 
 	public void Init(String input)
 	{
-		Init(input, "");	
-	}
-	
-	public void Init(String input, String fileName)
-	{
 		this.Input = input;
 		StartPos = 0;
 		EndPos = 0;
-		CurrentFile = fileName;
 		CurrentLine = 1;
 		CurrentColumn = 1;
 		CurrentPosition = 0;
@@ -75,7 +68,6 @@ public class Scanner
 		StartPos=tok.getEndPos();
 		EndPos=tok.getEndPos(); // set the tokenizer to the new scan position
 		CurrentLine = tok.getLine() + (tok.getText().length() - tok.getText().replace("\n", "").length());
-		CurrentFile = tok.getFile();
 		return tok;
 	}
 
@@ -89,7 +81,6 @@ public class Scanner
 		int startpos = StartPos;
 		int endpos = EndPos;
 		int currentline = CurrentLine;
-		String currentFile = CurrentFile;
 		Token tok = null;
 		ArrayList<TokenType> scantokens;
 
@@ -147,7 +138,6 @@ public class Scanner
 					 tok.setText("EOF");
 			}
 			// Update the line and column count for error reporting.
-			tok.setFile(currentFile);
 			tok.setLine(currentline);
 			if (tok.getStartPos() < Input.length())
 				tok.setColumn(tok.getStartPos() - Input.lastIndexOf('\n', tok.getStartPos()));
@@ -157,7 +147,6 @@ public class Scanner
 				startpos = tok.getEndPos();
 				endpos = tok.getEndPos();
 				currentline = tok.getLine() + (tok.getText().length() - tok.getText().replace("\n", "").length());
-				currentFile = tok.getFile();
 				Skipped.add(tok);
 			}
 			else
@@ -182,19 +171,11 @@ enum TokenType
 
 class Token<%IToken%>
 {
-	private String file;
 	private int line;
 	private int column;
 	private int startpos;
 	private int endpos;
 	private String text;
-
-	public String getFile() { 
-		return file; 
-	}
-	public void setFile(String value) {
-		file = value;
-	}
 
 	public int getLine() { 
 		return line;

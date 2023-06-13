@@ -66,7 +66,7 @@ namespace TinyExe
 
 			// execute the function here
 
-			object result = Node.Eval(tree, null);
+			object result = Node.EvalNode(tree, null);
 
 			// clean up the stack
 			tree.Context.PopScope();
