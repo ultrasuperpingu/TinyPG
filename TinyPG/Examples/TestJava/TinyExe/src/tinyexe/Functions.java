@@ -4,9 +4,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Random;
 
-//public delegate object FunctionDelegate(object[] parameters);
-//public delegate object FunctionContextDelegate(object[] parameters, Context context);
-
 
 public class Functions extends HashMap<String, Function>
 {
@@ -128,11 +125,11 @@ public class Functions extends HashMap<String, Function>
         return total / ps.length;
     }
 
-    /// <summary>
-    /// calculates the median over a list of numeric values
-    /// </summary>
-    /// <param name="ps">list of numeric values</param>
-    /// <returns>the median value</returns>
+    /**
+     * Calculates the median over a list of numeric values
+     * @param ps list of numeric values
+     * @return the median value
+     */
     private static Object Median(Object[] ps)
     {
         Object[] ordered=ps.clone();
@@ -144,11 +141,11 @@ public class Functions extends HashMap<String, Function>
             return (Util.ConvertToDouble(ordered[ordered.length / 2]) + Util.ConvertToDouble(ordered[ordered.length / 2-1]))/2;
     }
 
-    /// <summary>
-    /// calculates the statistical variance over a list of numeric values
-    /// </summary>
-    /// <param name="ps">list of numeric values</param>
-    /// <returns>the variance</returns>
+    /**
+     * Calculates the statistical variance over a list of numeric values
+     * @param ps list of numeric values
+     * @return the variance
+     */
     private static Object Var(Object[] ps)
     {
         double avg = Util.ConvertToDouble(Avg(ps));
@@ -159,22 +156,22 @@ public class Functions extends HashMap<String, Function>
         return total / (ps.length-1);
     }
 
-    /// <summary>
-    /// calculates the statistical standard deviation over a list of numeric values
-    /// </summary>
-    /// <param name="ps">list of numeric values</param>
-    /// <returns>the standard deviation</returns>
+    /**
+     * Calculates the statistical standard deviation over a list of numeric values
+     * @param ps list of numeric values
+     * @return the standard deviation
+     */
     private static Object StDev(Object[] ps)
     {
         double var = Util.ConvertToDouble(Var(ps));
         return Math.sqrt(var);
     }
 
-    /// <summary>
-    /// generic Log implementation, allows 1 or 2 parameters
-    /// </summary>
-    /// <param name="ps">numeric values</param>
-    /// <returns>Log of the value</returns>
+    /**
+     * Generic Log implementation, allows 1 or 2 parameters
+     * @param ps numeric values
+     * @return Log of the value
+     */
     private static Object Log(Object[] ps)
     {
         if (ps.length == 1)

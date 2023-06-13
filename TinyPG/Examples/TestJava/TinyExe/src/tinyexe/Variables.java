@@ -3,12 +3,12 @@ import java.util.HashMap;
 
 public class Variables extends HashMap<String, Object>
 {
-    /// <summary>
-    /// clones this set of variables
-    /// this is required in order to support local scope and recursion
-    /// a copy of the set of variables (arguments in a function) will be pushed on the scope stack
-    /// </summary>
-    /// <returns></returns>
+    /**
+     * Clones this set of variables
+     * This is required in order to support local scope and recursion
+     * a copy of the set of variables (arguments in a function) will be pushed on the scope stack
+     * @return 
+     */
     public Variables Clone()
     {
         Variables vars = new Variables();

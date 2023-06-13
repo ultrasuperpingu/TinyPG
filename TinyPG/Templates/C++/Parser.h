@@ -22,7 +22,6 @@ namespace <%Namespace%>
 		ParseTree* Parse(const std::string& input);
 		ParseTree* Parse(const std::string& input, ParseTree* tree);
 
-	protected:
 <%ParseNonTerminalsDecl%>
 
 <%ParserCustomCode%>

@@ -1,39 +1,43 @@
 package tinyexe;
 
-	//public delegate object FunctionDelegate(object[] parameters);
-
-	//public delegate object FunctionContextDelegate(object[] parameters, Context context);
-
 public abstract class Function
 {
     protected Variables arguments;
-    /// <summary>
-    /// define the arguments of the dynamic function
-    /// </summary>
+    
+    /**
+     * Define the arguments of the dynamic function
+     * @return arguments
+     */
     public Variables getArguments() {
         return arguments;
     }
 
     protected String name;
-    /// <summary>
-    /// name of the function
-    /// </summary>
+    
+    /**
+     * Name of the function
+     * @return name of the function
+     */
     public String getName() {
         return name;
     }
     
     protected int maxParameters;
-    /// <summary>
-    /// minimum number of allowed parameters (default = 0)
-    /// </summary>
+    
+    /**
+     * Maximum number of allowed parameters (default = 0)
+     * @return maxParameters
+     */
     public int getMaxParameters() {
         return maxParameters;
     }
     
     protected int minParameters;
-    /// <summary>
-    /// maximum number of allowed parameters (default = 0)
-    /// </summary>
+    
+    /**
+     * Minimum number of allowed parameters (default = 0)
+     * @return minParameters
+     */
     public int getMinParameters() {
         return minParameters;
     }

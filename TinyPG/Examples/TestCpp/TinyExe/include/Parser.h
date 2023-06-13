@@ -23,26 +23,89 @@ namespace TinyExe
 		ParseTree* Parse(const std::string& input, ParseTree* tree);
 
 	protected:
+	public:
+		ParseTree* ParseStart(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseStart(ParseNode* parent);
+	public:
+		ParseTree* ParseFunction(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseFunction(ParseNode* parent);
+	public:
+		ParseTree* ParsePrimaryExpression(const std::string& input, ParseTree* tree);
+	protected:
 		void ParsePrimaryExpression(ParseNode* parent);
+	public:
+		ParseTree* ParseParenthesizedExpression(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseParenthesizedExpression(ParseNode* parent);
+	public:
+		ParseTree* ParseUnaryExpression(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseUnaryExpression(ParseNode* parent);
+	public:
+		ParseTree* ParsePowerExpression(const std::string& input, ParseTree* tree);
+	protected:
 		void ParsePowerExpression(ParseNode* parent);
+	public:
+		ParseTree* ParseMultiplicativeExpression(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseMultiplicativeExpression(ParseNode* parent);
+	public:
+		ParseTree* ParseAdditiveExpression(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseAdditiveExpression(ParseNode* parent);
+	public:
+		ParseTree* ParseConcatEpression(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseConcatEpression(ParseNode* parent);
+	public:
+		ParseTree* ParseRelationalExpression(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseRelationalExpression(ParseNode* parent);
+	public:
+		ParseTree* ParseEqualityExpression(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseEqualityExpression(ParseNode* parent);
+	public:
+		ParseTree* ParseConditionalAndExpression(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseConditionalAndExpression(ParseNode* parent);
+	public:
+		ParseTree* ParseConditionalOrExpression(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseConditionalOrExpression(ParseNode* parent);
+	public:
+		ParseTree* ParseAssignmentExpression(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseAssignmentExpression(ParseNode* parent);
+	public:
+		ParseTree* ParseExpression(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseExpression(ParseNode* parent);
+	public:
+		ParseTree* ParseParams(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseParams(ParseNode* parent);
+	public:
+		ParseTree* ParseLiteral(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseLiteral(ParseNode* parent);
+	public:
+		ParseTree* ParseIntegerLiteral(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseIntegerLiteral(ParseNode* parent);
+	public:
+		ParseTree* ParseRealLiteral(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseRealLiteral(ParseNode* parent);
+	public:
+		ParseTree* ParseStringLiteral(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseStringLiteral(ParseNode* parent);
+	public:
+		ParseTree* ParseVariable(const std::string& input, ParseTree* tree);
+	protected:
 		void ParseVariable(ParseNode* parent);
 
 
@@ -86,6 +149,15 @@ namespace TinyExe
 		return tree;
 	}
 
+	inline ParseTree* Parser::ParseStart(const std::string& input, ParseTree* tree) // NonTerminalSymbol: Start
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseStart(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	inline void Parser::ParseStart(ParseNode* parent) // NonTerminalSymbol: Start
 	{
 		Token tok;
@@ -124,6 +196,15 @@ namespace TinyExe
 
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: Start
+
+	inline ParseTree* Parser::ParseFunction(const std::string& input, ParseTree* tree) // NonTerminalSymbol: Function
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseFunction(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
 
 	inline void Parser::ParseFunction(ParseNode* parent) // NonTerminalSymbol: Function
 	{
@@ -185,6 +266,15 @@ namespace TinyExe
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: Function
 
+	inline ParseTree* Parser::ParsePrimaryExpression(const std::string& input, ParseTree* tree) // NonTerminalSymbol: PrimaryExpression
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParsePrimaryExpression(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	inline void Parser::ParsePrimaryExpression(ParseNode* parent) // NonTerminalSymbol: PrimaryExpression
 	{
 		Token tok;
@@ -219,6 +309,15 @@ namespace TinyExe
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: PrimaryExpression
 
+	inline ParseTree* Parser::ParseParenthesizedExpression(const std::string& input, ParseTree* tree) // NonTerminalSymbol: ParenthesizedExpression
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseParenthesizedExpression(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	inline void Parser::ParseParenthesizedExpression(ParseNode* parent) // NonTerminalSymbol: ParenthesizedExpression
 	{
 		Token tok;
@@ -252,6 +351,15 @@ namespace TinyExe
 
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: ParenthesizedExpression
+
+	inline ParseTree* Parser::ParseUnaryExpression(const std::string& input, ParseTree* tree) // NonTerminalSymbol: UnaryExpression
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseUnaryExpression(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
 
 	inline void Parser::ParseUnaryExpression(ParseNode* parent) // NonTerminalSymbol: UnaryExpression
 	{
@@ -326,6 +434,15 @@ namespace TinyExe
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: UnaryExpression
 
+	inline ParseTree* Parser::ParsePowerExpression(const std::string& input, ParseTree* tree) // NonTerminalSymbol: PowerExpression
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParsePowerExpression(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	inline void Parser::ParsePowerExpression(ParseNode* parent) // NonTerminalSymbol: PowerExpression
 	{
 		Token tok;
@@ -359,6 +476,15 @@ namespace TinyExe
 
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: PowerExpression
+
+	inline ParseTree* Parser::ParseMultiplicativeExpression(const std::string& input, ParseTree* tree) // NonTerminalSymbol: MultiplicativeExpression
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseMultiplicativeExpression(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
 
 	inline void Parser::ParseMultiplicativeExpression(ParseNode* parent) // NonTerminalSymbol: MultiplicativeExpression
 	{
@@ -425,6 +551,15 @@ namespace TinyExe
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: MultiplicativeExpression
 
+	inline ParseTree* Parser::ParseAdditiveExpression(const std::string& input, ParseTree* tree) // NonTerminalSymbol: AdditiveExpression
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseAdditiveExpression(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	inline void Parser::ParseAdditiveExpression(ParseNode* parent) // NonTerminalSymbol: AdditiveExpression
 	{
 		Token tok;
@@ -479,6 +614,15 @@ namespace TinyExe
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: AdditiveExpression
 
+	inline ParseTree* Parser::ParseConcatEpression(const std::string& input, ParseTree* tree) // NonTerminalSymbol: ConcatEpression
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseConcatEpression(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	inline void Parser::ParseConcatEpression(ParseNode* parent) // NonTerminalSymbol: ConcatEpression
 	{
 		Token tok;
@@ -512,6 +656,15 @@ namespace TinyExe
 
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: ConcatEpression
+
+	inline ParseTree* Parser::ParseRelationalExpression(const std::string& input, ParseTree* tree) // NonTerminalSymbol: RelationalExpression
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseRelationalExpression(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
 
 	inline void Parser::ParseRelationalExpression(ParseNode* parent) // NonTerminalSymbol: RelationalExpression
 	{
@@ -588,6 +741,15 @@ namespace TinyExe
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: RelationalExpression
 
+	inline ParseTree* Parser::ParseEqualityExpression(const std::string& input, ParseTree* tree) // NonTerminalSymbol: EqualityExpression
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseEqualityExpression(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	inline void Parser::ParseEqualityExpression(ParseNode* parent) // NonTerminalSymbol: EqualityExpression
 	{
 		Token tok;
@@ -642,6 +804,15 @@ namespace TinyExe
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: EqualityExpression
 
+	inline ParseTree* Parser::ParseConditionalAndExpression(const std::string& input, ParseTree* tree) // NonTerminalSymbol: ConditionalAndExpression
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseConditionalAndExpression(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	inline void Parser::ParseConditionalAndExpression(ParseNode* parent) // NonTerminalSymbol: ConditionalAndExpression
 	{
 		Token tok;
@@ -676,6 +847,15 @@ namespace TinyExe
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: ConditionalAndExpression
 
+	inline ParseTree* Parser::ParseConditionalOrExpression(const std::string& input, ParseTree* tree) // NonTerminalSymbol: ConditionalOrExpression
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseConditionalOrExpression(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	inline void Parser::ParseConditionalOrExpression(ParseNode* parent) // NonTerminalSymbol: ConditionalOrExpression
 	{
 		Token tok;
@@ -709,6 +889,15 @@ namespace TinyExe
 
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: ConditionalOrExpression
+
+	inline ParseTree* Parser::ParseAssignmentExpression(const std::string& input, ParseTree* tree) // NonTerminalSymbol: AssignmentExpression
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseAssignmentExpression(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
 
 	inline void Parser::ParseAssignmentExpression(ParseNode* parent) // NonTerminalSymbol: AssignmentExpression
 	{
@@ -755,6 +944,15 @@ namespace TinyExe
 
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: AssignmentExpression
+
+	inline ParseTree* Parser::ParseExpression(const std::string& input, ParseTree* tree) // NonTerminalSymbol: Expression
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseExpression(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
 
 	inline void Parser::ParseExpression(ParseNode* parent) // NonTerminalSymbol: Expression
 	{
@@ -803,6 +1001,15 @@ namespace TinyExe
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: Expression
 
+	inline ParseTree* Parser::ParseParams(const std::string& input, ParseTree* tree) // NonTerminalSymbol: Params
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseParams(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	inline void Parser::ParseParams(ParseNode* parent) // NonTerminalSymbol: Params
 	{
 		Token tok;
@@ -836,6 +1043,15 @@ namespace TinyExe
 
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: Params
+
+	inline ParseTree* Parser::ParseLiteral(const std::string& input, ParseTree* tree) // NonTerminalSymbol: Literal
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseLiteral(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
 
 	inline void Parser::ParseLiteral(ParseNode* parent) // NonTerminalSymbol: Literal
 	{
@@ -875,6 +1091,15 @@ namespace TinyExe
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: Literal
 
+	inline ParseTree* Parser::ParseIntegerLiteral(const std::string& input, ParseTree* tree) // NonTerminalSymbol: IntegerLiteral
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseIntegerLiteral(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	inline void Parser::ParseIntegerLiteral(ParseNode* parent) // NonTerminalSymbol: IntegerLiteral
 	{
 		Token tok;
@@ -913,6 +1138,15 @@ namespace TinyExe
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: IntegerLiteral
 
+	inline ParseTree* Parser::ParseRealLiteral(const std::string& input, ParseTree* tree) // NonTerminalSymbol: RealLiteral
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseRealLiteral(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	inline void Parser::ParseRealLiteral(ParseNode* parent) // NonTerminalSymbol: RealLiteral
 	{
 		Token tok;
@@ -932,6 +1166,15 @@ namespace TinyExe
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: RealLiteral
 
+	inline ParseTree* Parser::ParseStringLiteral(const std::string& input, ParseTree* tree) // NonTerminalSymbol: StringLiteral
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseStringLiteral(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	inline void Parser::ParseStringLiteral(ParseNode* parent) // NonTerminalSymbol: StringLiteral
 	{
 		Token tok;
@@ -950,6 +1193,15 @@ namespace TinyExe
 
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: StringLiteral
+
+	inline ParseTree* Parser::ParseVariable(const std::string& input, ParseTree* tree) // NonTerminalSymbol: Variable
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseVariable(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
 
 	inline void Parser::ParseVariable(ParseNode* parent) // NonTerminalSymbol: Variable
 	{

@@ -38,6 +38,15 @@ namespace TinyExe
 			return tree;
 		}
 
+		public ParseTree ParseStart(string input, ParseTree tree) // NonTerminalSymbol: Start
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseStart(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseStart(ParseNode parent) // NonTerminalSymbol: Start
 		{
 			Token tok;
@@ -76,6 +85,15 @@ namespace TinyExe
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: Start
+
+		public ParseTree ParseFunction(string input, ParseTree tree) // NonTerminalSymbol: Function
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseFunction(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseFunction(ParseNode parent) // NonTerminalSymbol: Function
 		{
@@ -137,6 +155,15 @@ namespace TinyExe
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: Function
 
+		public ParseTree ParsePrimaryExpression(string input, ParseTree tree) // NonTerminalSymbol: PrimaryExpression
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParsePrimaryExpression(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParsePrimaryExpression(ParseNode parent) // NonTerminalSymbol: PrimaryExpression
 		{
 			Token tok;
@@ -171,6 +198,15 @@ namespace TinyExe
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: PrimaryExpression
 
+		public ParseTree ParseParenthesizedExpression(string input, ParseTree tree) // NonTerminalSymbol: ParenthesizedExpression
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseParenthesizedExpression(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseParenthesizedExpression(ParseNode parent) // NonTerminalSymbol: ParenthesizedExpression
 		{
 			Token tok;
@@ -204,6 +240,15 @@ namespace TinyExe
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: ParenthesizedExpression
+
+		public ParseTree ParseUnaryExpression(string input, ParseTree tree) // NonTerminalSymbol: UnaryExpression
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseUnaryExpression(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseUnaryExpression(ParseNode parent) // NonTerminalSymbol: UnaryExpression
 		{
@@ -278,6 +323,15 @@ namespace TinyExe
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: UnaryExpression
 
+		public ParseTree ParsePowerExpression(string input, ParseTree tree) // NonTerminalSymbol: PowerExpression
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParsePowerExpression(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParsePowerExpression(ParseNode parent) // NonTerminalSymbol: PowerExpression
 		{
 			Token tok;
@@ -311,6 +365,15 @@ namespace TinyExe
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: PowerExpression
+
+		public ParseTree ParseMultiplicativeExpression(string input, ParseTree tree) // NonTerminalSymbol: MultiplicativeExpression
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseMultiplicativeExpression(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseMultiplicativeExpression(ParseNode parent) // NonTerminalSymbol: MultiplicativeExpression
 		{
@@ -377,6 +440,15 @@ namespace TinyExe
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: MultiplicativeExpression
 
+		public ParseTree ParseAdditiveExpression(string input, ParseTree tree) // NonTerminalSymbol: AdditiveExpression
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseAdditiveExpression(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseAdditiveExpression(ParseNode parent) // NonTerminalSymbol: AdditiveExpression
 		{
 			Token tok;
@@ -431,6 +503,15 @@ namespace TinyExe
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: AdditiveExpression
 
+		public ParseTree ParseConcatEpression(string input, ParseTree tree) // NonTerminalSymbol: ConcatEpression
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseConcatEpression(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseConcatEpression(ParseNode parent) // NonTerminalSymbol: ConcatEpression
 		{
 			Token tok;
@@ -464,6 +545,15 @@ namespace TinyExe
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: ConcatEpression
+
+		public ParseTree ParseRelationalExpression(string input, ParseTree tree) // NonTerminalSymbol: RelationalExpression
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseRelationalExpression(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseRelationalExpression(ParseNode parent) // NonTerminalSymbol: RelationalExpression
 		{
@@ -540,6 +630,15 @@ namespace TinyExe
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: RelationalExpression
 
+		public ParseTree ParseEqualityExpression(string input, ParseTree tree) // NonTerminalSymbol: EqualityExpression
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseEqualityExpression(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseEqualityExpression(ParseNode parent) // NonTerminalSymbol: EqualityExpression
 		{
 			Token tok;
@@ -594,6 +693,15 @@ namespace TinyExe
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: EqualityExpression
 
+		public ParseTree ParseConditionalAndExpression(string input, ParseTree tree) // NonTerminalSymbol: ConditionalAndExpression
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseConditionalAndExpression(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseConditionalAndExpression(ParseNode parent) // NonTerminalSymbol: ConditionalAndExpression
 		{
 			Token tok;
@@ -628,6 +736,15 @@ namespace TinyExe
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: ConditionalAndExpression
 
+		public ParseTree ParseConditionalOrExpression(string input, ParseTree tree) // NonTerminalSymbol: ConditionalOrExpression
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseConditionalOrExpression(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseConditionalOrExpression(ParseNode parent) // NonTerminalSymbol: ConditionalOrExpression
 		{
 			Token tok;
@@ -661,6 +778,15 @@ namespace TinyExe
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: ConditionalOrExpression
+
+		public ParseTree ParseAssignmentExpression(string input, ParseTree tree) // NonTerminalSymbol: AssignmentExpression
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseAssignmentExpression(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseAssignmentExpression(ParseNode parent) // NonTerminalSymbol: AssignmentExpression
 		{
@@ -707,6 +833,15 @@ namespace TinyExe
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: AssignmentExpression
+
+		public ParseTree ParseExpression(string input, ParseTree tree) // NonTerminalSymbol: Expression
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseExpression(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseExpression(ParseNode parent) // NonTerminalSymbol: Expression
 		{
@@ -755,6 +890,15 @@ namespace TinyExe
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: Expression
 
+		public ParseTree ParseParams(string input, ParseTree tree) // NonTerminalSymbol: Params
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseParams(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseParams(ParseNode parent) // NonTerminalSymbol: Params
 		{
 			Token tok;
@@ -788,6 +932,15 @@ namespace TinyExe
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: Params
+
+		public ParseTree ParseLiteral(string input, ParseTree tree) // NonTerminalSymbol: Literal
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseLiteral(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseLiteral(ParseNode parent) // NonTerminalSymbol: Literal
 		{
@@ -827,6 +980,15 @@ namespace TinyExe
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: Literal
 
+		public ParseTree ParseIntegerLiteral(string input, ParseTree tree) // NonTerminalSymbol: IntegerLiteral
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseIntegerLiteral(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseIntegerLiteral(ParseNode parent) // NonTerminalSymbol: IntegerLiteral
 		{
 			Token tok;
@@ -865,6 +1027,15 @@ namespace TinyExe
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: IntegerLiteral
 
+		public ParseTree ParseRealLiteral(string input, ParseTree tree) // NonTerminalSymbol: RealLiteral
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseRealLiteral(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseRealLiteral(ParseNode parent) // NonTerminalSymbol: RealLiteral
 		{
 			Token tok;
@@ -884,6 +1055,15 @@ namespace TinyExe
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: RealLiteral
 
+		public ParseTree ParseStringLiteral(string input, ParseTree tree) // NonTerminalSymbol: StringLiteral
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseStringLiteral(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseStringLiteral(ParseNode parent) // NonTerminalSymbol: StringLiteral
 		{
 			Token tok;
@@ -902,6 +1082,15 @@ namespace TinyExe
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: StringLiteral
+
+		public ParseTree ParseVariable(string input, ParseTree tree) // NonTerminalSymbol: Variable
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseVariable(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseVariable(ParseNode parent) // NonTerminalSymbol: Variable
 		{

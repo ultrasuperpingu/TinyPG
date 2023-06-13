@@ -31,6 +31,9 @@ namespace TinyPG.CodeGenerators.Cpp
 				string method = GenerateParseMethod(s);
 				parserMethodsImpl.Append(method);
 
+				parserMethodsDecl.AppendLine("	public:");
+				parserMethodsDecl.AppendLine("		ParseTree* Parse" + s.Name + "(const std::string& input, ParseTree* tree);");
+				parserMethodsDecl.AppendLine("	protected:");
 				parserMethodsDecl.AppendLine("		void Parse" + s.Name + "(ParseNode* parent);");
 			}
 
@@ -46,6 +49,15 @@ namespace TinyPG.CodeGenerators.Cpp
 		private string GenerateParseMethod(NonTerminalSymbol s)
 		{
 			StringBuilder sb = new StringBuilder();
+			sb.AppendLine("	inline ParseTree* Parser::Parse" + s.Name + "(const std::string& input, ParseTree* tree)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("	{");
+			sb.AppendLine("		scanner.Init(input);");
+			sb.AppendLine("		this->tree = tree;");
+			sb.AppendLine("		Parse" + s.Name + "(tree);");
+			sb.AppendLine("		tree->Skipped = scanner.Skipped;");
+			sb.AppendLine("		return tree;");
+			sb.AppendLine("	}");
+			sb.AppendLine();
 			sb.AppendLine("	inline void Parser::Parse" + s.Name + "(ParseNode* parent)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
 			sb.AppendLine("	{");
 			sb.AppendLine("		Token tok;");

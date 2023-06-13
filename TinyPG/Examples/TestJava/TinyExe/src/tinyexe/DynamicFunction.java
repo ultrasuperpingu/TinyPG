@@ -1,8 +1,15 @@
 package tinyexe;
-import java.lang.*;
 
 public class DynamicFunction extends Function
 {
+    public DynamicFunction(String name, ParseNode node, Variables args, int minParameters, int maxParameters)
+    {
+        Node = node;
+        arguments = args;
+        this.minParameters = minParameters;
+        this.maxParameters = maxParameters;
+    }
+       
     /// <summary>
     /// points to the RHS of the assignment of this function
     /// this branch will be evaluated each time this function is executed
@@ -39,11 +46,4 @@ public class DynamicFunction extends Function
         return result;
     }
 
-    public DynamicFunction(String name, ParseNode node, Variables args, int minParameters, int maxParameters)
-    {
-        Node = node;
-        arguments = args;
-        this.minParameters = minParameters;
-        this.maxParameters = maxParameters;
-    }
 }

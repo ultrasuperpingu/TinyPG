@@ -44,8 +44,16 @@ namespace TinyPG.CodeGenerators.Java
 		// generates the method header and body
 		private string GenerateParseMethod(NonTerminalSymbol s)
 		{
-
 			StringBuilder sb = new StringBuilder();
+			sb.AppendLine("	public ParseTree Parse" + s.Name + "(String input, ParseTree tree)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("	{");
+			sb.AppendLine("		scanner.Init(input);");
+			sb.AppendLine("		this.tree = tree;");
+			sb.AppendLine("		Parse" + s.Name + "(tree);");
+			sb.AppendLine("		tree.Skipped = scanner.Skipped;");
+			sb.AppendLine("		return tree;");
+			sb.AppendLine("	}");
+			sb.AppendLine();
 			sb.AppendLine("	private void Parse" + s.Name + "(ParseNode parent)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
 			sb.AppendLine("	{");
 			sb.AppendLine("		Token tok;");
