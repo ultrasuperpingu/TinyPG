@@ -14,7 +14,7 @@ namespace TinyPG.Compiler
 {
 	public class TerminalSymbol : Symbol
 	{
-		public Regex Expression;
+		public string Expression;
 
 		public TerminalSymbol()
 			: this("Terminal_" + ++counter, "")
@@ -27,13 +27,7 @@ namespace TinyPG.Compiler
 		public TerminalSymbol(string name, string pattern)
 		{
 			Name = name;
-			Expression = new Regex(pattern, RegexOptions.Compiled);
-		}
-
-		public TerminalSymbol(string name, Regex expression)
-		{
-			Name = name;
-			Expression = expression;
+			Expression = pattern;
 		}
 
 		public override string PrintProduction()

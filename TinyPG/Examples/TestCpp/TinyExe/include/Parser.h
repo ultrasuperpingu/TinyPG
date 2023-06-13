@@ -22,7 +22,6 @@ namespace TinyExe
 		ParseTree* Parse(const std::string& input);
 		ParseTree* Parse(const std::string& input, ParseTree* tree);
 
-	protected:
 	public:
 		ParseTree* ParseStart(const std::string& input, ParseTree* tree);
 	protected:

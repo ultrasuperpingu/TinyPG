@@ -75,22 +75,22 @@ namespace TinyPG.Compiler
 
 					if (n.Nodes[n.Nodes.Count - 1].Nodes[2].Nodes[0].Token.Type == TokenType.STRING)
 					{
+						string name = n.Nodes[n.Nodes.Count - 1].Nodes[0].Token.Text;
+						string pattern = n.Nodes[n.Nodes.Count - 1].Nodes[2].Nodes[0].Token.Text;
 						try
 						{
-							terminal = new TerminalSymbol(n.Nodes[n.Nodes.Count - 1].Nodes[0].Token.Text, (string)n.Nodes[n.Nodes.Count - 1].Nodes[2].Nodes[0].Token.Text);
-							for (int i = 0; i < n.Nodes.Count - 1; i++)
-							{
-								if (n.Nodes[i].Token.Type == TokenType.Attribute)
-									EvalAttribute(new object[] { tree, g, terminal, n.Nodes[i] });
-							}
-
+							Regex.Match("", pattern);
 						}
-						catch (Exception ex)
+						catch (ArgumentException ex)
 						{
-							tree.Errors.Add(new ParseError("regular expression for '" + n.Nodes[n.Nodes.Count - 1].Nodes[0].Token.Text + "' results in error: " + ex.Message, 0x1020, n.Nodes[0]));
-							continue;
+							tree.Errors.Add(new ParseError("Regular expression '" + pattern + "'for '" + name + "' rule results in error: " + ex.Message, 0x1020, n.Nodes[0]));
 						}
-
+						terminal = new TerminalSymbol(name, pattern);
+						for (int i = 0; i < n.Nodes.Count - 1; i++)
+						{
+							if (n.Nodes[i].Token.Type == TokenType.Attribute)
+								EvalAttribute(new object[] { tree, g, terminal, n.Nodes[i] });
+						}
 						if (terminal.Name == "Start")
 							tree.Errors.Add(new ParseError("'Start' symbol cannot be a regular expression.", 0x1021, n.Nodes[0]));
 
