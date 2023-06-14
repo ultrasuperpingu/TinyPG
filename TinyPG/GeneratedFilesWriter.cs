@@ -38,9 +38,6 @@ namespace TinyPG
 						generator.Generate(grammar, debug? GenerateDebugMode.DebugSelf: GenerateDebugMode.None));
 				}
 			}
-
 		}
-
-
-}
+	}
 }

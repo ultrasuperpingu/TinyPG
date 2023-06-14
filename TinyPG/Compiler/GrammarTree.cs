@@ -49,6 +49,12 @@ namespace TinyPG.Compiler
 			this.text = text;
 			nodes = new List<ParseNode>();
 		}
+		protected bool IsTerminal(TokenType type)
+		{
+			return type == TokenType.STRING ||
+				type == TokenType.VERBATIM_STRING ||
+				type == TokenType.REGEX_PATTERN;
+		}
 
 		/// <summary>
 		/// EvalStart will first do a semantic check to see if symbols are declared correctly
@@ -72,19 +78,14 @@ namespace TinyPG.Compiler
 				}
 				if (n.Token.Type == TokenType.ExtProduction)
 				{
-
-					if (n.Nodes[n.Nodes.Count - 1].Nodes[2].Nodes[0].Token.Type == TokenType.STRING)
+					if (IsTerminal(n.Nodes[n.Nodes.Count - 1].Nodes[2].Nodes[0].Token.Type))
 					{
 						string name = n.Nodes[n.Nodes.Count - 1].Nodes[0].Token.Text;
 						string pattern = n.Nodes[n.Nodes.Count - 1].Nodes[2].Nodes[0].Token.Text;
-						try
-						{
-							Regex.Match("", pattern);
-						}
-						catch (ArgumentException ex)
-						{
-							tree.Errors.Add(new ParseError("Regular expression '" + pattern + "'for '" + name + "' rule results in error: " + ex.Message, 0x1020, n.Nodes[0]));
-						}
+						string errorRegex;
+						if(!pattern.LiteralToUnescaped().IsValidRegex(out errorRegex))
+							tree.Errors.Add(new ParseError("Regular expression '" + pattern + "'for '" + name + "' rule results in error: " + errorRegex, 0x1020, n.Nodes[0]));
+
 						terminal = new TerminalSymbol(name, pattern);
 						for (int i = 0; i < n.Nodes.Count - 1; i++)
 						{
@@ -136,7 +137,6 @@ namespace TinyPG.Compiler
 
 			return g;
 		}
-
 
 		protected override object EvalDirective(params object[] paramlist)
 		{
@@ -216,14 +216,22 @@ namespace TinyPG.Compiler
 			string key = node.Nodes[0].Token.Text;
 			
 			string value = node.Nodes[2].Token.Text;
-			if (node.Nodes[2].Token.Type == TokenType.STRING)
+			if (node.Nodes[2].Token.Type == TokenType.VERBATIM_STRING)
 			{
-				value = value.UnescapeVerbatim().FixNewLines();
+				value = value.VerbatimLiteralToUnescaped().FixNewLines();
 			}
-			else
+			else if (node.Nodes[2].Token.Type == TokenType.STRING)
 			{
-				value = value.UnescapeVerbatim().FixNewLines();
-				value = value.Substring(0, value.Length-1);
+				// true: don't escape special char (only \" is converted to ")
+				value = value.LiteralToUnescaped(true).FixNewLines();
+			}
+			else if (node.Nodes[2].Token.Type == TokenType.CODEBLOCK)
+			{
+				value = value.Substring(1, value.Length-3).FixNewLines();
+			}
+			else // Error
+			{
+				throw new Exception("Internal Error: Unexepected token type for Attribute Value: " + node.Nodes[2].Token.Type);
 			}
 
 			directive[key] = value;
@@ -313,7 +321,7 @@ namespace TinyPG.Compiler
 					{
 						if (symbol.Attributes["Color"][i] is string)
 						{
-							tree.Errors.Add(new ParseError("Parameter " + node.Nodes[3].Nodes[i * 2].Nodes[0].Token.Text + " is of incorrect type", 0x103A, node.Nodes[3].Nodes[i * 2].Nodes[0], true));
+							tree.Errors.Add(new ParseError("Parameter " + node.Nodes[3].Nodes[i * 2].Nodes[0].Token.Text + " is of incorrect type", 0x103B, node.Nodes[3].Nodes[i * 2].Nodes[0], true));
 							break;
 						}
 					}
@@ -376,7 +384,7 @@ namespace TinyPG.Compiler
 		{
 			ParseTree tree = (ParseTree)paramlist[0];
 			Grammar g = (Grammar)paramlist[1];
-			if (Nodes[2].Nodes[0].Token.Type == TokenType.STRING)
+			if (IsTerminal(Nodes[2].Nodes[0].Token.Type))
 			{
 				TerminalSymbol term = g.Symbols.Find(Nodes[0].Token.Text) as TerminalSymbol;
 				if (term == null)
@@ -387,7 +395,7 @@ namespace TinyPG.Compiler
 				if (Nodes[3].Token.Type == TokenType.CODEBLOCK || Nodes.Count > 5 && Nodes[5].Token.Type == TokenType.CODEBLOCK|| Nodes.Count > 9 && Nodes[9].Token.Type == TokenType.CODEBLOCK)
 					tree.Errors.Add(new ParseError("Terminal Symbol '" + Nodes[0].Token.Text + "' cannot declare a code block. ", 0x1040, Nodes[0]));
 			}
-			else
+			else if (Nodes[2].Nodes[0].Token.Type == TokenType.Subrule)
 			{
 				NonTerminalSymbol nts = g.Symbols.Find(Nodes[0].Token.Text) as NonTerminalSymbol;
 				if (nts == null)
@@ -422,6 +430,10 @@ namespace TinyPG.Compiler
 					codeblock = codeblock.Substring(1, codeblock.Length - 3).Trim();
 					nts.CodeBlock = codeblock;
 				}
+			}
+			else // Error
+			{
+				throw new Exception("Internal Error: Unexpected node type: " + Nodes[2].Nodes[0].Token.Type);
 			}
 			return g;
 		}

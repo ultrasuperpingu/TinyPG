@@ -29,6 +29,13 @@ int main()
 		{
 			tree->Context = context;
 			std::string res = ConvertToString(tree->Eval<std::any>({tree}));
+			if (tree->Errors.size() > 0)
+			{
+				for (auto e : tree->Errors)
+				{
+					std::cout << "Col " << e.Column << ": " << e.Message << std::endl;
+				}
+			}
 			std::cout << "< " << res << std::endl;
 		}
 		std::cout << "> ";

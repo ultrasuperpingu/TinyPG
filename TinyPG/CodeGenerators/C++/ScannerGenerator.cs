@@ -31,12 +31,12 @@ namespace TinyPG.CodeGenerators.Cpp
 			}
 
 			// build system tokens
-			tokentype.AppendLine("\r\n		//Non terminal tokens:");
+			tokentype.AppendLine(Environment.NewLine + "		//Non terminal tokens:");
 			tokentype.AppendLine(Helper.Outline("_NONE_", 2, "= 0,", 5));
 			tokentype.AppendLine(Helper.Outline("_UNDETERMINED_", 2, "= 1,", 5));
 
 			// build non terminal tokens
-			tokentype.AppendLine("\r\n		//Non terminal tokens:");
+			tokentype.AppendLine(Environment.NewLine + "		//Non terminal tokens:");
 			foreach (Symbol s in Grammar.GetNonTerminals())
 			{
 				tokentype.AppendLine(Helper.Outline(s.Name, 2, "= " + string.Format("{0:d},", counter), 5));
@@ -48,7 +48,17 @@ namespace TinyPG.CodeGenerators.Cpp
 			bool first = true;
 			foreach (TerminalSymbol s in Grammar.GetTerminals())
 			{
-				regexps.Append("		regex = std::regex(" + Helper.Unverbatim(s.Expression.ToString()) + "");
+				var expr = s.Expression;
+				// Add begin anchor if not present (^).
+				// the whole regex specified by user is encapsulated by
+				//  a non capturing group: (?:userRegex)
+				if (!expr.StartsWith("@\"^")
+					&& !expr.StartsWith("\"^"))
+				{
+					expr = expr.Insert(expr.IndexOf("\"")+1, @"^(?:");
+					expr = expr.Insert(expr.Length-1, ")");
+				}
+				regexps.Append("		regex = std::regex(" + Helper.Unverbatim(expr) + "");
 
 				if (s.Attributes.ContainsKey("IgnoreCase"))
 					regexps.Append("std::regex_constants::icase");

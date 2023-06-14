@@ -29,12 +29,12 @@ namespace TinyPG.CodeGenerators.VBNet
 			}
 
 			// build system tokens
-			tokentype.AppendLine("\r\n		'Non terminal tokens:");
+			tokentype.AppendLine(Environment.NewLine + "		'Non terminal tokens:");
 			tokentype.AppendLine(Helper.Outline("_NONE_", 2, "= 0", 5));
 			tokentype.AppendLine(Helper.Outline("_UNDETERMINED_", 2, "= 1", 5));
 
 			// build non terminal tokens
-			tokentype.AppendLine("\r\n		'Non terminal tokens:");
+			tokentype.AppendLine(Environment.NewLine + "		'Non terminal tokens:");
 			foreach (Symbol s in Grammar.GetNonTerminals())
 			{
 				tokentype.AppendLine(Helper.Outline(s.Name, 2, "= " + String.Format("{0:d}", counter), 5));
@@ -42,7 +42,7 @@ namespace TinyPG.CodeGenerators.VBNet
 			}
 
 			// build terminal tokens
-			tokentype.AppendLine("\r\n		'Terminal tokens:");
+			tokentype.AppendLine(Environment.NewLine + "		'Terminal tokens:");
 			bool first = true;
 			foreach (TerminalSymbol s in Grammar.GetTerminals())
 			{
@@ -60,10 +60,10 @@ namespace TinyPG.CodeGenerators.VBNet
 				if (s.Attributes.ContainsKey("IgnoreCase"))
 					regexps.Append(" & RegexOptions.IgnoreCase");
 
-				regexps.Append(")\r\n");
+				regexps.Append(")" + Environment.NewLine);
 
-				regexps.Append("			Patterns.Add(TokenType." + s.Name + ", regex)\r\n");
-				regexps.Append("			Tokens.Add(TokenType." + s.Name + ")\r\n\r\n");
+				regexps.Append("			Patterns.Add(TokenType." + s.Name + ", regex)" + Environment.NewLine);
+				regexps.Append("			Tokens.Add(TokenType." + s.Name + ")" + Environment.NewLine + Environment.NewLine);
 
 				if (first) first = false;
 				else tokentype.AppendLine("");
@@ -80,7 +80,6 @@ namespace TinyPG.CodeGenerators.VBNet
 			if (Debug != GenerateDebugMode.None)
 			{
 				scanner = scanner.Replace(@"<%Imports%>", "Imports TinyPG.Debug");
-				//scanner = scanner.Replace(@"<%Namespace%>", "TinyPG.Debug");
 				scanner = scanner.Replace(@"<%IToken%>", "\r\n        Implements TinyPG.Debug.IToken");
 				scanner = scanner.Replace(@"<%ImplementsITokenStartPos%>", " Implements TinyPG.Debug.IToken.StartPos");
 				scanner = scanner.Replace(@"<%ImplementsITokenEndPos%>", " Implements TinyPG.Debug.IToken.EndPos");
@@ -92,7 +91,6 @@ namespace TinyPG.CodeGenerators.VBNet
 			else
 			{
 				scanner = scanner.Replace(@"<%Imports%>", "");
-				//scanner = scanner.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				scanner = scanner.Replace(@"<%IToken%>", "");
 				scanner = scanner.Replace(@"<%ImplementsITokenStartPos%>", "");
 				scanner = scanner.Replace(@"<%ImplementsITokenEndPos%>", "");

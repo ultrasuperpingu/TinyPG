@@ -3,7 +3,7 @@
 //Simple expression calculator
 
 // Generate VB code
-<% @TinyPG Language="VB" Namespace="TinyPG" OutputPath="TestVB\SimpleExpr\" %>
+<% @TinyPG Language="VB" Namespace="TinyPG" OutputPath="TestVB\SimpleExpr" %>
 
 <% @ParseTree CustomCode={
 		Protected _context as System.Collections.Generic.Dictionary(Of String, Integer)

@@ -441,7 +441,8 @@ Expression -> AssignmentExpression? (ASSIGN AssignmentExpression)?
 		// function lookup is case insensitive
 		if (containsKey(tree->Context->Functions, str_tolower(key)))
 		{
-			if (!(std::any_cast<DynamicFunction*>(&(tree->Context->Functions[str_tolower(key)]))))
+			auto func = tree->Context->Functions[str_tolower(key)];
+			if (!func->IsDynamic())
 			{
 				tree->Errors.push_back(ParseError("Built in functions cannot be overwritten", 1050, this));
 				return std::any();

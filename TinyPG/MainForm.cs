@@ -149,7 +149,7 @@ namespace TinyPG
 			int i = 1;
 			foreach (var file in Directory.GetFiles(Path.Combine(exeDir,"Examples"), "*.tpg"))
 			{
-				if (file.StartsWith("_"))
+				if (Path.GetFileName(file).StartsWith("_"))
 					continue;
 				var myFile = file;
 				var tsmi = new ToolStripMenuItem();
@@ -157,7 +157,16 @@ namespace TinyPG
 				tsmi.Size = new System.Drawing.Size(313, 26);
 				tsmi.Text = Path.GetFileName(myFile);
 				tsmi.Click += new System.EventHandler((sender, ea) => {
-					NotepadViewFile(myFile);
+					//NotepadViewFile(myFile);
+					if (IsDirty && GrammarFile != null)
+					{
+						DialogResult r = MessageBox.Show(this, "You will lose current changes, continue?", "Lose changes", MessageBoxButtons.OKCancel);
+						if (r == DialogResult.Cancel) return;
+					}
+
+					GrammarFile = myFile;
+					LoadGrammarFile();
+					SaveConfig();
 				});
 				this.examplesToolStripMenuItem.DropDownItems.Add(tsmi);
 			}
@@ -471,46 +480,6 @@ namespace TinyPG
 			ViewFile("ParseTree");
 		}
 
-		private void expressionEvaluatorToolStripMenuItem1_Click(object sender, EventArgs e)
-		{
-			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\simple expression1.tpg");
-		}
-
-		private void codeblocksToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\simple expression2.tpg");
-		}
-		private void calculatorVBTSM_Click(object sender, EventArgs e)
-		{
-			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\simple expression2_vb.tpg");
-		}
-		private void calculatorJavaTSM_Click(object sender, EventArgs e)
-		{
-			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\simple expression2_java.tpg");
-		}
-
-		private void calculatorCppTSM_Click(object sender, EventArgs e)
-		{
-			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\simple expression2_cpp.tpg");
-		}
-		private void theTinyPGGrammarToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\BNFGrammar 1.3.tpg");
-		}
-
-		private void theTinyPGGrammarV10ToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\BNFGrammar 1.5.tpg");
-		}
-
-		private void theTinyPGGrammarHighlighterV12ToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\GrammarHighlighter v1.3.tpg");
-		}
-		private void tinyExprEvalTSM_Click(object sender, EventArgs e)
-		{
-			NotepadViewFile(AppDomain.CurrentDomain.BaseDirectory + @"Examples\TinyExpEval.tpg");
-		}
 		private void textOutput_LinkClicked(object sender, LinkClickedEventArgs e)
 		{
 			try
@@ -557,11 +526,12 @@ namespace TinyPG
 					return;
 
 				ICodeGenerator generator = CodeGeneratorFactory.CreateGenerator(filetype, grammar.Directives["TinyPG"]["Language"]);
-				string folder = grammar.GetOutputPath() + generator.FileName;
+				string folder = Path.Combine(grammar.GetOutputPath(), generator.FileName);
 				System.Diagnostics.Process.Start(folder);
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
+				Console.WriteLine(e.Message);
 			}
 		}
 

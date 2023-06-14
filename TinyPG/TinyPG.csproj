@@ -80,6 +80,7 @@
     <Compile Include="CodeGenerators\VBNet\TextHighlighterGenerator.cs" />
     <Compile Include="Compiler\Compiler.cs" />
     <Compile Include="Compiler\CompilerResult.cs" />
+    <Compile Include="Compiler\ErrorCode.cs" />
     <Compile Include="Compiler\Helper.cs" />
     <Compile Include="Controls\AssemblyInfo.cs" />
     <Compile Include="Controls\AutoComplete.cs">
@@ -140,16 +141,16 @@
     <Compile Include="Compiler\Scanner.cs" />
     <Compile Include="Compiler\Symbol.cs" />
     <Content Include="Templates\**">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Examples\**">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-	<Content Remove="Examples\**\.vs\**" />
-	<Content Remove="Examples\**\obj\**" />
-	<Content Remove="Examples\**\bin\**" />
-	<Content Remove="Examples\**\x64\**" />
-	<Content Remove="Examples\*.cs" />
+    <Content Remove="Examples\**\.vs\**" />
+    <Content Remove="Examples\**\obj\**" />
+    <Content Remove="Examples\**\bin\**" />
+    <Content Remove="Examples\**\x64\**" />
+    <Content Remove="Examples\*.cs" />
     <Compile Include="Compiler\TerminalSymbol.cs" />
     <Compile Include="SearchDialog.cs">
       <SubType>Form</SubType>

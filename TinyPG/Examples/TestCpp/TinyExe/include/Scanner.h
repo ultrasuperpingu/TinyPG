@@ -205,143 +205,143 @@ namespace TinyExe
 		
 		SkipList.push_back(TokenType::WHITESPACE);
 
-		regex = std::regex("true|false");
+		regex = std::regex("^(?:true|false)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::BOOLEANLITERAL, regex));
 		Tokens.push_back(TokenType::BOOLEANLITERAL);
 
-		regex = std::regex("[0-9]+(UL|Ul|uL|ul|LU|Lu|lU|lu|U|u|L|l)?");
+		regex = std::regex("^(?:[0-9]+(UL|Ul|uL|ul|LU|Lu|lU|lu|U|u|L|l)?)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::DECIMALINTEGERLITERAL, regex));
 		Tokens.push_back(TokenType::DECIMALINTEGERLITERAL);
 
-		regex = std::regex("([0-9]+\\.[0-9]+([eE][+-]?[0-9]+)?([fFdDMm]?)?)|(\\.[0-9]+([eE][+-]?[0-9]+)?([fFdDMm]?)?)|([0-9]+([eE][+-]?[0-9]+)([fFdDMm]?)?)|([0-9]+([fFdDMm]?))");
+		regex = std::regex("^(?:([0-9]+\\.[0-9]+([eE][+-]?[0-9]+)?([fFdDMm]?)?)|(\\.[0-9]+([eE][+-]?[0-9]+)?([fFdDMm]?)?)|([0-9]+([eE][+-]?[0-9]+)([fFdDMm]?)?)|([0-9]+([fFdDMm]?)))");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::REALLITERAL, regex));
 		Tokens.push_back(TokenType::REALLITERAL);
 
-		regex = std::regex("0(x|X)[0-9a-fA-F]+");
+		regex = std::regex("^(?:0(x|X)[0-9a-fA-F]+)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::HEXINTEGERLITERAL, regex));
 		Tokens.push_back(TokenType::HEXINTEGERLITERAL);
 
-		regex = std::regex("\\\"\"(\\\"\"\\\"\"|[^\\\"\"])*\\\"\"");
+		regex = std::regex("^(?:\\\"\"(\\\"\"\\\"\"|[^\\\"\"])*\\\"\")");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::STRINGLITERAL, regex));
 		Tokens.push_back(TokenType::STRINGLITERAL);
 
-		regex = std::regex("[a-zA-Z_][a-zA-Z0-9_]*(?=\\s*\\()");
+		regex = std::regex("^(?:[a-zA-Z_][a-zA-Z0-9_]*(?=\\s*\\())");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::FUNCTION, regex));
 		Tokens.push_back(TokenType::FUNCTION);
 
-		regex = std::regex("[a-zA-Z_][a-zA-Z0-9_]*(?!\\s*\\()");
+		regex = std::regex("^(?:[a-zA-Z_][a-zA-Z0-9_]*(?!\\s*\\())");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::VARIABLE, regex));
 		Tokens.push_back(TokenType::VARIABLE);
 
-		regex = std::regex("pi|e");
+		regex = std::regex("^(?:pi|e)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::CONSTANT, regex));
 		Tokens.push_back(TokenType::CONSTANT);
 
-		regex = std::regex("\\{\\s*");
+		regex = std::regex("^(?:\\{\\s*)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::BRACEOPEN, regex));
 		Tokens.push_back(TokenType::BRACEOPEN);
 
-		regex = std::regex("\\s*\\}");
+		regex = std::regex("^(?:\\s*\\})");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::BRACECLOSE, regex));
 		Tokens.push_back(TokenType::BRACECLOSE);
 
-		regex = std::regex("\\(\\s*");
+		regex = std::regex("^(?:\\(\\s*)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::BRACKETOPEN, regex));
 		Tokens.push_back(TokenType::BRACKETOPEN);
 
-		regex = std::regex("\\s*\\)");
+		regex = std::regex("^(?:\\s*\\))");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::BRACKETCLOSE, regex));
 		Tokens.push_back(TokenType::BRACKETCLOSE);
 
-		regex = std::regex(";");
+		regex = std::regex("^(?:;)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::SEMICOLON, regex));
 		Tokens.push_back(TokenType::SEMICOLON);
 
-		regex = std::regex("\\+\\+");
+		regex = std::regex("^(?:\\+\\+)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::PLUSPLUS, regex));
 		Tokens.push_back(TokenType::PLUSPLUS);
 
-		regex = std::regex("--");
+		regex = std::regex("^(?:--)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::MINUSMINUS, regex));
 		Tokens.push_back(TokenType::MINUSMINUS);
 
-		regex = std::regex("\\|\\||or");
+		regex = std::regex("^(?:\\|\\||or)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::PIPEPIPE, regex));
 		Tokens.push_back(TokenType::PIPEPIPE);
 
-		regex = std::regex("&&|and");
+		regex = std::regex("^(?:&&|and)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::AMPAMP, regex));
 		Tokens.push_back(TokenType::AMPAMP);
 
-		regex = std::regex("&(?!&)");
+		regex = std::regex("^(?:&(?!&))");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::AMP, regex));
 		Tokens.push_back(TokenType::AMP);
 
-		regex = std::regex("\\^");
+		regex = std::regex("^(?:\\^)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::POWER, regex));
 		Tokens.push_back(TokenType::POWER);
 
-		regex = std::regex("\\+");
+		regex = std::regex("^(?:\\+)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::PLUS, regex));
 		Tokens.push_back(TokenType::PLUS);
 
-		regex = std::regex("-");
+		regex = std::regex("^(?:-)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::MINUS, regex));
 		Tokens.push_back(TokenType::MINUS);
 
-		regex = std::regex("=");
+		regex = std::regex("^(?:=)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::EQUAL, regex));
 		Tokens.push_back(TokenType::EQUAL);
 
-		regex = std::regex(":=");
+		regex = std::regex("^(?::=)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::ASSIGN, regex));
 		Tokens.push_back(TokenType::ASSIGN);
 
-		regex = std::regex("!=|<>");
+		regex = std::regex("^(?:!=|<>)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::NOTEQUAL, regex));
 		Tokens.push_back(TokenType::NOTEQUAL);
 
-		regex = std::regex("!");
+		regex = std::regex("^(?:!)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::NOT, regex));
 		Tokens.push_back(TokenType::NOT);
 
-		regex = std::regex("\\*");
+		regex = std::regex("^(?:\\*)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::ASTERIKS, regex));
 		Tokens.push_back(TokenType::ASTERIKS);
 
-		regex = std::regex("/");
+		regex = std::regex("^(?:/)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::SLASH, regex));
 		Tokens.push_back(TokenType::SLASH);
 
-		regex = std::regex("%");
+		regex = std::regex("^(?:%)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::PERCENT, regex));
 		Tokens.push_back(TokenType::PERCENT);
 
-		regex = std::regex("\\?");
+		regex = std::regex("^(?:\\?)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::QUESTIONMARK, regex));
 		Tokens.push_back(TokenType::QUESTIONMARK);
 
-		regex = std::regex(",");
+		regex = std::regex("^(?:,)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::COMMA, regex));
 		Tokens.push_back(TokenType::COMMA);
 
-		regex = std::regex("<=");
+		regex = std::regex("^(?:<=)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::LESSEQUAL, regex));
 		Tokens.push_back(TokenType::LESSEQUAL);
 
-		regex = std::regex(">=");
+		regex = std::regex("^(?:>=)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::GREATEREQUAL, regex));
 		Tokens.push_back(TokenType::GREATEREQUAL);
 
-		regex = std::regex("<(?!>)");
+		regex = std::regex("^(?:<(?!>))");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::LESSTHAN, regex));
 		Tokens.push_back(TokenType::LESSTHAN);
 
-		regex = std::regex(">");
+		regex = std::regex("^(?:>)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::GREATERTHAN, regex));
 		Tokens.push_back(TokenType::GREATERTHAN);
 
-		regex = std::regex(":");
+		regex = std::regex("^(?::)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::COLON, regex));
 		Tokens.push_back(TokenType::COLON);
 
@@ -349,7 +349,7 @@ namespace TinyExe
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::EOF_, regex));
 		Tokens.push_back(TokenType::EOF_);
 
-		regex = std::regex("\\s+");
+		regex = std::regex("^(?:\\s+)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::WHITESPACE, regex));
 		Tokens.push_back(TokenType::WHITESPACE);
 

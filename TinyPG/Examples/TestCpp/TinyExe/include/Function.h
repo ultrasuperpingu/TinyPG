@@ -38,11 +38,17 @@ namespace TinyExe
 		int MinParameters;
 
 		virtual std::any Eval(std::vector<std::any> parameters, ParseTree* tree) = 0;
+		virtual bool IsDynamic();
 
 	};
 
 	inline Function::Function() : Arguments(NULL), Name(""), MaxParameters(0), MinParameters(0)
-	{}
+	{
+	}
 
+	inline bool Function::IsDynamic()
+	{
+		return false;
+	}
 
 }

@@ -15,7 +15,7 @@
 //    }    
 //}
 
-<% @TinyPG Language="Java" Namespace="tinypg" OutputPath="TestJava\SimpleExpr\src\tinypg\" %>
+<% @TinyPG Language="Java" Namespace="tinypg" OutputPath="TestJava\SimpleExpr\src\tinypg" %>
 
 // this is not supported in Java
 //<% @TextHighlighter Generate="true" %>

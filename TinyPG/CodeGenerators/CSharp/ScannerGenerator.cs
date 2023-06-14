@@ -29,12 +29,12 @@ namespace TinyPG.CodeGenerators.CSharp
 			}
 
 			// build system tokens
-			tokentype.AppendLine("\r\n		//Non terminal tokens:");
+			tokentype.AppendLine(Environment.NewLine + "		//Non terminal tokens:");
 			tokentype.AppendLine(Helper.Outline("_NONE_", 2, "= 0,", 5));
 			tokentype.AppendLine(Helper.Outline("_UNDETERMINED_", 2, "= 1,", 5));
 
 			// build non terminal tokens
-			tokentype.AppendLine("\r\n		//Non terminal tokens:");
+			tokentype.AppendLine(Environment.NewLine + "		//Non terminal tokens:");
 			foreach (Symbol s in Grammar.GetNonTerminals())
 			{
 				tokentype.AppendLine(Helper.Outline(s.Name, 2, "= " + String.Format("{0:d},", counter), 5));
@@ -42,14 +42,37 @@ namespace TinyPG.CodeGenerators.CSharp
 			}
 
 			// build terminal tokens
-			tokentype.AppendLine("\r\n			//Terminal tokens:");
+			tokentype.AppendLine(Environment.NewLine + "			//Terminal tokens:");
 			bool first = true;
 			foreach (TerminalSymbol s in Grammar.GetTerminals())
 			{
 				string RegexCompiled = null;
 				Grammar.Directives.Find("TinyPG").TryGetValue("RegexCompiled", out RegexCompiled);
-
-				regexps.Append("			regex = new Regex(" + s.Expression.ToString() + ", RegexOptions.None");
+				var expr = s.Expression;
+				// Add begin anchor if not present (\A).
+				// the whole regex specified by user is encapsulated by
+				//  a non capturing group: (?:userRegex)
+				if (expr.StartsWith("@"))
+				{
+					if (!expr.StartsWith("@\"^") && !expr.StartsWith(@"@""\A"))
+					{
+						expr = expr.Insert(expr.IndexOf("\"")+1, @"\A(?:");
+						expr = expr.Insert(expr.Length-1, ")");
+					}
+				}
+				else if (expr.StartsWith("\""))
+				{
+					if (!expr.StartsWith("\"^") && !expr.StartsWith("\"\\A"))
+					{
+						expr = expr.Insert(expr.IndexOf("\"")+1, @"\\A(?:");
+						expr = expr.Insert(expr.Length-1, ")");
+					}
+				}
+				else
+				{
+					throw new Exception("Internal Error: Termimal token not starting with \" or @\"");
+				}
+				regexps.Append("			regex = new Regex(" + expr + ", RegexOptions.None");
 
 				if (RegexCompiled == null || RegexCompiled.ToLower().Equals("true"))
 					regexps.Append(" | RegexOptions.Compiled");
@@ -57,10 +80,10 @@ namespace TinyPG.CodeGenerators.CSharp
 				if (s.Attributes.ContainsKey("IgnoreCase"))
 					regexps.Append(" | RegexOptions.IgnoreCase");
 
-				regexps.Append(");\r\n");
+				regexps.Append(");" + Environment.NewLine);
 
-				regexps.Append("			Patterns.Add(TokenType." + s.Name + ", regex);\r\n");
-				regexps.Append("			Tokens.Add(TokenType." + s.Name + ");\r\n\r\n");
+				regexps.Append("			Patterns.Add(TokenType." + s.Name + ", regex);" + Environment.NewLine);
+				regexps.Append("			Tokens.Add(TokenType." + s.Name + ");" + Environment.NewLine + Environment.NewLine);
 
 				if (first)
 					first = false;

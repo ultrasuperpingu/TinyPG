@@ -29,8 +29,10 @@ ARROW             	-> @"->";
 DIRECTIVEOPEN		-> @"<%\s*@";
 DIRECTIVECLOSE	-> @"%>";
 EOF               	-> @"^$";
-STRING             	-> @"@?\""(\""\""|[^\""])*\""";
-DEFAULT_VALUE        -> @"[_a-zA-Z0-9.<>#@\""]+";
+STRING             	-> @"\""(\\\""|[^\""])*\""";
+VERBATIM_STRING	-> @"(R|@)\""(\""\""|[^\""])*\""";
+REGEX_PATTERN		-> @"/(\/|[^/])+/";
+DEFAULT_VALUE		-> @"[_a-zA-Z0-9.<>#@\""]+";
 
 [Skip]
 WHITESPACE        	-> @"\s+";
@@ -44,13 +46,13 @@ COMMENTBLOCK      	-> @"/\*[^*]*\*+(?:[^/*][^*]*\*+)*/";
 // Production lines LL(1):
 Start             	-> Directive* ExtProduction* EOF;
 Directive 		-> DIRECTIVEOPEN IDENTIFIER NameValue* DIRECTIVECLOSE;
-NameValue		-> IDENTIFIER ASSIGN (STRING|CODEBLOCK);
+NameValue		-> IDENTIFIER ASSIGN (VERBATIM_STRING|STRING|CODEBLOCK);
 ExtProduction     	-> Attribute* Production;
 Attribute	      	-> SQUAREOPEN IDENTIFIER ( BRACKETOPEN Params? BRACKETCLOSE )? SQUARECLOSE;
 Params			-> Param (COMMA Param)*;
 Param			-> INTEGER | DOUBLE | STRING | HEX;
 Production        	-> IDENTIFIER ARROW Rule (COLON TYPE (DEFAULT BRACKETOPEN DEFAULT_VALUE BRACKETCLOSE)?)? (CODEBLOCK | SEMICOLON);
-Rule              	-> STRING | Subrule;
+Rule              	-> VERBATIM_STRING | STRING | Subrule;
 Subrule           	-> ConcatRule (PIPE ConcatRule)* ;
 ConcatRule      	-> Symbol+;
 Symbol            	-> (IDENTIFIER | (BRACKETOPEN Subrule BRACKETCLOSE) ) UNARYOPER?; 

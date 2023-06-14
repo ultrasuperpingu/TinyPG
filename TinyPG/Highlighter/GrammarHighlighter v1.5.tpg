@@ -16,7 +16,7 @@
 [Color(0, 128, 0)]	GRAMMARCOMMENTBLOCK 		-> @"/\*([^*]+|\*[^/])+(\*/)?";
 
 	
-[Color(255, 0, 0)]	DIRECTIVESTRING	-> @"@?\""(\""\""|[^\""])*(""|\n)";
+[Color(255, 0, 0)]	DIRECTIVESTRING	-> @"((@\""(\""\""|[^\""])*(""|\n))|(\""(\\\""|[^\""])*\""))";
 [Color(128, 0, 255)]	DIRECTIVEKEYWORD	-> @"^(@TinyPG|@Parser|@Scanner|@Grammar|@ParseTree|@TextHighlighter|@Compile)";
 			DIRECTIVESYMBOL	-> @"^(@|(%[^>])|=|"")+?";
 			DIRECTIVENONKEYWORD	-> @"[^%@=""{]+";
@@ -77,7 +77,7 @@
 			GRAMMARSYMBOL		-> @"[^{}\[\]/<>]|[</]$";
 			GRAMMARNONKEYWORD	-> @"([^;""\[\n\s/<{\(\)]|/[^/*]|<[^%])+";
 // string will scan until closing quote or the end of line
-[Color(163, 21, 21)]	GRAMMARSTRING        -> @"@?[""]([""][""]|[^\""\n])*[""]?";
+[Color(163, 21, 21)]	GRAMMARSTRING        -> @"(@[""]([""][""]|[^\""\n])*[""]?)|([""](\\""|[^\""\n])*[""]?)";
 
 Start 			->  (CommentBlock | AttributeBlock | GrammarBlock | CodeBlock | DirectiveBlock)* EOF;
 CommentBlock		-> (GRAMMARCOMMENTLINE | GRAMMARCOMMENTBLOCK)+;

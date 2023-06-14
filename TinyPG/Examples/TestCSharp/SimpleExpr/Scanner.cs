@@ -41,31 +41,31 @@ namespace SimpleExpr
 			Patterns.Add(TokenType.EOF, regex);
 			Tokens.Add(TokenType.EOF);
 
-			regex = new Regex(@"[0-9]+", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex("\\A(?:[0-9]+)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.NUMBER, regex);
 			Tokens.Add(TokenType.NUMBER);
 
-			regex = new Regex(@"[a-zA-Z_][a-zA-Z0-9_]*", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex("\\A(?:[a-zA-Z_][a-zA-Z0-9_]*)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.ID, regex);
 			Tokens.Add(TokenType.ID);
 
-			regex = new Regex(@"(\+|-)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\A(?:\+|-)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.PLUSMINUS, regex);
 			Tokens.Add(TokenType.PLUSMINUS);
 
-			regex = new Regex(@"\*|/", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\A(?:\*|/)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.MULTDIV, regex);
 			Tokens.Add(TokenType.MULTDIV);
 
-			regex = new Regex(@"\(", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\A(?:\()", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.BROPEN, regex);
 			Tokens.Add(TokenType.BROPEN);
 
-			regex = new Regex(@"\)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\A(?:\))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.BRCLOSE, regex);
 			Tokens.Add(TokenType.BRCLOSE);
 
-			regex = new Regex(@"\s+", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\A(?:\s+)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.WHITESPACE, regex);
 			Tokens.Add(TokenType.WHITESPACE);
 

@@ -38,6 +38,15 @@ namespace TinyPG.Highlighter
 			return tree;
 		}
 
+		public ParseTree ParseStart(string input, ParseTree tree) // NonTerminalSymbol: Start
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseStart(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseStart(ParseNode parent) // NonTerminalSymbol: Start
 		{
 			Token tok;
@@ -102,6 +111,15 @@ namespace TinyPG.Highlighter
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: Start
 
+		public ParseTree ParseCommentBlock(string input, ParseTree tree) // NonTerminalSymbol: CommentBlock
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseCommentBlock(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseCommentBlock(ParseNode parent) // NonTerminalSymbol: CommentBlock
 		{
 			Token tok;
@@ -143,6 +161,15 @@ namespace TinyPG.Highlighter
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: CommentBlock
+
+		public ParseTree ParseDirectiveBlock(string input, ParseTree tree) // NonTerminalSymbol: DirectiveBlock
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseDirectiveBlock(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseDirectiveBlock(ParseNode parent) // NonTerminalSymbol: DirectiveBlock
 		{
@@ -251,6 +278,15 @@ namespace TinyPG.Highlighter
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: DirectiveBlock
 
+		public ParseTree ParseGrammarBlock(string input, ParseTree tree) // NonTerminalSymbol: GrammarBlock
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseGrammarBlock(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseGrammarBlock(ParseNode parent) // NonTerminalSymbol: GrammarBlock
 		{
 			Token tok;
@@ -325,6 +361,15 @@ namespace TinyPG.Highlighter
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: GrammarBlock
+
+		public ParseTree ParseAttributeBlock(string input, ParseTree tree) // NonTerminalSymbol: AttributeBlock
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseAttributeBlock(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseAttributeBlock(ParseNode parent) // NonTerminalSymbol: AttributeBlock
 		{
@@ -406,6 +451,15 @@ namespace TinyPG.Highlighter
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: AttributeBlock
+
+		public ParseTree ParseCodeBlock(string input, ParseTree tree) // NonTerminalSymbol: CodeBlock
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseCodeBlock(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseCodeBlock(ParseNode parent) // NonTerminalSymbol: CodeBlock
 		{

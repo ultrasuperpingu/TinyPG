@@ -33,12 +33,12 @@ namespace TinyPG.CodeGenerators.Java
 			}
 
 			// build system tokens
-			tokentype.AppendLine("\r\n	//Non terminal tokens:");
+			tokentype.AppendLine(Environment.NewLine + "	//Non terminal tokens:");
 			tokentype.AppendLine(Helper.Outline("_NONE_", 1, ",", 4));
 			tokentype.AppendLine(Helper.Outline("_UNDETERMINED_", 1, ",", 4));
 
 			// build non terminal tokens
-			tokentype.AppendLine("\r\n	//Non terminal tokens:");
+			tokentype.AppendLine(Environment.NewLine + "	//Non terminal tokens:");
 			foreach (Symbol s in Grammar.GetNonTerminals())
 			{
 				tokentype.AppendLine(Helper.Outline(s.Name, 1, ",", 4));
@@ -46,16 +46,16 @@ namespace TinyPG.CodeGenerators.Java
 			}
 
 			// build terminal tokens
-			tokentype.AppendLine("\r\n	//Terminal tokens:");
+			tokentype.AppendLine(Environment.NewLine + "	//Terminal tokens:");
 			bool first = true;
 			foreach (TerminalSymbol s in Grammar.GetTerminals())
 			{
-				regexps.Append("		regex = Pattern.compile(" + Helper.Unverbatim(s.Expression.ToString()));
+				regexps.Append("		regex = Pattern.compile(" + Helper.Unverbatim(s.Expression));
 				if (s.Attributes.ContainsKey("IgnoreCase"))
 					regexps.Append(", Pattern.CASE_INSENSITIVE");
-				regexps.Append(");\r\n");
-				regexps.Append("		Patterns.put(TokenType." + s.Name + ", regex);\r\n");
-				regexps.Append("		Tokens.add(TokenType." + s.Name + ");\r\n\r\n");
+				regexps.Append(");" + Environment.NewLine);
+				regexps.Append("		Patterns.put(TokenType." + s.Name + ", regex);" + Environment.NewLine);
+				regexps.Append("		Tokens.add(TokenType." + s.Name + ");" + Environment.NewLine + Environment.NewLine);
 
 				if (first)
 					first = false;

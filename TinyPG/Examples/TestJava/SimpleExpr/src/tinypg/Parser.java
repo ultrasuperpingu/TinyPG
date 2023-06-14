@@ -31,6 +31,15 @@ public class Parser
 		return tree;
 	}
 
+	public ParseTree ParseStart(String input, ParseTree tree) // NonTerminalSymbol: Start
+	{
+		scanner.Init(input);
+		this.tree = tree;
+		ParseStart(tree);
+		tree.Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	private void ParseStart(ParseNode parent) // NonTerminalSymbol: Start
 	{
 		Token tok;
@@ -60,6 +69,15 @@ public class Parser
 
 		parent.Token.UpdateRange(node.Token);
 	} // NonTerminalSymbol: Start
+
+	public ParseTree ParseAddExpr(String input, ParseTree tree) // NonTerminalSymbol: AddExpr
+	{
+		scanner.Init(input);
+		this.tree = tree;
+		ParseAddExpr(tree);
+		tree.Skipped = scanner.Skipped;
+		return tree;
+	}
 
 	private void ParseAddExpr(ParseNode parent) // NonTerminalSymbol: AddExpr
 	{
@@ -95,6 +113,15 @@ public class Parser
 		parent.Token.UpdateRange(node.Token);
 	} // NonTerminalSymbol: AddExpr
 
+	public ParseTree ParseMultExpr(String input, ParseTree tree) // NonTerminalSymbol: MultExpr
+	{
+		scanner.Init(input);
+		this.tree = tree;
+		ParseMultExpr(tree);
+		tree.Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	private void ParseMultExpr(ParseNode parent) // NonTerminalSymbol: MultExpr
 	{
 		Token tok;
@@ -128,6 +155,15 @@ public class Parser
 
 		parent.Token.UpdateRange(node.Token);
 	} // NonTerminalSymbol: MultExpr
+
+	public ParseTree ParseAtom(String input, ParseTree tree) // NonTerminalSymbol: Atom
+	{
+		scanner.Init(input);
+		this.tree = tree;
+		ParseAtom(tree);
+		tree.Skipped = scanner.Skipped;
+		return tree;
+	}
 
 	private void ParseAtom(ParseNode parent) // NonTerminalSymbol: Atom
 	{

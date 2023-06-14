@@ -53,7 +53,7 @@ namespace TinyPG.Highlighter
 			Patterns.Add(TokenType.GRAMMARCOMMENTBLOCK, regex);
 			Tokens.Add(TokenType.GRAMMARCOMMENTBLOCK);
 
-			regex = new Regex(@"@?\""(\""\""|[^\""])*(""|\n)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"((@\""(\""\""|[^\""])*(""|\n))|(\""(\\\""|[^\""])*\""))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DIRECTIVESTRING, regex);
 			Tokens.Add(TokenType.DIRECTIVESTRING);
 
@@ -221,7 +221,7 @@ namespace TinyPG.Highlighter
 			Patterns.Add(TokenType.GRAMMARNONKEYWORD, regex);
 			Tokens.Add(TokenType.GRAMMARNONKEYWORD);
 
-			regex = new Regex(@"@?[""]([""][""]|[^\""\n])*[""]?", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"(@[""]([""][""]|[^\""\n])*[""]?)|([""](\\""|[^\""\n])*[""]?)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.GRAMMARSTRING, regex);
 			Tokens.Add(TokenType.GRAMMARSTRING);
 

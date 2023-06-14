@@ -38,6 +38,15 @@ namespace TinyPG
 			return tree;
 		}
 
+		public ParseTree ParseStart(string input, ParseTree tree) // NonTerminalSymbol: Start
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseStart(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseStart(ParseNode parent) // NonTerminalSymbol: Start
 		{
 			Token tok;
@@ -75,6 +84,15 @@ namespace TinyPG
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: Start
+
+		public ParseTree ParseDirective(string input, ParseTree tree) // NonTerminalSymbol: Directive
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseDirective(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseDirective(ParseNode parent) // NonTerminalSymbol: Directive
 		{
@@ -125,6 +143,15 @@ namespace TinyPG
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: Directive
 
+		public ParseTree ParseNameValue(string input, ParseTree tree) // NonTerminalSymbol: NameValue
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseNameValue(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseNameValue(ParseNode parent) // NonTerminalSymbol: NameValue
 		{
 			Token tok;
@@ -154,9 +181,19 @@ namespace TinyPG
 			}
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.STRING, TokenType.CODEBLOCK); // Choice Rule
+			tok = scanner.LookAhead(TokenType.VERBATIM_STRING, TokenType.STRING, TokenType.CODEBLOCK); // Choice Rule
 			switch (tok.Type)
 			{ // Choice Rule
+				case TokenType.VERBATIM_STRING:
+					tok = scanner.Scan(TokenType.VERBATIM_STRING); // Terminal Rule: VERBATIM_STRING
+					n = node.CreateNode(tok, tok.ToString() );
+					node.Token.UpdateRange(tok);
+					node.Nodes.Add(n);
+					if (tok.Type != TokenType.VERBATIM_STRING) {
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.VERBATIM_STRING.ToString(), 0x1001, tok));
+						return;
+					}
+					break;
 				case TokenType.STRING:
 					tok = scanner.Scan(TokenType.STRING); // Terminal Rule: STRING
 					n = node.CreateNode(tok, tok.ToString() );
@@ -178,12 +215,21 @@ namespace TinyPG
 					}
 					break;
 				default:
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected STRING or CODEBLOCK.", 0x0002, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected VERBATIM_STRING, STRING, or CODEBLOCK.", 0x0002, tok));
 					break;
 			} // Choice Rule
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: NameValue
+
+		public ParseTree ParseExtProduction(string input, ParseTree tree) // NonTerminalSymbol: ExtProduction
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseExtProduction(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseExtProduction(ParseNode parent) // NonTerminalSymbol: ExtProduction
 		{
@@ -206,6 +252,15 @@ namespace TinyPG
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: ExtProduction
+
+		public ParseTree ParseAttribute(string input, ParseTree tree) // NonTerminalSymbol: Attribute
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseAttribute(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseAttribute(ParseNode parent) // NonTerminalSymbol: Attribute
 		{
@@ -284,6 +339,15 @@ namespace TinyPG
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: Attribute
 
+		public ParseTree ParseParams(string input, ParseTree tree) // NonTerminalSymbol: Params
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseParams(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseParams(ParseNode parent) // NonTerminalSymbol: Params
 		{
 			Token tok;
@@ -317,6 +381,15 @@ namespace TinyPG
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: Params
+
+		public ParseTree ParseParam(string input, ParseTree tree) // NonTerminalSymbol: Param
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseParam(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseParam(ParseNode parent) // NonTerminalSymbol: Param
 		{
@@ -375,6 +448,15 @@ namespace TinyPG
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: Param
+
+		public ParseTree ParseProduction(string input, ParseTree tree) // NonTerminalSymbol: Production
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseProduction(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseProduction(ParseNode parent) // NonTerminalSymbol: Production
 		{
@@ -511,6 +593,15 @@ namespace TinyPG
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: Production
 
+		public ParseTree ParseRule(string input, ParseTree tree) // NonTerminalSymbol: Rule
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseRule(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseRule(ParseNode parent) // NonTerminalSymbol: Rule
 		{
 			Token tok;
@@ -518,9 +609,19 @@ namespace TinyPG
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Rule), "Rule");
 			parent.Nodes.Add(node);
 
-			tok = scanner.LookAhead(TokenType.STRING, TokenType.IDENTIFIER, TokenType.BRACKETOPEN); // Choice Rule
+			tok = scanner.LookAhead(TokenType.VERBATIM_STRING, TokenType.STRING, TokenType.IDENTIFIER, TokenType.BRACKETOPEN); // Choice Rule
 			switch (tok.Type)
 			{ // Choice Rule
+				case TokenType.VERBATIM_STRING:
+					tok = scanner.Scan(TokenType.VERBATIM_STRING); // Terminal Rule: VERBATIM_STRING
+					n = node.CreateNode(tok, tok.ToString() );
+					node.Token.UpdateRange(tok);
+					node.Nodes.Add(n);
+					if (tok.Type != TokenType.VERBATIM_STRING) {
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.VERBATIM_STRING.ToString(), 0x1001, tok));
+						return;
+					}
+					break;
 				case TokenType.STRING:
 					tok = scanner.Scan(TokenType.STRING); // Terminal Rule: STRING
 					n = node.CreateNode(tok, tok.ToString() );
@@ -536,12 +637,21 @@ namespace TinyPG
 					ParseSubrule(node); // NonTerminal Rule: Subrule
 					break;
 				default:
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected STRING, IDENTIFIER, or BRACKETOPEN.", 0x0002, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected VERBATIM_STRING, STRING, IDENTIFIER, or BRACKETOPEN.", 0x0002, tok));
 					break;
 			} // Choice Rule
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: Rule
+
+		public ParseTree ParseSubrule(string input, ParseTree tree) // NonTerminalSymbol: Subrule
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseSubrule(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseSubrule(ParseNode parent) // NonTerminalSymbol: Subrule
 		{
@@ -577,6 +687,15 @@ namespace TinyPG
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: Subrule
 
+		public ParseTree ParseConcatRule(string input, ParseTree tree) // NonTerminalSymbol: ConcatRule
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseConcatRule(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
+
 		private void ParseConcatRule(ParseNode parent) // NonTerminalSymbol: ConcatRule
 		{
 			Token tok;
@@ -592,6 +711,15 @@ namespace TinyPG
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: ConcatRule
+
+		public ParseTree ParseSymbol(string input, ParseTree tree) // NonTerminalSymbol: Symbol
+		{
+			scanner.Init(input);
+			this.tree = tree;
+			ParseSymbol(tree);
+			tree.Skipped = scanner.Skipped;
+			return tree;
+		}
 
 		private void ParseSymbol(ParseNode parent) // NonTerminalSymbol: Symbol
 		{
