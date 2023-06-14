@@ -16,6 +16,7 @@ The source code is licensed under the [Code Project Open License (CPOL)
 These are the new features and fixes we have added to the original code:
  - New features:
    - Added Java and C++ support.
+   - Added [TinyExe](https://www.codeproject.com/Articles/241830/a-Tiny-Expression-Evaluator) as an example (in C#, Java and C++)
    - Command line building of parsers.
    - Support for `[IgnoreCase]` flag on terminal symbols.
    - Support `RegexCompiled` option to don't use `RegexOptions.Compiled` in Scanner regexs
