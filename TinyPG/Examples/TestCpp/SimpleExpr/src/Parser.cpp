@@ -1,38 +1,12 @@
 // Automatically generated from source file: simple expression2_cpp.tpg
 // By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
 
-#pragma once
-#include <string>
-#include "Scanner.h"
-#include "ParseTree.h"
+#include "Parser.h"
 
 namespace TinyPG
 {
-	class Parser
-	{
-	private:
-		Scanner& scanner;
-		ParseTree* tree;
-		ParseTree* instanciatedTree;
-		void DeleteTree();
-	public:
-		Parser(Scanner& scanner);
-		virtual ~Parser();
 
-		ParseTree* Parse(const std::string& input);
-		ParseTree* Parse(const std::string& input, ParseTree* tree);
-
-	protected:
-		void ParseStart(ParseNode* parent);
-		void ParseAddExpr(ParseNode* parent);
-		void ParseMultExpr(ParseNode* parent);
-		void ParseAtom(ParseNode* parent);
-
-
-
-	};
-
-	inline void Parser::DeleteTree()
+	void Parser::DeleteTree()
 	{
 		if (instanciatedTree != NULL)
 		{
@@ -41,23 +15,23 @@ namespace TinyPG
 		}
 	}
 
-	inline Parser::Parser(Scanner& scanner) : scanner(scanner), tree(NULL), instanciatedTree(NULL)
+	Parser::Parser(Scanner& scanner) : scanner(scanner), tree(NULL), instanciatedTree(NULL)
 	{
 	}
 
-	inline Parser::~Parser()
+	Parser::~Parser()
 	{
 		DeleteTree();
 	}
 
-	inline ParseTree* Parser::Parse(const std::string& input)
+	ParseTree* Parser::Parse(const std::string& input)
 	{
 		DeleteTree();
 		instanciatedTree = new ParseTree();
 		return Parse(input, new ParseTree());
 	}
 
-	inline ParseTree* Parser::Parse(const std::string& input, ParseTree* tree)
+	ParseTree* Parser::Parse(const std::string& input, ParseTree* tree)
 	{
 		scanner.Init(input);
 		if (tree != instanciatedTree)
@@ -66,6 +40,15 @@ namespace TinyPG
 		ParseStart(tree);
 		tree->Skipped = scanner.Skipped;
 
+		return tree;
+	}
+
+	inline ParseTree* Parser::ParseStart(const std::string& input, ParseTree* tree) // NonTerminalSymbol: Start
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseStart(tree);
+		tree->Skipped = scanner.Skipped;
 		return tree;
 	}
 
@@ -98,6 +81,15 @@ namespace TinyPG
 
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: Start
+
+	inline ParseTree* Parser::ParseAddExpr(const std::string& input, ParseTree* tree) // NonTerminalSymbol: AddExpr
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseAddExpr(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
 
 	inline void Parser::ParseAddExpr(ParseNode* parent) // NonTerminalSymbol: AddExpr
 	{
@@ -133,6 +125,15 @@ namespace TinyPG
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: AddExpr
 
+	inline ParseTree* Parser::ParseMultExpr(const std::string& input, ParseTree* tree) // NonTerminalSymbol: MultExpr
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseMultExpr(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
+
 	inline void Parser::ParseMultExpr(ParseNode* parent) // NonTerminalSymbol: MultExpr
 	{
 		Token tok;
@@ -166,6 +167,15 @@ namespace TinyPG
 
 		parent->TokenVal.UpdateRange(node->TokenVal);
 	} // NonTerminalSymbol: MultExpr
+
+	inline ParseTree* Parser::ParseAtom(const std::string& input, ParseTree* tree) // NonTerminalSymbol: Atom
+	{
+		scanner.Init(input);
+		this->tree = tree;
+		ParseAtom(tree);
+		tree->Skipped = scanner.Skipped;
+		return tree;
+	}
 
 	inline void Parser::ParseAtom(ParseNode* parent) // NonTerminalSymbol: Atom
 	{

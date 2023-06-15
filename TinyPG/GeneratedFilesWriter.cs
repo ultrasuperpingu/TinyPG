@@ -30,8 +30,14 @@ namespace TinyPG
 				{
 					foreach (var entry in generator.Generate(grammar, debug ? GenerateDebugMode.DebugSelf : GenerateDebugMode.None))
 					{
+						var file = Path.Combine(grammar.GetOutputPath(), entry.Key);
+						var dir = Path.GetDirectoryName(file);
+						if (!Directory.Exists(dir))
+						{
+							Directory.CreateDirectory(dir);
+						}
 						File.WriteAllText(
-							Path.Combine(grammar.GetOutputPath(), entry.Key),
+							file,
 							entry.Value
 						);
 					}
