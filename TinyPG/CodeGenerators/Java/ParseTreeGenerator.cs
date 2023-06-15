@@ -10,19 +10,16 @@ namespace TinyPG.CodeGenerators.Java
 {
 	public class ParseTreeGenerator : BaseGenerator, ICodeGenerator
 	{
-		internal ParseTreeGenerator() : base("ParseTree.java")
+		internal ParseTreeGenerator() : base("ParseTree.java", "ParseNode.java", "ParseError.java", "ParseErrors.java")
 		{
 		}
 
-		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
+		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (Debug != GenerateDebugMode.None)
 				throw new Exception("Java cannot be generated in debug mode");
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
-
-			// copy the parse tree file (optionally)
-			string parsetree = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
 
 			StringBuilder evalsymbols = new StringBuilder();
 			StringBuilder evalmethods = new StringBuilder();
@@ -63,20 +60,19 @@ namespace TinyPG.CodeGenerators.Java
 				evalmethods.AppendLine("		return o;");
 				evalmethods.AppendLine("	}\r\n");
 			}
-
-			parsetree = parsetree.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
-			parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-			parsetree = parsetree.Replace(@"<%ParseError%>", "");
-			parsetree = parsetree.Replace(@"<%ParseErrors%>", "ArrayList<ParseError>");
-			parsetree = parsetree.Replace(@"<%IParseTree%>", "");
-			parsetree = parsetree.Replace(@"<%IParseNode%>", "");
-			parsetree = parsetree.Replace(@"<%ITokenGet%>", "");
-			parsetree = parsetree.Replace(@"<%INodesGet%>", "");
-			parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
-			parsetree = parsetree.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
-			parsetree = parsetree.Replace(@"<%VirtualEvalMethods%>", evalmethods.ToString());
-
-			return parsetree;
+			
+			Dictionary<string, string> generated = new Dictionary<string, string>();
+			foreach (var templateFile in TemplateFiles)
+			{
+				string fileContent = File.ReadAllText(Path.Combine(Grammar.GetTemplatePath(), templateFile));
+				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
+				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+				fileContent = fileContent.Replace(@"<%CustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
+				fileContent = fileContent.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
+				fileContent = fileContent.Replace(@"<%VirtualEvalMethods%>", evalmethods.ToString());
+				generated[templateFile] = fileContent;
+			}
+			return generated;
 		}
 
 		/// <summary>

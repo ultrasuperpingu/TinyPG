@@ -4,7 +4,7 @@
 package <%Namespace%>;
 
 
-public class Parser <%IParser%>
+public class Parser
 {
 	private final Scanner scanner;
 	private ParseTree tree;

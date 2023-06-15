@@ -4,7 +4,7 @@
 package tinyexe;
 
 
-public class Parser 
+public class Parser
 {
 	private final Scanner scanner;
 	private ParseTree tree;

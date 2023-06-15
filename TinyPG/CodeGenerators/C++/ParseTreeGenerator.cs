@@ -5,6 +5,8 @@ using System.Text.RegularExpressions;
 using System.Reflection;
 using System.Security.Cryptography;
 using System;
+using System.Collections.Generic;
+using TinyPG.Highlighter;
 
 namespace TinyPG.CodeGenerators.Cpp
 {
@@ -14,15 +16,12 @@ namespace TinyPG.CodeGenerators.Cpp
 		{
 		}
 
-		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
+		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (Debug != GenerateDebugMode.None)
 				throw new Exception("Cpp cannot be generated in debug mode");
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
-
-			// copy the parse tree file (optionally)
-			string parsetree = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
 
 			StringBuilder evalsymbols = new StringBuilder();
 			StringBuilder evalMethodsDecl = new StringBuilder();
@@ -68,16 +67,21 @@ namespace TinyPG.CodeGenerators.Cpp
 				evalMethodsImpl.AppendLine("	}\r\n");
 			}
 
-			parsetree = parsetree.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
-			parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-			parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
-			parsetree = parsetree.Replace(@"<%HeaderCode%>", Grammar.Directives["ParseTree"]["HeaderCode"]);
+			Dictionary<string, string> generated = new Dictionary<string, string>();
+			foreach (var templateName in templateFiles)
+			{
+				string fileContent = File.ReadAllText(Path.Combine(Grammar.GetTemplatePath(), templateName));
+				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
+				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+				fileContent = fileContent.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
+				fileContent = fileContent.Replace(@"<%HeaderCode%>", Grammar.Directives["ParseTree"]["HeaderCode"]);
 
-			parsetree = parsetree.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
-			parsetree = parsetree.Replace(@"<%VirtualEvalMethods%>", evalMethodsDecl.ToString());
-			parsetree = parsetree.Replace(@"<%VirtualEvalMethodsImpl%>", evalMethodsImpl.ToString());
-			
-			return parsetree;
+				fileContent = fileContent.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
+				fileContent = fileContent.Replace(@"<%VirtualEvalMethods%>", evalMethodsDecl.ToString());
+				fileContent = fileContent.Replace(@"<%VirtualEvalMethodsImpl%>", evalMethodsImpl.ToString());
+				generated[templateName] = fileContent;
+			}
+			return generated;
 		}
 
 		/// <summary>

@@ -13,7 +13,7 @@ namespace TinyPG.CodeGenerators.Java
 		{
 		}
 
-		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
+		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (Debug != GenerateDebugMode.None)
 				throw new Exception("Java cannot be generated in debug mode");
@@ -23,8 +23,6 @@ namespace TinyPG.CodeGenerators.Java
 
 			// generate the parser file
 			StringBuilder parsers = new StringBuilder();
-			string parser = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
-
 			// build non terminal tokens
 			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
@@ -32,13 +30,19 @@ namespace TinyPG.CodeGenerators.Java
 				parsers.Append(method);
 			}
 
-			parser = parser.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
-			parser = parser.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-			parser = parser.Replace(@"<%IParser%>", "");
-			parser = parser.Replace(@"<%IParseTree%>", "ParseTree");
-			parser = parser.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
-			parser = parser.Replace(@"<%ParseNonTerminals%>", parsers.ToString());
-			return parser;
+			Dictionary<string, string> generated = new Dictionary<string, string>();
+			foreach (var templateName in TemplateFiles)
+			{
+				string fileContent = File.ReadAllText(Path.Combine(Grammar.GetTemplatePath(), templateName));
+				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
+				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+				fileContent = fileContent.Replace(@"<%IParseTree%>", "ParseTree");
+				fileContent = fileContent.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
+				fileContent = fileContent.Replace(@"<%ParseNonTerminals%>", parsers.ToString());
+				generated[templateName] = fileContent;
+			}
+
+			return generated;
 		}
 
 		// generates the method header and body

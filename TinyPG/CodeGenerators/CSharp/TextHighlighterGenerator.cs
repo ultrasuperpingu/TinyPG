@@ -2,6 +2,7 @@
 using System.Text;
 using System.IO;
 using TinyPG.Compiler;
+using System.Collections.Generic;
 
 namespace TinyPG.CodeGenerators.CSharp
 {
@@ -11,12 +12,11 @@ namespace TinyPG.CodeGenerators.CSharp
 		{
 		}
 
-		public string Generate(Grammar Grammar,  GenerateDebugMode Debug)
+		public Dictionary<string, string> Generate(Grammar Grammar,  GenerateDebugMode Debug)
 		{
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
 
-			string generatedtext = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
 			StringBuilder tokens = new StringBuilder();
 			StringBuilder colors = new StringBuilder();
 
@@ -58,13 +58,18 @@ namespace TinyPG.CodeGenerators.CSharp
 				colorindex++;
 			}
 
-			generatedtext = generatedtext.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
-			generatedtext = generatedtext.Replace(@"<%HightlightTokens%>", tokens.ToString());
-			generatedtext = generatedtext.Replace(@"<%RtfColorPalette%>", colors.ToString());
-			generatedtext = generatedtext.Replace(@"<%TextHighlighterCustomCode%>", Grammar.Directives["TextHighlighter"]["CustomCode"]);
-			generatedtext = generatedtext.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-
-			return generatedtext;
+			Dictionary<string, string> generated = new Dictionary<string, string>();
+			foreach (var templateName in TemplateFiles)
+			{
+				string fileContent = File.ReadAllText(Path.Combine(Grammar.GetTemplatePath(), templateName));
+				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
+				fileContent = fileContent.Replace(@"<%HightlightTokens%>", tokens.ToString());
+				fileContent = fileContent.Replace(@"<%RtfColorPalette%>", colors.ToString());
+				fileContent = fileContent.Replace(@"<%TextHighlighterCustomCode%>", Grammar.Directives["TextHighlighter"]["CustomCode"]);
+				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+				generated[templateName] = fileContent;
+			}
+			return generated;
 		}
 
 	}

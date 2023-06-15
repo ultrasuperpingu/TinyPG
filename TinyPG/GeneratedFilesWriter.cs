@@ -26,16 +26,15 @@ namespace TinyPG
 			{
 				generator = CodeGeneratorFactory.CreateGenerator(d.Name, language);
 
-				if (generator != null && d.ContainsKey("FileName"))
-				{
-					generator.FileName = d["FileName"];
-				}
-
 				if (generator != null && d["Generate"].ToLower() == "true")
 				{
-					File.WriteAllText(
-						Path.Combine(grammar.GetOutputPath(), generator.FileName),
-						generator.Generate(grammar, debug? GenerateDebugMode.DebugSelf: GenerateDebugMode.None));
+					foreach (var entry in generator.Generate(grammar, debug ? GenerateDebugMode.DebugSelf : GenerateDebugMode.None))
+					{
+						File.WriteAllText(
+							Path.Combine(grammar.GetOutputPath(), entry.Key),
+							entry.Value
+						);
+					}
 				}
 			}
 		}

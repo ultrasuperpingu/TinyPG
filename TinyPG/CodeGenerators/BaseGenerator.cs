@@ -6,20 +6,17 @@ namespace TinyPG.CodeGenerators
 {
 	public class BaseGenerator
 	{
-		protected string templateName;
-		private string fileName;
+		protected List<string> templateFiles = new List<string>();
 
-		public BaseGenerator(string templateName)
+		public BaseGenerator(params string[] templateNames)
 		{
-			this.templateName = templateName;
-			FileName = templateName;
+			this.templateFiles = new List<string>(templateNames);
 
 		}
-
-		public virtual string FileName
+		public virtual List<string> TemplateFiles
 		{
-			get { return this.fileName; }
-			set { this.fileName = value; }
+			get { return this.templateFiles; }
+			set { this.templateFiles = value; }
 		}
 	}
 }

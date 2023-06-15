@@ -150,6 +150,7 @@
     <Content Remove="Examples\**\obj\**" />
     <Content Remove="Examples\**\bin\**" />
     <Content Remove="Examples\**\x64\**" />
+	<Content Remove="Examples\TestJava\build\**" />
     <Content Remove="Examples\*.cs" />
     <Compile Include="Compiler\TerminalSymbol.cs" />
     <Compile Include="SearchDialog.cs">

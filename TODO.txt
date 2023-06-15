@@ -3,12 +3,15 @@
  * Find a way for the ParseTree to return the correct type
  * Remove Non terminal default return value (it will be useless once the ParseTree will be able to return the correct type)
  * Make Error Codes consistant (ErrorCode class with all error codes done but not used)
- * Generate Token, TokenType, ParseErrors and ParseError in separate files in Java
+ * Generate header and cpp files in C++
  * Merge last modifications to vb generator
+ * Create a command line only executable
+ * Try to replace every unknown attribute in Parser, ParseTree and Scanner directive in the template files (ie, XXX="content" parameter in the ParseTree directive for example, will try to replace <%XXX%> by content in the ParseTree templatate file).
 
 Prospecting/Long Term:
  * Add my backtracking parser as a possible implementation (in addition to LL(1))
- * Port the code to Visual Source Code (via Language Server Protocol)
+ * Port the code to Visual Source Code (via Language Server Protocol and writing a tmLanguage grammar)
  * Remove VB support
  * Add a Search (and SearchXXX) method (in addition to Parse (and ParseXXX)) in the Parser
  * Add python and javascript generation
+ 

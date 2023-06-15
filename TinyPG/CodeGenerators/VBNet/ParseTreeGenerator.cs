@@ -2,6 +2,7 @@
 using System.IO;
 using TinyPG.Compiler;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace TinyPG.CodeGenerators.VBNet
 {
@@ -11,14 +12,13 @@ namespace TinyPG.CodeGenerators.VBNet
 		{
 		}
 		private bool isDebugOther;
-		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
+		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
 			isDebugOther = Debug == GenerateDebugMode.DebugOther;
 			// copy the parse tree file (optionally)
-			string parsetree = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
-
+			
 			StringBuilder evalsymbols = new StringBuilder();
 			StringBuilder evalmethods = new StringBuilder();
 
@@ -57,75 +57,80 @@ namespace TinyPG.CodeGenerators.VBNet
 				evalmethods.AppendLine("		End Function\r\n");
 			}
 
-			parsetree = parsetree.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
-			parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-			if (Debug != GenerateDebugMode.None)
+			Dictionary<string, string> generated = new Dictionary<string, string>();
+			foreach (var templateName in templateFiles)
 			{
-				parsetree = parsetree.Replace(@"<%Imports%>", "Imports TinyPG.Debug");
-				//parsetree = parsetree.Replace(@"<%Namespace%>", "TinyPG.Debug");
-				parsetree = parsetree.Replace(@"<%IParseTree%>", "\r\n        Implements TinyPG.Debug.IParseTree");
-				parsetree = parsetree.Replace(@"<%IParseNode%>", "\r\n        Implements TinyPG.Debug.IParseNode\r\n");
-				parsetree = parsetree.Replace(@"<%ParseError%>", "\r\n        Implements TinyPG.Debug.IParseError\r\n");
-				parsetree = parsetree.Replace(@"<%ParseErrors%>", "List(Of TinyPG.Debug.IParseError)");
+				string fileContent = File.ReadAllText(Path.Combine(Grammar.GetTemplatePath(), templateName));
+				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
+				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+				if (Debug != GenerateDebugMode.None)
+				{
+					fileContent = fileContent.Replace(@"<%Imports%>", "Imports TinyPG.Debug");
+					//parsetree = parsetree.Replace(@"<%Namespace%>", "TinyPG.Debug");
+					fileContent = fileContent.Replace(@"<%IParseTree%>", "\r\n        Implements TinyPG.Debug.IParseTree");
+					fileContent = fileContent.Replace(@"<%IParseNode%>", "\r\n        Implements TinyPG.Debug.IParseNode\r\n");
+					fileContent = fileContent.Replace(@"<%ParseError%>", "\r\n        Implements TinyPG.Debug.IParseError\r\n");
+					fileContent = fileContent.Replace(@"<%ParseErrors%>", "List(Of TinyPG.Debug.IParseError)");
 
-				string itoken = "		Public ReadOnly Property IToken() As TinyPG.Debug.IToken Implements TinyPG.Debug.IParseNode.IToken\r\n"
-								+ "			Get\r\n"
-								+ "				Return DirectCast(Token, TinyPG.Debug.IToken)\r\n"
-								+ "			End Get\r\n"
-								+ "		End Property\r\n";
-
-				parsetree = parsetree.Replace(@"<%ITokenGet%>", itoken);
-
-
-				parsetree = parsetree.Replace(@"<%ImplementsIParseTreePrintTree%>", " Implements TinyPG.Debug.IParseTree.PrintTree");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseTreeEval%>", " Implements TinyPG.Debug.IParseTree.Eval");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorCode%>", " Implements TinyPG.Debug.IParseError.Code");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorLine%>", " Implements TinyPG.Debug.IParseError.Line");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorColumn%>", " Implements TinyPG.Debug.IParseError.Column");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorPosition%>", " Implements TinyPG.Debug.IParseError.Position");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorLength%>", " Implements TinyPG.Debug.IParseError.Length");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorMessage%>", " Implements TinyPG.Debug.IParseError.Message");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorIsWarning%>", " Implements TinyPG.Debug.IParseError.IsWarning");
-				string inodes = "		Public Shared Function Node2INode(ByVal node As ParseNode) As TinyPG.Debug.IParseNode\r\n"
-									+ "			Return DirectCast(node, TinyPG.Debug.IParseNode)\r\n"
-									+ "		End Function\r\n\r\n"
-									+ "		Public ReadOnly Property INodes() As List(Of TinyPG.Debug.IParseNode) Implements TinyPG.Debug.IParseNode.INodes\r\n"
+					string itoken = "		Public ReadOnly Property IToken() As TinyPG.Debug.IToken Implements TinyPG.Debug.IParseNode.IToken\r\n"
 									+ "			Get\r\n"
-									+ "				Return Nodes.ConvertAll(Of TinyPG.Debug.IParseNode)(New Converter(Of ParseNode, TinyPG.Debug.IParseNode)(AddressOf Node2INode))\r\n"
+									+ "				Return DirectCast(Token, TinyPG.Debug.IToken)\r\n"
 									+ "			End Get\r\n"
 									+ "		End Property\r\n";
-				parsetree = parsetree.Replace(@"<%INodesGet%>", inodes);
-				parsetree = parsetree.Replace(@"<%ImplementsIParseNodeText%>", " Implements TinyPG.Debug.IParseNode.Text");
-				parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
+
+					fileContent = fileContent.Replace(@"<%ITokenGet%>", itoken);
+
+
+					fileContent = fileContent.Replace(@"<%ImplementsIParseTreePrintTree%>", " Implements TinyPG.Debug.IParseTree.PrintTree");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseTreeEval%>", " Implements TinyPG.Debug.IParseTree.Eval");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorCode%>", " Implements TinyPG.Debug.IParseError.Code");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorLine%>", " Implements TinyPG.Debug.IParseError.Line");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorColumn%>", " Implements TinyPG.Debug.IParseError.Column");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorPosition%>", " Implements TinyPG.Debug.IParseError.Position");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorLength%>", " Implements TinyPG.Debug.IParseError.Length");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorMessage%>", " Implements TinyPG.Debug.IParseError.Message");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorIsWarning%>", " Implements TinyPG.Debug.IParseError.IsWarning");
+					string inodes = "		Public Shared Function Node2INode(ByVal node As ParseNode) As TinyPG.Debug.IParseNode\r\n"
+										+ "			Return DirectCast(node, TinyPG.Debug.IParseNode)\r\n"
+										+ "		End Function\r\n\r\n"
+										+ "		Public ReadOnly Property INodes() As List(Of TinyPG.Debug.IParseNode) Implements TinyPG.Debug.IParseNode.INodes\r\n"
+										+ "			Get\r\n"
+										+ "				Return Nodes.ConvertAll(Of TinyPG.Debug.IParseNode)(New Converter(Of ParseNode, TinyPG.Debug.IParseNode)(AddressOf Node2INode))\r\n"
+										+ "			End Get\r\n"
+										+ "		End Property\r\n";
+					fileContent = fileContent.Replace(@"<%INodesGet%>", inodes);
+					fileContent = fileContent.Replace(@"<%ImplementsIParseNodeText%>", " Implements TinyPG.Debug.IParseNode.Text");
+					fileContent = fileContent.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
+				}
+				else
+				{
+					fileContent = fileContent.Replace(@"<%Imports%>", "");
+					//parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+					fileContent = fileContent.Replace(@"<%ParseError%>", "");
+					fileContent = fileContent.Replace(@"<%ParseErrors%>", "List(Of ParseError)");
+					fileContent = fileContent.Replace(@"<%IParseTree%>", "");
+					fileContent = fileContent.Replace(@"<%IParseNode%>", "");
+					fileContent = fileContent.Replace(@"<%ITokenGet%>", "");
+					fileContent = fileContent.Replace(@"<%INodesGet%>", "");
+
+					fileContent = fileContent.Replace(@"<%ImplementsIParseTreePrintTree%>", "");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseTreeEval%>", "");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorCode%>", "");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorLine%>", "");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorColumn%>", "");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorPosition%>", "");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorLength%>", "");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorMessage%>", "");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorIsWarning%>", "");
+					fileContent = fileContent.Replace(@"<%ImplementsIParseNodeText%>", "");
+					fileContent = fileContent.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
+				}
+
+				fileContent = fileContent.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
+				fileContent = fileContent.Replace(@"<%VirtualEvalMethods%>", evalmethods.ToString());
+				generated[templateName] = fileContent;
 			}
-			else
-			{
-				parsetree = parsetree.Replace(@"<%Imports%>", "");
-				//parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-				parsetree = parsetree.Replace(@"<%ParseError%>", "");
-				parsetree = parsetree.Replace(@"<%ParseErrors%>", "List(Of ParseError)");
-				parsetree = parsetree.Replace(@"<%IParseTree%>", "");
-				parsetree = parsetree.Replace(@"<%IParseNode%>", "");
-				parsetree = parsetree.Replace(@"<%ITokenGet%>", "");
-				parsetree = parsetree.Replace(@"<%INodesGet%>", "");
-
-				parsetree = parsetree.Replace(@"<%ImplementsIParseTreePrintTree%>", "");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseTreeEval%>", "");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorCode%>", "");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorLine%>", "");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorColumn%>", "");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorPosition%>", "");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorLength%>", "");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorMessage%>", "");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseErrorIsWarning%>", "");
-				parsetree = parsetree.Replace(@"<%ImplementsIParseNodeText%>", "");
-				parsetree = parsetree.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
-			}
-
-			parsetree = parsetree.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
-			parsetree = parsetree.Replace(@"<%VirtualEvalMethods%>", evalmethods.ToString());
-
-			return parsetree;
+			return generated;
 		}
 
 		/// <summary>

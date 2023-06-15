@@ -12,13 +12,14 @@ namespace TinyPG.CodeGenerators
 		{
 		}
 		
-		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
+		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			// generate the parser file
 			StringBuilder parsers = new StringBuilder();
-			string parser = File.ReadAllText(FileName);
-
-			return parser;
+			string fileContent = File.ReadAllText(TemplateFiles[0]);
+			Dictionary<string, string> files = new Dictionary<string, string>();
+			files[TemplateFiles[0]] = fileContent;
+			return files;
 		}
 	}
 }

@@ -9,18 +9,17 @@ namespace TinyPG.CodeGenerators.Java
 {
 	public class ScannerGenerator : BaseGenerator, ICodeGenerator
 	{
-		internal ScannerGenerator() : base("Scanner.java")
+		internal ScannerGenerator() : base("Scanner.java", "Token.java", "TokenType.java")
 		{
 		}
 
-		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
+		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (Debug != GenerateDebugMode.None)
 				throw new Exception("Java cannot be generated in debug mode");
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
 
-			string scanner = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
 
 			int counter = 2;
 			StringBuilder tokentype = new StringBuilder();
@@ -66,15 +65,18 @@ namespace TinyPG.CodeGenerators.Java
 				counter++;
 			}
 
-			scanner = scanner.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
-			scanner = scanner.Replace(@"<%SkipList%>", skiplist.ToString());
-			scanner = scanner.Replace(@"<%RegExps%>", regexps.ToString());
-			scanner = scanner.Replace(@"<%TokenType%>", tokentype.ToString());
-			scanner = scanner.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-			scanner = scanner.Replace(@"<%IToken%>", "");
-			scanner = scanner.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
-
-			return scanner;
+			Dictionary<string, string> generated = new Dictionary<string, string>();
+			foreach (var f in templateFiles)
+			{
+				string fileContent = File.ReadAllText(Path.Combine(Grammar.GetTemplatePath(), f));
+				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
+				fileContent = fileContent.Replace(@"<%SkipList%>", skiplist.ToString());
+				fileContent = fileContent.Replace(@"<%RegExps%>", regexps.ToString());
+				fileContent = fileContent.Replace(@"<%TokenType%>", tokentype.ToString());
+				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+				generated[f] = fileContent;
+			}
+			return generated;
 		}
 	}
 }

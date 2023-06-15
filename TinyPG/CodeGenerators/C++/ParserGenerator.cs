@@ -12,7 +12,7 @@ namespace TinyPG.CodeGenerators.Cpp
 		{
 		}
 
-		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
+		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (Debug != GenerateDebugMode.None)
 				throw new Exception("Cpp cannot be generated in debug mode");
@@ -23,8 +23,7 @@ namespace TinyPG.CodeGenerators.Cpp
 			// generate the parser file
 			StringBuilder parserMethodsImpl = new StringBuilder();
 			StringBuilder parserMethodsDecl = new StringBuilder();
-			string parser = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
-
+			
 			// build non terminal tokens
 			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
@@ -36,13 +35,19 @@ namespace TinyPG.CodeGenerators.Cpp
 				parserMethodsDecl.AppendLine("	protected:");
 				parserMethodsDecl.AppendLine("		void Parse" + s.Name + "(ParseNode* parent);");
 			}
+			Dictionary<string, string> generated = new Dictionary<string, string>();
+			foreach (var templateName in templateFiles)
+			{
+				string fileContent = File.ReadAllText(Path.Combine(Grammar.GetTemplatePath(), templateName));
 
-			parser = parser.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
-			parser = parser.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-			parser = parser.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
-			parser = parser.Replace(@"<%ParseNonTerminalsImpl%>", parserMethodsImpl.ToString());
-			parser = parser.Replace(@"<%ParseNonTerminalsDecl%>", parserMethodsDecl.ToString());
-			return parser;
+				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
+				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+				fileContent = fileContent.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
+				fileContent = fileContent.Replace(@"<%ParseNonTerminalsImpl%>", parserMethodsImpl.ToString());
+				fileContent = fileContent.Replace(@"<%ParseNonTerminalsDecl%>", parserMethodsDecl.ToString());
+				generated[templateName] = fileContent;
+			}
+			return generated;
 		}
 
 		// generates the method header and body

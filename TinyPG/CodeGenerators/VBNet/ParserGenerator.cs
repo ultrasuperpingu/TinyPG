@@ -12,41 +12,45 @@ namespace TinyPG.CodeGenerators.VBNet
 		{
 		}
 
-		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
+		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
 
 			// generate the parser file
 			StringBuilder parsers = new StringBuilder();
-			string parser = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
-
+			
 			// build non terminal tokens
 			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
 				string method = GenerateParseMethod(s);
 				parsers.Append(method);
 			}
-
-			parser = parser.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
-			parser = parser.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-			if (Debug != GenerateDebugMode.None)
+			Dictionary<string, string> generated = new Dictionary<string, string>();
+			foreach (var templateName in templateFiles)
 			{
-				parser = parser.Replace(@"<%Imports%>", "Imports TinyPG.Debug");
-				parser = parser.Replace(@"<%IParser%>", "\r\n        Implements TinyPG.Debug.IParser\r\n");
-				parser = parser.Replace(@"<%IParseTree%>", "TinyPG.Debug.IParseTree");
-				parser = parser.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
-			}
-			else
-			{
-				parser = parser.Replace(@"<%Imports%>", "");
-				parser = parser.Replace(@"<%IParser%>", "");
-				parser = parser.Replace(@"<%IParseTree%>", "ParseTree");
-				parser = parser.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
-			}
+				string fileContent = File.ReadAllText(Path.Combine(Grammar.GetTemplatePath(), templateName));
+				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
+				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+				if (Debug != GenerateDebugMode.None)
+				{
+					fileContent = fileContent.Replace(@"<%Imports%>", "Imports TinyPG.Debug");
+					fileContent = fileContent.Replace(@"<%IParser%>", "\r\n        Implements TinyPG.Debug.IParser\r\n");
+					fileContent = fileContent.Replace(@"<%IParseTree%>", "TinyPG.Debug.IParseTree");
+					fileContent = fileContent.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
+				}
+				else
+				{
+					fileContent = fileContent.Replace(@"<%Imports%>", "");
+					fileContent = fileContent.Replace(@"<%IParser%>", "");
+					fileContent = fileContent.Replace(@"<%IParseTree%>", "ParseTree");
+					fileContent = fileContent.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
+				}
 
-			parser = parser.Replace(@"<%ParseNonTerminals%>", parsers.ToString());
-			return parser;
+				fileContent = fileContent.Replace(@"<%ParseNonTerminals%>", parsers.ToString());
+				generated[templateName] = fileContent;
+			}
+			return generated;
 		}
 
 		// generates the method header and body

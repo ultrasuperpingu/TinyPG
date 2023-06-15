@@ -2,6 +2,7 @@
 using System.Text;
 using System.IO;
 using TinyPG.Compiler;
+using System.Collections.Generic;
 
 namespace TinyPG.CodeGenerators.VBNet
 {
@@ -11,12 +12,10 @@ namespace TinyPG.CodeGenerators.VBNet
 		{
 		}
 
-		public string Generate(Grammar Grammar, GenerateDebugMode Debug)
+		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
 				return null;
-
-			string scanner = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
 
 			int counter = 2;
 			StringBuilder tokentype = new StringBuilder();
@@ -72,35 +71,40 @@ namespace TinyPG.CodeGenerators.VBNet
 				counter++;
 			}
 
-			scanner = scanner.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
-			scanner = scanner.Replace(@"<%SkipList%>", skiplist.ToString());
-			scanner = scanner.Replace(@"<%RegExps%>", regexps.ToString());
-			scanner = scanner.Replace(@"<%TokenType%>", tokentype.ToString());
-			scanner = scanner.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-			if (Debug != GenerateDebugMode.None)
+			Dictionary<string, string> generated = new Dictionary<string, string>();
+			foreach (var templateName in templateFiles)
 			{
-				scanner = scanner.Replace(@"<%Imports%>", "Imports TinyPG.Debug");
-				scanner = scanner.Replace(@"<%IToken%>", "\r\n        Implements TinyPG.Debug.IToken");
-				scanner = scanner.Replace(@"<%ImplementsITokenStartPos%>", " Implements TinyPG.Debug.IToken.StartPos");
-				scanner = scanner.Replace(@"<%ImplementsITokenEndPos%>", " Implements TinyPG.Debug.IToken.EndPos");
-				scanner = scanner.Replace(@"<%ImplementsITokenLength%>", " Implements TinyPG.Debug.IToken.Length");
-				scanner = scanner.Replace(@"<%ImplementsITokenText%>", " Implements TinyPG.Debug.IToken.Text");
-				scanner = scanner.Replace(@"<%ImplementsITokenToString%>", " Implements TinyPG.Debug.IToken.ToString");
-				scanner = scanner.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
+				string fileContent = File.ReadAllText(Grammar.GetTemplatePath() + templateName);
+				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
+				fileContent = fileContent.Replace(@"<%SkipList%>", skiplist.ToString());
+				fileContent = fileContent.Replace(@"<%RegExps%>", regexps.ToString());
+				fileContent = fileContent.Replace(@"<%TokenType%>", tokentype.ToString());
+				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+				if (Debug != GenerateDebugMode.None)
+				{
+					fileContent = fileContent.Replace(@"<%Imports%>", "Imports TinyPG.Debug");
+					fileContent = fileContent.Replace(@"<%IToken%>", "\r\n        Implements TinyPG.Debug.IToken");
+					fileContent = fileContent.Replace(@"<%ImplementsITokenStartPos%>", " Implements TinyPG.Debug.IToken.StartPos");
+					fileContent = fileContent.Replace(@"<%ImplementsITokenEndPos%>", " Implements TinyPG.Debug.IToken.EndPos");
+					fileContent = fileContent.Replace(@"<%ImplementsITokenLength%>", " Implements TinyPG.Debug.IToken.Length");
+					fileContent = fileContent.Replace(@"<%ImplementsITokenText%>", " Implements TinyPG.Debug.IToken.Text");
+					fileContent = fileContent.Replace(@"<%ImplementsITokenToString%>", " Implements TinyPG.Debug.IToken.ToString");
+					fileContent = fileContent.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
+				}
+				else
+				{
+					fileContent = fileContent.Replace(@"<%Imports%>", "");
+					fileContent = fileContent.Replace(@"<%IToken%>", "");
+					fileContent = fileContent.Replace(@"<%ImplementsITokenStartPos%>", "");
+					fileContent = fileContent.Replace(@"<%ImplementsITokenEndPos%>", "");
+					fileContent = fileContent.Replace(@"<%ImplementsITokenLength%>", "");
+					fileContent = fileContent.Replace(@"<%ImplementsITokenText%>", "");
+					fileContent = fileContent.Replace(@"<%ImplementsITokenToString%>", "");
+					fileContent = fileContent.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
+				}
+				generated[templateName] = fileContent;
 			}
-			else
-			{
-				scanner = scanner.Replace(@"<%Imports%>", "");
-				scanner = scanner.Replace(@"<%IToken%>", "");
-				scanner = scanner.Replace(@"<%ImplementsITokenStartPos%>", "");
-				scanner = scanner.Replace(@"<%ImplementsITokenEndPos%>", "");
-				scanner = scanner.Replace(@"<%ImplementsITokenLength%>", "");
-				scanner = scanner.Replace(@"<%ImplementsITokenText%>", "");
-				scanner = scanner.Replace(@"<%ImplementsITokenToString%>", "");
-				scanner = scanner.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
-			}
-
-			return scanner;
+			return generated;
 		}
 	}
 }

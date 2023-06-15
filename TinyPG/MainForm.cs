@@ -526,7 +526,7 @@ namespace TinyPG
 					return;
 
 				ICodeGenerator generator = CodeGeneratorFactory.CreateGenerator(filetype, grammar.Directives["TinyPG"]["Language"]);
-				string folder = Path.Combine(grammar.GetOutputPath(), generator.FileName);
+				string folder = Path.Combine(grammar.GetOutputPath(), generator.TemplateFiles[0]);
 				System.Diagnostics.Process.Start(folder);
 			}
 			catch (Exception e)
