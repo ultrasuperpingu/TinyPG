@@ -8,7 +8,7 @@ namespace TinyPG.CodeGenerators.Cpp
 {
 	public class ParserGenerator : BaseGenerator, ICodeGenerator
 	{
-		internal ParserGenerator() : base("Parser.h")
+		internal ParserGenerator() : base("include/Parser.h", "src/Parser.cpp")
 		{
 		}
 

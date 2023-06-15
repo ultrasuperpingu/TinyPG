@@ -12,7 +12,7 @@ namespace TinyPG.CodeGenerators.Cpp
 {
 	public class ParseTreeGenerator : BaseGenerator, ICodeGenerator
 	{
-		internal ParseTreeGenerator() : base("ParseTree.h")
+		internal ParseTreeGenerator() : base("include/ParseTree.h", "src/ParseTree.cpp")
 		{
 		}
 

@@ -1,116 +1,19 @@
 ﻿// Automatically generated from source file: <%SourceFilename%>
 // By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
 
-#pragma once
-#include <string>
-#include <vector>
-#include <map>
-#include <regex>
+#include "Scanner.h"
 
 namespace <%Namespace%>
 {
-
-	enum TokenType
-	{
-<%TokenType%>
-	};
-	
-
-	class Token<%IToken%>
-	{
-
-	public:
-		const static Token Empty;
-		int Line;
-		int Column;
-		int StartPos;
-		int Length;
-		int EndPos;
-		std::string Text;
-
-		std::vector<Token> Skipped;
-		TokenType Type;
-
-		inline Token();
-
-		Token(int start, int end);
-
-		void UpdateRange(Token token);
-
-		std::string ToString();
-
-<%ScannerCustomCode%>
-	};
-	
-	class Scanner
-	{
-	public:
-		std::string Input;
-		int StartPos = 0;
-		int EndPos = 0;
-		int CurrentLine;
-		int CurrentColumn;
-		int CurrentPosition;
-		std::vector<Token> Skipped; // tokens that were skipped
-		std::map<TokenType, std::regex> Patterns;
-   
-	private:
-		Token LookAheadToken;
-		std::vector<TokenType> Tokens;
-		std::vector<TokenType> SkipList; // tokens to be skipped
-
-	public:
-		Scanner();
-
-		void Init(const std::string& input);
-
-		Token GetToken(TokenType type);
-
-		/// <summary>
-		/// executes a lookahead of the next token
-		/// and will advance the scan on the input string
-		/// </summary>
-		/// <returns></returns>
-		Token Scan(const std::vector<TokenType>& expectedtokens);
-
-		/// <summary>
-		/// returns token with longest best match
-		/// </summary>
-		/// <returns></returns>
-		Token LookAhead(const std::vector<TokenType>& expectedtokens);
-	};
-	// Check if vector contains an element
-	template <typename T>
-	bool contains(
-		const std::vector<T>& vecObj,
-		const T& element)
-	{
-		// Get the iterator of first occurrence
-		// of given element in vector
-		auto it = std::find(
-			vecObj.begin(),
-			vecObj.end(),
-			element);
-		return it != vecObj.end();
-	}
-	inline std::string replace(const std::string& str, const std::string& from, const std::string& to) {
-		size_t start_pos = str.find(from);
-		if (start_pos == std::string::npos)
-			return str;
-		std::string val = str;
-		val.replace(start_pos, from.length(), to);
-		return val;
-	}
-
 	// Token implementation
-	const inline Token Token::Empty = Token();
+	const Token Token::Empty = Token();
 
-	inline Token::Token()
+	Token::Token()
 		: Token(0, 0)
 	{
 	}
 
-	inline Token::Token(int start, int end)
+	Token::Token(int start, int end)
 	{
 		Type = TokenType::_UNDETERMINED_;
 		StartPos = start;
@@ -118,13 +21,13 @@ namespace <%Namespace%>
 		Text = "";
 	}
 
-	inline void Token::UpdateRange(Token token)
+	void Token::UpdateRange(Token token)
 	{
 		if (token.StartPos < StartPos) StartPos = token.StartPos;
 		if (token.EndPos > EndPos) EndPos = token.EndPos;
 	}
 
-	inline std::string Token::ToString()
+	std::string Token::ToString()
 	{
 		if (Text.empty())
 			return std::to_string(Type) + " '" + Text + "'";
@@ -133,7 +36,7 @@ namespace <%Namespace%>
 	}
 
 	// Scanner implementation
-	inline Scanner::Scanner()
+	Scanner::Scanner()
 	{
 		std::regex regex;
 		LookAheadToken = Token::Empty;
@@ -142,7 +45,7 @@ namespace <%Namespace%>
 <%RegExps%>
 	}
 
-	inline void Scanner::Init(const std::string& input)
+	void Scanner::Init(const std::string& input)
 	{
 		this->Input = input;
 		StartPos = 0;
@@ -153,19 +56,14 @@ namespace <%Namespace%>
 		LookAheadToken = Token::Empty;
 	}
 
-	inline Token Scanner::GetToken(TokenType type)
+	Token Scanner::GetToken(TokenType type)
 	{
 		Token t = Token(this->StartPos, this->EndPos);
 		t.Type = type;
 		return t;
 	}
 
-	/// <summary>
-	/// executes a lookahead of the next token
-	/// and will advance the scan on the input string
-	/// </summary>
-	/// <returns></returns>
-	inline Token Scanner::Scan(const std::vector<TokenType>& expectedtokens)
+	Token Scanner::Scan(const std::vector<TokenType>& expectedtokens)
 	{
 		Token tok = LookAhead(expectedtokens); // temporarely retrieve the lookahead
 		LookAheadToken = Token::Empty; // reset lookahead token, so scanning will continue
@@ -175,11 +73,7 @@ namespace <%Namespace%>
 		return tok;
 	}
 
-	/// <summary>
-	/// returns token with longest best match
-	/// </summary>
-	/// <returns></returns>
-	inline Token Scanner::LookAhead(const std::vector<TokenType>& expectedtokens)
+	Token Scanner::LookAhead(const std::vector<TokenType>& expectedtokens)
 	{
 		int i;
 		int startpos = StartPos;

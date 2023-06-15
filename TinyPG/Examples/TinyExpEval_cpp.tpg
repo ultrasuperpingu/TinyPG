@@ -6,7 +6,7 @@
 //Simple expression calculator
 // https://www.codeproject.com/Articles/241830/a-Tiny-Expression-Evaluator
 
-<% @TinyPG Language="Cpp" OutputPath="TestCpp\TinyExe\include" Namespace="TinyExe" %>
+<% @TinyPG Language="Cpp" OutputPath="TestCpp\TinyExe" Namespace="TinyExe" %>
 
 <% @ParseTree CustomCode={
 	// helper function to find access the function or variable

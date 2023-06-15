@@ -1,4 +1,4 @@
-// Automatically generated from source file: TinyExpEval_cpp.tpg
+﻿// Automatically generated from source file: <%SourceFilename%>
 // By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
 
 #pragma once
@@ -7,81 +7,16 @@
 #include <map>
 #include <regex>
 
-namespace TinyExe
+namespace <%Namespace%>
 {
 
 	enum TokenType
 	{
-
-		//Non terminal tokens:
-		_NONE_            = 0,
-		_UNDETERMINED_    = 1,
-
-		//Non terminal tokens:
-		Start             = 2,
-		Function          = 3,
-		PrimaryExpression = 4,
-		ParenthesizedExpression= 5,
-		UnaryExpression   = 6,
-		PowerExpression   = 7,
-		MultiplicativeExpression= 8,
-		AdditiveExpression= 9,
-		ConcatEpression   = 10,
-		RelationalExpression= 11,
-		EqualityExpression= 12,
-		ConditionalAndExpression= 13,
-		ConditionalOrExpression= 14,
-		AssignmentExpression= 15,
-		Expression        = 16,
-		Params            = 17,
-		Literal           = 18,
-		IntegerLiteral    = 19,
-		RealLiteral       = 20,
-		StringLiteral     = 21,
-		Variable          = 22,
-
-		//Terminal tokens:
-		BOOLEANLITERAL    = 23,
-		DECIMALINTEGERLITERAL= 24,
-		REALLITERAL       = 25,
-		HEXINTEGERLITERAL = 26,
-		STRINGLITERAL     = 27,
-		FUNCTION          = 28,
-		VARIABLE          = 29,
-		CONSTANT          = 30,
-		BRACEOPEN         = 31,
-		BRACECLOSE        = 32,
-		BRACKETOPEN       = 33,
-		BRACKETCLOSE      = 34,
-		SEMICOLON         = 35,
-		PLUSPLUS          = 36,
-		MINUSMINUS        = 37,
-		PIPEPIPE          = 38,
-		AMPAMP            = 39,
-		AMP               = 40,
-		POWER             = 41,
-		PLUS              = 42,
-		MINUS             = 43,
-		EQUAL             = 44,
-		ASSIGN            = 45,
-		NOTEQUAL          = 46,
-		NOT               = 47,
-		ASTERIKS          = 48,
-		SLASH             = 49,
-		PERCENT           = 50,
-		QUESTIONMARK      = 51,
-		COMMA             = 52,
-		LESSEQUAL         = 53,
-		GREATEREQUAL      = 54,
-		LESSTHAN          = 55,
-		GREATERTHAN       = 56,
-		COLON             = 57,
-		EOF_              = 58,
-		WHITESPACE        = 59
+<%TokenType%>
 	};
 	
 
-	class Token
+	class Token<%IToken%>
 	{
 
 	public:
@@ -104,7 +39,7 @@ namespace TinyExe
 
 		std::string ToString();
 
-
+<%ScannerCustomCode%>
 	};
 	
 	class Scanner

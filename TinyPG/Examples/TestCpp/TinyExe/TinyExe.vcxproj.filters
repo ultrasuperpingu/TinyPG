@@ -59,5 +59,14 @@
     <ClCompile Include="src\Variables.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Parser.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ParseTree.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scanner.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

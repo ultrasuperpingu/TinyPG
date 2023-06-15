@@ -8,7 +8,7 @@ namespace TinyPG.CodeGenerators.Cpp
 {
 	public class ScannerGenerator : BaseGenerator, ICodeGenerator
 	{
-		internal ScannerGenerator() : base("Scanner.h")
+		internal ScannerGenerator() : base("include/Scanner.h", "src/Scanner.cpp")
 		{
 		}
 
