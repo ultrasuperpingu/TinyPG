@@ -3,9 +3,19 @@ TinyPG
 
 The unofficial fork of the Tiny Parser Generator by Herre Kuijpers. It was first forked by [SickheadGames](https://github.com/SickheadGames/TinyPG), and this is a fork of the later.
 
-It is an LL(1) recursive descent parser generator written in C# which can generate a scanner, parser, and parsetree file in either C#, VB, Java or C++ code. It's also a IDE allowing to design a grammar.
-
 The original code and documentation can be found in the article ['A Tiny Parser Generator v1.2' on CodeProject](http://www.codeproject.com/Articles/28294/a-Tiny-Parser-Generator-v1-2).
+
+It is an LL(1) recursive descent parser generator written in C# which can generate a scanner, parser, and parsetree file in either C#, VB, Java or C++ code. It's also a IDE allowing to design a grammar. The generated files do not contains any dependancy, its just standalone C#, VB, C++ or java files you can integrate in your projects. You can also integrate custom code to evaluate the inputs.
+
+As a real world example, [TinyExe](https://www.codeproject.com/Articles/241830/a-Tiny-Expression-Evaluator) is provided on C#, Java and C++. TinyExe allow to interpret expression like :
+ * Literal only mathematical expressions: 4*(24/2-5)+14
+ * Mathematical expressions containing built-in function and constants: 5*5/(1+15.2), cos(Pi/4)*sin(Pi/6)^2 
+ * Variables affectations: x := 42
+ * Function definitions: f(x) := f(x) := x^2, f(x) := sin(x) / cos(x)
+ * Boolean Expressions: x >= 5, x == true
+ * Basic string functions: "Hello " & "world", "Pi = " & Pi, Len("hello world") 
+ * ...
+
   
 The source code is licensed under the [Code Project Open License (CPOL)
 ](http://www.codeproject.com/info/cpol10.aspx).
