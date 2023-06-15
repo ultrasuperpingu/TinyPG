@@ -163,7 +163,7 @@ namespace TinyExe
 		return Value;
 	}
 
-	inline std::any ParseNode::EvalStart(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalStart(const std::vector<std::any>& paramlist)
 	{
 		return this->GetExpressionValue(0, paramlist);
 	}
@@ -176,7 +176,7 @@ namespace TinyExe
 		throw std::exception("No Start[index] found.");
 	}
 
-	inline std::any ParseNode::EvalFunction(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalFunction(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			ParseNode* funcNode = this->Nodes[0];
@@ -228,7 +228,7 @@ namespace TinyExe
 		throw std::exception("No Function[index] found.");
 	}
 
-	inline std::any ParseNode::EvalPrimaryExpression(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalPrimaryExpression(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			TokenType type = this->Nodes[0]->TokenVal.Type;
@@ -253,7 +253,7 @@ namespace TinyExe
 		throw std::exception("No PrimaryExpression[index] found.");
 	}
 
-	inline std::any ParseNode::EvalParenthesizedExpression(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalParenthesizedExpression(const std::vector<std::any>& paramlist)
 	{
 		return this->GetExpressionValue(0, paramlist);
 	}
@@ -266,7 +266,7 @@ namespace TinyExe
 		throw std::exception("No ParenthesizedExpression[index] found.");
 	}
 
-	inline std::any ParseNode::EvalUnaryExpression(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalUnaryExpression(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			TokenType type = this->Nodes[0]->TokenVal.Type;
@@ -311,7 +311,7 @@ namespace TinyExe
 		throw std::exception("No UnaryExpression[index] found.");
 	}
 
-	inline std::any ParseNode::EvalPowerExpression(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalPowerExpression(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			std::any result = this->GetUnaryExpressionValue(0, paramlist);
@@ -339,7 +339,7 @@ namespace TinyExe
 		throw std::exception("No PowerExpression[index] found.");
 	}
 
-	inline std::any ParseNode::EvalMultiplicativeExpression(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalMultiplicativeExpression(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			std::any result = this->GetPowerExpressionValue(0, paramlist);
@@ -366,7 +366,7 @@ namespace TinyExe
 		throw std::exception("No MultiplicativeExpression[index] found.");
 	}
 
-	inline std::any ParseNode::EvalAdditiveExpression(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalAdditiveExpression(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			std::any result = this->GetMultiplicativeExpressionValue(0, paramlist);
@@ -391,7 +391,7 @@ namespace TinyExe
 		throw std::exception("No AdditiveExpression[index] found.");
 	}
 
-	inline std::any ParseNode::EvalConcatEpression(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalConcatEpression(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			std::any result = this->GetAdditiveExpressionValue(0, paramlist);
@@ -413,7 +413,7 @@ namespace TinyExe
 		throw std::exception("No ConcatEpression[index] found.");
 	}
 
-	inline std::any ParseNode::EvalRelationalExpression(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalRelationalExpression(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			std::any result = this->GetConcatEpressionValue(0, paramlist);
@@ -458,7 +458,7 @@ namespace TinyExe
 		throw std::exception("No RelationalExpression[index] found.");
 	}
 
-	inline std::any ParseNode::EvalEqualityExpression(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalEqualityExpression(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			std::any result = this->GetRelationalExpressionValue(0, paramlist);
@@ -533,7 +533,7 @@ namespace TinyExe
 		throw std::exception("No EqualityExpression[index] found.");
 	}
 
-	inline std::any ParseNode::EvalConditionalAndExpression(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalConditionalAndExpression(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			std::any result = this->GetEqualityExpressionValue(0, paramlist);
@@ -555,7 +555,7 @@ namespace TinyExe
 		throw std::exception("No ConditionalAndExpression[index] found.");
 	}
 
-	inline std::any ParseNode::EvalConditionalOrExpression(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalConditionalOrExpression(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			std::any result = this->GetConditionalAndExpressionValue(0, paramlist);
@@ -577,7 +577,7 @@ namespace TinyExe
 		throw std::exception("No ConditionalOrExpression[index] found.");
 	}
 
-	inline std::any ParseNode::EvalAssignmentExpression(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalAssignmentExpression(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			std::any result = this->GetConditionalOrExpressionValue(0, paramlist);
@@ -601,7 +601,7 @@ namespace TinyExe
 		throw std::exception("No AssignmentExpression[index] found.");
 	}
 
-	inline std::any ParseNode::EvalExpression(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalExpression(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			// if only left hand side available, this is not an assignment, simple evaluate expression
@@ -691,7 +691,7 @@ namespace TinyExe
 		throw std::exception("No Expression[index] found.");
 	}
 
-	inline std::any ParseNode::EvalParams(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalParams(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			std::vector<std::any> parameters = std::vector<std::any>();
@@ -714,7 +714,7 @@ namespace TinyExe
 		throw std::exception("No Params[index] found.");
 	}
 
-	inline std::any ParseNode::EvalLiteral(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalLiteral(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			TokenType type = this->Nodes[0]->TokenVal.Type;
@@ -741,7 +741,7 @@ namespace TinyExe
 		throw std::exception("No Literal[index] found.");
 	}
 
-	inline std::any ParseNode::EvalIntegerLiteral(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalIntegerLiteral(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			if (this->IsTokenPresent(TokenType::DECIMALINTEGERLITERAL, 0))
@@ -768,7 +768,7 @@ namespace TinyExe
 		throw std::exception("No IntegerLiteral[index] found.");
 	}
 
-	inline std::any ParseNode::EvalRealLiteral(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalRealLiteral(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			if (this->IsTokenPresent(TokenType::REALLITERAL, 0))
@@ -787,7 +787,7 @@ namespace TinyExe
 		throw std::exception("No RealLiteral[index] found.");
 	}
 
-	inline std::any ParseNode::EvalStringLiteral(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalStringLiteral(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			if (this->IsTokenPresent(TokenType::STRINGLITERAL, 0))
@@ -809,7 +809,7 @@ namespace TinyExe
 		throw std::exception("No StringLiteral[index] found.");
 	}
 
-	inline std::any ParseNode::EvalVariable(const std::vector<std::any>& paramlist)
+	std::any ParseNode::EvalVariable(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
 			if (tree->Context == NULL)

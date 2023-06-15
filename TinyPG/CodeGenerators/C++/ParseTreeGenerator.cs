@@ -42,7 +42,8 @@ namespace TinyPG.CodeGenerators.Cpp
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault))
 					defaultReturnValue = s.ReturnTypeDefault;
 				evalMethodsDecl.AppendLine("		virtual " + returnType + " Eval" + s.Name + "(const std::vector<std::any>& paramlist);");
-				evalMethodsImpl.AppendLine("	inline " + returnType + " ParseNode::Eval" + s.Name + "(const std::vector<std::any>& paramlist)");
+				
+				evalMethodsImpl.AppendLine("	" + returnType + " ParseNode::Eval" + s.Name + "(const std::vector<std::any>& paramlist)");
 				evalMethodsImpl.AppendLine("	{");
 				if (s.CodeBlock != null)
 				{
