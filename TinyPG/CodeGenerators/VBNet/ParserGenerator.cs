@@ -44,7 +44,7 @@ namespace TinyPG.CodeGenerators.VBNet
 					fileContent = fileContent.Replace(@"<%IParser%>", "");
 					fileContent = fileContent.Replace(@"<%IParseTree%>", "ParseTree");
 				}
-
+				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Parser"]);
 				fileContent = fileContent.Replace(@"<%ParseNonTerminals%>", parsers.ToString());
 				generated[templateName] = fileContent;
 			}

@@ -84,7 +84,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				fileContent = fileContent.Replace(@"<%RegExps%>", regexps.ToString());
 				fileContent = fileContent.Replace(@"<%TokenType%>", tokentype.ToString());
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-				fileContent = fileContent.Replace(@"<%IToken%>", "");
+				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Scanner"]);
 				generated[templateName] = fileContent;
 			}
 			return generated;

@@ -128,6 +128,7 @@ namespace TinyPG.CodeGenerators.VBNet
 
 				fileContent = fileContent.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
 				fileContent = fileContent.Replace(@"<%VirtualEvalMethods%>", evalmethods.ToString());
+				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["ParseTree"]);
 				generated[templateName] = fileContent;
 			}
 			return generated;

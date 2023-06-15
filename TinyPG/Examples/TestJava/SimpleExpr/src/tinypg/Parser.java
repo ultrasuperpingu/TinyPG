@@ -4,7 +4,7 @@
 package tinypg;
 
 
-public class Parser 
+public class Parser
 {
 	private final Scanner scanner;
 	private ParseTree tree;
@@ -227,7 +227,6 @@ public class Parser
 
 		parent.Token.UpdateRange(node.Token);
 	} // NonTerminalSymbol: Atom
-
 
 
 

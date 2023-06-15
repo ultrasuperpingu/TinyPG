@@ -16,7 +16,7 @@ namespace <%Namespace%>
 	};
 	
 
-	class Token<%IToken%>
+	class Token
 	{
 
 	public:

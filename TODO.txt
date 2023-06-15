@@ -5,7 +5,6 @@
  * Make Error Codes consistant (ErrorCode class with all error codes done but not used)
  * Merge last modifications to vb generator
  * Create a command line only executable
- * Try to replace every unknown attribute in Parser, ParseTree and Scanner directive in the template files (ie, XXX="content" parameter in the ParseTree directive for example, will try to replace <%XXX%> by content in the ParseTree templatate file).
 
 Prospecting/Long Term:
  * Add my backtracking parser as a possible implementation (in addition to LL(1))

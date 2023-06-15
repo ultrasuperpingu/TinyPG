@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TinyPG.Compiler;
 
 namespace TinyPG.CodeGenerators
 {
@@ -17,6 +18,15 @@ namespace TinyPG.CodeGenerators
 		{
 			get { return this.templateFiles; }
 			set { this.templateFiles = value; }
+		}
+
+		protected string ReplaceDirectiveAttributes(string fileContent, Directive directive)
+		{
+			foreach(var att in directive)
+			{
+				fileContent = fileContent.Replace("<%"+att.Key+"%>", att.Value);
+			}
+			return fileContent;
 		}
 	}
 }

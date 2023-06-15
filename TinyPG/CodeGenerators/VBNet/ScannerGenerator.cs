@@ -100,6 +100,7 @@ namespace TinyPG.CodeGenerators.VBNet
 					fileContent = fileContent.Replace(@"<%ImplementsITokenText%>", "");
 					fileContent = fileContent.Replace(@"<%ImplementsITokenToString%>", "");
 				}
+				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Scanner"]);
 				generated[templateName] = fileContent;
 			}
 			return generated;

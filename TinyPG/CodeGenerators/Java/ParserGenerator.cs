@@ -38,6 +38,7 @@ namespace TinyPG.CodeGenerators.Java
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				fileContent = fileContent.Replace(@"<%IParseTree%>", "ParseTree");
 				fileContent = fileContent.Replace(@"<%ParseNonTerminals%>", parsers.ToString());
+				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Parser"]);
 				generated[templateName] = fileContent;
 			}
 

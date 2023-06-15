@@ -48,6 +48,7 @@ namespace TinyPG.CodeGenerators.CSharp
 				}
 
 				fileContent = fileContent.Replace(@"<%ParseNonTerminals%>", parsers.ToString());
+				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Parser"]);
 				generated[templateName] = fileContent;
 			}
 			return generated;

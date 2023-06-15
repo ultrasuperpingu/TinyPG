@@ -65,8 +65,8 @@ namespace TinyPG.CodeGenerators.VBNet
 				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 				fileContent = fileContent.Replace(@"<%HightlightTokens%>", tokens.ToString());
 				fileContent = fileContent.Replace(@"<%RtfColorPalette%>", colors.ToString());
-				fileContent = fileContent.Replace(@"<%TextHighlighterCustomCode%>", Grammar.Directives["TextHighlighter"]["CustomCode"]);
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["TextHighlighter"]);
 				generated[templateName] = fileContent;
 			}
 			return generated;
