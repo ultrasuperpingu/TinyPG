@@ -39,7 +39,6 @@ namespace <%Namespace%>
 
 		std::string ToString();
 
-<%ScannerCustomCode%>
 	};
 	
 	class Scanner

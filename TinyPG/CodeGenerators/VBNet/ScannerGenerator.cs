@@ -89,7 +89,6 @@ namespace TinyPG.CodeGenerators.VBNet
 					fileContent = fileContent.Replace(@"<%ImplementsITokenLength%>", " Implements TinyPG.Debug.IToken.Length");
 					fileContent = fileContent.Replace(@"<%ImplementsITokenText%>", " Implements TinyPG.Debug.IToken.Text");
 					fileContent = fileContent.Replace(@"<%ImplementsITokenToString%>", " Implements TinyPG.Debug.IToken.ToString");
-					fileContent = fileContent.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
 				}
 				else
 				{
@@ -100,7 +99,6 @@ namespace TinyPG.CodeGenerators.VBNet
 					fileContent = fileContent.Replace(@"<%ImplementsITokenLength%>", "");
 					fileContent = fileContent.Replace(@"<%ImplementsITokenText%>", "");
 					fileContent = fileContent.Replace(@"<%ImplementsITokenToString%>", "");
-					fileContent = fileContent.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
 				}
 				generated[templateName] = fileContent;
 			}

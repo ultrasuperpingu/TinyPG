@@ -34,7 +34,6 @@ Namespace <%Namespace%>
 
 		<%ParseNonTerminals%>
 
-<%ParserCustomCode%>
 	End Class
 #End Region
 End Namespace

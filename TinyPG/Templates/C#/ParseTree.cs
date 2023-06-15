@@ -240,7 +240,7 @@ namespace <%Namespace%>
 
 <%VirtualEvalMethods%>
 
-<%ParseTreeCustomCode%>
+<%CustomCode%>
 	}
 	#endregion ParseTree
 }

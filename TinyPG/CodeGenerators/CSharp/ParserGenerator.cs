@@ -45,7 +45,6 @@ namespace TinyPG.CodeGenerators.CSharp
 				{
 					fileContent = fileContent.Replace(@"<%IParser%>", "");
 					fileContent = fileContent.Replace(@"<%IParseTree%>", "ParseTree");
-					fileContent = fileContent.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
 				}
 
 				fileContent = fileContent.Replace(@"<%ParseNonTerminals%>", parsers.ToString());

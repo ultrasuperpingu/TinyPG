@@ -106,12 +106,10 @@ namespace TinyPG.CodeGenerators.CSharp
 				if (Debug != GenerateDebugMode.None)
 				{
 					fileContent = fileContent.Replace(@"<%IToken%>", " : TinyPG.Debug.IToken");
-					fileContent = fileContent.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
 				}
 				else
 				{
 					fileContent = fileContent.Replace(@"<%IToken%>", "");
-					fileContent = fileContent.Replace(@"<%ScannerCustomCode%>", Grammar.Directives["Scanner"]["CustomCode"]);
 				}
 				generated[templateName] = fileContent;
 			}

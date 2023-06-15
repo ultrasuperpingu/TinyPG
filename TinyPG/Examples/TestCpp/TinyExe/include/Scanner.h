@@ -104,7 +104,6 @@ namespace TinyExe
 
 		std::string ToString();
 
-
 	};
 	
 	class Scanner

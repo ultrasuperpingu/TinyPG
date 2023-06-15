@@ -520,6 +520,5 @@ namespace <%Namespace%>
 		}
 
 		#endregion
-<%TextHighlighterCustomCode%>
 	}
 }

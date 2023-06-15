@@ -108,7 +108,6 @@ namespace TinyExe
 		void ParseVariable(ParseNode* parent);
 
 
-
 	};
 
 }

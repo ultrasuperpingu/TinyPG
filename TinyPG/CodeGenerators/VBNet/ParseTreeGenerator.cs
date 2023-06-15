@@ -100,7 +100,7 @@ namespace TinyPG.CodeGenerators.VBNet
 										+ "		End Property\r\n";
 					fileContent = fileContent.Replace(@"<%INodesGet%>", inodes);
 					fileContent = fileContent.Replace(@"<%ImplementsIParseNodeText%>", " Implements TinyPG.Debug.IParseNode.Text");
-					fileContent = fileContent.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
+					fileContent = fileContent.Replace(@"<%CustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
 				}
 				else
 				{
@@ -123,7 +123,7 @@ namespace TinyPG.CodeGenerators.VBNet
 					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorMessage%>", "");
 					fileContent = fileContent.Replace(@"<%ImplementsIParseErrorIsWarning%>", "");
 					fileContent = fileContent.Replace(@"<%ImplementsIParseNodeText%>", "");
-					fileContent = fileContent.Replace(@"<%ParseTreeCustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
+					fileContent = fileContent.Replace(@"<%CustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
 				}
 
 				fileContent = fileContent.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());

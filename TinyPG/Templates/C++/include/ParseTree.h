@@ -47,7 +47,7 @@ namespace <%Namespace%>
 		protected:
 <%VirtualEvalMethods%>
 
-<%ParseTreeCustomCode%>
+<%CustomCode%>
 	};
 	
 	class ParseError

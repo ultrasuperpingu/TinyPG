@@ -458,7 +458,6 @@ namespace TinyExe
 				return Type.ToString();
 		}
 
-
 	}
 
 	#endregion

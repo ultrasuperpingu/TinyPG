@@ -40,7 +40,6 @@ namespace <%Namespace%>
 
 <%ParseNonTerminals%>
 
-<%ParserCustomCode%>
 	}
 
 	#endregion Parser

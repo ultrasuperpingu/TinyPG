@@ -264,7 +264,6 @@ namespace TinyPG.Compiler
 				case "ParseTree":
 				case "TextHighlighter":
 					names.Add("Generate");
-					names.Add("FileName");
 					names.Add("CustomCode");
 					names.Add("HeaderCode");
 					break;

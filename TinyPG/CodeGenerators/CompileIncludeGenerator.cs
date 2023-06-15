@@ -8,7 +8,7 @@ namespace TinyPG.CodeGenerators
 {
 	public class CompileIncludeGenerator : BaseGenerator, ICodeGenerator
 	{
-		internal CompileIncludeGenerator() : base(null)
+		internal CompileIncludeGenerator() : base()
 		{
 		}
 		

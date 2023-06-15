@@ -244,7 +244,6 @@ namespace <%Namespace%>
 				return Type.ToString();
 		}
 
-<%ScannerCustomCode%>
 	}
 
 	#endregion

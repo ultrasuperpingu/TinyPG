@@ -222,7 +222,7 @@ Namespace <%Namespace%>
 			End If
 		End Function
 
-		<%ScannerCustomCode%>
+<%CustomCode%>
 
 End Class
 #End Region

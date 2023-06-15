@@ -251,7 +251,7 @@ Namespace <%Namespace%>
 
 		<%VirtualEvalMethods%>
 
-<%ParseTreeCustomCode%>
+<%CustomCode%>
 	End Class
 #End Region
 End Namespace

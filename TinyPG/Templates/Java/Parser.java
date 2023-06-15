@@ -33,5 +33,4 @@ public class Parser
 
 <%ParseNonTerminals%>
 
-<%ParserCustomCode%>
 }

@@ -42,7 +42,7 @@ namespace TinyPG.CodeGenerators.Cpp
 
 				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-				fileContent = fileContent.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
+				fileContent = fileContent.Replace(@"<%CustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
 				fileContent = fileContent.Replace(@"<%ParseNonTerminalsImpl%>", parserMethodsImpl.ToString());
 				fileContent = fileContent.Replace(@"<%ParseNonTerminalsDecl%>", parserMethodsDecl.ToString());
 				generated[templateName] = fileContent;

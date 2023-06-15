@@ -37,14 +37,12 @@ namespace TinyPG.CodeGenerators.VBNet
 					fileContent = fileContent.Replace(@"<%Imports%>", "Imports TinyPG.Debug");
 					fileContent = fileContent.Replace(@"<%IParser%>", "\r\n        Implements TinyPG.Debug.IParser\r\n");
 					fileContent = fileContent.Replace(@"<%IParseTree%>", "TinyPG.Debug.IParseTree");
-					fileContent = fileContent.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
 				}
 				else
 				{
 					fileContent = fileContent.Replace(@"<%Imports%>", "");
 					fileContent = fileContent.Replace(@"<%IParser%>", "");
 					fileContent = fileContent.Replace(@"<%IParseTree%>", "ParseTree");
-					fileContent = fileContent.Replace(@"<%ParserCustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
 				}
 
 				fileContent = fileContent.Replace(@"<%ParseNonTerminals%>", parsers.ToString());
