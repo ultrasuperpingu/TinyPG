@@ -231,7 +231,6 @@ namespace SimpleExpr
 
 
 
-
 	}
 
 	#endregion Parser

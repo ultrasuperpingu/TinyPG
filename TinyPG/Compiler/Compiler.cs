@@ -128,7 +128,7 @@ namespace TinyPG.Compiler
 			foreach (Directive d in Grammar.Directives)
 			{
 				generator = CodeGeneratorFactory.CreateGenerator(d.Name, language);
-				if (generator != null && d.ContainsKey("FileName"))
+				if (d.Name == "Compile" && generator != null && d.ContainsKey("FileName"))
 					generator.TemplateFiles.Add(d["FileName"]);
 
 				if (generator != null && (debugMode != GenerateDebugMode.None || d["Generate"].ToLower() == "true"))

@@ -14,24 +14,20 @@
 
 // The Parser Directive allows to specify the following parameters:
 // * Generate: Is the parser has to be generated. Default is true.
-// * FileName: The filename of the generated code. This can't be empty. Default is the template filename (ie Parser.{language file extension}).
-// * CustomCode: Custom code to be included in the body of the Parser class. Default is "".
-<% @Parser Generate="true" FileName="Parser.cs" %>
+<% @Parser Generate="true"%>
 // The ParseTree Directive allows to specify the following parameters:
 // * Generate: Is the parser tree file (which contains evaluation code or is the base class for it) has to be generated. Default is true.
-// * FileName: The filename of the generated code. This can't be empty. Default is the template filename (ie ParseTree.{language file extension}).
-// * CustomCode: Custom code to be included in the body of the Parser class. Default is "".
-<% @ParseTree Generate="true" FileName="ParseTree.cs" %>
+<% @ParseTree Generate="true"%>
 // The Scanner Directive allows to specify the following parameters:
 // * Generate: Is the scanner file has to be generated. Default is true.
-// * FileName: The filename of the generated code. This can't be empty. Default is the template filename (ie Scanner.{language file extension}).
 // * CustomCode: Custom code to be included in the body of the Scanner class. Default is "".
-<% @Scanner Generate="true" FileName="Scanner.cs" %>
+<% @Scanner Generate="true"%>
 // The TextHighlighter Directive (not allowed in none .net languages for now) allows to specify the following parameters:
 // * Generate: Is the text highlighter file has to be generated. Default is false.
-// * FileName: The filename of the generated code. This can't be empty. Default is the template filename (ie TextHighlighter.{language file extension}).
-// * CustomCode: Custom code to be included in the body of the Scanner class. Default is "".
-<% @TextHighlighter Generate="true" FileName="Scanner.cs" %>
+<% @TextHighlighter Generate="true"%>
+
+// For all directive, you can specify any attribute which value will be replaced in the template file with the content.
+//  for example, if you set an attribute Test="My Content" in the Parser directive, any <%Test%> text in the Scanner template file will be replaced by: My Content
 
 // Terminal rules:
 //  The terminal rules are specified with the following syntax:

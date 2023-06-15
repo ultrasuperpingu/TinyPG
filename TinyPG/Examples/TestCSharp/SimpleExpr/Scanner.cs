@@ -296,7 +296,6 @@ namespace SimpleExpr
 				return Type.ToString();
 		}
 
-
 	}
 
 	#endregion
