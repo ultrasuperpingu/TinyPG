@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using System.IO;
 
 namespace TinyPG.Parsing
 {
@@ -20,6 +21,20 @@ namespace TinyPG.Parsing
 	{
 		public GrammarTree()
 		{
+		}
+		public static GrammarTree FromFile(string filename)
+		{
+			string grammarfile = File.ReadAllText(filename);
+			var g = FromSource(grammarfile);
+			return g;
+		}
+
+		public static GrammarTree FromSource(string fileContent)
+		{
+			Scanner scanner = new Scanner();
+			Parser parser = new Parser(scanner);
+			GrammarTree tree = (GrammarTree)parser.Parse(fileContent, new GrammarTree());
+			return tree;
 		}
 	}
 
@@ -48,6 +63,7 @@ namespace TinyPG.Parsing
 			this.text = text;
 			nodes = new List<ParseNode>();
 		}
+
 		protected bool IsTerminal(TokenType type)
 		{
 			return type == TokenType.STRING ||

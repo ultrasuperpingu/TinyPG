@@ -94,8 +94,8 @@ namespace TinyPG.Parsing
 		{
 			Scanner scanner = new Scanner();
 			Parser parser = new Parser(scanner);
-			GrammarTree tree = (GrammarTree)parser.Parse(fileContent, new GrammarTree());
-			if (tree == null)
+			GrammarTree tree = GrammarTree.FromSource(fileContent);
+			if (tree == null || tree.Errors.HaveBlockingErrors)
 				return null;
 			Grammar g = (Grammar)tree.Eval();
 			return g;
