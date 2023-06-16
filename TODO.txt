@@ -1,11 +1,10 @@
  * Write documentation
  * Review C++ generated code and improve it (more use of templates ???)
- * Find a way for the ParseTree to return the correct type
+ * Find a way for the ParseTree to return the correct type (pretty straightforward now but waiting for C++ review first)
  * Remove Non terminal default return value (it will be useless once the ParseTree will be able to return the correct type)
  * Make Error Codes consistant (ErrorCode class with all error codes done but not used)
  * Merge last modifications to vb generator
- * Separate Parser/Generators and compiler in 2 different libraries (allowing to get an exe without dependancy to CodeDom). ??
- * And/Or Replace CodeDom with Roslyn ??
+ * Replace CodeDom with Roslyn ??
 
 Prospecting/Long Term:
  * Add my backtracking parser as a possible implementation (in addition to LL(1))

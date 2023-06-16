@@ -1,0 +1,143 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "tpg",
+	"patterns": [
+		{ "include": "#comment" },
+		{ "include": "#directive" },
+		{ "include": "#rule" },
+		{ "include": "#indented-symbols" }
+	],
+	"repository": {
+		"comment": {
+			"patterns": [
+				{
+					"name": "comment.block.tpg",
+					"begin": "/\\*\\*(?!/)",
+					"end": "\\*/",
+					"patterns": [
+						{
+							"include": "#comment-tags"
+						}
+					]
+				},
+				{
+					"name": "comment.line.tpg",
+					"match": "(//).*$\\n?",
+					"patterns": [
+						{
+							"include": "#comment-tags"
+						}
+					]
+				}
+			]
+		},
+		"comment-tags": {
+			"patterns": [
+				{
+					"name": "keyword.codetag.tpg",
+					"match": "\\b(?:TODO|FIXME|BUG|NOTE|HACK)\\b"
+				}
+			]
+		},
+		"directive": {
+			"patterns": [
+				{
+					"name": "constant.language.tpg",
+					"begin": "<%",
+					"end": "%>",
+					"patterns": [
+						{
+							"include": "#comment-tags"
+						}
+					]
+				}
+			]
+		},
+		"rule": {
+			"patterns": [
+				{
+					"match": "([\\w\\-]+)\\s*(->)\\s*(.+)?",
+					"captures": {
+						"1": {
+							"name": "entity.name.class.tpg"
+						},
+						"2": {
+							"name": "keyword.symbol.tpg"
+						},
+						"3": {
+							"patterns": [
+								{
+									"include": "#symbols"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"symbols": {
+			"patterns": [
+				{ "include": "#comment" },
+				{ "include": "#string" },
+				{ "include": "#symbol" },
+				{ "include": "#operators" }
+			]
+		},
+		"indented-symbols": {
+			"patterns": [
+				{ "include": "#symbols" }
+			]
+		},
+		"symbol": {
+			"patterns": [
+				{
+					"match": "\\b[A-Z][_A-Z0-9]*\\b",
+					"name": "support.variable.tpg"
+				},
+				{
+					"match": "\\b[_a-zA-Z][_a-zA-Z0-9]*\\b",
+					"name": "entity.name.class.tpg"
+				}
+			]
+		},
+		"string": {
+			"patterns": [
+				{
+					"name": "string.quoted.single.tpg",
+					"begin": "'",
+					"end": "'",
+					"patterns": [
+						{
+							"name": "constant.character.escape.tpg",
+							"match": "\\\\."
+						}
+					]
+				},
+				{
+					"name": "string.quoted.double.tpg",
+					"begin": "\"",
+					"end": "\"",
+					"patterns": [
+						{
+							"name": "constant.character.escape.tpg",
+							"match": "\\\\."
+						}
+					]
+				}
+			]
+		},
+		"operators": {
+			"patterns": [
+				{
+					"match": "[?+*|()\\[\\]{},.\\-!]",
+					"name": "keyword.control.tpg"
+				},
+				{
+					"match": ";",
+					"name": "keyword.symbol.tpg"
+				}
+			]
+		}
+	},
+	"scopeName": "source.tpg"
+}

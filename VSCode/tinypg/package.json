@@ -1,0 +1,48 @@
+{
+	"name": "TPG",
+	"displayName": "TinyPG Grammar Highlighting",
+	"description": "TinyPG for Visual Studio Code",
+	"version": "0.0.1",
+	"publisher": "ultrasuperpingu",
+	"engines": {
+		"vscode": "^1.32.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ultrasuperpingu/TinyPG.git"
+	},
+	"homepage": "https://github.com/ultrasuperpingu/TinyPG",
+	"bugs": {
+		"url": "https://github.com/ultrasuperpingu/TinyPG/issues"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"keywords": [
+		"tpg",
+		"syntax-highlighting"
+	],
+	"license": "GPLv3",
+	"contributes": {
+		"languages": [
+			{
+				"id": "tpg",
+				"aliases": [
+					"tpg"
+				],
+				"extensions": [
+					".tpg",
+					".TPG"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "tpg",
+				"scopeName": "source.tpg",
+				"path": "./syntaxes/tpg.tmLanguage.json"
+			}
+		]
+	}
+}
