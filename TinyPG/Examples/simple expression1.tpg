@@ -6,9 +6,12 @@
 // * Language: c#, cs, csharp, vb, vb.net, vbnet, visualbasic,
 // 		 java, cpp, c++ (case insensitive). Default is C#.
 // * Namespace: The namespace of the generated code. This can't be empty. Default is TinyPG.
-// * OutputPath: The directory where the generated files will be produced. Default is ".".
+// * OutputPath: The directory where the generated files will be produced.
+//			The default value is the current directory.
+//			If a relative path is specified, it will be interpretted as relative to the grammar file
 // * TemplatePath: The directory where the template files used for generation will be found.
 //			The default value is language dependant but will be in {ExeFileDir}\Template\{Language}
+//			If a relative path is specified, it will be interpretted as relative to the grammar file
 // * RegexCompiled: For .net languages, specify if the Regex are instanciated with the RegexOption.Compiled option. Default is true.
 <% @TinyPG Language="C#" Namespace="TinyPG.SimpleExpr" OutputPath="." RegexCompiled="true" %>
 

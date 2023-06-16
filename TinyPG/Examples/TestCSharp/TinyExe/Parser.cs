@@ -12,6 +12,7 @@ namespace TinyExe
 {
 	#region Parser
 
+	#pragma warning disable CS0168
 	public partial class Parser 
 	{
 		private Scanner scanner;

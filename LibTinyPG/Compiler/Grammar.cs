@@ -67,7 +67,13 @@ namespace TinyPG.Compiler
 		/// </summary>
 		public Directives Directives { get; set; }
 
-		public string SourceFilename { get; set; }
+		public string SourceFilename
+		{
+			get
+			{
+				return Path.GetFileName(Filename);
+			}
+		}
 
 		public Grammar()
 		{
@@ -153,6 +159,8 @@ namespace TinyPG.Compiler
 				d["Namespace"] = "TinyPG"; // set default namespace
 			if (!d.ContainsKey("OutputPath"))
 				d["OutputPath"] = "." + Path.DirectorySeparatorChar; // write files to current path
+			else if(!Path.IsPathRooted(d["OutputPath"]))
+				d["OutputPath"] = Path.Combine(GetDirectory(), d["OutputPath"]);
 			if (!d.ContainsKey("Language"))
 				d["Language"] = "C#"; // set default language
 			if (!d.ContainsKey("TemplatePath"))
@@ -182,6 +190,8 @@ namespace TinyPG.Compiler
 						break;
 				}
 			}
+			else if (!Path.IsPathRooted(d["TemplatePath"]))
+				d["TemplatePath"] = Path.Combine(GetDirectory(), d["TemplatePath"]);
 
 			d = Directives.Find("Parser");
 			if (d == null)
@@ -246,6 +256,24 @@ namespace TinyPG.Compiler
 			}
 		}
 
+		public string GetDirectory()
+		{
+			if(filename != null)
+				return Path.GetDirectoryName(filename);
+			return Environment.CurrentDirectory;
+		}
+		private string filename;
+		public string Filename
+		{
+			get
+			{
+				return filename;
+			}
+			set
+			{
+				filename = value;
+			}
+		}
 		public string GetTemplatePath()
 		{
 			string folder = AppDomain.CurrentDomain.BaseDirectory;

@@ -15,7 +15,6 @@ using System.Reflection;
 using TinyPG.CodeGenerators;
 using TinyPG.Debug;
 
-
 namespace TinyPG.Compiler
 {
 
@@ -178,50 +177,27 @@ namespace TinyPG.Compiler
 		/// <returns>the output of the parser/compiler</returns>
 		public CompilerResult Run(string input)
 		{
-		//	return Run(input, null);
-		//}
-
-		//public CompilerResult Run(string input, RichTextBox textHighlight)
-		//{
 			CompilerResult compilerresult = new CompilerResult();
 			string output = null;
 			if (assembly == null)
 				return null;
-
+			string ns = Grammar.Directives["TinyPG"]["Namespace"];
 			compilerresult.Assembly = assembly;
-			compilerresult.Scanner = assembly.CreateInstance(Grammar.Directives["TinyPG"]["Namespace"]+".Scanner");
-			Type scanner = compilerresult.Scanner.GetType();
-
-			compilerresult.Parser = (IParser)assembly.CreateInstance(Grammar.Directives["TinyPG"]["Namespace"]+".Parser", true, BindingFlags.CreateInstance, null, new object[] { compilerresult.Scanner }, null, null);
+			compilerresult.Scanner = assembly.CreateInstance(ns + ".Scanner");
+			
+			compilerresult.Parser = (IParser)assembly.CreateInstance(ns + ".Parser", true, BindingFlags.CreateInstance, null, new object[] { compilerresult.Scanner }, null, null);
 			Type parsertype = compilerresult.Parser.GetType();
 
 			compilerresult.ParseTree = (IParseTree) parsertype.InvokeMember("Parse", BindingFlags.InvokeMethod, null, compilerresult.Parser, new object[] { input });
 			
 			Type treetype = compilerresult.ParseTree.GetType();
 
-			compilerresult.Errors = (List<IParseError>)treetype.InvokeMember("Errors", BindingFlags.GetField, null, compilerresult.ParseTree, null);
-
-			/*if (textHighlight != null && errors.Count == 0)
+			var errors = (List<IParseError>)treetype.InvokeMember("Errors", BindingFlags.GetField, null, compilerresult.ParseTree, null);
+			compilerresult.ParsingErrors = new List<IParseError>(errors);
+			
+			if (errors.Count > 0)
 			{
-				// try highlight the input text
-				object highlighterinstance = assembly.CreateInstance(Grammar.Directives["TinyPG"]["Namespace"]+".TextHighlighter", true, BindingFlags.CreateInstance, null, new object[] { textHighlight, scannerinstance, parserinstance }, null, null);
-				if (highlighterinstance != null)
-				{
-					output += "Highlighting input..." + "\r\n";
-					Type highlightertype = highlighterinstance.GetType();
-					// highlight the input text only once
-					highlightertype.InvokeMember("HighlightText", BindingFlags.InvokeMethod, null, highlighterinstance, null);
-
-					// let this thread sleep so background thread can highlight the text
-					System.Threading.Thread.Sleep(20);
-
-					// dispose of the highlighter object
-					highlightertype.InvokeMember("Dispose", BindingFlags.InvokeMethod, null, highlighterinstance, null);
-				}
-			}*/
-			if (compilerresult.Errors.Count > 0)
-			{
-				foreach (IParseError err in compilerresult.Errors)
+				foreach (IParseError err in compilerresult.ParsingErrors)
 					output += string.Format("({0},{1}): {2}\r\n", err.Line, err.Column, err.Message);
 			}
 			else
@@ -234,10 +210,10 @@ namespace TinyPG.Compiler
 				try
 				{
 					compilerresult.Value = compilerresult.ParseTree.Eval();
-					if (compilerresult.Errors != null && compilerresult.Errors.Count > 0)
+					if (errors != null && errors.Count > 0)
 					{
 						output += "\r\nSemantics Errors: \r\n";
-						foreach (IParseError err in compilerresult.Errors)
+						foreach (IParseError err in errors)
 							output += string.Format("({0},{1}): {2}\r\n", err.Line, err.Column, err.Message);
 					}
 					else

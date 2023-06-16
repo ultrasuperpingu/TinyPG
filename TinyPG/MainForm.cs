@@ -563,19 +563,19 @@ namespace TinyPG
 					textOutput.Text += result.Output;
 					ParseTreeViewer.Populate(tvParsetree, result.ParseTree);
 
-					if (textInput != null && compiler.Errors.Count == 0)
+					if (textInput != null && result.ParsingErrors.Count == 0)
 					{
 						// try highlight the input text
-						object highlighterinstance = result.Assembly.CreateInstance(grammar.Directives["TinyPG"]["Namespace"]+".TextHighlighter", true, BindingFlags.CreateInstance, null, new object[] { textEditor, result.Scanner, result.Parser }, null, null);
+						object highlighterinstance = result.Assembly.CreateInstance(grammar.Directives["TinyPG"]["Namespace"]+".TextHighlighter", true, BindingFlags.CreateInstance, null, new object[] { textInput, result.Scanner, result.Parser }, null, null);
 						if (highlighterinstance != null)
 						{
-							textOutput.Text += "Highlighting input..." + "\r\n";
+							textOutput.Text += "\r\nHighlighting input..." + "\r\n";
 							Type highlightertype = highlighterinstance.GetType();
 							// highlight the input text only once
 							highlightertype.InvokeMember("HighlightText", BindingFlags.InvokeMethod, null, highlighterinstance, null);
 
 							// let this thread sleep so background thread can highlight the text
-							System.Threading.Thread.Sleep(20);
+							System.Threading.Thread.Sleep(200);
 
 							// dispose of the highlighter object
 							highlightertype.InvokeMember("Dispose", BindingFlags.InvokeMethod, null, highlighterinstance, null);
@@ -676,7 +676,7 @@ namespace TinyPG
 				TimeSpan span = DateTime.Now.Subtract(starttimer);
 				output.AppendLine("Grammar parsed successfully in " + span.TotalMilliseconds.ToString(CultureInfo.InvariantCulture) + "ms.");
 
-				grammar.SourceFilename = Path.GetFileName(GrammarFile);
+				grammar.Filename = GrammarFile;
 				SetHighlighterLanguage(grammar.Directives["TinyPG"]["Language"]);
 				
 				starttimer = DateTime.Now;

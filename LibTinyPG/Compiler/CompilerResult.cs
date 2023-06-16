@@ -23,6 +23,7 @@ namespace TinyPG.Compiler
 		public string Output;
 		public Assembly Assembly;
 		public object Value;
-		public List<IParseError> Errors;
+		public List<IParseError> ParsingErrors;
+		public List<IParseError> EvalErrors;
 	}
 }

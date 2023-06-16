@@ -4,7 +4,8 @@
  * Remove Non terminal default return value (it will be useless once the ParseTree will be able to return the correct type)
  * Make Error Codes consistant (ErrorCode class with all error codes done but not used)
  * Merge last modifications to vb generator
- * Create a command line only executable
+ * Separate Parser/Generators and compiler in 2 different libraries (allowing to get an exe without dependancy to CodeDom). ??
+ * And/Or Replace CodeDom with Roslyn ??
 
 Prospecting/Long Term:
  * Add my backtracking parser as a possible implementation (in addition to LL(1))

@@ -46,10 +46,10 @@ namespace TinyPG
 
 				Program prog = new Program(ManageParseError, output);
 				Grammar grammar = prog.ParseGrammar(File.ReadAllText(GrammarFilePath));
-
+				
 				if (grammar != null)
 				{
-					grammar.SourceFilename = Path.GetFileName(GrammarFilePath);
+					grammar.Filename = GrammarFilePath;
 					if (prog.BuildCode(grammar, new TinyPG.Compiler.Compiler()))
 					{
 						TimeSpan span = DateTime.Now.Subtract(starttimer);
