@@ -60,6 +60,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compiler\Compiler.cs" />
+    <Compile Include="Compiler\CompilerResult.cs" />
     <Compile Include="Controls\AssemblyInfo.cs" />
     <Compile Include="Controls\AutoComplete.cs">
       <SubType>Form</SubType>

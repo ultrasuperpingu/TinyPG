@@ -60,8 +60,6 @@
     <Compile Include="CodeGenerators\VBNet\ParseTreeGenerator.cs" />
     <Compile Include="CodeGenerators\VBNet\ScannerGenerator.cs" />
     <Compile Include="CodeGenerators\VBNet\TextHighlighterGenerator.cs" />
-    <Compile Include="Parsing\Compiler.cs" />
-    <Compile Include="Parsing\CompilerResult.cs" />
     <Compile Include="Parsing\ErrorCode.cs" />
     <Compile Include="Parsing\Helper.cs" />
     <Compile Include="Parsing\Grammar.cs" />
