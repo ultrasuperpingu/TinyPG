@@ -14,6 +14,7 @@ using System.Reflection;
 
 using TinyPG.CodeGenerators;
 using TinyPG.Debug;
+using TinyPG.Parsing;
 
 namespace TinyPG.Compiler
 {

@@ -13,7 +13,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Globalization;
 
-namespace TinyPG.Compiler
+namespace TinyPG.Parsing
 {
 
 	public class GrammarTree : GrammarNode

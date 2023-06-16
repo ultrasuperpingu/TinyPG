@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using TinyPG;
-using TinyPG.Compiler;
+using TinyPG.Parsing;
 using System.Text.RegularExpressions;
 
 namespace TinyPG.CodeGenerators.Java

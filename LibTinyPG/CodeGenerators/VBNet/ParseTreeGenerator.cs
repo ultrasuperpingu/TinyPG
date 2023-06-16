@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using System.IO;
-using TinyPG.Compiler;
+using TinyPG.Parsing;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 

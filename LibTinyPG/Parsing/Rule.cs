@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace TinyPG.Compiler
+namespace TinyPG.Parsing
 {
 	#region RuleType
 	public enum RuleType

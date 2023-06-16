@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System.Globalization;
 
-namespace TinyPG.Compiler
+namespace TinyPG.Parsing
 {
 	public class Directives : List<Directive>
 	{
@@ -155,14 +155,20 @@ namespace TinyPG.Compiler
 				d = new Directive("TinyPG");
 				Directives.Insert(0, d);
 			}
+			
 			if (!d.ContainsKey("Namespace"))
 				d["Namespace"] = "TinyPG"; // set default namespace
+			
 			if (!d.ContainsKey("OutputPath"))
 				d["OutputPath"] = "." + Path.DirectorySeparatorChar; // write files to current path
 			else if(!Path.IsPathRooted(d["OutputPath"]))
+				// if a relative path is specified in the grammar file, it's relative to
+				// the grammar file
 				d["OutputPath"] = Path.Combine(GetDirectory(), d["OutputPath"]);
+			
 			if (!d.ContainsKey("Language"))
 				d["Language"] = "C#"; // set default language
+			
 			if (!d.ContainsKey("TemplatePath"))
 			{
 				switch (d["Language"].ToLower(CultureInfo.InvariantCulture))
@@ -173,7 +179,7 @@ namespace TinyPG.Compiler
 					case "vb.net":
 					case "vb":
 						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
-							Path.Combine("Templates","VB") + Path.DirectorySeparatorChar;
+							Path.Combine("Templates", "VB") + Path.DirectorySeparatorChar;
 						break;
 					case "java":
 						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
@@ -186,12 +192,16 @@ namespace TinyPG.Compiler
 						break;
 					default:
 						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
-							Path.Combine("Templates","C#") + Path.DirectorySeparatorChar;
+							Path.Combine("Templates", "C#") + Path.DirectorySeparatorChar;
 						break;
 				}
 			}
 			else if (!Path.IsPathRooted(d["TemplatePath"]))
+			{
+				// if a relative path is specified in the grammar file, it's relative to
+				// the grammar file
 				d["TemplatePath"] = Path.Combine(GetDirectory(), d["TemplatePath"]);
+			}
 
 			d = Directives.Find("Parser");
 			if (d == null)

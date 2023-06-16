@@ -10,7 +10,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace TinyPG.Compiler
+namespace TinyPG.Parsing
 {
 	public class TerminalSymbol : Symbol
 	{

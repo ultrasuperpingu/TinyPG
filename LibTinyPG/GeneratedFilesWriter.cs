@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using TinyPG.CodeGenerators;
-using TinyPG.Compiler;
+using TinyPG.Parsing;
 using System.IO;
 
 namespace TinyPG

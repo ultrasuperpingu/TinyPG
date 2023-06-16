@@ -13,6 +13,7 @@ using System.Text;
 using System.IO;
 using System.Xml;
 using TinyPG.Compiler;
+using TinyPG.Parsing;
 using TinyPG.Debug;
 using TinyPG.Controls;
 using System.Globalization;

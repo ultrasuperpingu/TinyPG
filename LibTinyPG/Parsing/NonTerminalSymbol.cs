@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TinyPG.Compiler
+namespace TinyPG.Parsing
 {
 	public class NonTerminalSymbol : Symbol
 	{

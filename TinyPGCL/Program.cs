@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using TinyPG;
-using TinyPG.Compiler;
+using TinyPG.Parsing;
 
 namespace TinyPGCL
 {

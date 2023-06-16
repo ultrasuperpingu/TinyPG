@@ -10,6 +10,7 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using TinyPG.Parsing;
 using TinyPG.Compiler;
 using System.Text;
 using System.Threading;
