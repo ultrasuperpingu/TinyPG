@@ -80,9 +80,7 @@ namespace TinyPG.UnitTests
 		public void SimpleExpression1_Test()
 		{
 			var file = Path.Combine(TESTFILESPATH, @"simple expression1.tpg");
-			GrammarTree GT = LoadGrammar(file);
-			Grammar G = (Grammar)GT.Eval();
-			G.Filename = file;
+			Grammar G = Grammar.FromFile(file);
 
 			G.Directives["TinyPG"]["OutputPath"] = OUTPUTPATH;
 
@@ -111,9 +109,7 @@ namespace TinyPG.UnitTests
 		public void SimpleExpression2_Test()
 		{
 			var file = Path.Combine(TESTFILESPATH, @"simple expression2.tpg");
-			GrammarTree GT = LoadGrammar(file);
-			Grammar G = (Grammar)GT.Eval();
-			G.Filename = file;
+			Grammar G = Grammar.FromFile(file);
 
 			G.Directives.Add(new Directive("TinyPG"));
 			
@@ -131,12 +127,8 @@ namespace TinyPG.UnitTests
 		public void SimpleExpression2_VB_Test()
 		{
 			var file = Path.Combine(TESTFILESPATH, @"simple expression2_vb.tpg");
-			GrammarTree GT = LoadGrammar(file);
-			Grammar G = (Grammar)GT.Eval();
-			G.Filename = file;
-			
-			G.Directives.Add(new Directive("TinyPG"));
-			
+			Grammar G = Grammar.FromFile(file);
+
 			Compiler.Compiler compiler = new Compiler.Compiler();
 
 			compiler.Compile(G);
@@ -151,12 +143,8 @@ namespace TinyPG.UnitTests
 		public void SimpleExpression3_Test()
 		{
 			var file = Path.Combine(TESTFILESPATH, @"BNFGrammar 1.5.tpg");
-			GrammarTree GT = LoadGrammar(file);
-			Grammar G = (Grammar)GT.Eval();
-			G.Filename = file;
-			
-			G.Directives.Add(new Directive("TinyPG"));
-			
+			Grammar G = Grammar.FromFile(file);
+
 			Compiler.Compiler compiler = new Compiler.Compiler();
 
 			compiler.Compile(G);
@@ -172,11 +160,7 @@ namespace TinyPG.UnitTests
 		public void SimpleExpression4_Test()
 		{
 			var file = Path.Combine(TESTFILESPATH, @"GrammarHighlighter v1.3.tpg");
-			GrammarTree GT = LoadGrammar(file);
-			Grammar G = (Grammar)GT.Eval();
-			G.Filename = file;
-			
-			G.Directives.Add(new Directive("TinyPG"));
+			Grammar G = Grammar.FromFile(file);
 			
 			Compiler.Compiler compiler = new Compiler.Compiler();
 
@@ -192,10 +176,7 @@ namespace TinyPG.UnitTests
 		public void SimpleExpression4_VB_Test()
 		{
 			var file = Path.Combine(TESTFILESPATH, @"GrammarHighlighter_vb.tpg");
-			GrammarTree GT = LoadGrammar(file);
-			Grammar G = (Grammar)GT.Eval();
-			G.Filename = file;
-			G.Directives.Add(new Directive("TinyPG"));
+			Grammar G = Grammar.FromFile(file);
 			
 			Compiler.Compiler compiler = new Compiler.Compiler();
 
@@ -211,10 +192,8 @@ namespace TinyPG.UnitTests
 		public void TinyExe_Test()
 		{
 			var file = Path.Combine(TESTFILESPATH, @"TinyExpEval.tpg");
-			GrammarTree GT = LoadGrammar(file);
-			Grammar G = (Grammar)GT.Eval();
-			G.Filename = file;
-			
+			Grammar G = Grammar.FromFile(file);
+
 			G.Directives.Add(new Directive("TinyPG"));
 			
 			Compiler.Compiler compiler = new Compiler.Compiler();

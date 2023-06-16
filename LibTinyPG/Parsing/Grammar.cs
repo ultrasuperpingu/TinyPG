@@ -82,6 +82,25 @@ namespace TinyPG.Parsing
 			Directives = new Directives();
 		}
 
+		public static Grammar FromFile(string filename)
+		{
+			string grammarfile = File.ReadAllText(filename);
+			var g = FromSource(grammarfile);
+			g.Filename = filename;
+			return g;
+		}
+
+		public static Grammar FromSource(string fileContent)
+		{
+			Scanner scanner = new Scanner();
+			Parser parser = new Parser(scanner);
+			GrammarTree tree = (GrammarTree)parser.Parse(fileContent, new GrammarTree());
+			if (tree == null)
+				return null;
+			Grammar g = (Grammar)tree.Eval();
+			return g;
+		}
+
 		public Symbols GetTerminals()
 		{
 			Symbols symbols = new Symbols();
