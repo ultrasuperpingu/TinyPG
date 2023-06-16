@@ -14,9 +14,10 @@ namespace TinyPG.CodeGenerators.CSharp
 		private bool KindOfLL2 = false;
 		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
-			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
-				return null;
-
+			string templatePath = Grammar.GetTemplatePath();
+			if (string.IsNullOrEmpty(templatePath))
+				throw new Exception("Template path not found:" + Grammar.Directives["TinyPG"]["TemplatePath"]);
+			
 			// generate the parser file
 			StringBuilder parsers = new StringBuilder();
 			

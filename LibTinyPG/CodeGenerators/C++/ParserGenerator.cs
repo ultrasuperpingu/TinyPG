@@ -17,8 +17,9 @@ namespace TinyPG.CodeGenerators.Cpp
 			if (Debug != GenerateDebugMode.None)
 				throw new Exception("Cpp cannot be generated in debug mode");
 
-			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
-				return null;
+			string templatePath = Grammar.GetTemplatePath();
+			if (string.IsNullOrEmpty(templatePath))
+				throw new Exception("Template path not found:" + Grammar.Directives["TinyPG"]["TemplatePath"]);
 
 			// generate the parser file
 			StringBuilder parserMethodsImpl = new StringBuilder();

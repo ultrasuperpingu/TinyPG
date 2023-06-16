@@ -14,8 +14,9 @@ namespace TinyPG.CodeGenerators.CSharp
 
 		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
-			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
-				return null;
+			string templatePath = Grammar.GetTemplatePath();
+			if (string.IsNullOrEmpty(templatePath))
+				throw new Exception("Template path not found:" + Grammar.Directives["TinyPG"]["TemplatePath"]);
 
 			int counter = 2;
 			StringBuilder tokentype = new StringBuilder();
@@ -96,7 +97,7 @@ namespace TinyPG.CodeGenerators.CSharp
 			Dictionary<string, string> generated = new Dictionary<string, string>();
 			foreach (var templateName in TemplateFiles)
 			{
-				string fileContent = File.ReadAllText(Path.Combine(Grammar.GetTemplatePath(), templateName));
+				string fileContent = File.ReadAllText(Path.Combine(templatePath, templateName));
 				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 				fileContent = fileContent.Replace(@"<%SkipList%>", skiplist.ToString());
 				fileContent = fileContent.Replace(@"<%RegExps%>", regexps.ToString());

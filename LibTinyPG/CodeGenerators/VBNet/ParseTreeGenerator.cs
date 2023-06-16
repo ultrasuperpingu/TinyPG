@@ -3,6 +3,7 @@ using System.IO;
 using TinyPG.Parsing;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System;
 
 namespace TinyPG.CodeGenerators.VBNet
 {
@@ -14,8 +15,9 @@ namespace TinyPG.CodeGenerators.VBNet
 		private bool isDebugOther;
 		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
-			if (string.IsNullOrEmpty(Grammar.GetTemplatePath()))
-				return null;
+			string templatePath = Grammar.GetTemplatePath();
+			if (string.IsNullOrEmpty(templatePath))
+				throw new Exception("Template path not found:" + Grammar.Directives["TinyPG"]["TemplatePath"]);
 			isDebugOther = Debug == GenerateDebugMode.DebugOther;
 			// copy the parse tree file (optionally)
 			
@@ -60,7 +62,7 @@ namespace TinyPG.CodeGenerators.VBNet
 			Dictionary<string, string> generated = new Dictionary<string, string>();
 			foreach (var templateName in templateFiles)
 			{
-				string fileContent = File.ReadAllText(Path.Combine(Grammar.GetTemplatePath(), templateName));
+				string fileContent = File.ReadAllText(Path.Combine(templatePath, templateName));
 				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				if (Debug != GenerateDebugMode.None)
