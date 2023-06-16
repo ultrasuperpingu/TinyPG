@@ -38,7 +38,7 @@ public class DynamicFunction extends Function
 
         // execute the function here
 
-        Object result = Node.Eval(tree, null);
+        Object result = Node.Eval(tree);
 
         // clean up the stack
         tree.Context.PopScope();

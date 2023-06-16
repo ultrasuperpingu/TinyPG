@@ -3,7 +3,6 @@ using System.IO;
 using TinyPG.Compiler;
 using System.Text.RegularExpressions;
 using System;
-using System.Reflection;
 using System.Collections.Generic;
 
 namespace TinyPG.CodeGenerators.CSharp

@@ -253,7 +253,7 @@ namespace TinyPG.Compiler
 			if (Path.IsPathRooted(pathout))
 				folder = Path.GetFullPath(pathout);
 			else
-				folder = Path.GetFullPath(folder + pathout);
+				folder = Path.GetFullPath(Path.Combine(folder, pathout));
 
 
 			DirectoryInfo dir = new DirectoryInfo(folder + Path.DirectorySeparatorChar);
@@ -265,15 +265,15 @@ namespace TinyPG.Compiler
 
 		public string GetOutputPath()
 		{
-			string folder = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar;
+			string folder = Directory.GetCurrentDirectory();
 			string pathout = Directives["TinyPG"]["OutputPath"];
 			if (Path.IsPathRooted(pathout))
 				folder = Path.GetFullPath(pathout);
 			else
-				folder = Path.GetFullPath(folder + pathout);
+				folder = Path.GetFullPath(Path.Combine(folder, pathout));
 
 
-			DirectoryInfo dir = new DirectoryInfo(folder + Path.DirectorySeparatorChar);
+			DirectoryInfo dir = new DirectoryInfo(folder);
 			if (!dir.Exists)
 			{
 				try

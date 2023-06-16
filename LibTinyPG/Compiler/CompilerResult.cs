@@ -9,14 +9,20 @@
 //-----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using TinyPG.Debug;
+
 namespace TinyPG.Compiler
 {
 	public class CompilerResult
 	{
+		public object Scanner;
+		public IParser Parser;
 		public IParseTree ParseTree;
 		public string Output;
+		public Assembly Assembly;
 		public object Value;
+		public List<IParseError> Errors;
 	}
 }

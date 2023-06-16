@@ -54,6 +54,10 @@
     <Content Include="AuthoringTests.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LibTinyPG\LibTinyPG.csproj">
+      <Project>{9ef7f11a-ac54-491d-8947-f87cbfd7dfb3}</Project>
+      <Name>LibTinyPG</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TinyPG\TinyPG.csproj">
       <Project>{423B1883-6B35-401B-BB70-B7167F847575}</Project>
       <Name>TinyPG</Name>

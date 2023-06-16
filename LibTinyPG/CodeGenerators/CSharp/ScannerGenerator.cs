@@ -3,7 +3,6 @@ using System.Text;
 using System.IO;
 using TinyPG.Compiler;
 using System.Collections.Generic;
-using TinyPG.Highlighter;
 
 namespace TinyPG.CodeGenerators.CSharp
 {

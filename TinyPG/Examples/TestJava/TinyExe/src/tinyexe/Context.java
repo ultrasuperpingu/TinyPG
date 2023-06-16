@@ -88,7 +88,7 @@ public class Context
     /**
      * Resets the context to its defaults
      */
-    public void Reset()
+    public final void Reset()
     {
         inScope = new ArrayList<Variables>();
         functions = new Functions();

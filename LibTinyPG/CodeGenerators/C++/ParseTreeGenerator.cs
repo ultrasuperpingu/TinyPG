@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System;
 using System.Collections.Generic;
-using TinyPG.Highlighter;
 
 namespace TinyPG.CodeGenerators.Cpp
 {

@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Globalization;
-using TinyPG.Highlighter;
 
 namespace TinyPG.Compiler
 {

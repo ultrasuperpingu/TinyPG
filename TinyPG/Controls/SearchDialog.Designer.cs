@@ -1,4 +1,4 @@
-﻿namespace TinyPG
+﻿namespace TinyPG.Controls
 {
 	partial class SearchDialog
 	{

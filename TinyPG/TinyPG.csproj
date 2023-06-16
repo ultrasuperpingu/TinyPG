@@ -60,28 +60,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeGenerators\BaseGenerator.cs" />
-    <Compile Include="CodeGenerators\C++\ParserGenerator.cs" />
-    <Compile Include="CodeGenerators\C++\ParseTreeGenerator.cs" />
-    <Compile Include="CodeGenerators\C++\ScannerGenerator.cs" />
-    <Compile Include="CodeGenerators\CodeGeneratorFactory.cs" />
-    <Compile Include="CodeGenerators\ICodeGenerator.cs" />
-    <Compile Include="CodeGenerators\CSharp\ParserGenerator.cs" />
-    <Compile Include="CodeGenerators\CSharp\ParseTreeGenerator.cs" />
-    <Compile Include="CodeGenerators\CSharp\ScannerGenerator.cs" />
-    <Compile Include="CodeGenerators\CSharp\TextHighlighterGenerator.cs" />
-    <Compile Include="CodeGenerators\Java\ParserGenerator.cs" />
-    <Compile Include="CodeGenerators\Java\ParseTreeGenerator.cs" />
-    <Compile Include="CodeGenerators\Java\ScannerGenerator.cs" />
-    <Compile Include="CodeGenerators\CompileIncludeGenerator.cs" />
-    <Compile Include="CodeGenerators\VBNet\ParserGenerator.cs" />
-    <Compile Include="CodeGenerators\VBNet\ParseTreeGenerator.cs" />
-    <Compile Include="CodeGenerators\VBNet\ScannerGenerator.cs" />
-    <Compile Include="CodeGenerators\VBNet\TextHighlighterGenerator.cs" />
-    <Compile Include="Compiler\Compiler.cs" />
-    <Compile Include="Compiler\CompilerResult.cs" />
-    <Compile Include="Compiler\ErrorCode.cs" />
-    <Compile Include="Compiler\Helper.cs" />
     <Compile Include="Controls\AssemblyInfo.cs" />
     <Compile Include="Controls\AutoComplete.cs">
       <SubType>Form</SubType>
@@ -99,50 +77,22 @@
     <Compile Include="Controls\HeaderExtender.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\TabControlEx.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\TextMarker.cs" />
-    <Compile Include="Debug\IParser.cs" />
-    <Compile Include="Debug\IParseTree.cs" />
-    <Compile Include="Debug\IToken.cs" />
-    <Compile Include="GeneratedFilesWriter.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Highlighter\Parser.cs" />
-    <Compile Include="Highlighter\ParseTree.cs" />
-    <Compile Include="Highlighter\Scanner.cs" />
-    <Compile Include="Highlighter\TextHighlighter.cs" />
-    <Compile Include="ParseTreeViewer.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Controls\RegexControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\RegexControl.Designer.cs">
       <DependentUpon>RegexControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Compiler\Grammar.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="Controls\SearchDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="Controls\SearchDialog.Designer.cs">
+      <DependentUpon>SearchDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Compiler\NonTerminalSymbol.cs" />
-    <Compile Include="Compiler\Parser.cs" />
-    <Compile Include="Compiler\ParseTree.cs" />
-    <Compile Include="Compiler\GrammarTree.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Compiler\Rule.cs" />
-    <Compile Include="Compiler\Scanner.cs" />
-    <Compile Include="Compiler\Symbol.cs" />
-    <Content Include="Templates\**">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Compile Include="Controls\TabControlEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TextMarker.cs" />
     <Content Include="Examples\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -152,19 +102,34 @@
     <Content Remove="Examples\**\x64\**" />
     <Content Remove="Examples\TestJava\build\**" />
     <Content Remove="Examples\*.cs" />
-    <Compile Include="Compiler\TerminalSymbol.cs" />
-    <Compile Include="SearchDialog.cs">
+    <Compile Include="Highlighter\Parser.cs" />
+    <Compile Include="Highlighter\ParseTree.cs" />
+    <Compile Include="Highlighter\Scanner.cs" />
+    <Compile Include="Highlighter\TextHighlighter.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SearchDialog.Designer.cs">
-      <DependentUpon>SearchDialog.cs</DependentUpon>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="ParseTreeViewer.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="SyntaxChecker.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controls\AutoComplete.resx">
       <DependentUpon>AutoComplete.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SearchDialog.resx">
+      <DependentUpon>SearchDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -179,9 +144,6 @@
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SearchDialog.resx">
-      <DependentUpon>SearchDialog.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.1">
@@ -194,6 +156,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibTinyPG\LibTinyPG.csproj">
+      <Project>{9ef7f11a-ac54-491d-8947-f87cbfd7dfb3}</Project>
+      <Name>LibTinyPG</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

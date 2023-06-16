@@ -12,6 +12,7 @@ namespace <%Namespace%>
 {
 	#region Parser
 
+	#pragma warning disable CS0168
 	public partial class Parser <%IParser%>
 	{
 		private Scanner scanner;

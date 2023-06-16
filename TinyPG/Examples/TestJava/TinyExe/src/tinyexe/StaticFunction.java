@@ -5,7 +5,7 @@ public class StaticFunction extends Function
     public StaticFunction(String name, FunctionContextDelegate function, int minParameters, int maxParameters)
     {
         this.name = name;
-        functionContextDelegate = function;
+        this.functionContextDelegate = function;
         this.minParameters = minParameters;
         this.maxParameters = maxParameters;
         this.arguments = new Variables();

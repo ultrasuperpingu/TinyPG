@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TinyPG
+namespace TinyPG.Controls
 {
 	public partial class SearchDialog : Form
 	{

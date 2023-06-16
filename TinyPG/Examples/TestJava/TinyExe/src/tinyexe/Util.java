@@ -25,7 +25,7 @@ public class Util {
                 Number number = format.parse(o.toString().replace(",", "."));
                 return number.doubleValue();
             } catch (ParseException e) {
-                e.printStackTrace();
+                e.printStackTrace(System.err);
             }
         }
 		return 0.0;

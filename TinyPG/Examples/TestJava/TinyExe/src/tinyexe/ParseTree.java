@@ -29,13 +29,11 @@ public class ParseTree extends ParseNode
 
 	private void PrintNode(StringBuilder sb, ParseNode node, int indent)
 	{
-		
 		for(int i=0;i<indent;i++) {
 			sb.append(' ');
 		}
 
-		
-		sb.append(node.getText() + "\n");
+		sb.append(node.getText()).append("\n");
 
 		for (ParseNode n : node.getNodes())
 			PrintNode(sb, n, indent + 2);
