@@ -1,4 +1,4 @@
-// Automatically generated from source file: BNFGrammar 1.5.tpg
+// Automatically generated from source file: BNFGrammar.tpg
 // By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
 
 using System;
@@ -12,6 +12,7 @@ namespace TinyPG
 {
 	#region Parser
 
+	#pragma warning disable 168 // unused variables
 	public partial class Parser 
 	{
 		private Scanner scanner;
@@ -789,7 +790,6 @@ namespace TinyPG
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: Symbol
-
 
 
 

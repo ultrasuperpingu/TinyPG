@@ -2,7 +2,6 @@
 // By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
 
 package tinypg;
-import java.util.ArrayList;
 
 public class ParseError
 {

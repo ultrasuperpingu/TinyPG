@@ -21,8 +21,8 @@ public class Scanner
 	public HashMap<TokenType, Pattern> Patterns;
 
 	private Token LookAheadToken;
-	private ArrayList<TokenType> Tokens;
-	private ArrayList<TokenType> SkipList; // tokens to be skipped
+	private final ArrayList<TokenType> Tokens;
+	private final ArrayList<TokenType> SkipList; // tokens to be skipped
 	private static final List<TokenType> tokenTypeList = Arrays.asList(TokenType.values());
 	
 	public Scanner()

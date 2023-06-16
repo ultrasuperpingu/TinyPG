@@ -1,4 +1,4 @@
-// Automatically generated from source file: BNFGrammar 1.5.tpg
+// Automatically generated from source file: BNFGrammar.tpg
 // By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
 
 

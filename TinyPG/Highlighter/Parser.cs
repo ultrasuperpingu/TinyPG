@@ -12,6 +12,7 @@ namespace TinyPG.Highlighter
 {
 	#region Parser
 
+	#pragma warning disable 168 // unused variables
 	public partial class Parser 
 	{
 		private Scanner scanner;
@@ -585,7 +586,6 @@ namespace TinyPG.Highlighter
 
 			parent.Token.UpdateRange(node.Token);
 		} // NonTerminalSymbol: CodeBlock
-
 
 
 

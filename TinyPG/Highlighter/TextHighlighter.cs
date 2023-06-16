@@ -613,6 +613,5 @@ namespace TinyPG.Highlighter
 		}
 
 		#endregion
-
 	}
 }
