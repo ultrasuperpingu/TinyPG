@@ -178,21 +178,21 @@ namespace TinyPG.Parsing
 					case "vbnet":
 					case "vb.net":
 					case "vb":
-						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
-							Path.Combine("Templates", "VB") + Path.DirectorySeparatorChar;
+						d["TemplatePath"] = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+							"Templates", "VB") + Path.DirectorySeparatorChar;
 						break;
 					case "java":
-						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
-							Path.Combine("Templates", "Java") + Path.DirectorySeparatorChar;
+						d["TemplatePath"] = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+							"Templates", "Java") + Path.DirectorySeparatorChar;
 						break;
 					case "cpp":
 					case "c++":
-						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
-							Path.Combine("Templates", "C++") + Path.DirectorySeparatorChar;
+						d["TemplatePath"] = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+							"Templates", "C++") + Path.DirectorySeparatorChar;
 						break;
 					default:
-						d["TemplatePath"] = AppDomain.CurrentDomain.BaseDirectory +
-							Path.Combine("Templates", "C#") + Path.DirectorySeparatorChar;
+						d["TemplatePath"] = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+							"Templates", "C#") + Path.DirectorySeparatorChar;
 						break;
 				}
 			}

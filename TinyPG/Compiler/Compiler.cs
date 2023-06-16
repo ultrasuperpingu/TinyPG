@@ -15,6 +15,7 @@ using System.Reflection;
 using TinyPG.CodeGenerators;
 using TinyPG.Debug;
 using TinyPG.Parsing;
+using System.IO;
 
 namespace TinyPG.Compiler
 {
@@ -118,6 +119,9 @@ namespace TinyPG.Compiler
 
 			string tinypgfile = Assembly.GetExecutingAssembly().Location;
 			compilerparams.ReferencedAssemblies.Add(tinypgfile);
+			string tinypglibfile = Assembly.GetAssembly(typeof(Parser)).Location;
+			if(tinypglibfile != tinypgfile)
+				compilerparams.ReferencedAssemblies.Add(tinypglibfile);
 
 			// generate the code with debug interface enabled
 			List<string> sources = new List<string>();
@@ -127,7 +131,12 @@ namespace TinyPG.Compiler
 			{
 				generator = CodeGeneratorFactory.CreateGenerator(d.Name, language);
 				if (d.Name == "Compile" && generator != null && d.ContainsKey("FileName"))
-					generator.TemplateFiles.Add(d["FileName"]);
+				{
+					if(Path.IsPathRooted(d["FileName"]))
+						generator.TemplateFiles.Add(d["FileName"]);
+					else
+						generator.TemplateFiles.Add(Path.Combine(Grammar.GetDirectory(), d["FileName"]));
+				}
 
 				if (generator != null && (debugMode != GenerateDebugMode.None || d["Generate"].ToLower() == "true"))
 				{

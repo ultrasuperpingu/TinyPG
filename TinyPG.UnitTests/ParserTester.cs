@@ -16,8 +16,6 @@ namespace TinyPG.UnitTests
 	public class ParserTester
 	{
 		// TODO: set the correct paths to be able to run the unittests succesfully
-		private const string TEMPLATEPATH = @"Templates\C#\";
-		private const string TEMPLATEPATH_VB = @"Templates\VB\";
 		private const string OUTPUTPATH = @"";
 		private const string TESTFILESPATH = @"Examples\";
 
@@ -81,12 +79,11 @@ namespace TinyPG.UnitTests
 		[TestMethod]
 		public void SimpleExpression1_Test()
 		{
-
-			GrammarTree GT = LoadGrammar(Path.Combine(TESTFILESPATH, @"simple expression1.tpg"));
+			var file = Path.Combine(TESTFILESPATH, @"simple expression1.tpg");
+			GrammarTree GT = LoadGrammar(file);
 			Grammar G = (Grammar)GT.Eval();
+			G.Filename = file;
 
-
-			G.Directives["TinyPG"]["TemplatePath"] = TEMPLATEPATH;
 			G.Directives["TinyPG"]["OutputPath"] = OUTPUTPATH;
 
 			// basic checks
@@ -113,11 +110,13 @@ namespace TinyPG.UnitTests
 		[TestMethod]
 		public void SimpleExpression2_Test()
 		{
-			GrammarTree GT = LoadGrammar(Path.Combine(TESTFILESPATH, @"simple expression2.tpg"));
+			var file = Path.Combine(TESTFILESPATH, @"simple expression2.tpg");
+			GrammarTree GT = LoadGrammar(file);
 			Grammar G = (Grammar)GT.Eval();
-			G.Directives.Add(new Directive("TinyPG"));
-			G.Directives["TinyPG"]["TemplatePath"] = TEMPLATEPATH;
+			G.Filename = file;
 
+			G.Directives.Add(new Directive("TinyPG"));
+			
 			Compiler.Compiler compiler = new Compiler.Compiler();
 
 			compiler.Compile(G);
@@ -131,11 +130,13 @@ namespace TinyPG.UnitTests
 		[TestMethod]
 		public void SimpleExpression2_VB_Test()
 		{
-			GrammarTree GT = LoadGrammar(Path.Combine(TESTFILESPATH, @"simple expression2_vb.tpg"));
+			var file = Path.Combine(TESTFILESPATH, @"simple expression2_vb.tpg");
+			GrammarTree GT = LoadGrammar(file);
 			Grammar G = (Grammar)GT.Eval();
+			G.Filename = file;
+			
 			G.Directives.Add(new Directive("TinyPG"));
-			G.Directives["TinyPG"]["TemplatePath"] = TEMPLATEPATH_VB;
-
+			
 			Compiler.Compiler compiler = new Compiler.Compiler();
 
 			compiler.Compile(G);
@@ -149,11 +150,13 @@ namespace TinyPG.UnitTests
 		[TestMethod]
 		public void SimpleExpression3_Test()
 		{
-			GrammarTree GT = LoadGrammar(Path.Combine(TESTFILESPATH, @"BNFGrammar 1.5.tpg"));
+			var file = Path.Combine(TESTFILESPATH, @"BNFGrammar 1.5.tpg");
+			GrammarTree GT = LoadGrammar(file);
 			Grammar G = (Grammar)GT.Eval();
+			G.Filename = file;
+			
 			G.Directives.Add(new Directive("TinyPG"));
-			G.Directives["TinyPG"]["TemplatePath"] = TEMPLATEPATH;
-
+			
 			Compiler.Compiler compiler = new Compiler.Compiler();
 
 			compiler.Compile(G);
@@ -168,11 +171,13 @@ namespace TinyPG.UnitTests
 		[TestMethod]
 		public void SimpleExpression4_Test()
 		{
-			GrammarTree GT = LoadGrammar(Path.Combine(TESTFILESPATH, @"GrammarHighlighter v1.3.tpg"));
+			var file = Path.Combine(TESTFILESPATH, @"GrammarHighlighter v1.3.tpg");
+			GrammarTree GT = LoadGrammar(file);
 			Grammar G = (Grammar)GT.Eval();
+			G.Filename = file;
+			
 			G.Directives.Add(new Directive("TinyPG"));
-			G.Directives["TinyPG"]["TemplatePath"] = TEMPLATEPATH;
-
+			
 			Compiler.Compiler compiler = new Compiler.Compiler();
 
 			compiler.Compile(G);
@@ -186,11 +191,12 @@ namespace TinyPG.UnitTests
 		[TestMethod]
 		public void SimpleExpression4_VB_Test()
 		{
-			GrammarTree GT = LoadGrammar(Path.Combine(TESTFILESPATH, @"GrammarHighlighter_vb.tpg"));
+			var file = Path.Combine(TESTFILESPATH, @"GrammarHighlighter_vb.tpg");
+			GrammarTree GT = LoadGrammar(file);
 			Grammar G = (Grammar)GT.Eval();
+			G.Filename = file;
 			G.Directives.Add(new Directive("TinyPG"));
-			G.Directives["TinyPG"]["TemplatePath"] = TEMPLATEPATH_VB;
-
+			
 			Compiler.Compiler compiler = new Compiler.Compiler();
 
 			compiler.Compile(G);
@@ -204,17 +210,19 @@ namespace TinyPG.UnitTests
 		[TestMethod]
 		public void TinyExe_Test()
 		{
-			GrammarTree GT = LoadGrammar(Path.Combine(TESTFILESPATH, @"TinyExpEval.tpg"));
+			var file = Path.Combine(TESTFILESPATH, @"TinyExpEval.tpg");
+			GrammarTree GT = LoadGrammar(file);
 			Grammar G = (Grammar)GT.Eval();
+			G.Filename = file;
+			
 			G.Directives.Add(new Directive("TinyPG"));
-			G.Directives["TinyPG"]["TemplatePath"] = TEMPLATEPATH;
-
+			
 			Compiler.Compiler compiler = new Compiler.Compiler();
 
 			compiler.Compile(G);
 			Assert.IsTrue(compiler.Errors.Count == 0, "compilation contains errors");
 
-			CompilerResult result = compiler.Run("using System.IO;\r\n");
+			CompilerResult result = compiler.Run("f(x) := cos(x)^x\r\n");
 
 			Assert.IsTrue(result.Output.StartsWith("Parse was successful."));
 		}
