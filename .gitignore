@@ -120,3 +120,5 @@ UpgradeLog*.XML
 /TinyPG/Examples/TestCpp/TinyExe/.vs
 /TinyPG/Examples/TestJava/TinyExe/nbproject/private
 /TinyPG/Examples/TestJava/TinyExe/dist/
+/.vs
+/LibTinyPG/.vs
