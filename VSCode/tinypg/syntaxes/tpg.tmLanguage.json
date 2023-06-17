@@ -5,6 +5,7 @@
 		{ "include": "#comment" },
 		{ "include": "#directive" },
 		{ "include": "#rule" },
+		{ "include": "#codeblock" },
 		{ "include": "#indented-symbols" }
 	],
 	"repository": {
@@ -42,14 +43,41 @@
 		"directive": {
 			"patterns": [
 				{
-					"name": "constant.language.tpg",
+					"name": "keyword.operator.tpg",
 					"begin": "<%",
 					"end": "%>",
 					"patterns": [
-						{
-							"include": "#comment-tags"
-						}
+						{ "include": "#directive-name" },
+						{ "include": "#directive-attribute" },
+						{ "include": "#string" },
+						{ "include": "#codeblock" }
 					]
+				}
+			]
+		},
+		"directive-name": {
+			"patterns": [
+				{
+					"name": "constant.language.tpg",
+					"match": "@[a-zA-z_][a-zA-z_0-9]*"
+				}
+			]
+		},
+		"directive-attribute": {
+			"patterns": [
+				{
+					"match": "([a-zA-z_][a-zA-z_0-9]*)(=)(\"[^\"]*\")",
+					"captures": {
+						"1": {
+							"name": "entity.name.class.tpg"
+						},
+						"2": {
+							"name": "keyword.operator.tpg"
+						},
+						"3": {
+							"name": "string.quoted.double.tpg"
+						}
+					}
 				}
 			]
 		},
@@ -70,6 +98,28 @@
 									"include": "#symbols"
 								}
 							]
+						}
+					}
+				}
+			]
+		},
+		"codeblock": {
+			"patterns": [
+				{
+					"match": "(\\{)([^\\}]*\\}([^};][^}]*\\}+)*)(;)",
+					"captures": {
+						"1": {
+							"name": "keyword.operator.tpg"
+						},
+						"2": {
+							"patterns": [
+								{
+									"include": "source.cs"
+								}
+							]
+						},
+						"3": {
+							"name": "keyword.symbol.tpg"
 						}
 					}
 				}
@@ -103,9 +153,9 @@
 		"string": {
 			"patterns": [
 				{
-					"name": "string.quoted.single.tpg",
-					"begin": "'",
-					"end": "'",
+					"name": "string.quoted.double.tpg",
+					"begin": "\"",
+					"end": "\"",
 					"patterns": [
 						{
 							"name": "constant.character.escape.tpg",
@@ -115,12 +165,12 @@
 				},
 				{
 					"name": "string.quoted.double.tpg",
-					"begin": "\"",
+					"begin": "@\"",
 					"end": "\"",
 					"patterns": [
 						{
 							"name": "constant.character.escape.tpg",
-							"match": "\\\\."
+							"match": "\"\""
 						}
 					]
 				}

@@ -24,7 +24,7 @@ namespace TinyPGCL
 				{
 					if(grammarFile != null)
 					{
-						Console.WriteLine("Error: Grammar file already specified (found "+key+", previously found: "+grammarFile+")");
+						Console.Error.WriteLine("Error: Grammar file already specified (found "+key+", previously found: "+grammarFile+")");
 						return;
 					}
 					grammarFile = key;
@@ -33,7 +33,7 @@ namespace TinyPGCL
 				{
 					if(args.Length <= i+1)
 					{
-						Console.WriteLine("Error: No value specified for parameter " + key);
+						Console.Error.WriteLine("Error: No value specified for parameter " + key);
 						return;
 					}
 					parameters.Add(key, args[i+1]);
@@ -42,7 +42,7 @@ namespace TinyPGCL
 			}
 			if(grammarFile == null)
 			{
-				Console.WriteLine("Error: No grammar file specified");
+				Console.Error.WriteLine("Error: No grammar file specified");
 				return;
 			}
 			string grammarText = System.IO.File.ReadAllText(grammarFile);
@@ -51,9 +51,9 @@ namespace TinyPGCL
 			GrammarTree tree = (GrammarTree)parser.Parse(grammarText, new GrammarTree());
 			foreach (var e in tree.Errors)
 			{
-				Console.WriteLine((e.IsWarning ? "Warning:" : "Error:")+";("+e.Line+","+e.Column+");"+e.Code+";"+e.Message);
+				Console.Error.WriteLine((e.IsWarning ? "Warning:" : "Error:")+";("+e.Line+","+e.Column+");"+e.Code+";"+e.Message);
 			}
-			if (tree.Errors.HaveBlockingErrors)
+			if (tree.Errors.ContainBlockingErrors)
 			{
 				return;
 			}
@@ -63,7 +63,7 @@ namespace TinyPGCL
 				Grammar grammar = (Grammar)tree.Eval();
 				foreach (var e in tree.Errors)
 				{
-					Console.WriteLine((e.IsWarning ? "Warning:" : "Error:")+";("+e.Line+","+e.Column+");"+e.Code+";"+e.Message);
+					Console.Error.WriteLine((e.IsWarning ? "Warning:" : "Error:")+";("+e.Line+","+e.Column+");"+e.Code+";"+e.Message);
 				}
 				if (grammar == null)
 				{
