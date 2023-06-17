@@ -53,7 +53,7 @@ namespace TinyPGCL
 			{
 				Console.Error.WriteLine((e.IsWarning ? "Warning:" : "Error:")+";("+e.Line+","+e.Column+");"+e.Code+";"+e.Message);
 			}
-			if (tree.Errors.ContainBlockingErrors)
+			if (tree.Errors.HasBlockingErrors)
 			{
 				return;
 			}
