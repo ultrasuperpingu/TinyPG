@@ -15,12 +15,12 @@ namespace <%Namespace%>
 	[Serializable]
 	public class ParseErrors : <%ParseErrors%>
 	{
-		public bool HasBlockingErrors
+		public bool ContainsErrors
 		{
 			get { return Find(e => e.IsWarning == false) != null; }
 		}
-		public bool HasWarnings
-		{
+		public bool ContainsWarnings
+	{
 			get { return Find(e => e.IsWarning == true) != null; }
 		}
 		public <%ParseErrors%> Warnings

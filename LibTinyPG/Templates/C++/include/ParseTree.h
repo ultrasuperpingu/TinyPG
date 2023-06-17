@@ -72,6 +72,11 @@ namespace <%Namespace%>
 	
 	class ParseErrors : public std::vector<ParseError>
 	{
+	public:
+		bool containsErrors();
+		bool containsWarnings();
+		std::vector<ParseError> getErrors();
+		std::vector<ParseError> getWarnings();
 	};
 
 	
@@ -107,4 +112,24 @@ namespace <%Namespace%>
 		return Nodes[0]->EvalStart(paramlist);
 	}
 
+	inline bool ParseErrors::containsErrors()
+	{
+		return std::find_if(begin(), end(), [](ParseError i) {return !i.IsWarning; }) != end();
+	}
+	inline bool ParseErrors::containsWarnings()
+	{
+		return std::find_if(begin(), end(), [](ParseError i) {return i.IsWarning; }) != end();
+	}
+	inline std::vector<ParseError> ParseErrors::getErrors()
+	{
+		std::vector<ParseError> errors;
+		std::copy_if(begin(), end(), std::back_inserter(errors), [](ParseError i) {return !i.IsWarning; });
+		return errors;
+	}
+	inline std::vector<ParseError> ParseErrors::getWarnings()
+	{
+		std::vector<ParseError> warnings;
+		std::copy_if(begin(), end(), std::back_inserter(warnings), [](ParseError i) {return i.IsWarning; });
+		return warnings;
+	}
 }

@@ -7,11 +7,11 @@ import java.util.ArrayList;
 
 public class ParseErrors extends ArrayList<ParseError>
 {
-	public boolean haveBlockingErrors()
+	public boolean containsErrors()
 	{
 		return this.stream().filter(e -> e.isWarning() == false) != null;
 	}
-	public boolean haveWarnings()
+	public boolean containsWarnings()
 	{
 		return this.stream().filter(e -> e.isWarning() == true) != null;
 	}
@@ -25,14 +25,14 @@ public class ParseErrors extends ArrayList<ParseError>
 		}
 		return warnings;
 	}
-	public ArrayList<ParseError> getBlockingErrors()
+	public ArrayList<ParseError> getErrors()
 	{
-		ArrayList<ParseError> warnings = new ArrayList<>();
+		ArrayList<ParseError> errors = new ArrayList<>();
 		for(ParseError e : this)
 		{
 			if(!e.isWarning())
-				warnings.add(e);
+				errors.add(e);
 		}
-		return warnings;
+		return errors;
 	}
 }
