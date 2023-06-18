@@ -5,8 +5,8 @@
 		{ "include": "#comment" },
 		{ "include": "#directive" },
 		{ "include": "#rule" },
-		{ "include": "#codeblock" },
-		{ "include": "#indented-symbols" }
+		{ "include": "#attribute" },
+		{ "include": "#codeblock" }
 	],
 	"repository": {
 		"comment": {
@@ -40,16 +40,30 @@
 				}
 			]
 		},
+		"attribute": {
+			"patterns": [
+				{
+					"match": "\\[([a-zA-Z]+)(\\([^\\)]*\\))?\\]",
+					"captures": {
+						"1":{
+							"name": "variable.other.tpg"
+						},
+						"2":{
+							"name": "variable.parameter.tpg"
+						}
+					}
+				}
+			]
+		},
 		"directive": {
 			"patterns": [
 				{
-					"name": "keyword.operator.tpg",
+					"name": "constant.other",
 					"begin": "<%",
 					"end": "%>",
 					"patterns": [
 						{ "include": "#directive-name" },
 						{ "include": "#directive-attribute" },
-						{ "include": "#string" },
 						{ "include": "#codeblock" }
 					]
 				}
@@ -106,22 +120,15 @@
 		"codeblock": {
 			"patterns": [
 				{
-					"match": "(\\{)([^\\}]*\\}([^};][^}]*\\}+)*)(;)",
-					"captures": {
-						"1": {
-							"name": "keyword.operator.tpg"
-						},
-						"2": {
-							"patterns": [
-								{
-									"include": "source.cs"
-								}
-							]
-						},
-						"3": {
-							"name": "keyword.symbol.tpg"
+					"name": "comment.block.documentation",
+					"begin": "\\{",
+					"end": "\\};",
+					
+					"patterns": [
+						{
+							"include": "source.cs"
 						}
-					}
+					]
 				}
 			]
 		},
@@ -131,11 +138,6 @@
 				{ "include": "#string" },
 				{ "include": "#symbol" },
 				{ "include": "#operators" }
-			]
-		},
-		"indented-symbols": {
-			"patterns": [
-				{ "include": "#symbols" }
 			]
 		},
 		"symbol": {
