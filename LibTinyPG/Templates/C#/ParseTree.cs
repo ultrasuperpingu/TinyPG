@@ -8,6 +8,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.Globalization;
 using System.Linq;
+<%HeaderCode%>
 
 namespace <%Namespace%>
 {

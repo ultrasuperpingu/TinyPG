@@ -67,7 +67,7 @@ namespace TinyPG.CodeGenerators.VBNet
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				if (Debug != GenerateDebugMode.None)
 				{
-					fileContent = fileContent.Replace(@"<%Imports%>", "Imports TinyPG.Debug");
+					fileContent = fileContent.Replace(@"<%HeaderCode%>", "Imports TinyPG.Debug"+Environment.NewLine+Grammar.Directives["TinyPG"]["HeaderCode"]);
 					//parsetree = parsetree.Replace(@"<%Namespace%>", "TinyPG.Debug");
 					fileContent = fileContent.Replace(@"<%IParseTree%>", "\r\n        Implements TinyPG.Debug.IParseTree");
 					fileContent = fileContent.Replace(@"<%IParseNode%>", "\r\n        Implements TinyPG.Debug.IParseNode\r\n");
@@ -106,7 +106,7 @@ namespace TinyPG.CodeGenerators.VBNet
 				}
 				else
 				{
-					fileContent = fileContent.Replace(@"<%Imports%>", "");
+					fileContent = fileContent.Replace(@"<%HeaderCode%>", Grammar.Directives["TinyPG"]["HeaderCode"]);
 					//parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 					fileContent = fileContent.Replace(@"<%ParseError%>", "");
 					fileContent = fileContent.Replace(@"<%ParseErrors%>", "List(Of ParseError)");

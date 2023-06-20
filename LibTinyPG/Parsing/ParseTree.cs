@@ -8,6 +8,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.Globalization;
 using System.Linq;
+using TinyPG.Parsing;
 
 namespace TinyPG
 {
@@ -274,14 +275,14 @@ namespace TinyPG
 			return Value;
 		}
 
-		protected virtual object EvalStart(params object[] paramlist)
+		protected virtual Grammar EvalStart(params object[] paramlist)
 		{
 			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetStartValue(int index, params object[] paramlist )
+		protected virtual Grammar GetStartValue(int index, params object[] paramlist )
 		{
-			object o = default(object);
+			Grammar o = default(Grammar);
 			ParseNode node = GetTokenNode(TokenType.Start, index);
 			if (node != null)
 				o = node.EvalStart(paramlist);
@@ -344,14 +345,14 @@ namespace TinyPG
 			return o;
 		}
 
-		protected virtual object EvalParams(params object[] paramlist)
+		protected virtual object[] EvalParams(params object[] paramlist)
 		{
 			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetParamsValue(int index, params object[] paramlist )
+		protected virtual object[] GetParamsValue(int index, params object[] paramlist )
 		{
-			object o = default(object);
+			object[] o = default(object[]);
 			ParseNode node = GetTokenNode(TokenType.Params, index);
 			if (node != null)
 				o = node.EvalParams(paramlist);
@@ -400,42 +401,42 @@ namespace TinyPG
 			return o;
 		}
 
-		protected virtual object EvalSubrule(params object[] paramlist)
+		protected virtual Rule EvalSubrule(params object[] paramlist)
 		{
 			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetSubruleValue(int index, params object[] paramlist )
+		protected virtual Rule GetSubruleValue(int index, params object[] paramlist )
 		{
-			object o = default(object);
+			Rule o = default(Rule);
 			ParseNode node = GetTokenNode(TokenType.Subrule, index);
 			if (node != null)
 				o = node.EvalSubrule(paramlist);
 			return o;
 		}
 
-		protected virtual object EvalConcatRule(params object[] paramlist)
+		protected virtual Rule EvalConcatRule(params object[] paramlist)
 		{
 			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetConcatRuleValue(int index, params object[] paramlist )
+		protected virtual Rule GetConcatRuleValue(int index, params object[] paramlist )
 		{
-			object o = default(object);
+			Rule o = default(Rule);
 			ParseNode node = GetTokenNode(TokenType.ConcatRule, index);
 			if (node != null)
 				o = node.EvalConcatRule(paramlist);
 			return o;
 		}
 
-		protected virtual object EvalSymbol(params object[] paramlist)
+		protected virtual Rule EvalSymbol(params object[] paramlist)
 		{
 			throw new NotImplementedException("Could not interpret input; no semantics implemented.");
 		}
 
-		protected virtual object GetSymbolValue(int index, params object[] paramlist )
+		protected virtual Rule GetSymbolValue(int index, params object[] paramlist )
 		{
-			object o = default(object);
+			Rule o = default(Rule);
 			ParseNode node = GetTokenNode(TokenType.Symbol, index);
 			if (node != null)
 				o = node.EvalSymbol(paramlist);

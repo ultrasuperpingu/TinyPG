@@ -5,7 +5,7 @@ Imports System
 Imports System.Collections.Generic
 Imports System.Text
 Imports System.Xml.Serialization
-<%Imports%>
+<%HeaderCode%>
 
 Namespace <%Namespace%>
 #Region "ParseTree"

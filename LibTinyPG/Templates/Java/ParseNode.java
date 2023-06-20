@@ -3,6 +3,7 @@
 
 package <%Namespace%>;
 import java.util.ArrayList;
+<%HeaderCode%>
 
 public class ParseNode
 {

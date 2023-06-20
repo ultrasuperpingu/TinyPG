@@ -79,7 +79,7 @@ namespace TinyPG.Parsing
 		/// <param name="tree"></param>
 		/// <param name="paramlist"></param>
 		/// <returns></returns>
-		protected override object EvalStart(params object[] paramlist)
+		protected override Grammar EvalStart(params object[] paramlist)
 		{
 			TerminalSymbol terminal = null;
 			bool StartFound = false;
@@ -315,7 +315,7 @@ namespace TinyPG.Parsing
 				return null;
 			}
 
-			symbol.Attributes.Add(node.Nodes[1].Token.Text, (object[])EvalParams(new object[] { tree, node }));
+			symbol.Attributes.Add(node.Nodes[1].Token.Text, EvalParams(new object[] { tree, node }));
 			switch (node.Nodes[1].Token.Text)
 			{
 				case "Skip":
@@ -352,7 +352,7 @@ namespace TinyPG.Parsing
 			return symbol;
 		}
 
-		protected override object EvalParams(params object[] paramlist)
+		protected override object[] EvalParams(params object[] paramlist)
 		{
 			ParseTree tree = (ParseTree)paramlist[0];
 			GrammarNode node = (GrammarNode)paramlist[1];
@@ -457,10 +457,10 @@ namespace TinyPG.Parsing
 			return Nodes[0].EvalNode(paramlist);
 		}
 
-		protected override object EvalSubrule(params object[] paramlist)
+		protected override Rule EvalSubrule(params object[] paramlist)
 		{
 			if (Nodes.Count == 1) // single symbol
-				return Nodes[0].EvalNode(paramlist);
+				return (Rule)Nodes[0].EvalNode(paramlist);
 
 			Rule choiceRule = new Rule(RuleType.Choice);
 			// i+=2 to skip to the | symbols
@@ -473,10 +473,10 @@ namespace TinyPG.Parsing
 			return choiceRule;
 		}
 
-		protected override object EvalConcatRule(params object[] paramlist)
+		protected override Rule EvalConcatRule(params object[] paramlist)
 		{
 			if (Nodes.Count == 1) // single symbol
-				return Nodes[0].EvalNode(paramlist);
+				return (Rule)Nodes[0].EvalNode(paramlist);
 
 			Rule concatRule = new Rule(RuleType.Concat);
 			for (int i = 0; i < Nodes.Count; i++)
@@ -489,7 +489,7 @@ namespace TinyPG.Parsing
 		}
 
 
-		protected override object EvalSymbol(params object[] paramlist)
+		protected override Rule EvalSymbol(params object[] paramlist)
 		{
 			ParseNode last = Nodes[Nodes.Count - 1];
 			if (last.Token.Type == TokenType.UNARYOPER)
@@ -532,13 +532,13 @@ namespace TinyPG.Parsing
 			if (Nodes[0].Token.Type == TokenType.BRACKETOPEN)
 			{
 				// create subrule syntax tree
-				return Nodes[1].EvalNode(paramlist);
+				return (Rule)Nodes[1].EvalNode(paramlist);
 			}
 			else
 			{
 				ParseTree tree = (ParseTree)paramlist[0];
 				Grammar g = (Grammar)paramlist[1];
-				Symbol s = (Symbol)g.Symbols.Find(Nodes[0].Token.Text);
+				Symbol s = g.Symbols.Find(Nodes[0].Token.Text);
 				if (s == null)
 				{
 					tree.Errors.Add(new ParseError("Symbol '" + Nodes[0].Token.Text + "' is not declared.", 0x1043, Nodes[0]));
