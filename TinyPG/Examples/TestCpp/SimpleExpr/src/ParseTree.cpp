@@ -122,7 +122,7 @@ namespace TinyPG
 		ParseNode* node = GetTokenNode(TokenType::Start, index);
 		if (node != NULL)
 			return node->EvalStart(paramlist);
-		throw std::exception("No Start[index] found.");
+		throw std::runtime_error("No Start[index] found.");
 	}
 
 	int ParseNode::EvalAddExpr(const std::vector<std::any>& paramlist)
@@ -146,7 +146,7 @@ namespace TinyPG
 		ParseNode* node = GetTokenNode(TokenType::AddExpr, index);
 		if (node != NULL)
 			return node->EvalAddExpr(paramlist);
-		throw std::exception("No AddExpr[index] found.");
+		throw std::runtime_error("No AddExpr[index] found.");
 	}
 
 	int ParseNode::EvalMultExpr(const std::vector<std::any>& paramlist)
@@ -169,7 +169,7 @@ namespace TinyPG
 		ParseNode* node = GetTokenNode(TokenType::MultExpr, index);
 		if (node != NULL)
 			return node->EvalMultExpr(paramlist);
-		throw std::exception("No MultExpr[index] found.");
+		throw std::runtime_error("No MultExpr[index] found.");
 	}
 
 	int ParseNode::EvalAtom(const std::vector<std::any>& paramlist)
@@ -186,7 +186,7 @@ namespace TinyPG
 		ParseNode* node = GetTokenNode(TokenType::Atom, index);
 		if (node != NULL)
 			return node->EvalAtom(paramlist);
-		throw std::exception("No Atom[index] found.");
+		throw std::runtime_error("No Atom[index] found.");
 	}
 
 
