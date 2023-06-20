@@ -93,7 +93,7 @@ namespace TinyPG.Parsing
 		public static Grammar FromSource(string fileContent)
 		{
 			GrammarTree tree = GrammarTree.FromSource(fileContent);
-			if (tree == null || tree.Errors.HasBlockingErrors)
+			if (tree == null || tree.Errors.ContainsErrors)
 				return null;
 			Grammar g = (Grammar)tree.Eval();
 			return g;

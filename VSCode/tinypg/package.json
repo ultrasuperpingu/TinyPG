@@ -1,11 +1,11 @@
 {
-	"name": "TPG",
+	"name": "tpg",
 	"displayName": "TinyPG Grammar Highlighting",
 	"description": "TinyPG for Visual Studio Code",
 	"version": "0.0.1",
 	"publisher": "ultrasuperpingu",
 	"engines": {
-		"vscode": "^1.32.0"
+		"vscode": "^1.75.0"
 	},
 	"repository": {
 		"type": "git",
@@ -28,7 +28,8 @@
 			{
 				"id": "tpg",
 				"aliases": [
-					"tpg"
+					"TPG",
+					"TinyPG"
 				],
 				"extensions": [
 					".tpg",

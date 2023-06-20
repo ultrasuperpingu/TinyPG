@@ -16,18 +16,13 @@ namespace TinyPGCL
 				return;
 			}
 			Dictionary<string, string> parameters = new Dictionary<string, string>();
-			string grammarFile = null;
+			List<string> grammarFiles = new List<string>();
 			for(int i=0;i<args.Length;i++)
 			{
 				string key = args[i];
 				if (!key.StartsWith("--"))
 				{
-					if(grammarFile != null)
-					{
-						Console.Error.WriteLine("Error: Grammar file already specified (found "+key+", previously found: "+grammarFile+")");
-						return;
-					}
-					grammarFile = key;
+					grammarFiles.Add(key);
 				}
 				else
 				{
@@ -40,52 +35,55 @@ namespace TinyPGCL
 					i++;
 				}
 			}
-			if(grammarFile == null)
+			if(grammarFiles.Count == 0)
 			{
 				Console.Error.WriteLine("Error: No grammar file specified");
 				return;
 			}
-			string grammarText = System.IO.File.ReadAllText(grammarFile);
-			Scanner scanner = new Scanner();
-			Parser parser = new Parser(scanner);
-			GrammarTree tree = (GrammarTree)parser.Parse(grammarText, new GrammarTree());
-			foreach (var e in tree.Errors)
+			foreach (var grammarFile in grammarFiles)
 			{
-				Console.Error.WriteLine((e.IsWarning ? "Warning:" : "Error:")+";("+e.Line+","+e.Column+");"+e.Code+";"+e.Message);
-			}
-			if (tree.Errors.HasBlockingErrors)
-			{
-				return;
-			}
-			else
-			{
-				tree.Errors.Clear();
-				Grammar grammar = (Grammar)tree.Eval();
+				string grammarText = File.ReadAllText(grammarFile);
+				Scanner scanner = new Scanner();
+				Parser parser = new Parser(scanner);
+				GrammarTree tree = (GrammarTree)parser.Parse(grammarText, new GrammarTree());
 				foreach (var e in tree.Errors)
 				{
-					Console.Error.WriteLine((e.IsWarning ? "Warning:" : "Error:")+";("+e.Line+","+e.Column+");"+e.Code+";"+e.Message);
+					Console.Error.WriteLine(grammarFile + ":"+e.Line+":"+e.Column+": "+(e.IsWarning ? "warning: " : "error: ")+e.Message);
 				}
-				if (grammar == null)
+				if (tree.Errors.ContainsErrors)
 				{
-					return;
+					continue;
 				}
-				grammar.Filename = grammarFile;
-				if (parameters.ContainsKey("--language"))
-					grammar.Directives["TinyPG"]["Language"] = parameters["--language"];
-				if (parameters.ContainsKey("--output-path"))
-					grammar.Directives["TinyPG"]["OutputPath"] = Path.Combine(Environment.CurrentDirectory, parameters["--output-path"]);
-				if (parameters.ContainsKey("--template-path path"))
-					grammar.Directives["TinyPG"]["TemplatePath"] = Path.Combine(Environment.CurrentDirectory, parameters["--template-path"]);
-				if (parameters.ContainsKey("--template-path path"))
-					grammar.Directives["TinyPG"]["Namespace"] = parameters["--namespace"];
-				grammar.Preprocess();
-				if (tree.Errors.Count == 0)
+				else
 				{
-					Console.WriteLine(grammar.PrintGrammar());
-					Console.WriteLine(grammar.PrintFirsts());
+					tree.Errors.Clear();
+					Grammar grammar = (Grammar)tree.Eval();
+					foreach (var e in tree.Errors)
+					{
+						Console.Error.WriteLine(grammarFile + ":"+e.Line+":"+e.Column+": "+(e.IsWarning ? "warning: " : "error: ")+e.Message);
+					}
+					if (grammar == null)
+					{
+						continue;
+					}
+					grammar.Filename = grammarFile;
+					if (parameters.ContainsKey("--language"))
+						grammar.Directives["TinyPG"]["Language"] = parameters["--language"];
+					if (parameters.ContainsKey("--output-path"))
+						grammar.Directives["TinyPG"]["OutputPath"] = Path.Combine(Environment.CurrentDirectory, parameters["--output-path"]);
+					if (parameters.ContainsKey("--template-path path"))
+						grammar.Directives["TinyPG"]["TemplatePath"] = Path.Combine(Environment.CurrentDirectory, parameters["--template-path"]);
+					if (parameters.ContainsKey("--template-path path"))
+						grammar.Directives["TinyPG"]["Namespace"] = parameters["--namespace"];
+					grammar.Preprocess();
+					if (tree.Errors.Count == 0)
+					{
+						Console.WriteLine(grammar.PrintGrammar());
+						Console.WriteLine(grammar.PrintFirsts());
 
-					Console.WriteLine("Parse successful!\r\n");
-					new GeneratedFilesWriter(grammar).Generate();
+						Console.WriteLine("Parse successful!\r\n");
+						new GeneratedFilesWriter(grammar).Generate();
+					}
 				}
 			}
 		}

@@ -15,12 +15,12 @@ namespace TinyPG
 	[Serializable]
 	public class ParseErrors : List<ParseError>
 	{
-		public bool HasBlockingErrors
+		public bool ContainsErrors
 		{
 			get { return Find(e => e.IsWarning == false) != null; }
 		}
-		public bool HasWarnings
-		{
+		public bool ContainsWarnings
+	{
 			get { return Find(e => e.IsWarning == true) != null; }
 		}
 		public List<ParseError> Warnings

@@ -5,11 +5,14 @@
  * Make Error Codes consistant (ErrorCode class with all error codes done but not used)
  * Merge last modifications to vb generator
  * Replace CodeDom with Roslyn ??
-
+ * Make an installer (with ability to add TinyPGCL to the path)
+ 
 Prospecting/Long Term:
  * Add my backtracking parser as a possible implementation (in addition to LL(1))
- * Port the code to Visual Source Code (via Language Server Protocol and writing a tmLanguage grammar)
+ * Implement a Visual Source Code Extension (via Language Server Protocol (tmLanguage grammar done))
  * Remove VB support
  * Add a Search (and SearchXXX) method (in addition to Parse (and ParseXXX)) in the Parser
  * Add python and javascript generation
+ * Step by step parsing for debug purpose
+ * Ability to map error line in the produced file (while compiling it) to the grammar file (the code block in grammar file)
  

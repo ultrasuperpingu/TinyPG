@@ -12,6 +12,7 @@ namespace SimpleExpr
 {
 	#region Parser
 
+	#pragma warning disable 168 // unused variables
 	public partial class Parser 
 	{
 		private Scanner scanner;
