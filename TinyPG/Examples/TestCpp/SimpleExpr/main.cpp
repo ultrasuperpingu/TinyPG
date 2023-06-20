@@ -12,7 +12,7 @@ int main()
 	context.insert(std::pair<std::string, int>("_15", 15));
 	tree->setContext(&context);
 
-	for (int i = 0; i < tree->Errors.size(); i++)
+	for (int i = 0; i < (int)tree->Errors.size(); i++)
 	{
 		std::cerr << "error: " << tree->Errors[i].Line << ","<< tree->Errors[i].Column<< " : " << tree->Errors[i].Message << std::endl;
 	}
