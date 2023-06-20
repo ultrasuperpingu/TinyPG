@@ -109,7 +109,7 @@ namespace <%Namespace%>
 
 			tok = Token(startpos, endpos);
 
-			for (i = 0; i < scantokens.size(); i++)
+			for (i = 0; i < (int)scantokens.size(); i++)
 			{
 				std::regex r = Patterns[scantokens[i]];
 				std::smatch m;
@@ -131,7 +131,7 @@ namespace <%Namespace%>
 			}
 			else if (tok.StartPos == tok.EndPos)
 			{
-				if (tok.StartPos < Input.length())
+				if (tok.StartPos < (int)Input.length())
 					tok.Text = Input.substr(tok.StartPos, 1);
 				else
 					tok.Text = "EOF";
@@ -139,7 +139,7 @@ namespace <%Namespace%>
 
 			// Update the line and column count for error reporting.
 			tok.Line = currentline;
-			if (tok.StartPos < Input.length())
+			if (tok.StartPos < (int)Input.length())
 				tok.Column = tok.StartPos - (int)Input.find_last_of('\n', tok.StartPos);
 
 			if (contains(SkipList, tok.Type))
