@@ -52,7 +52,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				}
 				else
 				{
-					evalMethodsImpl.AppendLine("		throw std::exception(\"Could not interpret input; no semantics implemented.\");");
+					evalMethodsImpl.AppendLine("		throw std::runtime_error(\"Could not interpret input; no semantics implemented.\");");
 					// otherwise simply not implemented!
 				}
 				evalMethodsImpl.AppendLine("	}\r\n");
@@ -64,7 +64,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				evalMethodsImpl.AppendLine("		ParseNode* node = GetTokenNode(TokenType::" + s.Name + ", index);");
 				evalMethodsImpl.AppendLine("		if (node != NULL)");
 				evalMethodsImpl.AppendLine("			return node->Eval"+s.Name+"(paramlist);");
-				evalMethodsImpl.AppendLine("		throw std::exception(\"No "+ s.Name+"[index] found.\");");
+				evalMethodsImpl.AppendLine("		throw std::runtime_error(\"No "+ s.Name+"[index] found.\");");
 				evalMethodsImpl.AppendLine("	}\r\n");
 			}
 

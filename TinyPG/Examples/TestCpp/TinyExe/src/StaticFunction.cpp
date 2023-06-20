@@ -22,14 +22,14 @@ namespace TinyExe
 
 	std::any StaticFunction::Eval(std::vector<std::any> parameters, ParseTree* tree)
 	{
-		tree->Context->PushScope(NULL);
+		tree->context->PushScope(NULL);
 
 		std::any result;
 		if (functionDelegate != NULL)
 			result = functionDelegate(parameters);
 		else if (functionContextDelegate != NULL)
-			result = functionContextDelegate(parameters, tree->Context);
-		tree->Context->PopScope();
+			result = functionContextDelegate(parameters, tree->context);
+		tree->context->PopScope();
 		return result;
 	}
 

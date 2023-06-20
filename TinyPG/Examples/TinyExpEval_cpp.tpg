@@ -24,7 +24,7 @@
 		return NULL;
 	}
 	public:
-		Context* Context = NULL;
+		Context* context = NULL;
 }; HeaderCode=@"#include <sstream>
 #include <cmath>
 #include ""Function.h""
@@ -91,25 +91,25 @@ Function -> FUNCTION BRACKETOPEN Params? BRACKETCLOSE
 	ParseNode* funcNode = this->Nodes[0];
 	ParseNode* paramNode = this->Nodes[2];
 
-	if (tree->Context == NULL)
+	if (tree->context == NULL)
 	{
 		tree->Errors.push_back(ParseError("No context defined", 1041, this));
 		return NULL;
 	}
-	if (tree->Context->CurrentStackSize > 50)
+	if (tree->context->CurrentStackSize > 50)
 	{
 		tree->Errors.push_back(ParseError("Stack overflow: " + funcNode->TokenVal.Text + "()", 1046, this));
 		return NULL;
 	}
 	std::string key = str_tolower(funcNode->TokenVal.Text);
-	if (!containsKey(tree->Context->Functions, key))
+	if (!containsKey(tree->context->functions, key))
 	{
 		tree->Errors.push_back(ParseError("Fuction not defined: " + funcNode->TokenVal.Text + "()", 1042, this));
 		return NULL;
 	}
 
 	// retrieves the function from declared functions
-	class Function* func = tree->Context->Functions[key];
+	class Function* func = tree->context->functions[key];
 
 	// evaluate the function parameters
 	std::vector<std::any> parameters = std::vector<std::any>();
@@ -419,7 +419,7 @@ Expression -> AssignmentExpression? (ASSIGN AssignmentExpression)?
 		return NULL;
 	}
 
-	if (tree->Context == NULL)
+	if (tree->context == NULL)
 	{
 		tree->Errors.push_back(ParseError("No context defined", 1041, this));
 		return NULL;
@@ -429,8 +429,8 @@ Expression -> AssignmentExpression? (ASSIGN AssignmentExpression)?
 	{
 		// simply overwrite any previous defnition
 		std::string key = v->TokenVal.Text;
-		tree->Context->Globals[key] = $AssignmentExpression[1];
-		return tree->Context->Globals[key] ;
+		tree->context->Globals[key] = $AssignmentExpression[1];
+		return tree->context->Globals[key] ;
 	}
 	else if (v->TokenVal.Type == TokenType::Function)
 	{
@@ -438,9 +438,9 @@ Expression -> AssignmentExpression? (ASSIGN AssignmentExpression)?
 		std::string key = v->Nodes[0]->TokenVal.Text;
 
 		// function lookup is case insensitive
-		if (containsKey(tree->Context->Functions, str_tolower(key)))
+		if (containsKey(tree->context->functions, str_tolower(key)))
 		{
-			auto func = tree->Context->Functions[str_tolower(key)];
+			auto func = tree->context->functions[str_tolower(key)];
 			if (!func->IsDynamic())
 			{
 				tree->Errors.push_back(ParseError("Built in functions cannot be overwritten", 1050, this));
@@ -472,7 +472,7 @@ Expression -> AssignmentExpression? (ASSIGN AssignmentExpression)?
 		// pass on nodes[2] which is the Right Hand Side (RHS) of the assignment
 		// nodes[2] will be evaluated at runtime when the function is executed.
 		DynamicFunction* dynf = new DynamicFunction(key, Nodes[2], vars, (int)vars->size(), (int)vars->size());
-		tree->Context->Functions[str_tolower(key)] = dynf;
+		tree->context->functions[str_tolower(key)] = dynf;
 		return dynf;
 	}
 
@@ -556,7 +556,7 @@ StringLiteral -> STRINGLITERAL
 Variable -> VARIABLE
 {
 	ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	if (tree->Context == NULL)
+	if (tree->context == NULL)
 	{
 		tree->Errors.push_back(ParseError("No context defined", 1041, this));
 		return NULL;
@@ -564,14 +564,14 @@ Variable -> VARIABLE
 
 	std::string key = (std::string)$VARIABLE;
 	// first check if the variable was declared in scope of a function
-	std::any scope_var = tree->Context->GetScopeVariable(key);
+	std::any scope_var = tree->context->GetScopeVariable(key);
 	if(scope_var.has_value())
 		return scope_var;
 	
 	// if not in scope of a function
 	// next check if the variable was declared as a global variable
-	if (containsKey(tree->Context->Globals,key))
-		return tree->Context->Globals[key];
+	if (containsKey(tree->context->Globals,key))
+		return tree->context->Globals[key];
 
 	//variable not found
 	tree->Errors.push_back(ParseError("Variable not defined: " + key, 1039, this));

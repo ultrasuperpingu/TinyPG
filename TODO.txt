@@ -1,18 +1,23 @@
- * Write documentation
+ * Set namespace of generated grammar parser to TinyPG.Parsing (watch to the conflict with TinyPG.Highlighting) 
+ * Write documentation (WIP)
  * Review C++ generated code and improve it (more use of templates ???)
  * Find a way for the ParseTree to return the correct type (pretty straightforward now but waiting for C++ review first)
+ * ParseTree should be returns as shared_ptr ?
  * Remove Non terminal default return value (it will be useless once the ParseTree will be able to return the correct type)
- * Make Error Codes consistant (ErrorCode class with all error codes done but not used)
+ * Make Error Codes consistant (ErrorCode class with all error codes done but not used). Once done, add the ability to silent warnings.
  * Merge last modifications to vb generator
  * Replace CodeDom with Roslyn ??
  * Make an installer (with ability to add TinyPGCL to the path)
+ * Add a Comment attribute to be able to add comments to the EvalXXX methods (ex: specify the expected param list (which is params object[] or equivalent) to the method via documentation comments)
+ * And/or add a Parameters attribute (to be able to specify the parameters of the EvalXXX function and their type instead of the params object[] parameters)
+ * Allows void return type ??
  
 Prospecting/Long Term:
  * Add my backtracking parser as a possible implementation (in addition to LL(1))
- * Implement a Visual Source Code Extension (via Language Server Protocol (tmLanguage grammar done))
  * Remove VB support
  * Add a Search (and SearchXXX) method (in addition to Parse (and ParseXXX)) in the Parser
  * Add python and javascript generation
+ * Implement a Visual Studio (and VSCode) Extension (via Language Server Protocol) (for VSCode, tmLanguage grammar is done, example of task is done too)
  * Step by step parsing for debug purpose
  * Ability to map error line in the produced file (while compiling it) to the grammar file (the code block in grammar file)
  

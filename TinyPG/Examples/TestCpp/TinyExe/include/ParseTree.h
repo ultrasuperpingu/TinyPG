@@ -110,7 +110,7 @@ namespace TinyExe
 		return NULL;
 	}
 	public:
-		Context* Context = NULL;
+		Context* context = NULL;
 
 	};
 	

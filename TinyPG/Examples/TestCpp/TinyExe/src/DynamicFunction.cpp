@@ -8,7 +8,7 @@ namespace TinyExe
 		// create a new scope for the arguments
 		Variables* pars = Arguments->Clone();
 		// now push a copy of the function arguments on the stack
-		tree->Context->PushScope(pars);
+		tree->context->PushScope(pars);
 
 		// assign the parameters to the current function scope variables
 		int i = 0;
@@ -20,7 +20,7 @@ namespace TinyExe
 		std::any result = Node->Eval({ tree });
 
 		// clean up the stack
-		tree->Context->PopScope();
+		tree->context->PopScope();
 
 		return result;
 	}

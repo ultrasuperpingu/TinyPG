@@ -44,9 +44,9 @@ namespace TinyExe
 	void Context::Reset()
 	{
 		inScope = std::vector<Variables*>();
-		Functions = ::TinyExe::Functions();
+		functions = ::TinyExe::Functions();
 		Globals = Variables();
-		Functions.InitDefaults();
+		functions.InitDefaults();
 		Globals["Pi"] = 3.1415926535897932384626433832795; // Math.Pi is not very precise
 		Globals["E"] = 2.7182818284590452353602874713527;  // Math.E is not very precise either
 	}
@@ -59,7 +59,7 @@ namespace TinyExe
 	{
 		Context* c = new Context();
 		c->Globals = this->Globals;
-		c->Functions = this->Functions;
+		c->functions = this->functions;
 		return c;
 	}
 }

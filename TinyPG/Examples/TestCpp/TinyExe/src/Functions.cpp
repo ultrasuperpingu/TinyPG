@@ -1,5 +1,7 @@
 #pragma once
 
+#include <climits>
+#include <cfloat>
 #include "Functions.h"
 #include "Util.h"
 #include "StaticFunction.h"

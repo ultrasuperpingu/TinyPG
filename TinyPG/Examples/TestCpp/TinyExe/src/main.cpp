@@ -27,7 +27,7 @@ int main()
 		}
 		else
 		{
-			tree->Context = context;
+			tree->context = context;
 			std::string res = ConvertToString(tree->Eval<std::any>({tree}));
 			if (tree->Errors.size() > 0)
 			{

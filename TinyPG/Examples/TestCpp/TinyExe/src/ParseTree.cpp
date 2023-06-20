@@ -173,7 +173,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::Start, index);
 		if (node != NULL)
 			return node->EvalStart(paramlist);
-		throw std::exception("No Start[index] found.");
+		throw std::runtime_error("No Start[index] found.");
 	}
 
 	std::any ParseNode::EvalFunction(const std::vector<std::any>& paramlist)
@@ -182,25 +182,25 @@ namespace TinyExe
 			ParseNode* funcNode = this->Nodes[0];
 			ParseNode* paramNode = this->Nodes[2];
 		
-			if (tree->Context == NULL)
+			if (tree->context == NULL)
 			{
 				tree->Errors.push_back(ParseError("No context defined", 1041, this));
 				return NULL;
 			}
-			if (tree->Context->CurrentStackSize > 50)
+			if (tree->context->CurrentStackSize > 50)
 			{
 				tree->Errors.push_back(ParseError("Stack overflow: " + funcNode->TokenVal.Text + "()", 1046, this));
 				return NULL;
 			}
 			std::string key = str_tolower(funcNode->TokenVal.Text);
-			if (!containsKey(tree->Context->Functions, key))
+			if (!containsKey(tree->context->functions, key))
 			{
 				tree->Errors.push_back(ParseError("Fuction not defined: " + funcNode->TokenVal.Text + "()", 1042, this));
 				return NULL;
 			}
 		
 			// retrieves the function from declared functions
-			class Function* func = tree->Context->Functions[key];
+			class Function* func = tree->context->functions[key];
 		
 			// evaluate the function parameters
 			std::vector<std::any> parameters = std::vector<std::any>();
@@ -225,7 +225,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::Function, index);
 		if (node != NULL)
 			return node->EvalFunction(paramlist);
-		throw std::exception("No Function[index] found.");
+		throw std::runtime_error("No Function[index] found.");
 	}
 
 	std::any ParseNode::EvalPrimaryExpression(const std::vector<std::any>& paramlist)
@@ -250,7 +250,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::PrimaryExpression, index);
 		if (node != NULL)
 			return node->EvalPrimaryExpression(paramlist);
-		throw std::exception("No PrimaryExpression[index] found.");
+		throw std::runtime_error("No PrimaryExpression[index] found.");
 	}
 
 	std::any ParseNode::EvalParenthesizedExpression(const std::vector<std::any>& paramlist)
@@ -263,7 +263,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::ParenthesizedExpression, index);
 		if (node != NULL)
 			return node->EvalParenthesizedExpression(paramlist);
-		throw std::exception("No ParenthesizedExpression[index] found.");
+		throw std::runtime_error("No ParenthesizedExpression[index] found.");
 	}
 
 	std::any ParseNode::EvalUnaryExpression(const std::vector<std::any>& paramlist)
@@ -308,7 +308,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::UnaryExpression, index);
 		if (node != NULL)
 			return node->EvalUnaryExpression(paramlist);
-		throw std::exception("No UnaryExpression[index] found.");
+		throw std::runtime_error("No UnaryExpression[index] found.");
 	}
 
 	std::any ParseNode::EvalPowerExpression(const std::vector<std::any>& paramlist)
@@ -336,7 +336,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::PowerExpression, index);
 		if (node != NULL)
 			return node->EvalPowerExpression(paramlist);
-		throw std::exception("No PowerExpression[index] found.");
+		throw std::runtime_error("No PowerExpression[index] found.");
 	}
 
 	std::any ParseNode::EvalMultiplicativeExpression(const std::vector<std::any>& paramlist)
@@ -363,7 +363,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::MultiplicativeExpression, index);
 		if (node != NULL)
 			return node->EvalMultiplicativeExpression(paramlist);
-		throw std::exception("No MultiplicativeExpression[index] found.");
+		throw std::runtime_error("No MultiplicativeExpression[index] found.");
 	}
 
 	std::any ParseNode::EvalAdditiveExpression(const std::vector<std::any>& paramlist)
@@ -388,7 +388,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::AdditiveExpression, index);
 		if (node != NULL)
 			return node->EvalAdditiveExpression(paramlist);
-		throw std::exception("No AdditiveExpression[index] found.");
+		throw std::runtime_error("No AdditiveExpression[index] found.");
 	}
 
 	std::any ParseNode::EvalConcatEpression(const std::vector<std::any>& paramlist)
@@ -410,7 +410,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::ConcatEpression, index);
 		if (node != NULL)
 			return node->EvalConcatEpression(paramlist);
-		throw std::exception("No ConcatEpression[index] found.");
+		throw std::runtime_error("No ConcatEpression[index] found.");
 	}
 
 	std::any ParseNode::EvalRelationalExpression(const std::vector<std::any>& paramlist)
@@ -455,7 +455,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::RelationalExpression, index);
 		if (node != NULL)
 			return node->EvalRelationalExpression(paramlist);
-		throw std::exception("No RelationalExpression[index] found.");
+		throw std::runtime_error("No RelationalExpression[index] found.");
 	}
 
 	std::any ParseNode::EvalEqualityExpression(const std::vector<std::any>& paramlist)
@@ -530,7 +530,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::EqualityExpression, index);
 		if (node != NULL)
 			return node->EvalEqualityExpression(paramlist);
-		throw std::exception("No EqualityExpression[index] found.");
+		throw std::runtime_error("No EqualityExpression[index] found.");
 	}
 
 	std::any ParseNode::EvalConditionalAndExpression(const std::vector<std::any>& paramlist)
@@ -552,7 +552,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::ConditionalAndExpression, index);
 		if (node != NULL)
 			return node->EvalConditionalAndExpression(paramlist);
-		throw std::exception("No ConditionalAndExpression[index] found.");
+		throw std::runtime_error("No ConditionalAndExpression[index] found.");
 	}
 
 	std::any ParseNode::EvalConditionalOrExpression(const std::vector<std::any>& paramlist)
@@ -574,7 +574,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::ConditionalOrExpression, index);
 		if (node != NULL)
 			return node->EvalConditionalOrExpression(paramlist);
-		throw std::exception("No ConditionalOrExpression[index] found.");
+		throw std::runtime_error("No ConditionalOrExpression[index] found.");
 	}
 
 	std::any ParseNode::EvalAssignmentExpression(const std::vector<std::any>& paramlist)
@@ -598,7 +598,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::AssignmentExpression, index);
 		if (node != NULL)
 			return node->EvalAssignmentExpression(paramlist);
-		throw std::exception("No AssignmentExpression[index] found.");
+		throw std::runtime_error("No AssignmentExpression[index] found.");
 	}
 
 	std::any ParseNode::EvalExpression(const std::vector<std::any>& paramlist)
@@ -623,7 +623,7 @@ namespace TinyExe
 				return NULL;
 			}
 		
-			if (tree->Context == NULL)
+			if (tree->context == NULL)
 			{
 				tree->Errors.push_back(ParseError("No context defined", 1041, this));
 				return NULL;
@@ -633,8 +633,8 @@ namespace TinyExe
 			{
 				// simply overwrite any previous defnition
 				std::string key = v->TokenVal.Text;
-				tree->Context->Globals[key] = this->GetAssignmentExpressionValue(1, paramlist);
-				return tree->Context->Globals[key] ;
+				tree->context->Globals[key] = this->GetAssignmentExpressionValue(1, paramlist);
+				return tree->context->Globals[key] ;
 			}
 			else if (v->TokenVal.Type == TokenType::Function)
 			{
@@ -642,9 +642,9 @@ namespace TinyExe
 				std::string key = v->Nodes[0]->TokenVal.Text;
 		
 				// function lookup is case insensitive
-				if (containsKey(tree->Context->Functions, str_tolower(key)))
+				if (containsKey(tree->context->functions, str_tolower(key)))
 				{
-					auto func = tree->Context->Functions[str_tolower(key)];
+					auto func = tree->context->functions[str_tolower(key)];
 					if (!func->IsDynamic())
 					{
 						tree->Errors.push_back(ParseError("Built in functions cannot be overwritten", 1050, this));
@@ -676,7 +676,7 @@ namespace TinyExe
 				// pass on nodes[2] which is the Right Hand Side (RHS) of the assignment
 				// nodes[2] will be evaluated at runtime when the function is executed.
 				DynamicFunction* dynf = new DynamicFunction(key, Nodes[2], vars, (int)vars->size(), (int)vars->size());
-				tree->Context->Functions[str_tolower(key)] = dynf;
+				tree->context->functions[str_tolower(key)] = dynf;
 				return dynf;
 			}
 		
@@ -688,7 +688,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::Expression, index);
 		if (node != NULL)
 			return node->EvalExpression(paramlist);
-		throw std::exception("No Expression[index] found.");
+		throw std::runtime_error("No Expression[index] found.");
 	}
 
 	std::any ParseNode::EvalParams(const std::vector<std::any>& paramlist)
@@ -711,7 +711,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::Params, index);
 		if (node != NULL)
 			return node->EvalParams(paramlist);
-		throw std::exception("No Params[index] found.");
+		throw std::runtime_error("No Params[index] found.");
 	}
 
 	std::any ParseNode::EvalLiteral(const std::vector<std::any>& paramlist)
@@ -738,7 +738,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::Literal, index);
 		if (node != NULL)
 			return node->EvalLiteral(paramlist);
-		throw std::exception("No Literal[index] found.");
+		throw std::runtime_error("No Literal[index] found.");
 	}
 
 	std::any ParseNode::EvalIntegerLiteral(const std::vector<std::any>& paramlist)
@@ -765,7 +765,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::IntegerLiteral, index);
 		if (node != NULL)
 			return node->EvalIntegerLiteral(paramlist);
-		throw std::exception("No IntegerLiteral[index] found.");
+		throw std::runtime_error("No IntegerLiteral[index] found.");
 	}
 
 	std::any ParseNode::EvalRealLiteral(const std::vector<std::any>& paramlist)
@@ -784,7 +784,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::RealLiteral, index);
 		if (node != NULL)
 			return node->EvalRealLiteral(paramlist);
-		throw std::exception("No RealLiteral[index] found.");
+		throw std::runtime_error("No RealLiteral[index] found.");
 	}
 
 	std::any ParseNode::EvalStringLiteral(const std::vector<std::any>& paramlist)
@@ -806,13 +806,13 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::StringLiteral, index);
 		if (node != NULL)
 			return node->EvalStringLiteral(paramlist);
-		throw std::exception("No StringLiteral[index] found.");
+		throw std::runtime_error("No StringLiteral[index] found.");
 	}
 
 	std::any ParseNode::EvalVariable(const std::vector<std::any>& paramlist)
 	{
 		ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-			if (tree->Context == NULL)
+			if (tree->context == NULL)
 			{
 				tree->Errors.push_back(ParseError("No context defined", 1041, this));
 				return NULL;
@@ -820,14 +820,14 @@ namespace TinyExe
 		
 			std::string key = (std::string)this->GetTerminalValue(TokenType::VARIABLE, 0);
 			// first check if the variable was declared in scope of a function
-			std::any scope_var = tree->Context->GetScopeVariable(key);
+			std::any scope_var = tree->context->GetScopeVariable(key);
 			if(scope_var.has_value())
 				return scope_var;
 			
 			// if not in scope of a function
 			// next check if the variable was declared as a global variable
-			if (containsKey(tree->Context->Globals,key))
-				return tree->Context->Globals[key];
+			if (containsKey(tree->context->Globals,key))
+				return tree->context->Globals[key];
 		
 			//variable not found
 			tree->Errors.push_back(ParseError("Variable not defined: " + key, 1039, this));
@@ -839,7 +839,7 @@ namespace TinyExe
 		ParseNode* node = GetTokenNode(TokenType::Variable, index);
 		if (node != NULL)
 			return node->EvalVariable(paramlist);
-		throw std::exception("No Variable[index] found.");
+		throw std::runtime_error("No Variable[index] found.");
 	}
 
 

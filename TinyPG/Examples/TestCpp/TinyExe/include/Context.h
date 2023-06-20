@@ -20,7 +20,7 @@ namespace TinyExe
 		std::vector<Variables*> inScope;
 
 	public:
-		Functions Functions;
+		Functions functions;
 		Variables Globals;
 
 		/// <summary>

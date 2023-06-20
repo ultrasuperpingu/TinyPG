@@ -2,7 +2,7 @@
 // By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
 
 #include "Scanner.h"
-
+#include <climits>
 namespace TinyExe
 {
 	// Token implementation
