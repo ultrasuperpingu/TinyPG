@@ -91,7 +91,7 @@ namespace TinyPG
 			Patterns.Add(TokenType.IDENTIFIER, regex);
 			Tokens.Add(TokenType.IDENTIFIER);
 
-			regex = new Regex(@"\A(?:[a-zA-Z_][a-zA-Z0-9_]*(::[a-zA-Z_][a-zA-Z0-9_]*)*(<[a-zA-Z_][a-zA-Z0-9_,]*(::[a-zA-Z_][a-zA-Z0-9_,]*)*\**(\[\s*\])*>)?(\[\s*\])*)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\A(?:((?!default|;|\{).)*)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.TYPE, regex);
 			Tokens.Add(TokenType.TYPE);
 

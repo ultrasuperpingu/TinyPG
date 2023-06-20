@@ -420,7 +420,7 @@ namespace TinyPG.Parsing
 
 				if (Nodes[3].Token.Type == TokenType.COLON)
 				{
-					nts.ReturnType = Nodes[4].Token.Text.ToString();
+					nts.ReturnType = Nodes[4].Token.Text.Trim().ToString();
 					if (Nodes[5].Token.Type == TokenType.DEFAULT)
 					{
 						nts.ReturnTypeDefault = Nodes[7].Token.Text.ToString();

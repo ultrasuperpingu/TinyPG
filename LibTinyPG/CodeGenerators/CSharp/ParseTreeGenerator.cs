@@ -79,10 +79,12 @@ namespace TinyPG.CodeGenerators.CSharp
 					if (Debug == GenerateDebugMode.DebugSelf)
 					{
 						fileContent = fileContent.Replace(@"<%CustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
+						fileContent = fileContent.Replace(@"<%HeaderCode%>", Grammar.Directives["ParseTree"]["HeaderCode"]);
 					}
 					else
 					{
 						fileContent = fileContent.Replace(@"<%CustomCode%>", "");
+						fileContent = fileContent.Replace(@"<%HeaderCode%>", "");
 					}
 				}
 				else

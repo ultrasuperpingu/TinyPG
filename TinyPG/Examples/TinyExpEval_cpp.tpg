@@ -25,8 +25,7 @@
 	}
 	public:
 		Context* Context = NULL;
-}; HeaderCode=@"#include <any>
-#include <sstream>
+}; HeaderCode=@"#include <sstream>
 #include <cmath>
 #include ""Function.h""
 #include ""Context.h""
