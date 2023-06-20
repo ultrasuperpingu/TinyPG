@@ -96,7 +96,7 @@ namespace TinyExe
 		std::vector<Token> Skipped;
 		TokenType Type;
 
-		inline Token();
+		Token();
 
 		Token(int start, int end);
 

@@ -22,11 +22,11 @@ namespace TinyPG
 
 		std::string Text;
 
-		inline virtual ParseNode* CreateNode(Token token, std::string text);
+		virtual ParseNode* CreateNode(Token token, std::string text);
 
 	protected:
 		ParseNode(Token token, const std::string& text);
-		inline virtual ~ParseNode();
+		virtual ~ParseNode();
 
 		virtual ParseNode* GetTokenNode(TokenType type, int index);
 		virtual bool IsTokenPresent(TokenType type, int index);
