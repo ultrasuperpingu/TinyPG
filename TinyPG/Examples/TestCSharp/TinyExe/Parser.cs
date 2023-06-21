@@ -57,7 +57,7 @@ namespace TinyExe
 
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT, TokenType.ASSIGN); // Option Rule
+			tok = scanner.LookAhead(TokenType.EOF_, TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT, TokenType.ASSIGN); // Option Rule
 			if (tok.Type == TokenType.FUNCTION
 			    || tok.Type == TokenType.VARIABLE
 			    || tok.Type == TokenType.BOOLEANLITERAL
@@ -125,7 +125,7 @@ namespace TinyExe
 			}
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT, TokenType.ASSIGN, TokenType.SEMICOLON); // Option Rule
+			tok = scanner.LookAhead(TokenType.BRACKETCLOSE, TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT, TokenType.ASSIGN, TokenType.SEMICOLON); // Option Rule
 			if (tok.Type == TokenType.FUNCTION
 			    || tok.Type == TokenType.VARIABLE
 			    || tok.Type == TokenType.BOOLEANLITERAL
@@ -361,7 +361,7 @@ namespace TinyExe
 
 				 // Concat Rule
 				ParseUnaryExpression(node); // NonTerminal Rule: UnaryExpression
-			tok = scanner.LookAhead(TokenType.POWER); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.POWER); // ZeroOrMore Rule
 			}
 
 			parent.Token.UpdateRange(node.Token);
@@ -435,7 +435,7 @@ namespace TinyExe
 
 				 // Concat Rule
 				ParsePowerExpression(node); // NonTerminal Rule: PowerExpression
-			tok = scanner.LookAhead(TokenType.ASTERIKS, TokenType.SLASH, TokenType.PERCENT); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.ASTERIKS, TokenType.SLASH, TokenType.PERCENT); // ZeroOrMore Rule
 			}
 
 			parent.Token.UpdateRange(node.Token);
@@ -498,7 +498,7 @@ namespace TinyExe
 
 				 // Concat Rule
 				ParseMultiplicativeExpression(node); // NonTerminal Rule: MultiplicativeExpression
-			tok = scanner.LookAhead(TokenType.PLUS, TokenType.MINUS); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.PLUS, TokenType.MINUS); // ZeroOrMore Rule
 			}
 
 			parent.Token.UpdateRange(node.Token);
@@ -541,7 +541,7 @@ namespace TinyExe
 
 				 // Concat Rule
 				ParseAdditiveExpression(node); // NonTerminal Rule: AdditiveExpression
-			tok = scanner.LookAhead(TokenType.AMP); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.AMP); // ZeroOrMore Rule
 			}
 
 			parent.Token.UpdateRange(node.Token);
@@ -688,7 +688,7 @@ namespace TinyExe
 
 				 // Concat Rule
 				ParseRelationalExpression(node); // NonTerminal Rule: RelationalExpression
-			tok = scanner.LookAhead(TokenType.EQUAL, TokenType.NOTEQUAL); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.EQUAL, TokenType.NOTEQUAL); // ZeroOrMore Rule
 			}
 
 			parent.Token.UpdateRange(node.Token);
@@ -731,7 +731,7 @@ namespace TinyExe
 
 				 // Concat Rule
 				ParseEqualityExpression(node); // NonTerminal Rule: EqualityExpression
-			tok = scanner.LookAhead(TokenType.AMPAMP); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.AMPAMP); // ZeroOrMore Rule
 			}
 
 			parent.Token.UpdateRange(node.Token);
@@ -774,7 +774,7 @@ namespace TinyExe
 
 				 // Concat Rule
 				ParseConditionalAndExpression(node); // NonTerminal Rule: ConditionalAndExpression
-			tok = scanner.LookAhead(TokenType.PIPEPIPE); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.PIPEPIPE); // ZeroOrMore Rule
 			}
 
 			parent.Token.UpdateRange(node.Token);
@@ -853,7 +853,7 @@ namespace TinyExe
 
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT); // Option Rule
+			tok = scanner.LookAhead(TokenType.ASSIGN, TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT); // Option Rule
 			if (tok.Type == TokenType.FUNCTION
 			    || tok.Type == TokenType.VARIABLE
 			    || tok.Type == TokenType.BOOLEANLITERAL
@@ -928,7 +928,7 @@ namespace TinyExe
 
 				 // Concat Rule
 				ParseExpression(node); // NonTerminal Rule: Expression
-			tok = scanner.LookAhead(TokenType.SEMICOLON); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.SEMICOLON); // ZeroOrMore Rule
 			}
 
 			parent.Token.UpdateRange(node.Token);

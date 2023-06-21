@@ -109,7 +109,7 @@ namespace SimpleExpr
 
 				 // Concat Rule
 				ParseMultExpr(node); // NonTerminal Rule: MultExpr
-			tok = scanner.LookAhead(TokenType.PLUSMINUS); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.PLUSMINUS); // ZeroOrMore Rule
 			}
 
 			parent.Token.UpdateRange(node.Token);
@@ -152,7 +152,7 @@ namespace SimpleExpr
 
 				 // Concat Rule
 				ParseAtom(node); // NonTerminal Rule: Atom
-			tok = scanner.LookAhead(TokenType.MULTDIV); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.MULTDIV); // ZeroOrMore Rule
 			}
 
 			parent.Token.UpdateRange(node.Token);

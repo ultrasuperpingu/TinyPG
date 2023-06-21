@@ -57,20 +57,20 @@ namespace TinyPG.Parsing
 
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.DIRECTIVEOPEN); // ZeroOrMore Rule
+			tok = scanner.LookAhead(TokenType.SQUAREOPEN, TokenType.IDENTIFIER, TokenType.EOF, TokenType.DIRECTIVEOPEN); // ZeroOrMore Rule
 			while (tok.Type == TokenType.DIRECTIVEOPEN)
 			{
 				ParseDirective(node); // NonTerminal Rule: Directive
-			tok = scanner.LookAhead(TokenType.DIRECTIVEOPEN); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.SQUAREOPEN, TokenType.IDENTIFIER, TokenType.EOF, TokenType.DIRECTIVEOPEN); // ZeroOrMore Rule
 			}
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.SQUAREOPEN, TokenType.IDENTIFIER); // ZeroOrMore Rule
+			tok = scanner.LookAhead(TokenType.EOF, TokenType.SQUAREOPEN, TokenType.IDENTIFIER); // ZeroOrMore Rule
 			while (tok.Type == TokenType.SQUAREOPEN
 			    || tok.Type == TokenType.IDENTIFIER)
 			{
 				ParseExtProduction(node); // NonTerminal Rule: ExtProduction
-			tok = scanner.LookAhead(TokenType.SQUAREOPEN, TokenType.IDENTIFIER); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.EOF, TokenType.SQUAREOPEN, TokenType.IDENTIFIER); // ZeroOrMore Rule
 			}
 
 			 // Concat Rule
@@ -124,11 +124,11 @@ namespace TinyPG.Parsing
 			}
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.IDENTIFIER); // ZeroOrMore Rule
+			tok = scanner.LookAhead(TokenType.DIRECTIVECLOSE, TokenType.IDENTIFIER); // ZeroOrMore Rule
 			while (tok.Type == TokenType.IDENTIFIER)
 			{
 				ParseNameValue(node); // NonTerminal Rule: NameValue
-			tok = scanner.LookAhead(TokenType.IDENTIFIER); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.DIRECTIVECLOSE, TokenType.IDENTIFIER); // ZeroOrMore Rule
 			}
 
 			 // Concat Rule
@@ -241,11 +241,11 @@ namespace TinyPG.Parsing
 
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.SQUAREOPEN); // ZeroOrMore Rule
+			tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.SQUAREOPEN); // ZeroOrMore Rule
 			while (tok.Type == TokenType.SQUAREOPEN)
 			{
 				ParseAttribute(node); // NonTerminal Rule: Attribute
-			tok = scanner.LookAhead(TokenType.SQUAREOPEN); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.SQUAREOPEN); // ZeroOrMore Rule
 			}
 
 			 // Concat Rule
@@ -292,7 +292,7 @@ namespace TinyPG.Parsing
 			}
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.BRACKETOPEN); // Option Rule
+			tok = scanner.LookAhead(TokenType.SQUARECLOSE, TokenType.BRACKETOPEN); // Option Rule
 			if (tok.Type == TokenType.BRACKETOPEN)
 			{
 
@@ -307,7 +307,7 @@ namespace TinyPG.Parsing
 				}
 
 				 // Concat Rule
-				tok = scanner.LookAhead(TokenType.INTEGER, TokenType.DOUBLE, TokenType.STRING, TokenType.HEX); // Option Rule
+				tok = scanner.LookAhead(TokenType.BRACKETCLOSE, TokenType.INTEGER, TokenType.DOUBLE, TokenType.STRING, TokenType.HEX); // Option Rule
 				if (tok.Type == TokenType.INTEGER
 				    || tok.Type == TokenType.DOUBLE
 				    || tok.Type == TokenType.STRING
@@ -377,7 +377,7 @@ namespace TinyPG.Parsing
 
 				 // Concat Rule
 				ParseParam(node); // NonTerminal Rule: Param
-			tok = scanner.LookAhead(TokenType.COMMA); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.COMMA); // ZeroOrMore Rule
 			}
 
 			parent.Token.UpdateRange(node.Token);
@@ -491,7 +491,7 @@ namespace TinyPG.Parsing
 			ParseRule(node); // NonTerminal Rule: Rule
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.COLON); // Option Rule
+			tok = scanner.LookAhead(TokenType.CODEBLOCK, TokenType.SEMICOLON, TokenType.COLON); // Option Rule
 			if (tok.Type == TokenType.COLON)
 			{
 
@@ -682,7 +682,7 @@ namespace TinyPG.Parsing
 
 				 // Concat Rule
 				ParseConcatRule(node); // NonTerminal Rule: ConcatRule
-			tok = scanner.LookAhead(TokenType.PIPE); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.PIPE); // ZeroOrMore Rule
 			}
 
 			parent.Token.UpdateRange(node.Token);
