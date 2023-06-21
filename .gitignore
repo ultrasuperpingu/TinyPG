@@ -122,3 +122,4 @@ UpgradeLog*.XML
 /TinyPG/Examples/TestJava/TinyExe/dist/
 /.vs
 /LibTinyPG/.vs
+/Output

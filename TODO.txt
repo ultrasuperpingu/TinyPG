@@ -1,4 +1,3 @@
- * Set namespace of generated grammar parser to TinyPG.Parsing (watch to the conflict with TinyPG.Highlighting) 
  * Write documentation (WIP)
  * Review C++ generated code and improve it (more use of templates ???)
  * Find a way for the ParseTree to return the correct type (pretty straightforward now but waiting for C++ review first)
@@ -7,7 +6,6 @@
  * Make Error Codes consistant (ErrorCode class with all error codes done but not used). Once done, add the ability to silent warnings.
  * Merge last modifications to vb generator
  * Replace CodeDom with Roslyn ??
- * Make an installer (with ability to add TinyPGCL to the path)
  * Add a Comment attribute to be able to add comments to the EvalXXX methods (ex: specify the expected param list (which is params object[] or equivalent) to the method via documentation comments)
  * And/or add a Parameters attribute (to be able to specify the parameters of the EvalXXX function and their type instead of the params object[] parameters)
  * Allows void return type ??

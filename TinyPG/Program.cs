@@ -14,6 +14,8 @@ using TinyPG.Parsing;
 using TinyPG.Compiler;
 using System.Text;
 using System.Threading;
+using System.Collections.Generic;
+using System.Security.Cryptography;
 
 namespace TinyPG
 {
@@ -31,43 +33,87 @@ namespace TinyPG
 		{
 			if (args.Length > 0)
 			{
-				string GrammarFilePath = Path.GetFullPath(args[0]);
-				StringBuilder output = new StringBuilder(string.Empty);
-				if (!File.Exists(GrammarFilePath))
+				string GrammarFilePath = null;
+				bool generate = false;
+				for (int i = 0; i<args.Length; i++)
 				{
-					output.Append("Specified file " + GrammarFilePath + " does not exists");
-					Console.WriteLine(output.ToString());
-					return (int)ExitCode.InvalidFilename;
-				}
-
-				//As stated in documentation current directory is the one of the TPG file.
-				Directory.SetCurrentDirectory(Path.GetDirectoryName(GrammarFilePath));
-
-				DateTime starttimer = DateTime.Now;
-
-				Program prog = new Program(ManageParseError, output);
-				Grammar grammar = prog.ParseGrammar(File.ReadAllText(GrammarFilePath));
-				
-				if (grammar != null)
-				{
-					grammar.Filename = GrammarFilePath;
-					if (prog.BuildCode(grammar, new TinyPG.Compiler.Compiler()))
+					string key = args[i];
+					if (!key.StartsWith("-"))
 					{
-						TimeSpan span = DateTime.Now.Subtract(starttimer);
-						output.AppendLine("Compilation successful in " + span.TotalMilliseconds + "ms.");
+						if (File.Exists(key))
+						{
+							if(string.IsNullOrEmpty(GrammarFilePath))
+								GrammarFilePath = key;
+							else
+								Console.Error.WriteLine("You can only specify one file to open or generate. File " + key + " will be ignored.");
+						}
+						else
+						{
+							Console.Error.WriteLine("Specified file " + key + " does not exists.");
+						}
+					}
+					else if(key.ToLower().StartsWith("--generate") || key.ToLower().StartsWith("-generate") || key.ToLower().StartsWith("-g"))
+					{
+						generate = true;
+					}
+					else
+					{
+						Console.Error.WriteLine("Specified argument unknown " + key);
 					}
 				}
-
-				Console.WriteLine(output.ToString());
+				if (generate)
+					GenerateFromGrammar(GrammarFilePath);
+				else
+					OpenMainForm(GrammarFilePath);
 			}
 			else
 			{
-				Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
-				Application.EnableVisualStyles();
-				Application.SetCompatibleTextRenderingDefault(false);
-				Application.Run(new MainForm());
+				OpenMainForm();
 			}
 			return (int)ExitCode.Success;
+		}
+
+		private static void GenerateFromGrammar(string GrammarFilePath)
+		{
+			if (!File.Exists(GrammarFilePath))
+			{
+				Console.Error.WriteLine("Specified file " + GrammarFilePath + " does not exists");
+				return;
+			}
+			StringBuilder output = new StringBuilder(string.Empty);
+			//As stated in documentation current directory is the one of the TPG file.
+			Directory.SetCurrentDirectory(Path.GetDirectoryName(GrammarFilePath));
+
+			DateTime starttimer = DateTime.Now;
+
+			Program prog = new Program(ManageParseError, output);
+			Grammar grammar = prog.ParseGrammar(File.ReadAllText(GrammarFilePath));
+
+			if (grammar != null)
+			{
+				grammar.Filename = GrammarFilePath;
+				if (prog.BuildCode(grammar, new TinyPG.Compiler.Compiler()))
+				{
+					TimeSpan span = DateTime.Now.Subtract(starttimer);
+					output.AppendLine("Compilation successful in " + span.TotalMilliseconds + "ms.");
+				}
+			}
+
+			Console.WriteLine(output.ToString());
+		}
+
+		private static void OpenMainForm(string file = null)
+		{
+			Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault(false);
+			var form = new MainForm();
+			if (!string.IsNullOrEmpty(file))
+			{
+				// grammar will be loaded on form load (via LoadConfig)
+				form.GrammarFile = file;
+			}
+			Application.Run(form);
 		}
 
 		static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)

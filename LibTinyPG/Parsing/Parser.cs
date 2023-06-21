@@ -8,7 +8,7 @@ using System.Collections.Generic;
 // can happen during the parser generation.
 //#pragma warning disable 168
 
-namespace TinyPG
+namespace TinyPG.Parsing
 {
 	#region Parser
 

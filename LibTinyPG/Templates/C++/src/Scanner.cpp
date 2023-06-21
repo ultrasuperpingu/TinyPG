@@ -1,8 +1,8 @@
 ﻿// Automatically generated from source file: <%SourceFilename%>
 // By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
-
-#include "Scanner.h"
 #include <climits>
+#include "Scanner.h"
+
 namespace <%Namespace%>
 {
 	// Token implementation

@@ -4,8 +4,7 @@
 
 // Incorporated revisions by William A. McKee Aug. 14, 2008
 
-<% @TinyPG Namespace="TinyPG" %>
-<% @ParseTree HeaderCode="using TinyPG.Parsing;" %>
+<% @TinyPG Namespace="TinyPG.Parsing" %>
 
 // Terminals:
 BRACKETOPEN      	-> @"\(";

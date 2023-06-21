@@ -8,9 +8,9 @@ using System.Text;
 using System.Xml.Serialization;
 using System.Globalization;
 using System.Linq;
-using TinyPG.Parsing;
 
-namespace TinyPG
+
+namespace TinyPG.Parsing
 {
 	#region ParseTree
 	[Serializable]

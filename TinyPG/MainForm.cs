@@ -19,7 +19,8 @@ using TinyPG.Controls;
 using System.Globalization;
 using TinyPG.CodeGenerators;
 using System.Reflection;
-using TinyPG.Highlighter;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace TinyPG
 {
@@ -35,7 +36,7 @@ namespace TinyPG
 		private bool IsDirty;
 
 		// the current file the user is editing
-		private string GrammarFile;
+		private string grammarFile;
 
 		// manages docking and floating of panels
 		private DockExtender DockExtender;
@@ -69,16 +70,31 @@ namespace TinyPG
 		EventHandler syntaxUpdateChecker;
 		private string lastSearch;
 
+		public bool IsPortableMode { get; private set; }
+		public string GrammarFile { get => grammarFile; set => grammarFile=value; }
+
+		public string GetExamplesDirectory()
+		{
+			string baseDir = GetDataFilesDirectory();
+			return Path.Combine(baseDir, "Examples");
+		}
+
+		private string GetDataFilesDirectory()
+		{
+			var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+			if (!IsPortableMode)
+				baseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TinyPG");
+			return baseDir;
+		}
 		#endregion
 
 		#region Initialization
 		public MainForm()
 		{
-
 			InitializeComponent();
 			IsDirty = false;
 			compiler = null;
-			GrammarFile = null;
+			grammarFile = null;
 
 			this.Disposed += new EventHandler(MainForm_Disposed);
 		}
@@ -137,20 +153,71 @@ namespace TinyPG
 			textHighlighter = new TinyPG.Highlighter.TextHighlighter(textEditor, highlighterScanner, new TinyPG.Highlighter.Parser(highlighterScanner));
 			textHighlighter.SwitchContext += new TinyPG.Highlighter.ContextSwitchEventHandler(TextHighlighter_SwitchContext);
 
+			//IsPortableMode = CheckPermission(AppDomain.CurrentDomain.BaseDirectory);
+			IsPortableMode = false;
+			
 			LoadConfig();
 
-			if (GrammarFile == null)
+			if (grammarFile == null)
 				NewGrammar();
 
+			if(!IsPortableMode && !Directory.Exists(GetExamplesDirectory()))
+			{
+				CopyExamplesToLocalData();
+			}
 			FillExampleMenu();
 		}
 
+		private void CopyExamplesToLocalData()
+		{
+			string source = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Examples");
+			string target = GetExamplesDirectory();
+			CopyDirectory(source, target, true);
+		}
+
+		static void CopyDirectory(string sourceDir, string destinationDir, bool recursive)
+		{
+			// Get information about the source directory
+			var dir = new DirectoryInfo(sourceDir);
+
+			// Check if the source directory exists
+			if (!dir.Exists)
+				throw new DirectoryNotFoundException($"Source directory not found: {dir.FullName}");
+
+			// Cache directories before we start copying
+			DirectoryInfo[] dirs = dir.GetDirectories();
+
+			// Create the destination directory
+			Directory.CreateDirectory(destinationDir);
+
+			// Get the files in the source directory and copy to the destination directory
+			foreach (FileInfo file in dir.GetFiles())
+			{
+				string targetFilePath = Path.Combine(destinationDir, file.Name);
+				file.CopyTo(targetFilePath);
+			}
+
+			// If recursive and copying subdirectories, recursively call this method
+			if (recursive)
+			{
+				foreach (DirectoryInfo subDir in dirs)
+				{
+					string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+					CopyDirectory(subDir.FullName, newDestinationDir, true);
+				}
+			}
+		}
 		private void FillExampleMenu()
 		{
 			this.examplesToolStripMenuItem.DropDownItems.Clear();
-			var exeDir = Path.GetDirectoryName(Path.Combine(System.Reflection.Assembly.GetEntryAssembly().Location));
+			string examplesDir = GetExamplesDirectory();
+			if (!Directory.Exists(examplesDir))
+			{
+				this.helpToolStripMenuItem.DropDownItems.Remove(this.examplesToolStripMenuItem);
+				return;
+			}
 			int i = 1;
-			foreach (var file in Directory.GetFiles(Path.Combine(exeDir,"Examples"), "*.tpg"))
+			foreach (var file in Directory.GetFiles(examplesDir, "*.tpg"))
 			{
 				if (Path.GetFileName(file).StartsWith("_"))
 					continue;
@@ -159,21 +226,23 @@ namespace TinyPG
 				tsmi.Name = "exampleTSMI"+(i++);
 				tsmi.Size = new System.Drawing.Size(313, 26);
 				tsmi.Text = Path.GetFileName(myFile);
-				tsmi.Click += new System.EventHandler((sender, ea) => {
+				tsmi.Click += new System.EventHandler((sender, ea) =>
+				{
 					//NotepadViewFile(myFile);
-					if (IsDirty && GrammarFile != null)
+					if (IsDirty && grammarFile != null)
 					{
 						DialogResult r = MessageBox.Show(this, "You will lose current changes, continue?", "Lose changes", MessageBoxButtons.OKCancel);
 						if (r == DialogResult.Cancel) return;
 					}
 
-					GrammarFile = myFile;
+					grammarFile = myFile;
 					LoadGrammarFile();
 					SaveConfig();
 				});
 				this.examplesToolStripMenuItem.DropDownItems.Add(tsmi);
 			}
 		}
+
 		#endregion Initialization
 
 		#region Control events
@@ -283,7 +352,7 @@ namespace TinyPG
 			if (compiler != null && compiler.Errors.Count == 0)
 			{
 				// save the grammar when compilation was successful
-				SaveGrammar(GrammarFile);
+				SaveGrammar(grammarFile);
 			}
 
 		}
@@ -340,13 +409,13 @@ namespace TinyPG
 			if (newgrammarfile == null)
 				return;
 
-			if (IsDirty && GrammarFile != null)
+			if (IsDirty && grammarFile != null)
 			{
 				DialogResult r = MessageBox.Show(this, "You will lose current changes, continue?", "Lose changes", MessageBoxButtons.OKCancel);
 				if (r == DialogResult.Cancel) return;
 			}
 
-			GrammarFile = newgrammarfile;
+			grammarFile = newgrammarfile;
 			LoadGrammarFile();
 			SaveConfig();
 		}
@@ -368,13 +437,13 @@ namespace TinyPG
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (string.IsNullOrEmpty(GrammarFile))
+			if (string.IsNullOrEmpty(grammarFile))
 			{
 				SaveGrammarAs();
 			}
 			else
 			{
-				SaveGrammar(GrammarFile);
+				SaveGrammar(grammarFile);
 			}
 			SaveConfig();
 		}
@@ -547,12 +616,12 @@ namespace TinyPG
 				if (IsDirty || compiler == null || !compiler.IsCompiled)
 					CompileGrammar(true);
 
-				if (string.IsNullOrEmpty(GrammarFile))
+				if (string.IsNullOrEmpty(grammarFile))
 					return;
 
 				// save the grammar when compilation was successful
 				if (compiler != null && compiler.Errors.Count == 0)
-					SaveGrammar(GrammarFile);
+					SaveGrammar(grammarFile);
 
 				CompilerResult result = new CompilerResult();
 				if (compiler.IsCompiled)
@@ -656,10 +725,10 @@ namespace TinyPG
 
 		private void CompileGrammar(bool fallbackIfNeeded)
 		{
-			if (string.IsNullOrEmpty(GrammarFile))
+			if (string.IsNullOrEmpty(grammarFile))
 				SaveGrammarAs();
 
-			if (string.IsNullOrEmpty(GrammarFile))
+			if (string.IsNullOrEmpty(grammarFile))
 				return;
 
 			compiler = new Compiler.Compiler();
@@ -677,7 +746,7 @@ namespace TinyPG
 				TimeSpan span = DateTime.Now.Subtract(starttimer);
 				output.AppendLine("Grammar parsed successfully in " + span.TotalMilliseconds.ToString(CultureInfo.InvariantCulture) + "ms.");
 
-				grammar.Filename = GrammarFile;
+				grammar.Filename = grammarFile;
 				SetHighlighterLanguage(grammar.Directives["TinyPG"]["Language"]);
 				
 				starttimer = DateTime.Now;
@@ -717,14 +786,14 @@ namespace TinyPG
 		private void SetFormCaption()
 		{
 			this.Text = "@TinyPG - a Tiny Parser Generator .Net";
-			if ((GrammarFile == null) || (!File.Exists(GrammarFile)))
+			if ((grammarFile == null) || (!File.Exists(grammarFile)))
 			{
 				if (IsDirty)
 					this.Text += " *";
 				return;
 			}
 
-			string name = new FileInfo(GrammarFile).Name;
+			string name = new FileInfo(grammarFile).Name;
 			this.Text += " [" + name + "]";
 			if (IsDirty)
 				this.Text += " *";
@@ -732,7 +801,7 @@ namespace TinyPG
 
 		private void NewGrammar()
 		{
-			GrammarFile = null;
+			grammarFile = null;
 			IsDirty = false;
 
 			string text = "//" + AssemblyInfo.ProductName + " v" + Application.ProductVersion + "\r\n";
@@ -756,18 +825,18 @@ namespace TinyPG
 		}
 		private void LoadGrammarFile()
 		{
-			if (GrammarFile == null)
+			if (grammarFile == null)
 				return;
-			if (!File.Exists(GrammarFile))
+			if (!File.Exists(grammarFile))
 			{
-				GrammarFile = null; // file does not exist anymore
+				grammarFile = null; // file does not exist anymore
 				return;
 			}
 
-			string folder = new FileInfo(GrammarFile).DirectoryName;
-			Directory.SetCurrentDirectory(folder);
+			var fileinfo = new FileInfo(grammarFile);
+			Directory.SetCurrentDirectory(fileinfo.DirectoryName);
 
-			var content = File.ReadAllText(GrammarFile);
+			var content = File.ReadAllText(fileinfo.FullName);
 			textEditor.Text = content;
 			textEditor.ClearUndo();
 			CompileGrammar(true);
@@ -804,9 +873,9 @@ namespace TinyPG
 			if (string.IsNullOrEmpty(filename))
 				return;
 
-			GrammarFile = filename;
+			grammarFile = filename;
 
-			string folder = new FileInfo(GrammarFile).DirectoryName;
+			string folder = new FileInfo(grammarFile).DirectoryName;
 			Directory.SetCurrentDirectory(folder);
 
 			string text = textEditor.Text.Replace("\n", "\r\n");
@@ -819,8 +888,12 @@ namespace TinyPG
 		{
 			try
 			{
-				string configfile = AppDomain.CurrentDomain.BaseDirectory + "TinyPG.config";
-
+				string configfile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TinyPG.config");
+				if (!IsPortableMode)
+				{
+					var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TinyPG");
+					configfile = Path.Combine(dir, "TinyPG.config");
+				}
 				if (!File.Exists(configfile))
 					return;
 
@@ -828,12 +901,13 @@ namespace TinyPG
 				doc.Load(configfile);
 				var ofp = doc["AppSettings"]["OpenFilePath"].Attributes[0].Value;
 				if (string.IsNullOrEmpty(ofp))
-					ofp = @".\Examples";
+					ofp = GetExamplesDirectory();
 				openFileDialog.InitialDirectory = ofp;
 				saveFileDialog.InitialDirectory = doc["AppSettings"]["SaveFilePath"].Attributes[0].Value;
-				GrammarFile = doc["AppSettings"]["GrammarFile"].Attributes[0].Value;
+				if(string.IsNullOrEmpty(grammarFile)) // could have been filed with a command line args
+					grammarFile = doc["AppSettings"]["GrammarFile"].Attributes[0].Value;
 
-				if (string.IsNullOrEmpty(GrammarFile))
+				if (string.IsNullOrEmpty(grammarFile))
 					NewGrammar();
 				else
 					LoadGrammarFile();
@@ -846,7 +920,16 @@ namespace TinyPG
 
 		private void SaveConfig()
 		{
-			string configfile = AppDomain.CurrentDomain.BaseDirectory + "TinyPG.config";
+			string configfile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TinyPG.config");
+			if (!IsPortableMode)
+			{
+				var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TinyPG");
+				if (!Directory.Exists(dir))
+				{
+					Directory.CreateDirectory(dir);
+				}
+				configfile = Path.Combine(dir, "TinyPG.config");
+			}
 			XmlAttribute attr;
 			XmlDocument doc = new XmlDocument();
 			XmlNode settings = doc.CreateElement("AppSettings", "TinyPG");
@@ -870,10 +953,47 @@ namespace TinyPG
 				attr.Value = new FileInfo(saveFileDialog.FileName).Directory.FullName;
 
 			attr = doc.CreateAttribute("Value");
-			attr.Value = GrammarFile;
+			attr.Value = grammarFile;
 			settings["GrammarFile"].Attributes.Append(attr);
-
 			doc.Save(configfile);
+		}
+
+		private static bool CheckPermission(string dir)
+		{
+			if (!Directory.Exists(dir))
+				return false;
+			var writeAllow = false;
+			var writeDeny = false;
+
+			try
+			{
+				var user = WindowsIdentity.GetCurrent();
+				var accessControlList = Directory.GetAccessControl(dir);
+				if (accessControlList == null)
+					return false;
+				var accessRules = accessControlList.GetAccessRules(true, true,
+											typeof(SecurityIdentifier));
+				if (accessRules ==null)
+					return false;
+
+				foreach (FileSystemAccessRule rule in accessRules)
+				{
+					if (!user.Owner.Value.StartsWith(rule.IdentityReference.Value))
+						continue;
+					if ((FileSystemRights.Write & rule.FileSystemRights) != FileSystemRights.Write)
+						continue;
+
+					if (rule.AccessControlType == AccessControlType.Allow)
+						writeAllow = true;
+					else if (rule.AccessControlType == AccessControlType.Deny)
+						writeDeny = true;
+				}
+			}
+			catch(Exception)
+			{
+				return false;
+			}
+			return writeAllow && !writeDeny;
 		}
 
 		private void SetStatusbar()
