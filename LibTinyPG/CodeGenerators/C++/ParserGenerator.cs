@@ -11,7 +11,7 @@ namespace TinyPG.CodeGenerators.Cpp
 		internal ParserGenerator() : base("include/Parser.h", "src/Parser.cpp")
 		{
 		}
-
+		private bool LookAheadFollowingRulesOnOptionals = true;
 		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (Debug != GenerateDebugMode.None)
@@ -89,6 +89,9 @@ namespace TinyPG.CodeGenerators.Cpp
 		{
 			Rule r = rules[index];
 			Symbols firsts = null;
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+			Symbols firstsExtended = null;
+#endif
 			StringBuilder sb = new StringBuilder();
 			string Indent = Helper.Indent(indent);
 			switch (r.Type)
@@ -117,8 +120,16 @@ namespace TinyPG.CodeGenerators.Cpp
 					break;
 				case RuleType.ZeroOrMore:
 					firsts = r.GetFirstTerminals();
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					firstsExtended = CollectExpectedTokens(rules, index + 1);
+					firstsExtended.AddRange(firsts);
+#endif
 					sb.Append(Indent + "tok = scanner.LookAhead({");
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					AppendTokenList(firstsExtended, sb);
+#else
 					AppendTokenList(firsts, sb);
+#endif
 					sb.AppendLine("});" + Helper.AddComment("ZeroOrMore Rule"));
 
 					sb.Append(Indent + "while (");
@@ -131,8 +142,12 @@ namespace TinyPG.CodeGenerators.Cpp
 						sb.Append(GenerateProductionRuleCode(r.Rules, i, indent + 1));
 					}
 
-					sb.Append(Indent + "tok = scanner.LookAhead({");
+					sb.Append(Indent + "	tok = scanner.LookAhead({");
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					AppendTokenList(firstsExtended, sb);
+#else
 					AppendTokenList(firsts, sb);
+#endif
 					sb.AppendLine("});" + Helper.AddComment("ZeroOrMore Rule"));
 					sb.AppendLine(Indent + "}");
 					break;
@@ -145,17 +160,34 @@ namespace TinyPG.CodeGenerators.Cpp
 					}
 
 					firsts = r.GetFirstTerminals();
-					sb.Append(Indent + "	tok = scanner.LookAhead({");
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					firstsExtended = CollectExpectedTokens(rules, index + 1);
+					firstsExtended.AddRange(firsts);
+#endif
+
+					sb.Append    (Indent + "	tok = scanner.LookAhead({");
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					AppendTokenList(firstsExtended, sb);
+#else
 					AppendTokenList(firsts, sb);
+#endif
 					sb.AppendLine("});" + Helper.AddComment("OneOrMore Rule"));
-					sb.Append(Indent + "} while (");
+					sb.Append(    Indent + "} while (");
 					AppendTokenCondition(firsts, sb, Indent);
 					sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
 					break;
 				case RuleType.Option:
 					firsts = r.GetFirstTerminals();
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+						firstsExtended = CollectExpectedTokens(rules, index + 1);
+						firstsExtended.AddRange(firsts);
+#endif
 					sb.Append(Indent + "tok = scanner.LookAhead({");
-					AppendTokenList(firsts, sb);
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+						AppendTokenList(firstsExtended, sb);
+#else
+						AppendTokenList(firsts, sb);
+#endif
 					sb.AppendLine("});" + Helper.AddComment("Option Rule"));
 
 					sb.Append(Indent + "if (");
@@ -215,6 +247,19 @@ namespace TinyPG.CodeGenerators.Cpp
 			return expectedTokens;
 		}
 
+		private static Symbols CollectExpectedTokens(Rules rules, int index)
+		{
+			var symbols = new Symbols();
+			for (int i = index; i < rules.Count; i++)
+			{
+				rules[i].DetermineFirstTerminals(symbols);
+				if (rules[i].Type != RuleType.ZeroOrMore &&
+					rules[i].Type != RuleType.Option)
+					break;
+			}
+			return symbols;
+		}
+
 		private void AppendTokenList(Symbols symbols, StringBuilder sb, List<string> tokenNames = null)
 		{
 			int i = 0;
@@ -242,6 +287,5 @@ namespace TinyPG.CodeGenerators.Cpp
 			}
 
 		}
-
 	}
 }

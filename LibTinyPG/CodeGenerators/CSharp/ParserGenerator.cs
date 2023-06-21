@@ -11,7 +11,6 @@ namespace TinyPG.CodeGenerators.CSharp
 		internal ParserGenerator() : base("Parser.cs")
 		{
 		}
-		private bool LookAheadFollowingRulesOnOptionals = true;
 		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			string templatePath = Grammar.GetTemplatePath();
@@ -70,10 +69,6 @@ namespace TinyPG.CodeGenerators.CSharp
 			sb.AppendLine("		{");
 			sb.AppendLine("			Token tok;");
 			sb.AppendLine("			ParseNode n;");
-			if (LookAheadFollowingRulesOnOptionals)
-			{
-				//sb.AppendLine("			bool found;");
-			}
 			sb.AppendLine("			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType." + s.Name + "), \"" + s.Name + "\");");
 			sb.AppendLine("			parent.Nodes.Add(node);");
 			sb.AppendLine("");
@@ -94,7 +89,9 @@ namespace TinyPG.CodeGenerators.CSharp
 		{
 			Rule r = rules[index];
 			Symbols firsts = null;
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
 			Symbols firstsExtended = null;
+#endif
 			StringBuilder sb = new StringBuilder();
 			string Indent = Helper.Indent(indent);
 			switch (r.Type)
@@ -123,20 +120,16 @@ namespace TinyPG.CodeGenerators.CSharp
 					break;
 				case RuleType.ZeroOrMore:
 					firsts = r.GetFirstTerminals();
-					if(LookAheadFollowingRulesOnOptionals)
-					{
-						firstsExtended = CollectExpectedTokens(rules, index + 1);
-						firstsExtended.AddRange(firsts);
-					}
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					firstsExtended = CollectExpectedTokens(rules, index + 1);
+					firstsExtended.AddRange(firsts);
+#endif
 					sb.Append(Indent + "tok = scanner.LookAhead(");
-					if (!LookAheadFollowingRulesOnOptionals)
-					{
-						AppendTokenList(firsts, sb);
-					}
-					else
-					{
-						AppendTokenList(firstsExtended, sb);
-					}
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					AppendTokenList(firstsExtended, sb);
+#else
+					AppendTokenList(firsts, sb);
+#endif
 					sb.AppendLine(");" + Helper.AddComment("ZeroOrMore Rule"));
 
 					sb.Append(Indent + "while (");
@@ -150,14 +143,11 @@ namespace TinyPG.CodeGenerators.CSharp
 					}
 
 					sb.Append(Indent + "	tok = scanner.LookAhead(");
-					if(LookAheadFollowingRulesOnOptionals)
-					{
-						AppendTokenList(firstsExtended, sb);
-					}
-					else
-					{
-						AppendTokenList(firsts, sb);
-					}
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					AppendTokenList(firstsExtended, sb);
+#else
+					AppendTokenList(firsts, sb);
+#endif
 					sb.AppendLine(");" + Helper.AddComment("ZeroOrMore Rule"));
 					sb.AppendLine(Indent + "}");
 					break;
@@ -170,50 +160,38 @@ namespace TinyPG.CodeGenerators.CSharp
 					}
 
 					firsts = r.GetFirstTerminals();
-					if(LookAheadFollowingRulesOnOptionals)
-					{
-						firstsExtended = CollectExpectedTokens(rules, index + 1);
-						firstsExtended.AddRange(firsts);
-					}
-					
-					if (LookAheadFollowingRulesOnOptionals)
-					{
-						sb.Append    (Indent + "	tok = scanner.LookAhead(");
-						AppendTokenList(firstsExtended, sb);
-						sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
-					}
-					else
-					{
-						sb.Append(Indent + "	tok = scanner.LookAhead(");
-						AppendTokenList(firsts, sb);
-						sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
-					}
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					firstsExtended = CollectExpectedTokens(rules, index + 1);
+					firstsExtended.AddRange(firsts);
+#endif
+
+					sb.Append    (Indent + "	tok = scanner.LookAhead(");
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					AppendTokenList(firstsExtended, sb);
+#else
+					AppendTokenList(firsts, sb);
+#endif
+					sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
 					sb.Append(    Indent + "} while (");
 					AppendTokenCondition(firsts, sb, Indent);
 					sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
 					break;
 				case RuleType.Option:
 					firsts = r.GetFirstTerminals();
-					if (LookAheadFollowingRulesOnOptionals)
-					{
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
 						firstsExtended = CollectExpectedTokens(rules, index + 1);
 						firstsExtended.AddRange(firsts);
-					}
+#endif
 					sb.Append(Indent + "tok = scanner.LookAhead(");
-					if (LookAheadFollowingRulesOnOptionals)
-					{
-						AppendTokenList(firstsExtended, sb);
-					}
-					else
-					{
-						AppendTokenList(firsts, sb);
-					}
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					AppendTokenList(firstsExtended, sb);
+#else
+					AppendTokenList(firsts, sb);
+#endif
 					sb.AppendLine(");" + Helper.AddComment("Option Rule"));
 
 					sb.Append(Indent + "if (");
-					
 					AppendTokenCondition(firsts, sb, Indent);
-					
 					sb.AppendLine(")");
 					sb.AppendLine(Indent + "{");
 
@@ -269,7 +247,7 @@ namespace TinyPG.CodeGenerators.CSharp
 			return expectedTokens;
 		}
 
-		private Symbols CollectExpectedTokens(Rules rules, int index)
+		private static Symbols CollectExpectedTokens(Rules rules, int index)
 		{
 			var symbols = new Symbols();
 			for (int i = index; i < rules.Count; i++)

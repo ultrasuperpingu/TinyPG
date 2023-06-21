@@ -61,7 +61,7 @@ namespace TinyExe
 
 
 		 // Concat Rule
-		tok = scanner.LookAhead({TokenType::FUNCTION, TokenType::VARIABLE, TokenType::BOOLEANLITERAL, TokenType::DECIMALINTEGERLITERAL, TokenType::HEXINTEGERLITERAL, TokenType::REALLITERAL, TokenType::STRINGLITERAL, TokenType::BRACKETOPEN, TokenType::PLUS, TokenType::MINUS, TokenType::NOT, TokenType::ASSIGN}); // Option Rule
+		tok = scanner.LookAhead({TokenType::EOF_, TokenType::FUNCTION, TokenType::VARIABLE, TokenType::BOOLEANLITERAL, TokenType::DECIMALINTEGERLITERAL, TokenType::HEXINTEGERLITERAL, TokenType::REALLITERAL, TokenType::STRINGLITERAL, TokenType::BRACKETOPEN, TokenType::PLUS, TokenType::MINUS, TokenType::NOT, TokenType::ASSIGN}); // Option Rule
 		if (tok.Type == TokenType::FUNCTION
 		    || tok.Type == TokenType::VARIABLE
 		    || tok.Type == TokenType::BOOLEANLITERAL
@@ -129,7 +129,7 @@ namespace TinyExe
 		}
 
 		 // Concat Rule
-		tok = scanner.LookAhead({TokenType::FUNCTION, TokenType::VARIABLE, TokenType::BOOLEANLITERAL, TokenType::DECIMALINTEGERLITERAL, TokenType::HEXINTEGERLITERAL, TokenType::REALLITERAL, TokenType::STRINGLITERAL, TokenType::BRACKETOPEN, TokenType::PLUS, TokenType::MINUS, TokenType::NOT, TokenType::ASSIGN, TokenType::SEMICOLON}); // Option Rule
+		tok = scanner.LookAhead({TokenType::BRACKETCLOSE, TokenType::FUNCTION, TokenType::VARIABLE, TokenType::BOOLEANLITERAL, TokenType::DECIMALINTEGERLITERAL, TokenType::HEXINTEGERLITERAL, TokenType::REALLITERAL, TokenType::STRINGLITERAL, TokenType::BRACKETOPEN, TokenType::PLUS, TokenType::MINUS, TokenType::NOT, TokenType::ASSIGN, TokenType::SEMICOLON}); // Option Rule
 		if (tok.Type == TokenType::FUNCTION
 		    || tok.Type == TokenType::VARIABLE
 		    || tok.Type == TokenType::BOOLEANLITERAL
@@ -857,7 +857,7 @@ namespace TinyExe
 
 
 		 // Concat Rule
-		tok = scanner.LookAhead({TokenType::FUNCTION, TokenType::VARIABLE, TokenType::BOOLEANLITERAL, TokenType::DECIMALINTEGERLITERAL, TokenType::HEXINTEGERLITERAL, TokenType::REALLITERAL, TokenType::STRINGLITERAL, TokenType::BRACKETOPEN, TokenType::PLUS, TokenType::MINUS, TokenType::NOT}); // Option Rule
+		tok = scanner.LookAhead({TokenType::ASSIGN, TokenType::FUNCTION, TokenType::VARIABLE, TokenType::BOOLEANLITERAL, TokenType::DECIMALINTEGERLITERAL, TokenType::HEXINTEGERLITERAL, TokenType::REALLITERAL, TokenType::STRINGLITERAL, TokenType::BRACKETOPEN, TokenType::PLUS, TokenType::MINUS, TokenType::NOT}); // Option Rule
 		if (tok.Type == TokenType::FUNCTION
 		    || tok.Type == TokenType::VARIABLE
 		    || tok.Type == TokenType::BOOLEANLITERAL
