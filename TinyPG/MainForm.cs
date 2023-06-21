@@ -153,8 +153,8 @@ namespace TinyPG
 			textHighlighter = new TinyPG.Highlighter.TextHighlighter(textEditor, highlighterScanner, new TinyPG.Highlighter.Parser(highlighterScanner));
 			textHighlighter.SwitchContext += new TinyPG.Highlighter.ContextSwitchEventHandler(TextHighlighter_SwitchContext);
 
-			//IsPortableMode = CheckPermission(AppDomain.CurrentDomain.BaseDirectory);
-			IsPortableMode = false;
+			IsPortableMode = CheckPermission(AppDomain.CurrentDomain.BaseDirectory);
+			//IsPortableMode = false;
 			
 			LoadConfig();
 

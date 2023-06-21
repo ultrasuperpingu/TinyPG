@@ -3,6 +3,7 @@
  * Find a way for the ParseTree to return the correct type (pretty straightforward now but waiting for C++ review first)
  * ParseTree should be returns as shared_ptr ?
  * Remove Non terminal default return value (it will be useless once the ParseTree will be able to return the correct type)
+ * Stop parsing on first error...
  * Make Error Codes consistant (ErrorCode class with all error codes done but not used). Once done, add the ability to silent warnings.
  * Merge last modifications to vb generator
  * Replace CodeDom with Roslyn ??
