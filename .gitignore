@@ -123,3 +123,16 @@ UpgradeLog*.XML
 /.vs
 /LibTinyPG/.vs
 /Output
+/TinyPG/Examples/test
+/TinyPG/Examples/Parser.cs
+/TinyPG/Examples/ParseTree.cs
+/TinyPG/Examples/Scanner.cs
+/TinyPG/Examples/TextHighlighter.cs
+*.o
+/TinyPGCpp/.vs
+/TinyPG/Examples/TestCpp/TinyExe/tinyexe
+/TinyPG/Examples/TestVB/SimpleExpr/IParseTree.vb
+/TinyPG/Examples/TestVB/SimpleExpr/IParser.vb
+/TinyPG/Examples/TestVB/SimpleExpr/IToken.vb
+/TinyPG/Examples/_basic.tpg
+/TinyPG/Examples/_test.tpg

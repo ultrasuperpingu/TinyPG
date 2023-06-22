@@ -49,7 +49,7 @@ public class Parser
 
 
 		 // Concat Rule
-		tok = scanner.LookAhead(TokenType.NUMBER, TokenType.BROPEN, TokenType.ID); // Option Rule
+		tok = scanner.LookAhead(TokenType.NUMBER, TokenType.BROPEN, TokenType.ID, TokenType.EOF); // Option Rule
 		if (tok.Type == TokenType.NUMBER
 		    || tok.Type == TokenType.BROPEN
 		    || tok.Type == TokenType.ID)
@@ -63,7 +63,7 @@ public class Parser
 		node.Token.UpdateRange(tok);
 		node.getNodes().add(n);
 		if (tok.Type != TokenType.EOF) {
-			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.EOF.toString(), 0x1001, tok));
+			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'EOF'.", 0x1001, tok));
 			return;
 		}
 
@@ -101,7 +101,7 @@ public class Parser
 			node.Token.UpdateRange(tok);
 			node.getNodes().add(n);
 			if (tok.Type != TokenType.PLUSMINUS) {
-				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.PLUSMINUS.toString(), 0x1001, tok));
+				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'PLUSMINUS'.", 0x1001, tok));
 				return;
 			}
 
@@ -144,7 +144,7 @@ public class Parser
 			node.Token.UpdateRange(tok);
 			node.getNodes().add(n);
 			if (tok.Type != TokenType.MULTDIV) {
-				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.MULTDIV.toString(), 0x1001, tok));
+				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'MULTDIV'.", 0x1001, tok));
 				return;
 			}
 
@@ -172,7 +172,7 @@ public class Parser
 		ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Atom), "Atom");
 		parent.getNodes().add(node);
 
-		tok = scanner.LookAhead(TokenType.NUMBER, TokenType.BROPEN, TokenType.ID); // Choice Rule
+		tok = scanner.LookAhead(TokenType.NUMBER, TokenType.BROPEN, TokenType.ID);
 		switch (tok.Type)
 		{ // Choice Rule
 			case NUMBER:
@@ -181,7 +181,7 @@ public class Parser
 				node.Token.UpdateRange(tok);
 				node.getNodes().add(n);
 				if (tok.Type != TokenType.NUMBER) {
-					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.NUMBER.toString(), 0x1001, tok));
+					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'NUMBER'.", 0x1001, tok));
 					return;
 				}
 				break;
@@ -193,7 +193,7 @@ public class Parser
 				node.Token.UpdateRange(tok);
 				node.getNodes().add(n);
 				if (tok.Type != TokenType.BROPEN) {
-					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.BROPEN.toString(), 0x1001, tok));
+					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'BROPEN'.", 0x1001, tok));
 					return;
 				}
 
@@ -206,7 +206,7 @@ public class Parser
 				node.Token.UpdateRange(tok);
 				node.getNodes().add(n);
 				if (tok.Type != TokenType.BRCLOSE) {
-					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.BRCLOSE.toString(), 0x1001, tok));
+					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'BRCLOSE'.", 0x1001, tok));
 					return;
 				}
 				break;
@@ -216,7 +216,7 @@ public class Parser
 				node.Token.UpdateRange(tok);
 				node.getNodes().add(n);
 				if (tok.Type != TokenType.ID) {
-					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.ID.toString(), 0x1001, tok));
+					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'ID'.", 0x1001, tok));
 					return;
 				}
 				break;

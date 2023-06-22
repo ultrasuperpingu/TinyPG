@@ -49,7 +49,7 @@ public class Parser
 
 
 		 // Concat Rule
-		tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT, TokenType.ASSIGN); // Option Rule
+		tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT, TokenType.ASSIGN, TokenType.EOF_); // Option Rule
 		if (tok.Type == TokenType.FUNCTION
 		    || tok.Type == TokenType.VARIABLE
 		    || tok.Type == TokenType.BOOLEANLITERAL
@@ -72,7 +72,7 @@ public class Parser
 		node.Token.UpdateRange(tok);
 		node.getNodes().add(n);
 		if (tok.Type != TokenType.EOF_) {
-			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.EOF_.toString(), 0x1001, tok));
+			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'EOF_'.", 0x1001, tok));
 			return;
 		}
 
@@ -102,7 +102,7 @@ public class Parser
 		node.Token.UpdateRange(tok);
 		node.getNodes().add(n);
 		if (tok.Type != TokenType.FUNCTION) {
-			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.FUNCTION.toString(), 0x1001, tok));
+			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'FUNCTION'.", 0x1001, tok));
 			return;
 		}
 
@@ -112,12 +112,12 @@ public class Parser
 		node.Token.UpdateRange(tok);
 		node.getNodes().add(n);
 		if (tok.Type != TokenType.BRACKETOPEN) {
-			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.BRACKETOPEN.toString(), 0x1001, tok));
+			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'BRACKETOPEN'.", 0x1001, tok));
 			return;
 		}
 
 		 // Concat Rule
-		tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT, TokenType.ASSIGN, TokenType.SEMICOLON); // Option Rule
+		tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT, TokenType.ASSIGN, TokenType.SEMICOLON, TokenType.BRACKETCLOSE); // Option Rule
 		if (tok.Type == TokenType.FUNCTION
 		    || tok.Type == TokenType.VARIABLE
 		    || tok.Type == TokenType.BOOLEANLITERAL
@@ -141,7 +141,7 @@ public class Parser
 		node.Token.UpdateRange(tok);
 		node.getNodes().add(n);
 		if (tok.Type != TokenType.BRACKETCLOSE) {
-			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.BRACKETCLOSE.toString(), 0x1001, tok));
+			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'BRACKETCLOSE'.", 0x1001, tok));
 			return;
 		}
 
@@ -164,7 +164,7 @@ public class Parser
 		ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.PrimaryExpression), "PrimaryExpression");
 		parent.getNodes().add(node);
 
-		tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN); // Choice Rule
+		tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN);
 		switch (tok.Type)
 		{ // Choice Rule
 			case FUNCTION:
@@ -214,7 +214,7 @@ public class Parser
 		node.Token.UpdateRange(tok);
 		node.getNodes().add(n);
 		if (tok.Type != TokenType.BRACKETOPEN) {
-			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.BRACKETOPEN.toString(), 0x1001, tok));
+			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'BRACKETOPEN'.", 0x1001, tok));
 			return;
 		}
 
@@ -227,7 +227,7 @@ public class Parser
 		node.Token.UpdateRange(tok);
 		node.getNodes().add(n);
 		if (tok.Type != TokenType.BRACKETCLOSE) {
-			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.BRACKETCLOSE.toString(), 0x1001, tok));
+			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'BRACKETCLOSE'.", 0x1001, tok));
 			return;
 		}
 
@@ -250,7 +250,7 @@ public class Parser
 		ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.UnaryExpression), "UnaryExpression");
 		parent.getNodes().add(node);
 
-		tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT); // Choice Rule
+		tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT);
 		switch (tok.Type)
 		{ // Choice Rule
 			case FUNCTION:
@@ -271,7 +271,7 @@ public class Parser
 				node.Token.UpdateRange(tok);
 				node.getNodes().add(n);
 				if (tok.Type != TokenType.PLUS) {
-					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.PLUS.toString(), 0x1001, tok));
+					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'PLUS'.", 0x1001, tok));
 					return;
 				}
 
@@ -286,7 +286,7 @@ public class Parser
 				node.Token.UpdateRange(tok);
 				node.getNodes().add(n);
 				if (tok.Type != TokenType.MINUS) {
-					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.MINUS.toString(), 0x1001, tok));
+					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'MINUS'.", 0x1001, tok));
 					return;
 				}
 
@@ -301,7 +301,7 @@ public class Parser
 				node.Token.UpdateRange(tok);
 				node.getNodes().add(n);
 				if (tok.Type != TokenType.NOT) {
-					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.NOT.toString(), 0x1001, tok));
+					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'NOT'.", 0x1001, tok));
 					return;
 				}
 
@@ -347,7 +347,7 @@ public class Parser
 			node.Token.UpdateRange(tok);
 			node.getNodes().add(n);
 			if (tok.Type != TokenType.POWER) {
-				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.POWER.toString(), 0x1001, tok));
+				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'POWER'.", 0x1001, tok));
 				return;
 			}
 
@@ -387,7 +387,7 @@ public class Parser
 		{
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.ASTERIKS, TokenType.SLASH, TokenType.PERCENT); // Choice Rule
+			tok = scanner.LookAhead(TokenType.ASTERIKS, TokenType.SLASH, TokenType.PERCENT);
 			switch (tok.Type)
 			{ // Choice Rule
 				case ASTERIKS:
@@ -396,7 +396,7 @@ public class Parser
 					node.Token.UpdateRange(tok);
 					node.getNodes().add(n);
 					if (tok.Type != TokenType.ASTERIKS) {
-						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.ASTERIKS.toString(), 0x1001, tok));
+						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'ASTERIKS'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -406,7 +406,7 @@ public class Parser
 					node.Token.UpdateRange(tok);
 					node.getNodes().add(n);
 					if (tok.Type != TokenType.SLASH) {
-						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.SLASH.toString(), 0x1001, tok));
+						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'SLASH'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -416,7 +416,7 @@ public class Parser
 					node.Token.UpdateRange(tok);
 					node.getNodes().add(n);
 					if (tok.Type != TokenType.PERCENT) {
-						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.PERCENT.toString(), 0x1001, tok));
+						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'PERCENT'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -460,7 +460,7 @@ public class Parser
 		{
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.PLUS, TokenType.MINUS); // Choice Rule
+			tok = scanner.LookAhead(TokenType.PLUS, TokenType.MINUS);
 			switch (tok.Type)
 			{ // Choice Rule
 				case PLUS:
@@ -469,7 +469,7 @@ public class Parser
 					node.Token.UpdateRange(tok);
 					node.getNodes().add(n);
 					if (tok.Type != TokenType.PLUS) {
-						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.PLUS.toString(), 0x1001, tok));
+						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'PLUS'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -479,7 +479,7 @@ public class Parser
 					node.Token.UpdateRange(tok);
 					node.getNodes().add(n);
 					if (tok.Type != TokenType.MINUS) {
-						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.MINUS.toString(), 0x1001, tok));
+						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'MINUS'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -527,7 +527,7 @@ public class Parser
 			node.Token.UpdateRange(tok);
 			node.getNodes().add(n);
 			if (tok.Type != TokenType.AMP) {
-				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.AMP.toString(), 0x1001, tok));
+				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'AMP'.", 0x1001, tok));
 				return;
 			}
 
@@ -568,7 +568,7 @@ public class Parser
 		{
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.LESSTHAN, TokenType.LESSEQUAL, TokenType.GREATERTHAN, TokenType.GREATEREQUAL); // Choice Rule
+			tok = scanner.LookAhead(TokenType.LESSTHAN, TokenType.LESSEQUAL, TokenType.GREATERTHAN, TokenType.GREATEREQUAL);
 			switch (tok.Type)
 			{ // Choice Rule
 				case LESSTHAN:
@@ -577,7 +577,7 @@ public class Parser
 					node.Token.UpdateRange(tok);
 					node.getNodes().add(n);
 					if (tok.Type != TokenType.LESSTHAN) {
-						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.LESSTHAN.toString(), 0x1001, tok));
+						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'LESSTHAN'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -587,7 +587,7 @@ public class Parser
 					node.Token.UpdateRange(tok);
 					node.getNodes().add(n);
 					if (tok.Type != TokenType.LESSEQUAL) {
-						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.LESSEQUAL.toString(), 0x1001, tok));
+						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'LESSEQUAL'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -597,7 +597,7 @@ public class Parser
 					node.Token.UpdateRange(tok);
 					node.getNodes().add(n);
 					if (tok.Type != TokenType.GREATERTHAN) {
-						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.GREATERTHAN.toString(), 0x1001, tok));
+						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'GREATERTHAN'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -607,7 +607,7 @@ public class Parser
 					node.Token.UpdateRange(tok);
 					node.getNodes().add(n);
 					if (tok.Type != TokenType.GREATEREQUAL) {
-						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.GREATEREQUAL.toString(), 0x1001, tok));
+						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'GREATEREQUAL'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -650,7 +650,7 @@ public class Parser
 		{
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.EQUAL, TokenType.NOTEQUAL); // Choice Rule
+			tok = scanner.LookAhead(TokenType.EQUAL, TokenType.NOTEQUAL);
 			switch (tok.Type)
 			{ // Choice Rule
 				case EQUAL:
@@ -659,7 +659,7 @@ public class Parser
 					node.Token.UpdateRange(tok);
 					node.getNodes().add(n);
 					if (tok.Type != TokenType.EQUAL) {
-						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.EQUAL.toString(), 0x1001, tok));
+						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'EQUAL'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -669,7 +669,7 @@ public class Parser
 					node.Token.UpdateRange(tok);
 					node.getNodes().add(n);
 					if (tok.Type != TokenType.NOTEQUAL) {
-						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.NOTEQUAL.toString(), 0x1001, tok));
+						tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'NOTEQUAL'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -717,7 +717,7 @@ public class Parser
 			node.Token.UpdateRange(tok);
 			node.getNodes().add(n);
 			if (tok.Type != TokenType.AMPAMP) {
-				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.AMPAMP.toString(), 0x1001, tok));
+				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'AMPAMP'.", 0x1001, tok));
 				return;
 			}
 
@@ -760,7 +760,7 @@ public class Parser
 			node.Token.UpdateRange(tok);
 			node.getNodes().add(n);
 			if (tok.Type != TokenType.PIPEPIPE) {
-				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.PIPEPIPE.toString(), 0x1001, tok));
+				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'PIPEPIPE'.", 0x1001, tok));
 				return;
 			}
 
@@ -803,7 +803,7 @@ public class Parser
 			node.Token.UpdateRange(tok);
 			node.getNodes().add(n);
 			if (tok.Type != TokenType.QUESTIONMARK) {
-				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.QUESTIONMARK.toString(), 0x1001, tok));
+				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'QUESTIONMARK'.", 0x1001, tok));
 				return;
 			}
 
@@ -816,7 +816,7 @@ public class Parser
 			node.Token.UpdateRange(tok);
 			node.getNodes().add(n);
 			if (tok.Type != TokenType.COLON) {
-				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.COLON.toString(), 0x1001, tok));
+				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'COLON'.", 0x1001, tok));
 				return;
 			}
 
@@ -845,7 +845,7 @@ public class Parser
 
 
 		 // Concat Rule
-		tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT); // Option Rule
+		tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT, TokenType.ASSIGN); // Option Rule
 		if (tok.Type == TokenType.FUNCTION
 		    || tok.Type == TokenType.VARIABLE
 		    || tok.Type == TokenType.BOOLEANLITERAL
@@ -872,7 +872,7 @@ public class Parser
 			node.Token.UpdateRange(tok);
 			node.getNodes().add(n);
 			if (tok.Type != TokenType.ASSIGN) {
-				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.ASSIGN.toString(), 0x1001, tok));
+				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'ASSIGN'.", 0x1001, tok));
 				return;
 			}
 
@@ -914,7 +914,7 @@ public class Parser
 			node.Token.UpdateRange(tok);
 			node.getNodes().add(n);
 			if (tok.Type != TokenType.SEMICOLON) {
-				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.SEMICOLON.toString(), 0x1001, tok));
+				tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'SEMICOLON'.", 0x1001, tok));
 				return;
 			}
 
@@ -942,7 +942,7 @@ public class Parser
 		ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Literal), "Literal");
 		parent.getNodes().add(node);
 
-		tok = scanner.LookAhead(TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL); // Choice Rule
+		tok = scanner.LookAhead(TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL);
 		switch (tok.Type)
 		{ // Choice Rule
 			case BOOLEANLITERAL:
@@ -951,7 +951,7 @@ public class Parser
 				node.Token.UpdateRange(tok);
 				node.getNodes().add(n);
 				if (tok.Type != TokenType.BOOLEANLITERAL) {
-					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.BOOLEANLITERAL.toString(), 0x1001, tok));
+					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'BOOLEANLITERAL'.", 0x1001, tok));
 					return;
 				}
 				break;
@@ -989,7 +989,7 @@ public class Parser
 		ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.IntegerLiteral), "IntegerLiteral");
 		parent.getNodes().add(node);
 
-		tok = scanner.LookAhead(TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL); // Choice Rule
+		tok = scanner.LookAhead(TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL);
 		switch (tok.Type)
 		{ // Choice Rule
 			case DECIMALINTEGERLITERAL:
@@ -998,7 +998,7 @@ public class Parser
 				node.Token.UpdateRange(tok);
 				node.getNodes().add(n);
 				if (tok.Type != TokenType.DECIMALINTEGERLITERAL) {
-					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.DECIMALINTEGERLITERAL.toString(), 0x1001, tok));
+					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'DECIMALINTEGERLITERAL'.", 0x1001, tok));
 					return;
 				}
 				break;
@@ -1008,7 +1008,7 @@ public class Parser
 				node.Token.UpdateRange(tok);
 				node.getNodes().add(n);
 				if (tok.Type != TokenType.HEXINTEGERLITERAL) {
-					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.HEXINTEGERLITERAL.toString(), 0x1001, tok));
+					tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'HEXINTEGERLITERAL'.", 0x1001, tok));
 					return;
 				}
 				break;
@@ -1041,7 +1041,7 @@ public class Parser
 		node.Token.UpdateRange(tok);
 		node.getNodes().add(n);
 		if (tok.Type != TokenType.REALLITERAL) {
-			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.REALLITERAL.toString(), 0x1001, tok));
+			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'REALLITERAL'.", 0x1001, tok));
 			return;
 		}
 
@@ -1069,7 +1069,7 @@ public class Parser
 		node.Token.UpdateRange(tok);
 		node.getNodes().add(n);
 		if (tok.Type != TokenType.STRINGLITERAL) {
-			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.STRINGLITERAL.toString(), 0x1001, tok));
+			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'STRINGLITERAL'.", 0x1001, tok));
 			return;
 		}
 
@@ -1097,7 +1097,7 @@ public class Parser
 		node.Token.UpdateRange(tok);
 		node.getNodes().add(n);
 		if (tok.Type != TokenType.VARIABLE) {
-			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected " + TokenType.VARIABLE.toString(), 0x1001, tok));
+			tree.Errors.add(new ParseError("Unexpected token '" + tok.getText().replace("\n", "") + "' found. Expected 'VARIABLE'.", 0x1001, tok));
 			return;
 		}
 

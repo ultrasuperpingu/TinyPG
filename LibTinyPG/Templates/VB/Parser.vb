@@ -32,7 +32,7 @@ Namespace <%Namespace%>
 			Return m_tree
 		End Function
 
-		<%ParseNonTerminals%>
+<%ParseNonTerminals%>
 
 	End Class
 #End Region

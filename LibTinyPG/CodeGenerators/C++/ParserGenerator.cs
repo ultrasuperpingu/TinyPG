@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using TinyPG.Parsing;
-using System;
 
 namespace TinyPG.CodeGenerators.Cpp
 {
@@ -11,7 +11,7 @@ namespace TinyPG.CodeGenerators.Cpp
 		internal ParserGenerator() : base("include/Parser.h", "src/Parser.cpp")
 		{
 		}
-		private bool LookAheadFollowingRulesOnOptionals = true;
+
 		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (Debug != GenerateDebugMode.None)
@@ -39,11 +39,9 @@ namespace TinyPG.CodeGenerators.Cpp
 			Dictionary<string, string> generated = new Dictionary<string, string>();
 			foreach (var templateName in templateFiles)
 			{
-				string fileContent = File.ReadAllText(Path.Combine(Grammar.GetTemplatePath(), templateName));
-
+				string fileContent = File.ReadAllText(Path.Combine(templatePath, templateName));
 				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-				fileContent = fileContent.Replace(@"<%CustomCode%>", Grammar.Directives["Parser"]["CustomCode"]);
 				fileContent = fileContent.Replace(@"<%ParseNonTerminalsImpl%>", parserMethodsImpl.ToString());
 				fileContent = fileContent.Replace(@"<%ParseNonTerminalsDecl%>", parserMethodsDecl.ToString());
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Parser"]);
@@ -103,7 +101,7 @@ namespace TinyPG.CodeGenerators.Cpp
 					sb.AppendLine(Indent + "node->TokenVal.UpdateRange(tok);");
 					sb.AppendLine(Indent + "node->Nodes.push_back(n);");
 					sb.AppendLine(Indent + "if (tok.Type != TokenType::" + r.Symbol.Name + ") {");
-					sb.AppendLine(Indent + "	tree->Errors.push_back(ParseError(\"Unexpected token '\" + replace(tok.Text, \"\\n\", \"\") + \"' found. Expected " + r.Symbol.Name + "\", 0x1001, tok));");
+					sb.AppendLine(Indent + "	tree->Errors.push_back(ParseError(\"Unexpected token '\" + replace(tok.Text, \"\\n\", \"\") + \"' found. Expected '" + r.Symbol.Name + "'.\", 0x1001, tok));");
 					sb.AppendLine(Indent + "	return;");
 					sb.AppendLine(Indent + "}");
 					break;
@@ -122,7 +120,7 @@ namespace TinyPG.CodeGenerators.Cpp
 					firsts = r.GetFirstTerminals();
 #if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
 					firstsExtended = CollectExpectedTokens(rules, index + 1);
-					firstsExtended.AddRange(firsts);
+					firstsExtended.InsertRange(0, firsts);
 #endif
 					sb.Append(Indent + "tok = scanner.LookAhead({");
 #if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
@@ -162,7 +160,7 @@ namespace TinyPG.CodeGenerators.Cpp
 					firsts = r.GetFirstTerminals();
 #if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
 					firstsExtended = CollectExpectedTokens(rules, index + 1);
-					firstsExtended.AddRange(firsts);
+					firstsExtended.InsertRange(0, firsts);
 #endif
 
 					sb.Append    (Indent + "	tok = scanner.LookAhead({");
@@ -171,7 +169,7 @@ namespace TinyPG.CodeGenerators.Cpp
 #else
 					AppendTokenList(firsts, sb);
 #endif
-					sb.AppendLine("});" + Helper.AddComment("OneOrMore Rule"));
+					sb.AppendLine("});");
 					sb.Append(    Indent + "} while (");
 					AppendTokenCondition(firsts, sb, Indent);
 					sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
@@ -179,14 +177,14 @@ namespace TinyPG.CodeGenerators.Cpp
 				case RuleType.Option:
 					firsts = r.GetFirstTerminals();
 #if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
-						firstsExtended = CollectExpectedTokens(rules, index + 1);
-						firstsExtended.AddRange(firsts);
+					firstsExtended = CollectExpectedTokens(rules, index + 1);
+					firstsExtended.InsertRange(0, firsts);
 #endif
 					sb.Append(Indent + "tok = scanner.LookAhead({");
 #if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
-						AppendTokenList(firstsExtended, sb);
+					AppendTokenList(firstsExtended, sb);
 #else
-						AppendTokenList(firsts, sb);
+					AppendTokenList(firsts, sb);
 #endif
 					sb.AppendLine("});" + Helper.AddComment("Option Rule"));
 
@@ -206,7 +204,7 @@ namespace TinyPG.CodeGenerators.Cpp
 					sb.Append(Indent + "tok = scanner.LookAhead({");
 					var tokens = new List<string>();
 					AppendTokenList(firsts, sb, tokens);
-					sb.AppendLine("});" + Helper.AddComment("Choice Rule"));
+					sb.AppendLine("});");
 
 					sb.AppendLine(Indent + "switch (tok.Type)");
 					sb.AppendLine(Indent + "{" + Helper.AddComment("Choice Rule"));

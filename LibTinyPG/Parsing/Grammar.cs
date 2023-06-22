@@ -81,22 +81,34 @@ namespace TinyPG.Parsing
 			SkipSymbols = new Symbols();
 			Directives = new Directives();
 		}
-
 		public static Grammar FromFile(string filename)
 		{
+			ParseErrors errors;
+			return FromFile(filename, out errors);
+		}
+
+		public static Grammar FromFile(string filename, out ParseErrors errors)
+		{
 			string grammarfile = File.ReadAllText(filename);
-			var g = FromSource(grammarfile);
-			g.Filename = filename;
+			var g = FromSource(grammarfile, out errors);
+			if(g != null)
+				g.Filename = filename;
 			return g;
 		}
 
-		public static Grammar FromSource(string fileContent)
+		public static Grammar FromSource(string filename)
+		{
+			ParseErrors errors;
+			return FromSource(filename, out errors);
+		}
+
+		public static Grammar FromSource(string fileContent, out ParseErrors errors)
 		{
 			GrammarTree tree = GrammarTree.FromSource(fileContent);
+			errors = tree.Errors;
 			if (tree == null || tree.Errors.ContainsErrors)
 				return null;
-			Grammar g = (Grammar)tree.Eval();
-			return g;
+			return (Grammar)tree.Eval();
 		}
 
 		public Symbols GetTerminals()
@@ -303,10 +315,12 @@ namespace TinyPG.Parsing
 		}
 		public string GetTemplatePath()
 		{
-			string folder = AppDomain.CurrentDomain.BaseDirectory;
+			string folder = GetDirectory();
 			string pathout = Directives["TinyPG"]["TemplatePath"];
+			// If the attribute was not present, it has been filled with absolute path (files next to exe)
 			if (Path.IsPathRooted(pathout))
-				folder = Path.GetFullPath(pathout);
+				folder = pathout;
+			// If the attribute was present, TemplatePath should be relative to grammar file or current dir if file not saved
 			else
 				folder = Path.GetFullPath(Path.Combine(folder, pathout));
 

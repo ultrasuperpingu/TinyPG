@@ -8,14 +8,15 @@
 // LIABILITY FOR ANY DATA DAMAGE/LOSS THAT THIS PRODUCT MAY CAUSE.
 //-----------------------------------------------------------------------
 using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
-using System.Windows.Forms;
-using TinyPG.Parsing;
-using TinyPG.Compiler;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Collections.Generic;
-using System.Security.Cryptography;
+using System.Windows.Forms;
+using TinyPG.Compiler;
+using TinyPG.Parsing;
 
 namespace TinyPG
 {
@@ -25,6 +26,8 @@ namespace TinyPG
 		{
 			Success = 0,
 			InvalidFilename = 1,
+			ParsingFails = 2,
+			EvalGrammarFails = 3,
 			UnknownError = 10
 		}
 
@@ -42,7 +45,7 @@ namespace TinyPG
 					{
 						if (File.Exists(key))
 						{
-							if(string.IsNullOrEmpty(GrammarFilePath))
+							if (string.IsNullOrEmpty(GrammarFilePath))
 								GrammarFilePath = key;
 							else
 								Console.Error.WriteLine("You can only specify one file to open or generate. File " + key + " will be ignored.");
@@ -52,7 +55,7 @@ namespace TinyPG
 							Console.Error.WriteLine("Specified file " + key + " does not exists.");
 						}
 					}
-					else if(key.ToLower().StartsWith("--generate") || key.ToLower().StartsWith("-generate") || key.ToLower().StartsWith("-g"))
+					else if (key.ToLower().StartsWith("--generate") || key.ToLower().StartsWith("-generate") || key.ToLower().StartsWith("-g"))
 					{
 						generate = true;
 					}
@@ -62,7 +65,7 @@ namespace TinyPG
 					}
 				}
 				if (generate)
-					GenerateFromGrammar(GrammarFilePath);
+					return GenerateCodeFromGrammar(GrammarFilePath);
 				else
 					OpenMainForm(GrammarFilePath);
 			}
@@ -70,40 +73,54 @@ namespace TinyPG
 			{
 				OpenMainForm();
 			}
-			return (int)ExitCode.Success;
+			return 0;
 		}
 
-		private static void GenerateFromGrammar(string GrammarFilePath)
+		private static int GenerateCodeFromGrammar(string GrammarFilePath)
 		{
 			if (!File.Exists(GrammarFilePath))
 			{
 				Console.Error.WriteLine("Specified file " + GrammarFilePath + " does not exists");
-				return;
+				return (int)ExitCode.InvalidFilename;
 			}
-			StringBuilder output = new StringBuilder(string.Empty);
 			//As stated in documentation current directory is the one of the TPG file.
 			Directory.SetCurrentDirectory(Path.GetDirectoryName(GrammarFilePath));
 
 			DateTime starttimer = DateTime.Now;
+			ParseErrors errors;
+			Grammar grammar = Grammar.FromSource(File.ReadAllText(GrammarFilePath), out errors);
+			foreach (ParseError error in errors)
+				Console.Error.WriteLine(string.Format((error.IsWarning ? "Warning: " : "Error: ")+"({0},{1}): {2}", error.Line, error.Column, error.Message));
+			TimeSpan duration = DateTime.Now - starttimer;
 
-			Program prog = new Program(ManageParseError, output);
-			Grammar grammar = prog.ParseGrammar(File.ReadAllText(GrammarFilePath));
-
-			if (grammar != null)
+			if (grammar != null && !errors.ContainsErrors)
 			{
+				Console.WriteLine("Grammar parsed successfully in " + duration.TotalMilliseconds.ToString(CultureInfo.InvariantCulture) + "ms.");
+
 				grammar.Filename = GrammarFilePath;
-				if (prog.BuildCode(grammar, new TinyPG.Compiler.Compiler()))
-				{
-					TimeSpan span = DateTime.Now.Subtract(starttimer);
-					output.AppendLine("Compilation successful in " + span.TotalMilliseconds + "ms.");
-				}
+				new GeneratedFilesWriter(grammar).Generate();
+
+				Console.WriteLine(grammar.PrintGrammar());
+				Console.WriteLine(grammar.PrintFirsts());
+				Console.WriteLine("Parse successful!\r\n");
 			}
-
-			Console.WriteLine(output.ToString());
+			else
+			{
+				return (int)ExitCode.ParsingFails;
+			}
+			return (int)ExitCode.Success;
 		}
-
+		/*[DllImport("kernel32.dll", SetLastError = true)]
+		internal static extern int AllocConsole();
+		[DllImport("user32.dll")]
+		static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+		[DllImport("kernel32.dll")]
+		static extern IntPtr GetConsoleWindow();*/
+		[DllImport("kernel32.dll")]
+		static extern bool FreeConsole();
 		private static void OpenMainForm(string file = null)
 		{
+			FreeConsole();
 			Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
@@ -116,73 +133,9 @@ namespace TinyPG
 			Application.Run(form);
 		}
 
-		static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+		private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
 		{
 			MessageBox.Show("An unhandled exception occured: " + e.Exception.Message);
-		}
-
-		public delegate void OnParseErrorDelegate(ParseTree tree, StringBuilder output);
-		private OnParseErrorDelegate parseErrorDelegate;
-		private StringBuilder output;
-		public StringBuilder Output { get { return this.output; } }
-
-		public Program(OnParseErrorDelegate parseErrorDelegate, StringBuilder output)
-		{
-			this.parseErrorDelegate = parseErrorDelegate;
-			this.output = output;
-		}
-
-		public Grammar ParseGrammar(string input)
-		{
-			Grammar grammar = null;
-			Scanner scanner = new Scanner();
-			Parser parser = new Parser(scanner);
-
-			ParseTree tree = parser.Parse(input, new GrammarTree());
-
-			if (tree.Errors.Count > 0)
-			{
-				this.parseErrorDelegate(tree, this.output);
-			}
-			else
-			{
-				grammar = (Grammar)tree.Eval();
-				grammar.Preprocess();
-
-				if (tree.Errors.Count == 0)
-				{
-					this.output.AppendLine(grammar.PrintGrammar());
-					this.output.AppendLine(grammar.PrintFirsts());
-
-					this.output.AppendLine("Parse successful!\r\n");
-				}
-			}
-			return grammar;
-		}
-
-
-		public bool BuildCode(Grammar grammar, TinyPG.Compiler.Compiler compiler)
-		{
-			this.output.AppendLine("Building code...");
-			compiler.Compile(grammar);
-			foreach (string err in compiler.Errors)
-				this.output.AppendLine(err);
-			if (!compiler.IsCompiled)
-			{
-				this.output.AppendLine("Compilation contains errors, could not compile.");
-			}
-
-			new GeneratedFilesWriter(grammar).Generate();
-
-			return compiler.IsCompiled;
-		}
-
-		protected static void ManageParseError(ParseTree tree, StringBuilder output)
-		{
-			foreach (ParseError error in tree.Errors)
-				output.AppendLine(string.Format("({0},{1}): {2}", error.Line, error.Column, error.Message));
-
-			output.AppendLine("Semantic errors in grammar found.");
 		}
 
 	}

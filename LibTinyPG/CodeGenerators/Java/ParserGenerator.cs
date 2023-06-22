@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using TinyPG;
 using TinyPG.Parsing;
 
 namespace TinyPG.CodeGenerators.Java
@@ -24,6 +23,7 @@ namespace TinyPG.CodeGenerators.Java
 
 			// generate the parser file
 			StringBuilder parsers = new StringBuilder();
+			
 			// build non terminal tokens
 			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
@@ -37,7 +37,6 @@ namespace TinyPG.CodeGenerators.Java
 				string fileContent = File.ReadAllText(Path.Combine(templatePath, templateName));
 				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
-				fileContent = fileContent.Replace(@"<%IParseTree%>", "ParseTree");
 				fileContent = fileContent.Replace(@"<%ParseNonTerminals%>", parsers.ToString());
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Parser"]);
 				generated[templateName] = fileContent;
@@ -83,9 +82,11 @@ namespace TinyPG.CodeGenerators.Java
 		{
 			Rule r = rules[index];
 			Symbols firsts = null;
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+			Symbols firstsExtended = null;
+#endif
 			StringBuilder sb = new StringBuilder();
 			string Indent = Helper.Indent(indent);
-
 			switch (r.Type)
 			{
 				case RuleType.Terminal:
@@ -95,7 +96,7 @@ namespace TinyPG.CodeGenerators.Java
 					sb.AppendLine(Indent + "node.Token.UpdateRange(tok);");
 					sb.AppendLine(Indent + "node.getNodes().add(n);");
 					sb.AppendLine(Indent + "if (tok.Type != TokenType." + r.Symbol.Name + ") {");
-					sb.AppendLine(Indent + "	tree.Errors.add(new ParseError(\"Unexpected token '\" + tok.getText().replace(\"\\n\", \"\") + \"' found. Expected \" + TokenType." + r.Symbol.Name + ".toString(), 0x1001, tok));");
+					sb.AppendLine(Indent + "	tree.Errors.add(new ParseError(\"Unexpected token '\" + tok.getText().replace(\"\\n\", \"\") + \"' found. Expected '" + r.Symbol.Name + "'.\", 0x1001, tok));");
 					sb.AppendLine(Indent + "	return;");
 					sb.AppendLine(Indent + "}");
 					break;
@@ -112,8 +113,16 @@ namespace TinyPG.CodeGenerators.Java
 					break;
 				case RuleType.ZeroOrMore:
 					firsts = r.GetFirstTerminals();
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					firstsExtended = CollectExpectedTokens(rules, index + 1);
+					firstsExtended.InsertRange(0, firsts);
+#endif
 					sb.Append(Indent + "tok = scanner.LookAhead(");
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					AppendTokenList(firstsExtended, sb);
+#else
 					AppendTokenList(firsts, sb);
+#endif
 					sb.AppendLine(");" + Helper.AddComment("ZeroOrMore Rule"));
 
 					sb.Append(Indent + "while (");
@@ -127,7 +136,11 @@ namespace TinyPG.CodeGenerators.Java
 					}
 
 					sb.Append(Indent + "tok = scanner.LookAhead(");
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					AppendTokenList(firstsExtended, sb);
+#else
 					AppendTokenList(firsts, sb);
+#endif
 					sb.AppendLine(");" + Helper.AddComment("ZeroOrMore Rule"));
 					sb.AppendLine(Indent + "}");
 					break;
@@ -140,17 +153,34 @@ namespace TinyPG.CodeGenerators.Java
 					}
 
 					firsts = r.GetFirstTerminals();
-					sb.Append(Indent + "    tok = scanner.LookAhead(");
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					firstsExtended = CollectExpectedTokens(rules, index + 1);
+					firstsExtended.InsertRange(0, firsts);
+#endif
+
+					sb.Append(Indent + "tok = scanner.LookAhead(");
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					AppendTokenList(firstsExtended, sb);
+#else
 					AppendTokenList(firsts, sb);
-					sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
+#endif
+					sb.AppendLine(");");
 					sb.Append(    Indent + "} while (");
 					AppendTokenCondition(firsts, sb, Indent);
 					sb.AppendLine(");" + Helper.AddComment("OneOrMore Rule"));
 					break;
 				case RuleType.Option:
 					firsts = r.GetFirstTerminals();
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					firstsExtended = CollectExpectedTokens(rules, index + 1);
+					firstsExtended.InsertRange(0, firsts);
+#endif
 					sb.Append(Indent + "tok = scanner.LookAhead(");
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					AppendTokenList(firstsExtended, sb);
+#else
 					AppendTokenList(firsts, sb);
+#endif
 					sb.AppendLine(");" + Helper.AddComment("Option Rule"));
 
 					sb.Append(Indent + "if (");
@@ -169,7 +199,7 @@ namespace TinyPG.CodeGenerators.Java
 					sb.Append(Indent + "tok = scanner.LookAhead(");
 					var tokens = new List<string>();
 					AppendTokenList(firsts, sb, tokens);
-					sb.AppendLine(");" + Helper.AddComment("Choice Rule"));
+					sb.AppendLine(");");
 
 					sb.AppendLine(Indent + "switch (tok.Type)");
 					sb.AppendLine(Indent + "{" + Helper.AddComment("Choice Rule"));
@@ -208,6 +238,19 @@ namespace TinyPG.CodeGenerators.Java
 			}
 
 			return expectedTokens;
+		}
+
+		private static Symbols CollectExpectedTokens(Rules rules, int index)
+		{
+			var symbols = new Symbols();
+			for (int i = index; i < rules.Count; i++)
+			{
+				rules[i].DetermineFirstTerminals(symbols);
+				if (rules[i].Type != RuleType.ZeroOrMore &&
+					rules[i].Type != RuleType.Option)
+					break;
+			}
+			return symbols;
 		}
 
 		private void AppendTokenList(Symbols symbols, StringBuilder sb, List<string> tokenNames = null)

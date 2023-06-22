@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TinyPG.Parsing;
 
@@ -61,8 +59,7 @@ namespace TinyPG.UnitTests
 				 .Append("ALL -> @\".*\";")
 				 .Append("Start -> ALL;");
 
-			Program prog = new Program(FailError, new StringBuilder(string.Empty));
-			Grammar grammar = prog.ParseGrammar(input.ToString());
+			Grammar grammar = Program.ParseGrammar(input.ToString());
 			Assert.IsNotNull(grammar);
 		}
 
@@ -76,8 +73,7 @@ namespace TinyPG.UnitTests
 				 .Append(@"<% @TinyPG %>")
 				 .Append("ALL -> @\".*Start -> ALL;");
 
-			Program prog = new Program(PassError, new StringBuilder(string.Empty));
-			Grammar grammar = prog.ParseGrammar(input.ToString());
+			Grammar grammar = Program.ParseGrammar(input.ToString());
 			Assert.IsNull(grammar);
 		}
 

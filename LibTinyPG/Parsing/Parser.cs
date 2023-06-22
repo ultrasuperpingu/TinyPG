@@ -182,7 +182,7 @@ namespace TinyPG.Parsing
 			}
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.VERBATIM_STRING, TokenType.STRING, TokenType.CODEBLOCK); // Choice Rule
+			tok = scanner.LookAhead(TokenType.VERBATIM_STRING, TokenType.STRING, TokenType.CODEBLOCK);
 			switch (tok.Type)
 			{ // Choice Rule
 				case TokenType.VERBATIM_STRING:
@@ -399,7 +399,7 @@ namespace TinyPG.Parsing
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Param), "Param");
 			parent.Nodes.Add(node);
 
-			tok = scanner.LookAhead(TokenType.INTEGER, TokenType.DOUBLE, TokenType.STRING, TokenType.HEX); // Choice Rule
+			tok = scanner.LookAhead(TokenType.INTEGER, TokenType.DOUBLE, TokenType.STRING, TokenType.HEX);
 			switch (tok.Type)
 			{ // Choice Rule
 				case TokenType.INTEGER:
@@ -563,7 +563,7 @@ namespace TinyPG.Parsing
 			}
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.CODEBLOCK, TokenType.SEMICOLON); // Choice Rule
+			tok = scanner.LookAhead(TokenType.CODEBLOCK, TokenType.SEMICOLON);
 			switch (tok.Type)
 			{ // Choice Rule
 				case TokenType.CODEBLOCK:
@@ -610,7 +610,7 @@ namespace TinyPG.Parsing
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Rule), "Rule");
 			parent.Nodes.Add(node);
 
-			tok = scanner.LookAhead(TokenType.VERBATIM_STRING, TokenType.STRING, TokenType.IDENTIFIER, TokenType.BRACKETOPEN); // Choice Rule
+			tok = scanner.LookAhead(TokenType.VERBATIM_STRING, TokenType.STRING, TokenType.IDENTIFIER, TokenType.BRACKETOPEN);
 			switch (tok.Type)
 			{ // Choice Rule
 				case TokenType.VERBATIM_STRING:
@@ -706,7 +706,7 @@ namespace TinyPG.Parsing
 
 			do { // OneOrMore Rule
 				ParseSymbol(node); // NonTerminal Rule: Symbol
-				tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.BRACKETOPEN); // OneOrMore Rule
+				tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.BRACKETOPEN);
 			} while (tok.Type == TokenType.IDENTIFIER
 			    || tok.Type == TokenType.BRACKETOPEN); // OneOrMore Rule
 
@@ -731,7 +731,7 @@ namespace TinyPG.Parsing
 
 
 			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.BRACKETOPEN); // Choice Rule
+			tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.BRACKETOPEN);
 			switch (tok.Type)
 			{ // Choice Rule
 				case TokenType.IDENTIFIER:

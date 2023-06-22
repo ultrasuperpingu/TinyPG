@@ -4,6 +4,7 @@
 package tinypg;
 import java.util.ArrayList;
 
+
 public class ParseNode
 {
 	protected String text;

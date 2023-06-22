@@ -46,13 +46,14 @@ namespace TinyPG.CodeGenerators.VBNet
 			bool first = true;
 			foreach (TerminalSymbol s in Grammar.GetTerminals())
 			{
-				string vbexpr = s.Expression.ToString();
-				if (vbexpr.StartsWith("@"))
-					vbexpr = vbexpr.Substring(1);
 				string RegexCompiled = null;
 				Grammar.Directives.Find("TinyPG").TryGetValue("RegexCompiled", out RegexCompiled);
+				string expr = s.Expression;
+				if (expr.StartsWith("@"))
+					expr = expr.Substring(1);
+				
 
-				regexps.Append("			regex = new Regex(" + vbexpr + ", RegexOptions.None");
+				regexps.Append("			regex = new Regex(" + expr + ", RegexOptions.None");
 
 				if (RegexCompiled == null || RegexCompiled.ToLower().Equals("true"))
 					regexps.Append(" & RegexOptions.Compiled");
@@ -65,8 +66,10 @@ namespace TinyPG.CodeGenerators.VBNet
 				regexps.Append("			Patterns.Add(TokenType." + s.Name + ", regex)" + Environment.NewLine);
 				regexps.Append("			Tokens.Add(TokenType." + s.Name + ")" + Environment.NewLine + Environment.NewLine);
 
-				if (first) first = false;
-				else tokentype.AppendLine("");
+				if (first)
+					first = false;
+				else
+					tokentype.AppendLine("");
 
 				tokentype.Append(Helper.Outline(s.Name, 2, "= " + String.Format("{0:d}", counter), 5));
 				counter++;
@@ -104,6 +107,7 @@ namespace TinyPG.CodeGenerators.VBNet
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Scanner"]);
 				generated[templateName] = fileContent;
 			}
+
 			return generated;
 		}
 	}

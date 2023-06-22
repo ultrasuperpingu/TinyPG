@@ -1,9 +1,10 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.IO;
 using TinyPG.Parsing;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using System;
+
 
 namespace TinyPG.CodeGenerators.VBNet
 {
@@ -19,8 +20,7 @@ namespace TinyPG.CodeGenerators.VBNet
 			if (string.IsNullOrEmpty(templatePath))
 				throw new Exception("Template path not found:" + Grammar.Directives["TinyPG"]["TemplatePath"]);
 			isDebugOther = Debug == GenerateDebugMode.DebugOther;
-			// copy the parse tree file (optionally)
-			
+
 			StringBuilder evalsymbols = new StringBuilder();
 			StringBuilder evalmethods = new StringBuilder();
 
@@ -67,8 +67,7 @@ namespace TinyPG.CodeGenerators.VBNet
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				if (Debug != GenerateDebugMode.None)
 				{
-					fileContent = fileContent.Replace(@"<%HeaderCode%>", "Imports TinyPG.Debug"+Environment.NewLine+Grammar.Directives["TinyPG"]["HeaderCode"]);
-					//parsetree = parsetree.Replace(@"<%Namespace%>", "TinyPG.Debug");
+					fileContent = fileContent.Replace(@"<%HeaderCode%>", "Imports TinyPG.Debug"+Environment.NewLine+Grammar.Directives["ParseTree"]["HeaderCode"]);
 					fileContent = fileContent.Replace(@"<%IParseTree%>", "\r\n        Implements TinyPG.Debug.IParseTree");
 					fileContent = fileContent.Replace(@"<%IParseNode%>", "\r\n        Implements TinyPG.Debug.IParseNode\r\n");
 					fileContent = fileContent.Replace(@"<%ParseError%>", "\r\n        Implements TinyPG.Debug.IParseError\r\n");
@@ -106,7 +105,7 @@ namespace TinyPG.CodeGenerators.VBNet
 				}
 				else
 				{
-					fileContent = fileContent.Replace(@"<%HeaderCode%>", Grammar.Directives["TinyPG"]["HeaderCode"]);
+					fileContent = fileContent.Replace(@"<%HeaderCode%>", Grammar.Directives["ParseTree"]["HeaderCode"]);
 					//parsetree = parsetree.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 					fileContent = fileContent.Replace(@"<%ParseError%>", "");
 					fileContent = fileContent.Replace(@"<%ParseErrors%>", "List(Of ParseError)");
@@ -158,7 +157,9 @@ namespace TinyPG.CodeGenerators.VBNet
 			{
 				Symbol s = symbols.Find(match.Groups["var"].Value);
 				if (s == null)
+				{
 					continue; // error situation
+				}
 				string indexer = "0";
 				if (match.Groups["index"].Value.Length > 0)
 				{

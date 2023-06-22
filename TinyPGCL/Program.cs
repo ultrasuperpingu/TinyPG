@@ -76,13 +76,13 @@ namespace TinyPGCL
 					if (parameters.ContainsKey("--template-path path"))
 						grammar.Directives["TinyPG"]["Namespace"] = parameters["--namespace"];
 					grammar.Preprocess();
-					if (tree.Errors.Count == 0)
+					if (!tree.Errors.ContainsErrors)
 					{
-						Console.WriteLine(grammar.PrintGrammar());
-						Console.WriteLine(grammar.PrintFirsts());
-
 						Console.WriteLine("Parse successful!\r\n");
 						new GeneratedFilesWriter(grammar).Generate();
+
+						Console.WriteLine(grammar.PrintGrammar());
+						Console.WriteLine(grammar.PrintFirsts());
 					}
 				}
 			}

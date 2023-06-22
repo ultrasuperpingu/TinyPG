@@ -14,7 +14,7 @@ public class Parser
 		this.scanner = scanner;
 	}
 
-	public <%IParseTree%> Parse(String input)
+	public ParseTree Parse(String input)
 	{
 		tree = new ParseTree();
 		return Parse(input, tree);

@@ -56,16 +56,16 @@ namespace SimpleExpr
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			ParseAddExpr(node); // NonTerminal Rule: AddExpr
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.EOF); // Terminal Rule: EOF
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.EOF) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.EOF.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'EOF'.", 0x1001, tok));
 				return;
 			}
 
@@ -89,25 +89,25 @@ namespace SimpleExpr
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			ParseMultExpr(node); // NonTerminal Rule: MultExpr
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.PLUSMINUS); // ZeroOrMore Rule
 			while (tok.Type == TokenType.PLUSMINUS)
 			{
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.PLUSMINUS); // Terminal Rule: PLUSMINUS
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.PLUSMINUS) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.PLUSMINUS.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'PLUSMINUS'.", 0x1001, tok));
 					return;
 				}
 
-				 // Concat Rule
+				// Concat Rule
 				ParseMultExpr(node); // NonTerminal Rule: MultExpr
 				tok = scanner.LookAhead(TokenType.PLUSMINUS); // ZeroOrMore Rule
 			}
@@ -132,25 +132,25 @@ namespace SimpleExpr
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			ParseAtom(node); // NonTerminal Rule: Atom
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.MULTDIV); // ZeroOrMore Rule
 			while (tok.Type == TokenType.MULTDIV)
 			{
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.MULTDIV); // Terminal Rule: MULTDIV
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.MULTDIV) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.MULTDIV.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'MULTDIV'.", 0x1001, tok));
 					return;
 				}
 
-				 // Concat Rule
+				// Concat Rule
 				ParseAtom(node); // NonTerminal Rule: Atom
 				tok = scanner.LookAhead(TokenType.MULTDIV); // ZeroOrMore Rule
 			}
@@ -174,7 +174,7 @@ namespace SimpleExpr
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Atom), "Atom");
 			parent.Nodes.Add(node);
 
-			tok = scanner.LookAhead(TokenType.NUMBER, TokenType.BROPEN, TokenType.ID); // Choice Rule
+			tok = scanner.LookAhead(TokenType.NUMBER, TokenType.BROPEN, TokenType.ID);
 			switch (tok.Type)
 			{ // Choice Rule
 				case TokenType.NUMBER:
@@ -183,32 +183,32 @@ namespace SimpleExpr
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.NUMBER) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.NUMBER.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'NUMBER'.", 0x1001, tok));
 						return;
 					}
 					break;
 				case TokenType.BROPEN:
 
-					 // Concat Rule
+					// Concat Rule
 					tok = scanner.Scan(TokenType.BROPEN); // Terminal Rule: BROPEN
 					n = node.CreateNode(tok, tok.ToString() );
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.BROPEN) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BROPEN.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'BROPEN'.", 0x1001, tok));
 						return;
 					}
 
-					 // Concat Rule
+					// Concat Rule
 					ParseAddExpr(node); // NonTerminal Rule: AddExpr
 
-					 // Concat Rule
+					// Concat Rule
 					tok = scanner.Scan(TokenType.BRCLOSE); // Terminal Rule: BRCLOSE
 					n = node.CreateNode(tok, tok.ToString() );
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.BRCLOSE) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRCLOSE.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'BRCLOSE'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -218,7 +218,7 @@ namespace SimpleExpr
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.ID) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.ID.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'ID'.", 0x1001, tok));
 						return;
 					}
 					break;

@@ -1,9 +1,10 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.IO;
 using TinyPG.Parsing;
 using System.Text.RegularExpressions;
-using System;
 using System.Collections.Generic;
+
 
 namespace TinyPG.CodeGenerators.CSharp
 {
@@ -28,7 +29,6 @@ namespace TinyPG.CodeGenerators.CSharp
 			{
 				evalsymbols.AppendLine("				case TokenType." + s.Name + ":");
 				evalsymbols.AppendLine("					Value = Eval" + s.Name + "(paramlist);");
-				//evalsymbols.AppendLine("					Value = Token.Text;");
 				evalsymbols.AppendLine("				break;");
 
 				string returnType = "object";

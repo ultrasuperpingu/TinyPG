@@ -1,8 +1,8 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.IO;
 using TinyPG.Parsing;
-using System.Collections.Generic;
-using System;
 
 namespace TinyPG.CodeGenerators.VBNet
 {
@@ -27,6 +27,7 @@ namespace TinyPG.CodeGenerators.VBNet
 				string method = GenerateParseMethod(s);
 				parsers.Append(method);
 			}
+
 			Dictionary<string, string> generated = new Dictionary<string, string>();
 			foreach (var templateName in templateFiles)
 			{
@@ -47,6 +48,7 @@ namespace TinyPG.CodeGenerators.VBNet
 				}
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Parser"]);
 				fileContent = fileContent.Replace(@"<%ParseNonTerminals%>", parsers.ToString());
+				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Parser"]);
 				generated[templateName] = fileContent;
 			}
 			return generated;
@@ -56,6 +58,14 @@ namespace TinyPG.CodeGenerators.VBNet
 		private string GenerateParseMethod(NonTerminalSymbol s)
 		{
 			StringBuilder sb = new StringBuilder();
+			sb.AppendLine("		Public Function Parse" + s.Name + "(ByVal input As String, ByVal tree As ParseTree) As ParseTree" + Helper.AddComment("'", "NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("			m_scanner.Init(input)");
+			sb.AppendLine("			Me.m_tree = tree");
+			sb.AppendLine("			Parse" + s.Name + "(tree)");
+			sb.AppendLine("			tree.Skipped = m_scanner.Skipped");
+			sb.AppendLine("			Return tree");
+			sb.AppendLine("		End Function");
+			sb.AppendLine();
 			sb.AppendLine("		Private Sub Parse" + s.Name + "(ByVal parent As ParseNode)" + Helper.AddComment("'", "NonTerminalSymbol: " + s.Name));
 			sb.AppendLine("			Dim tok As Token");
 			sb.AppendLine("			Dim n As ParseNode");
@@ -79,6 +89,9 @@ namespace TinyPG.CodeGenerators.VBNet
 		{
 			Rule r = rules[index];
 			Symbols firsts = null;
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+			Symbols firstsExtended = null;
+#endif
 			StringBuilder sb = new StringBuilder();
 			string Indent = Helper.Indent(indent);
 			switch (r.Type)
@@ -90,7 +103,7 @@ namespace TinyPG.CodeGenerators.VBNet
 					sb.AppendLine(Indent + "node.Token.UpdateRange(tok)");
 					sb.AppendLine(Indent + "node.Nodes.Add(n)");
 					sb.AppendLine(Indent + "If tok.Type <> TokenType." + r.Symbol.Name + " Then");
-					sb.AppendLine(Indent + "	m_tree.Errors.Add(New ParseError(\"Unexpected token '\" + tok.Text.Replace(\"\\n\", \"\") + \"' found. Expected \" + TokenType." + r.Symbol.Name + ".ToString(), &H1001, tok))");
+					sb.AppendLine(Indent + "	m_tree.Errors.Add(New ParseError(\"Unexpected token '\" + tok.Text.Replace(\"\\n\", \"\") + \"' found. Expected '" + r.Symbol.Name + "'.\", &H1001, tok))");
 					sb.AppendLine(Indent + "	Return\r\n");
 					sb.AppendLine(Indent + "End If\r\n");
 					break;
@@ -107,8 +120,16 @@ namespace TinyPG.CodeGenerators.VBNet
 					break;
 				case RuleType.ZeroOrMore:
 					firsts = r.GetFirstTerminals();
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					firstsExtended = CollectExpectedTokens(rules, index + 1);
+					firstsExtended.InsertRange(0, firsts);
+#endif
 					sb.Append(Indent + "tok = m_scanner.LookAhead(");
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					AppendTokenList(firstsExtended, sb);
+#else
 					AppendTokenList(firsts, sb);
+#endif
 					sb.AppendLine(")" + Helper.AddComment("'", "ZeroOrMore Rule"));
 
 					sb.Append(Indent + "While ");
@@ -122,7 +143,11 @@ namespace TinyPG.CodeGenerators.VBNet
 					}
 
 					sb.Append(Indent + "tok = m_scanner.LookAhead(");
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					AppendTokenList(firstsExtended, sb);
+#else
 					AppendTokenList(firsts, sb);
+#endif
 					sb.AppendLine(")" + Helper.AddComment("'", "ZeroOrMore Rule"));
 					sb.AppendLine(Indent + "End While");
 					break;
@@ -135,17 +160,34 @@ namespace TinyPG.CodeGenerators.VBNet
 					}
 
 					firsts = r.GetFirstTerminals();
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					firstsExtended = CollectExpectedTokens(rules, index + 1);
+					firstsExtended.InsertRange(0, firsts);
+#endif
+
 					sb.Append(Indent + "	tok = m_scanner.LookAhead(");
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					AppendTokenList(firstsExtended, sb);
+#else
 					AppendTokenList(firsts, sb);
-					sb.AppendLine(")" + Helper.AddComment("'", "OneOrMore Rule"));
+#endif
+					sb.AppendLine(")");
 					sb.Append(Indent + "Loop While ");
 					AppendTokenCondition(firsts, sb, Indent);
 					sb.AppendLine("" + Helper.AddComment("'", "OneOrMore Rule"));
 					break;
 				case RuleType.Option:
 					firsts = r.GetFirstTerminals();
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					firstsExtended = CollectExpectedTokens(rules, index + 1);
+					firstsExtended.InsertRange(0, firsts);
+#endif
 					sb.Append(Indent + "tok = m_scanner.LookAhead(");
+#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					AppendTokenList(firstsExtended, sb);
+#else
 					AppendTokenList(firsts, sb);
+#endif
 					sb.AppendLine(")" + Helper.AddComment("'", "Option Rule"));
 
 					sb.Append(Indent + "If ");
@@ -163,7 +205,7 @@ namespace TinyPG.CodeGenerators.VBNet
 					sb.Append(Indent + "tok = m_scanner.LookAhead(");
 					var tokens = new List<string>();
 					AppendTokenList(firsts, sb, tokens);
-					sb.AppendLine(")" + Helper.AddComment("'", "Choice Rule"));
+					sb.AppendLine(")");
 
 					sb.AppendLine(Indent + "Select Case tok.Type");
 					sb.AppendLine(Indent + "" + Helper.AddComment("'", "Choice Rule"));
@@ -172,8 +214,10 @@ namespace TinyPG.CodeGenerators.VBNet
 						foreach (TerminalSymbol s in r.Rules[i].GetFirstTerminals())
 						{
 							sb.AppendLine(Indent + "	Case TokenType." + s.Name + "");
+							//TODO: build a list of comma separated token and remove following line of the loop
 							sb.Append(GenerateProductionRuleCode(r.Rules, i, indent + 2));
 						}
+
 					}
 					sb.AppendLine(Indent + "	Case Else");
 					string expectedTokens = BuildExpectedTokensStringForErrorMessage(tokens);
@@ -201,6 +245,19 @@ namespace TinyPG.CodeGenerators.VBNet
 			}
 
 			return expectedTokens;
+		}
+
+		private static Symbols CollectExpectedTokens(Rules rules, int index)
+		{
+			var symbols = new Symbols();
+			for (int i = index; i < rules.Count; i++)
+			{
+				rules[i].DetermineFirstTerminals(symbols);
+				if (rules[i].Type != RuleType.ZeroOrMore &&
+					rules[i].Type != RuleType.Option)
+					break;
+			}
+			return symbols;
 		}
 
 		private void AppendTokenList(Symbols symbols, StringBuilder sb, List<string> tokenNames = null)

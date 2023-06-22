@@ -737,23 +737,42 @@ namespace TinyPG
 			// clear tree
 			tvParsetree.Nodes.Clear();
 
-			Program prog = new Program(ManageParseError, output);
 			DateTime starttimer = DateTime.Now;
-			grammar = prog.ParseGrammar(textEditor.Text);
+			ParseErrors errors;
+			grammar = Grammar.FromSource(textEditor.Text, out errors);
 
+			foreach (ParseError error in errors)
+				output.AppendLine(string.Format((error.IsWarning ? "Warning: " : "Error: ")+"({0},{1}): {2}", error.Line, error.Column, error.Message));
+			
 			if (grammar != null)
 			{
-				TimeSpan span = DateTime.Now.Subtract(starttimer);
-				output.AppendLine("Grammar parsed successfully in " + span.TotalMilliseconds.ToString(CultureInfo.InvariantCulture) + "ms.");
+				output.AppendLine(grammar.PrintGrammar());
+				output.AppendLine(grammar.PrintFirsts());
+				output.AppendLine();
+
+				TimeSpan duration = DateTime.Now - starttimer;
+				output.AppendLine("Grammar parsed successfully in " + duration.TotalMilliseconds.ToString(CultureInfo.InvariantCulture) + "ms.");
 
 				grammar.Filename = grammarFile;
 				SetHighlighterLanguage(grammar.Directives["TinyPG"]["Language"]);
 				
 				starttimer = DateTime.Now;
-				if (prog.BuildCode(grammar, compiler))
+				output.AppendLine("Building code...");
+				compiler.Compile(grammar);
+				foreach (string err in compiler.Errors)
+					output.AppendLine(err);
+				if (!compiler.IsCompiled)
 				{
-					span = DateTime.Now.Subtract(starttimer);
-					output.AppendLine("Compilation successful in " + span.TotalMilliseconds.ToString(CultureInfo.InvariantCulture) + "ms.");
+					output.AppendLine("Compilation contains errors, could not compile.");
+				}
+
+				new GeneratedFilesWriter(grammar).Generate();
+
+
+				if (compiler.IsCompiled)
+				{
+					duration = DateTime.Now.Subtract(starttimer);
+					output.AppendLine("Compilation successful in " + duration.TotalMilliseconds.ToString(CultureInfo.InvariantCulture) + "ms.");
 				}
 			}
 

@@ -61,7 +61,7 @@ namespace TinyPG
 
 
 		 // Concat Rule
-		tok = scanner.LookAhead({TokenType::NUMBER, TokenType::BROPEN, TokenType::ID}); // Option Rule
+		tok = scanner.LookAhead({TokenType::NUMBER, TokenType::BROPEN, TokenType::ID, TokenType::EOF_}); // Option Rule
 		if (tok.Type == TokenType::NUMBER
 		    || tok.Type == TokenType::BROPEN
 		    || tok.Type == TokenType::ID)
@@ -75,7 +75,7 @@ namespace TinyPG
 		node->TokenVal.UpdateRange(tok);
 		node->Nodes.push_back(n);
 		if (tok.Type != TokenType::EOF_) {
-			tree->Errors.push_back(ParseError("Unexpected token '" + replace(tok.Text, "\n", "") + "' found. Expected EOF_", 0x1001, tok));
+			tree->Errors.push_back(ParseError("Unexpected token '" + replace(tok.Text, "\n", "") + "' found. Expected 'EOF_'.", 0x1001, tok));
 			return;
 		}
 
@@ -113,13 +113,13 @@ namespace TinyPG
 			node->TokenVal.UpdateRange(tok);
 			node->Nodes.push_back(n);
 			if (tok.Type != TokenType::PLUSMINUS) {
-				tree->Errors.push_back(ParseError("Unexpected token '" + replace(tok.Text, "\n", "") + "' found. Expected PLUSMINUS", 0x1001, tok));
+				tree->Errors.push_back(ParseError("Unexpected token '" + replace(tok.Text, "\n", "") + "' found. Expected 'PLUSMINUS'.", 0x1001, tok));
 				return;
 			}
 
 			 // Concat Rule
 			ParseMultExpr(node); // NonTerminal Rule: MultExpr
-		tok = scanner.LookAhead({TokenType::PLUSMINUS}); // ZeroOrMore Rule
+			tok = scanner.LookAhead({TokenType::PLUSMINUS}); // ZeroOrMore Rule
 		}
 
 		parent->TokenVal.UpdateRange(node->TokenVal);
@@ -156,13 +156,13 @@ namespace TinyPG
 			node->TokenVal.UpdateRange(tok);
 			node->Nodes.push_back(n);
 			if (tok.Type != TokenType::MULTDIV) {
-				tree->Errors.push_back(ParseError("Unexpected token '" + replace(tok.Text, "\n", "") + "' found. Expected MULTDIV", 0x1001, tok));
+				tree->Errors.push_back(ParseError("Unexpected token '" + replace(tok.Text, "\n", "") + "' found. Expected 'MULTDIV'.", 0x1001, tok));
 				return;
 			}
 
 			 // Concat Rule
 			ParseAtom(node); // NonTerminal Rule: Atom
-		tok = scanner.LookAhead({TokenType::MULTDIV}); // ZeroOrMore Rule
+			tok = scanner.LookAhead({TokenType::MULTDIV}); // ZeroOrMore Rule
 		}
 
 		parent->TokenVal.UpdateRange(node->TokenVal);
@@ -184,7 +184,7 @@ namespace TinyPG
 		ParseNode* node = parent->CreateNode(scanner.GetToken(TokenType::Atom), "Atom");
 		parent->Nodes.push_back(node);
 
-		tok = scanner.LookAhead({TokenType::NUMBER, TokenType::BROPEN, TokenType::ID}); // Choice Rule
+		tok = scanner.LookAhead({TokenType::NUMBER, TokenType::BROPEN, TokenType::ID});
 		switch (tok.Type)
 		{ // Choice Rule
 			case TokenType::NUMBER:
@@ -193,7 +193,7 @@ namespace TinyPG
 				node->TokenVal.UpdateRange(tok);
 				node->Nodes.push_back(n);
 				if (tok.Type != TokenType::NUMBER) {
-					tree->Errors.push_back(ParseError("Unexpected token '" + replace(tok.Text, "\n", "") + "' found. Expected NUMBER", 0x1001, tok));
+					tree->Errors.push_back(ParseError("Unexpected token '" + replace(tok.Text, "\n", "") + "' found. Expected 'NUMBER'.", 0x1001, tok));
 					return;
 				}
 				break;
@@ -205,7 +205,7 @@ namespace TinyPG
 				node->TokenVal.UpdateRange(tok);
 				node->Nodes.push_back(n);
 				if (tok.Type != TokenType::BROPEN) {
-					tree->Errors.push_back(ParseError("Unexpected token '" + replace(tok.Text, "\n", "") + "' found. Expected BROPEN", 0x1001, tok));
+					tree->Errors.push_back(ParseError("Unexpected token '" + replace(tok.Text, "\n", "") + "' found. Expected 'BROPEN'.", 0x1001, tok));
 					return;
 				}
 
@@ -218,7 +218,7 @@ namespace TinyPG
 				node->TokenVal.UpdateRange(tok);
 				node->Nodes.push_back(n);
 				if (tok.Type != TokenType::BRCLOSE) {
-					tree->Errors.push_back(ParseError("Unexpected token '" + replace(tok.Text, "\n", "") + "' found. Expected BRCLOSE", 0x1001, tok));
+					tree->Errors.push_back(ParseError("Unexpected token '" + replace(tok.Text, "\n", "") + "' found. Expected 'BRCLOSE'.", 0x1001, tok));
 					return;
 				}
 				break;
@@ -228,7 +228,7 @@ namespace TinyPG
 				node->TokenVal.UpdateRange(tok);
 				node->Nodes.push_back(n);
 				if (tok.Type != TokenType::ID) {
-					tree->Errors.push_back(ParseError("Unexpected token '" + replace(tok.Text, "\n", "") + "' found. Expected ID", 0x1001, tok));
+					tree->Errors.push_back(ParseError("Unexpected token '" + replace(tok.Text, "\n", "") + "' found. Expected 'ID'.", 0x1001, tok));
 					return;
 				}
 				break;

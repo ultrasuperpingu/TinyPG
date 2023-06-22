@@ -66,16 +66,13 @@
 			this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.statusPos = new System.Windows.Forms.ToolStripStatusLabel();
 			this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
-			this.textEditor = new System.Windows.Forms.RichTextBox();
+			this.textEditor = new TinyPG.Controls.RichTextBoxEx();
 			this.splitterBottom = new System.Windows.Forms.Splitter();
 			this.splitterRight = new System.Windows.Forms.Splitter();
 			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
 			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.panelOutput = new System.Windows.Forms.Panel();
-			this.panelInput = new System.Windows.Forms.Panel();
-			this.textInput = new System.Windows.Forms.RichTextBox();
-			this.headerEvaluator = new TinyPG.Controls.HeaderLabel();
 			this.tabOutput = new TinyPG.Controls.TabControlEx();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.textOutput = new System.Windows.Forms.RichTextBox();
@@ -84,14 +81,17 @@
 			this.tabPage3 = new System.Windows.Forms.TabPage();
 			this.regExControl = new TinyPG.Controls.RegExControl();
 			this.headerOutput = new TinyPG.Controls.HeaderLabel();
+			this.panelInput = new System.Windows.Forms.Panel();
+			this.textInput = new System.Windows.Forms.RichTextBox();
+			this.headerEvaluator = new TinyPG.Controls.HeaderLabel();
 			this.menuStrip.SuspendLayout();
 			this.statusStrip.SuspendLayout();
 			this.panelOutput.SuspendLayout();
-			this.panelInput.SuspendLayout();
 			this.tabOutput.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.tabPage2.SuspendLayout();
 			this.tabPage3.SuspendLayout();
+			this.panelInput.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip
@@ -104,7 +104,7 @@
             this.helpToolStripMenuItem});
 			this.menuStrip.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip.Name = "menuStrip";
-			this.menuStrip.Size = new System.Drawing.Size(1383, 30);
+			this.menuStrip.Size = new System.Drawing.Size(1383, 28);
 			this.menuStrip.TabIndex = 0;
 			this.menuStrip.Text = "menuStrip";
 			// 
@@ -121,7 +121,7 @@
             this.toolStripSeparator2,
             this.exitToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-			this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
+			this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
 			this.fileToolStripMenuItem.Text = "&File";
 			// 
 			// newToolStripMenuItem
@@ -193,7 +193,7 @@
             this.parsetreeToolStripMenuItem,
             this.expressionEvaluatorToolStripMenuItem});
 			this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-			this.viewToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
+			this.viewToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
 			this.viewToolStripMenuItem.Text = "&View";
 			// 
 			// regexToolToolStripMenuItem
@@ -238,7 +238,7 @@
             this.viewScannerToolStripMenuItem,
             this.viewParseTreeCodeToolStripMenuItem});
 			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(57, 26);
+			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(57, 24);
 			this.toolsToolStripMenuItem.Text = "&Build";
 			// 
 			// parseToolStripMenuItem
@@ -289,7 +289,7 @@
             this.aboutTinyParserGeneratorToolStripMenuItem,
             this.examplesToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
 			this.helpToolStripMenuItem.Text = "&Help";
 			// 
 			// aboutTinyParserGeneratorToolStripMenuItem
@@ -390,10 +390,21 @@
 			this.textEditor.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.textEditor.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.textEditor.HideSelection = false;
-			this.textEditor.Location = new System.Drawing.Point(0, 30);
+			this.textEditor.Location = new System.Drawing.Point(0, 28);
 			this.textEditor.Margin = new System.Windows.Forms.Padding(4);
 			this.textEditor.Name = "textEditor";
-			this.textEditor.Size = new System.Drawing.Size(949, 514);
+			this.textEditor.NumberAlignment = System.Drawing.StringAlignment.Center;
+			this.textEditor.NumberBackground1 = System.Drawing.SystemColors.ControlLight;
+			this.textEditor.NumberBackground2 = System.Drawing.SystemColors.Window;
+			this.textEditor.NumberBorder = System.Drawing.SystemColors.ControlDark;
+			this.textEditor.NumberBorderThickness = 1F;
+			this.textEditor.NumberColor = System.Drawing.Color.DarkGray;
+			this.textEditor.NumberFont = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.textEditor.NumberLeadingZeroes = false;
+			this.textEditor.NumberLineCounting = TinyPG.Controls.RichTextBoxEx.LineCounting.CRLF;
+			this.textEditor.NumberPadding = 2;
+			this.textEditor.ShowLineNumbers = true;
+			this.textEditor.Size = new System.Drawing.Size(949, 516);
 			this.textEditor.TabIndex = 3;
 			this.textEditor.Text = "";
 			this.textEditor.WordWrap = false;
@@ -417,10 +428,10 @@
 			// 
 			this.splitterRight.BackColor = System.Drawing.SystemColors.InactiveCaption;
 			this.splitterRight.Dock = System.Windows.Forms.DockStyle.Right;
-			this.splitterRight.Location = new System.Drawing.Point(949, 30);
+			this.splitterRight.Location = new System.Drawing.Point(949, 28);
 			this.splitterRight.Margin = new System.Windows.Forms.Padding(4);
 			this.splitterRight.Name = "splitterRight";
-			this.splitterRight.Size = new System.Drawing.Size(7, 739);
+			this.splitterRight.Size = new System.Drawing.Size(7, 741);
 			this.splitterRight.TabIndex = 7;
 			this.splitterRight.TabStop = false;
 			// 
@@ -444,11 +455,113 @@
 			this.panelOutput.Controls.Add(this.tabOutput);
 			this.panelOutput.Controls.Add(this.headerOutput);
 			this.panelOutput.Dock = System.Windows.Forms.DockStyle.Right;
-			this.panelOutput.Location = new System.Drawing.Point(956, 30);
+			this.panelOutput.Location = new System.Drawing.Point(956, 28);
 			this.panelOutput.Margin = new System.Windows.Forms.Padding(4);
 			this.panelOutput.Name = "panelOutput";
-			this.panelOutput.Size = new System.Drawing.Size(427, 739);
+			this.panelOutput.Size = new System.Drawing.Size(427, 741);
 			this.panelOutput.TabIndex = 8;
+			// 
+			// tabOutput
+			// 
+			this.tabOutput.Alignment = System.Windows.Forms.TabAlignment.Bottom;
+			this.tabOutput.Controls.Add(this.tabPage1);
+			this.tabOutput.Controls.Add(this.tabPage2);
+			this.tabOutput.Controls.Add(this.tabPage3);
+			this.tabOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tabOutput.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
+			this.tabOutput.Location = new System.Drawing.Point(0, 25);
+			this.tabOutput.Margin = new System.Windows.Forms.Padding(4);
+			this.tabOutput.Name = "tabOutput";
+			this.tabOutput.Padding = new System.Drawing.Point(10, 3);
+			this.tabOutput.SelectedIndex = 0;
+			this.tabOutput.Size = new System.Drawing.Size(427, 716);
+			this.tabOutput.TabIndex = 6;
+			this.tabOutput.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabOutput_Selected);
+			// 
+			// tabPage1
+			// 
+			this.tabPage1.Controls.Add(this.textOutput);
+			this.tabPage1.Location = new System.Drawing.Point(4, 4);
+			this.tabPage1.Margin = new System.Windows.Forms.Padding(4);
+			this.tabPage1.Name = "tabPage1";
+			this.tabPage1.Padding = new System.Windows.Forms.Padding(4);
+			this.tabPage1.Size = new System.Drawing.Size(419, 687);
+			this.tabPage1.TabIndex = 0;
+			this.tabPage1.Text = "Output";
+			this.tabPage1.UseVisualStyleBackColor = true;
+			// 
+			// textOutput
+			// 
+			this.textOutput.BackColor = System.Drawing.SystemColors.Window;
+			this.textOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.textOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textOutput.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.textOutput.Location = new System.Drawing.Point(4, 4);
+			this.textOutput.Margin = new System.Windows.Forms.Padding(4);
+			this.textOutput.Name = "textOutput";
+			this.textOutput.ReadOnly = true;
+			this.textOutput.Size = new System.Drawing.Size(411, 679);
+			this.textOutput.TabIndex = 6;
+			this.textOutput.Text = "";
+			this.textOutput.WordWrap = false;
+			this.textOutput.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.textOutput_LinkClicked);
+			// 
+			// tabPage2
+			// 
+			this.tabPage2.Controls.Add(this.tvParsetree);
+			this.tabPage2.Location = new System.Drawing.Point(4, 4);
+			this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(4);
+			this.tabPage2.Size = new System.Drawing.Size(419, 687);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "Parse tree";
+			this.tabPage2.UseVisualStyleBackColor = true;
+			// 
+			// tvParsetree
+			// 
+			this.tvParsetree.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.tvParsetree.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tvParsetree.Location = new System.Drawing.Point(4, 4);
+			this.tvParsetree.Margin = new System.Windows.Forms.Padding(4);
+			this.tvParsetree.Name = "tvParsetree";
+			this.tvParsetree.Size = new System.Drawing.Size(411, 679);
+			this.tvParsetree.TabIndex = 0;
+			this.tvParsetree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvParsetree_AfterSelect);
+			// 
+			// tabPage3
+			// 
+			this.tabPage3.Controls.Add(this.regExControl);
+			this.tabPage3.Location = new System.Drawing.Point(4, 4);
+			this.tabPage3.Margin = new System.Windows.Forms.Padding(4);
+			this.tabPage3.Name = "tabPage3";
+			this.tabPage3.Size = new System.Drawing.Size(419, 687);
+			this.tabPage3.TabIndex = 2;
+			this.tabPage3.Text = "Regex tool";
+			this.tabPage3.UseVisualStyleBackColor = true;
+			// 
+			// regExControl
+			// 
+			this.regExControl.BackColor = System.Drawing.SystemColors.Control;
+			this.regExControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.regExControl.Location = new System.Drawing.Point(0, 0);
+			this.regExControl.Margin = new System.Windows.Forms.Padding(5);
+			this.regExControl.Name = "regExControl";
+			this.regExControl.Size = new System.Drawing.Size(419, 687);
+			this.regExControl.TabIndex = 12;
+			// 
+			// headerOutput
+			// 
+			this.headerOutput.Dock = System.Windows.Forms.DockStyle.Top;
+			this.headerOutput.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.headerOutput.ForeColor = System.Drawing.SystemColors.GrayText;
+			this.headerOutput.Location = new System.Drawing.Point(0, 0);
+			this.headerOutput.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.headerOutput.Name = "headerOutput";
+			this.headerOutput.Size = new System.Drawing.Size(427, 25);
+			this.headerOutput.TabIndex = 7;
+			this.headerOutput.Text = "Output";
+			this.headerOutput.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// panelInput
 			// 
@@ -474,7 +587,7 @@
 			this.textInput.Name = "textInput";
 			this.textInput.Size = new System.Drawing.Size(949, 194);
 			this.textInput.TabIndex = 2;
-			this.textInput.Text = "";
+			this.textInput.Text = "Enter the text to parse here";
 			this.textInput.WordWrap = false;
 			this.textInput.SelectionChanged += new System.EventHandler(this.textInput_SelectionChanged);
 			this.textInput.Enter += new System.EventHandler(this.textInput_Enter);
@@ -492,108 +605,6 @@
 			this.headerEvaluator.TabIndex = 3;
 			this.headerEvaluator.Text = "Expression Evaluator";
 			this.headerEvaluator.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// tabOutput
-			// 
-			this.tabOutput.Alignment = System.Windows.Forms.TabAlignment.Bottom;
-			this.tabOutput.Controls.Add(this.tabPage1);
-			this.tabOutput.Controls.Add(this.tabPage2);
-			this.tabOutput.Controls.Add(this.tabPage3);
-			this.tabOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tabOutput.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
-			this.tabOutput.Location = new System.Drawing.Point(0, 25);
-			this.tabOutput.Margin = new System.Windows.Forms.Padding(4);
-			this.tabOutput.Name = "tabOutput";
-			this.tabOutput.Padding = new System.Drawing.Point(10, 3);
-			this.tabOutput.SelectedIndex = 0;
-			this.tabOutput.Size = new System.Drawing.Size(427, 714);
-			this.tabOutput.TabIndex = 6;
-			this.tabOutput.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabOutput_Selected);
-			// 
-			// tabPage1
-			// 
-			this.tabPage1.Controls.Add(this.textOutput);
-			this.tabPage1.Location = new System.Drawing.Point(4, 4);
-			this.tabPage1.Margin = new System.Windows.Forms.Padding(4);
-			this.tabPage1.Name = "tabPage1";
-			this.tabPage1.Padding = new System.Windows.Forms.Padding(4);
-			this.tabPage1.Size = new System.Drawing.Size(419, 685);
-			this.tabPage1.TabIndex = 0;
-			this.tabPage1.Text = "Output";
-			this.tabPage1.UseVisualStyleBackColor = true;
-			// 
-			// textOutput
-			// 
-			this.textOutput.BackColor = System.Drawing.SystemColors.Window;
-			this.textOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.textOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.textOutput.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.textOutput.Location = new System.Drawing.Point(4, 4);
-			this.textOutput.Margin = new System.Windows.Forms.Padding(4);
-			this.textOutput.Name = "textOutput";
-			this.textOutput.ReadOnly = true;
-			this.textOutput.Size = new System.Drawing.Size(411, 677);
-			this.textOutput.TabIndex = 6;
-			this.textOutput.Text = "";
-			this.textOutput.WordWrap = false;
-			this.textOutput.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.textOutput_LinkClicked);
-			// 
-			// tabPage2
-			// 
-			this.tabPage2.Controls.Add(this.tvParsetree);
-			this.tabPage2.Location = new System.Drawing.Point(4, 4);
-			this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Padding = new System.Windows.Forms.Padding(4);
-			this.tabPage2.Size = new System.Drawing.Size(419, 685);
-			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "Parse tree";
-			this.tabPage2.UseVisualStyleBackColor = true;
-			// 
-			// tvParsetree
-			// 
-			this.tvParsetree.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.tvParsetree.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tvParsetree.Location = new System.Drawing.Point(4, 4);
-			this.tvParsetree.Margin = new System.Windows.Forms.Padding(4);
-			this.tvParsetree.Name = "tvParsetree";
-			this.tvParsetree.Size = new System.Drawing.Size(411, 677);
-			this.tvParsetree.TabIndex = 0;
-			this.tvParsetree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvParsetree_AfterSelect);
-			// 
-			// tabPage3
-			// 
-			this.tabPage3.Controls.Add(this.regExControl);
-			this.tabPage3.Location = new System.Drawing.Point(4, 4);
-			this.tabPage3.Margin = new System.Windows.Forms.Padding(4);
-			this.tabPage3.Name = "tabPage3";
-			this.tabPage3.Size = new System.Drawing.Size(419, 685);
-			this.tabPage3.TabIndex = 2;
-			this.tabPage3.Text = "Regex tool";
-			this.tabPage3.UseVisualStyleBackColor = true;
-			// 
-			// regExControl
-			// 
-			this.regExControl.BackColor = System.Drawing.SystemColors.Control;
-			this.regExControl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.regExControl.Location = new System.Drawing.Point(0, 0);
-			this.regExControl.Margin = new System.Windows.Forms.Padding(5);
-			this.regExControl.Name = "regExControl";
-			this.regExControl.Size = new System.Drawing.Size(419, 685);
-			this.regExControl.TabIndex = 12;
-			// 
-			// headerOutput
-			// 
-			this.headerOutput.Dock = System.Windows.Forms.DockStyle.Top;
-			this.headerOutput.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.headerOutput.ForeColor = System.Drawing.SystemColors.GrayText;
-			this.headerOutput.Location = new System.Drawing.Point(0, 0);
-			this.headerOutput.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.headerOutput.Name = "headerOutput";
-			this.headerOutput.Size = new System.Drawing.Size(427, 25);
-			this.headerOutput.TabIndex = 7;
-			this.headerOutput.Text = "Output";
-			this.headerOutput.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// MainForm
 			// 
@@ -618,11 +629,11 @@
 			this.statusStrip.ResumeLayout(false);
 			this.statusStrip.PerformLayout();
 			this.panelOutput.ResumeLayout(false);
-			this.panelInput.ResumeLayout(false);
 			this.tabOutput.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
 			this.tabPage2.ResumeLayout(false);
 			this.tabPage3.ResumeLayout(false);
+			this.panelInput.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -632,7 +643,6 @@
 
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.StatusStrip statusStrip;
-        private System.Windows.Forms.RichTextBox textEditor;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
@@ -683,5 +693,6 @@
         private System.Windows.Forms.ToolStripMenuItem viewParseTreeCodeToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+		private Controls.RichTextBoxEx textEditor;
 	}
 }

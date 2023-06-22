@@ -56,8 +56,8 @@ namespace TinyExe
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.EOF_, TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT, TokenType.ASSIGN); // Option Rule
+			// Concat Rule
+			tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT, TokenType.ASSIGN, TokenType.EOF_); // Option Rule
 			if (tok.Type == TokenType.FUNCTION
 			    || tok.Type == TokenType.VARIABLE
 			    || tok.Type == TokenType.BOOLEANLITERAL
@@ -74,13 +74,13 @@ namespace TinyExe
 				ParseExpression(node); // NonTerminal Rule: Expression
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.EOF_); // Terminal Rule: EOF_
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.EOF_) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.EOF_.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'EOF_'.", 0x1001, tok));
 				return;
 			}
 
@@ -104,28 +104,28 @@ namespace TinyExe
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.FUNCTION); // Terminal Rule: FUNCTION
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.FUNCTION) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.FUNCTION.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'FUNCTION'.", 0x1001, tok));
 				return;
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.BRACKETOPEN); // Terminal Rule: BRACKETOPEN
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.BRACKETOPEN) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETOPEN.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'BRACKETOPEN'.", 0x1001, tok));
 				return;
 			}
 
-			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.BRACKETCLOSE, TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT, TokenType.ASSIGN, TokenType.SEMICOLON); // Option Rule
+			// Concat Rule
+			tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT, TokenType.ASSIGN, TokenType.SEMICOLON, TokenType.BRACKETCLOSE); // Option Rule
 			if (tok.Type == TokenType.FUNCTION
 			    || tok.Type == TokenType.VARIABLE
 			    || tok.Type == TokenType.BOOLEANLITERAL
@@ -143,13 +143,13 @@ namespace TinyExe
 				ParseParams(node); // NonTerminal Rule: Params
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.BRACKETCLOSE); // Terminal Rule: BRACKETCLOSE
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.BRACKETCLOSE) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETCLOSE.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'BRACKETCLOSE'.", 0x1001, tok));
 				return;
 			}
 
@@ -172,7 +172,7 @@ namespace TinyExe
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.PrimaryExpression), "PrimaryExpression");
 			parent.Nodes.Add(node);
 
-			tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN); // Choice Rule
+			tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN);
 			switch (tok.Type)
 			{ // Choice Rule
 				case TokenType.FUNCTION:
@@ -216,26 +216,26 @@ namespace TinyExe
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.BRACKETOPEN); // Terminal Rule: BRACKETOPEN
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.BRACKETOPEN) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETOPEN.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'BRACKETOPEN'.", 0x1001, tok));
 				return;
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			ParseExpression(node); // NonTerminal Rule: Expression
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.BRACKETCLOSE); // Terminal Rule: BRACKETCLOSE
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.BRACKETCLOSE) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETCLOSE.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'BRACKETCLOSE'.", 0x1001, tok));
 				return;
 			}
 
@@ -258,7 +258,7 @@ namespace TinyExe
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.UnaryExpression), "UnaryExpression");
 			parent.Nodes.Add(node);
 
-			tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT); // Choice Rule
+			tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT);
 			switch (tok.Type)
 			{ // Choice Rule
 				case TokenType.FUNCTION:
@@ -273,47 +273,47 @@ namespace TinyExe
 					break;
 				case TokenType.PLUS:
 
-					 // Concat Rule
+					// Concat Rule
 					tok = scanner.Scan(TokenType.PLUS); // Terminal Rule: PLUS
 					n = node.CreateNode(tok, tok.ToString() );
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.PLUS) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.PLUS.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'PLUS'.", 0x1001, tok));
 						return;
 					}
 
-					 // Concat Rule
+					// Concat Rule
 					ParseUnaryExpression(node); // NonTerminal Rule: UnaryExpression
 					break;
 				case TokenType.MINUS:
 
-					 // Concat Rule
+					// Concat Rule
 					tok = scanner.Scan(TokenType.MINUS); // Terminal Rule: MINUS
 					n = node.CreateNode(tok, tok.ToString() );
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.MINUS) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.MINUS.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'MINUS'.", 0x1001, tok));
 						return;
 					}
 
-					 // Concat Rule
+					// Concat Rule
 					ParseUnaryExpression(node); // NonTerminal Rule: UnaryExpression
 					break;
 				case TokenType.NOT:
 
-					 // Concat Rule
+					// Concat Rule
 					tok = scanner.Scan(TokenType.NOT); // Terminal Rule: NOT
 					n = node.CreateNode(tok, tok.ToString() );
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.NOT) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.NOT.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'NOT'.", 0x1001, tok));
 						return;
 					}
 
-					 // Concat Rule
+					// Concat Rule
 					ParseUnaryExpression(node); // NonTerminal Rule: UnaryExpression
 					break;
 				default:
@@ -341,25 +341,25 @@ namespace TinyExe
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			ParseUnaryExpression(node); // NonTerminal Rule: UnaryExpression
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.POWER); // ZeroOrMore Rule
 			while (tok.Type == TokenType.POWER)
 			{
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.POWER); // Terminal Rule: POWER
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.POWER) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.POWER.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'POWER'.", 0x1001, tok));
 					return;
 				}
 
-				 // Concat Rule
+				// Concat Rule
 				ParseUnaryExpression(node); // NonTerminal Rule: UnaryExpression
 				tok = scanner.LookAhead(TokenType.POWER); // ZeroOrMore Rule
 			}
@@ -384,18 +384,18 @@ namespace TinyExe
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			ParsePowerExpression(node); // NonTerminal Rule: PowerExpression
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.ASTERIKS, TokenType.SLASH, TokenType.PERCENT); // ZeroOrMore Rule
 			while (tok.Type == TokenType.ASTERIKS
 			    || tok.Type == TokenType.SLASH
 			    || tok.Type == TokenType.PERCENT)
 			{
 
-				 // Concat Rule
-				tok = scanner.LookAhead(TokenType.ASTERIKS, TokenType.SLASH, TokenType.PERCENT); // Choice Rule
+				// Concat Rule
+				tok = scanner.LookAhead(TokenType.ASTERIKS, TokenType.SLASH, TokenType.PERCENT);
 				switch (tok.Type)
 				{ // Choice Rule
 					case TokenType.ASTERIKS:
@@ -404,7 +404,7 @@ namespace TinyExe
 						node.Token.UpdateRange(tok);
 						node.Nodes.Add(n);
 						if (tok.Type != TokenType.ASTERIKS) {
-							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.ASTERIKS.ToString(), 0x1001, tok));
+							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'ASTERIKS'.", 0x1001, tok));
 							return;
 						}
 						break;
@@ -414,7 +414,7 @@ namespace TinyExe
 						node.Token.UpdateRange(tok);
 						node.Nodes.Add(n);
 						if (tok.Type != TokenType.SLASH) {
-							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.SLASH.ToString(), 0x1001, tok));
+							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'SLASH'.", 0x1001, tok));
 							return;
 						}
 						break;
@@ -424,7 +424,7 @@ namespace TinyExe
 						node.Token.UpdateRange(tok);
 						node.Nodes.Add(n);
 						if (tok.Type != TokenType.PERCENT) {
-							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.PERCENT.ToString(), 0x1001, tok));
+							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'PERCENT'.", 0x1001, tok));
 							return;
 						}
 						break;
@@ -433,7 +433,7 @@ namespace TinyExe
 						break;
 				} // Choice Rule
 
-				 // Concat Rule
+				// Concat Rule
 				ParsePowerExpression(node); // NonTerminal Rule: PowerExpression
 				tok = scanner.LookAhead(TokenType.ASTERIKS, TokenType.SLASH, TokenType.PERCENT); // ZeroOrMore Rule
 			}
@@ -458,17 +458,17 @@ namespace TinyExe
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			ParseMultiplicativeExpression(node); // NonTerminal Rule: MultiplicativeExpression
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.PLUS, TokenType.MINUS); // ZeroOrMore Rule
 			while (tok.Type == TokenType.PLUS
 			    || tok.Type == TokenType.MINUS)
 			{
 
-				 // Concat Rule
-				tok = scanner.LookAhead(TokenType.PLUS, TokenType.MINUS); // Choice Rule
+				// Concat Rule
+				tok = scanner.LookAhead(TokenType.PLUS, TokenType.MINUS);
 				switch (tok.Type)
 				{ // Choice Rule
 					case TokenType.PLUS:
@@ -477,7 +477,7 @@ namespace TinyExe
 						node.Token.UpdateRange(tok);
 						node.Nodes.Add(n);
 						if (tok.Type != TokenType.PLUS) {
-							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.PLUS.ToString(), 0x1001, tok));
+							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'PLUS'.", 0x1001, tok));
 							return;
 						}
 						break;
@@ -487,7 +487,7 @@ namespace TinyExe
 						node.Token.UpdateRange(tok);
 						node.Nodes.Add(n);
 						if (tok.Type != TokenType.MINUS) {
-							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.MINUS.ToString(), 0x1001, tok));
+							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'MINUS'.", 0x1001, tok));
 							return;
 						}
 						break;
@@ -496,7 +496,7 @@ namespace TinyExe
 						break;
 				} // Choice Rule
 
-				 // Concat Rule
+				// Concat Rule
 				ParseMultiplicativeExpression(node); // NonTerminal Rule: MultiplicativeExpression
 				tok = scanner.LookAhead(TokenType.PLUS, TokenType.MINUS); // ZeroOrMore Rule
 			}
@@ -521,25 +521,25 @@ namespace TinyExe
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			ParseAdditiveExpression(node); // NonTerminal Rule: AdditiveExpression
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.AMP); // ZeroOrMore Rule
 			while (tok.Type == TokenType.AMP)
 			{
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.AMP); // Terminal Rule: AMP
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.AMP) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.AMP.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'AMP'.", 0x1001, tok));
 					return;
 				}
 
-				 // Concat Rule
+				// Concat Rule
 				ParseAdditiveExpression(node); // NonTerminal Rule: AdditiveExpression
 				tok = scanner.LookAhead(TokenType.AMP); // ZeroOrMore Rule
 			}
@@ -564,10 +564,10 @@ namespace TinyExe
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			ParseConcatEpression(node); // NonTerminal Rule: ConcatEpression
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.LESSTHAN, TokenType.LESSEQUAL, TokenType.GREATERTHAN, TokenType.GREATEREQUAL); // Option Rule
 			if (tok.Type == TokenType.LESSTHAN
 			    || tok.Type == TokenType.LESSEQUAL
@@ -575,8 +575,8 @@ namespace TinyExe
 			    || tok.Type == TokenType.GREATEREQUAL)
 			{
 
-				 // Concat Rule
-				tok = scanner.LookAhead(TokenType.LESSTHAN, TokenType.LESSEQUAL, TokenType.GREATERTHAN, TokenType.GREATEREQUAL); // Choice Rule
+				// Concat Rule
+				tok = scanner.LookAhead(TokenType.LESSTHAN, TokenType.LESSEQUAL, TokenType.GREATERTHAN, TokenType.GREATEREQUAL);
 				switch (tok.Type)
 				{ // Choice Rule
 					case TokenType.LESSTHAN:
@@ -585,7 +585,7 @@ namespace TinyExe
 						node.Token.UpdateRange(tok);
 						node.Nodes.Add(n);
 						if (tok.Type != TokenType.LESSTHAN) {
-							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.LESSTHAN.ToString(), 0x1001, tok));
+							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'LESSTHAN'.", 0x1001, tok));
 							return;
 						}
 						break;
@@ -595,7 +595,7 @@ namespace TinyExe
 						node.Token.UpdateRange(tok);
 						node.Nodes.Add(n);
 						if (tok.Type != TokenType.LESSEQUAL) {
-							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.LESSEQUAL.ToString(), 0x1001, tok));
+							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'LESSEQUAL'.", 0x1001, tok));
 							return;
 						}
 						break;
@@ -605,7 +605,7 @@ namespace TinyExe
 						node.Token.UpdateRange(tok);
 						node.Nodes.Add(n);
 						if (tok.Type != TokenType.GREATERTHAN) {
-							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.GREATERTHAN.ToString(), 0x1001, tok));
+							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'GREATERTHAN'.", 0x1001, tok));
 							return;
 						}
 						break;
@@ -615,7 +615,7 @@ namespace TinyExe
 						node.Token.UpdateRange(tok);
 						node.Nodes.Add(n);
 						if (tok.Type != TokenType.GREATEREQUAL) {
-							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.GREATEREQUAL.ToString(), 0x1001, tok));
+							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'GREATEREQUAL'.", 0x1001, tok));
 							return;
 						}
 						break;
@@ -624,7 +624,7 @@ namespace TinyExe
 						break;
 				} // Choice Rule
 
-				 // Concat Rule
+				// Concat Rule
 				ParseConcatEpression(node); // NonTerminal Rule: ConcatEpression
 			}
 
@@ -648,17 +648,17 @@ namespace TinyExe
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			ParseRelationalExpression(node); // NonTerminal Rule: RelationalExpression
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.EQUAL, TokenType.NOTEQUAL); // ZeroOrMore Rule
 			while (tok.Type == TokenType.EQUAL
 			    || tok.Type == TokenType.NOTEQUAL)
 			{
 
-				 // Concat Rule
-				tok = scanner.LookAhead(TokenType.EQUAL, TokenType.NOTEQUAL); // Choice Rule
+				// Concat Rule
+				tok = scanner.LookAhead(TokenType.EQUAL, TokenType.NOTEQUAL);
 				switch (tok.Type)
 				{ // Choice Rule
 					case TokenType.EQUAL:
@@ -667,7 +667,7 @@ namespace TinyExe
 						node.Token.UpdateRange(tok);
 						node.Nodes.Add(n);
 						if (tok.Type != TokenType.EQUAL) {
-							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.EQUAL.ToString(), 0x1001, tok));
+							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'EQUAL'.", 0x1001, tok));
 							return;
 						}
 						break;
@@ -677,7 +677,7 @@ namespace TinyExe
 						node.Token.UpdateRange(tok);
 						node.Nodes.Add(n);
 						if (tok.Type != TokenType.NOTEQUAL) {
-							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.NOTEQUAL.ToString(), 0x1001, tok));
+							tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'NOTEQUAL'.", 0x1001, tok));
 							return;
 						}
 						break;
@@ -686,7 +686,7 @@ namespace TinyExe
 						break;
 				} // Choice Rule
 
-				 // Concat Rule
+				// Concat Rule
 				ParseRelationalExpression(node); // NonTerminal Rule: RelationalExpression
 				tok = scanner.LookAhead(TokenType.EQUAL, TokenType.NOTEQUAL); // ZeroOrMore Rule
 			}
@@ -711,25 +711,25 @@ namespace TinyExe
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			ParseEqualityExpression(node); // NonTerminal Rule: EqualityExpression
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.AMPAMP); // ZeroOrMore Rule
 			while (tok.Type == TokenType.AMPAMP)
 			{
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.AMPAMP); // Terminal Rule: AMPAMP
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.AMPAMP) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.AMPAMP.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'AMPAMP'.", 0x1001, tok));
 					return;
 				}
 
-				 // Concat Rule
+				// Concat Rule
 				ParseEqualityExpression(node); // NonTerminal Rule: EqualityExpression
 				tok = scanner.LookAhead(TokenType.AMPAMP); // ZeroOrMore Rule
 			}
@@ -754,25 +754,25 @@ namespace TinyExe
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			ParseConditionalAndExpression(node); // NonTerminal Rule: ConditionalAndExpression
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.PIPEPIPE); // ZeroOrMore Rule
 			while (tok.Type == TokenType.PIPEPIPE)
 			{
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.PIPEPIPE); // Terminal Rule: PIPEPIPE
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.PIPEPIPE) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.PIPEPIPE.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'PIPEPIPE'.", 0x1001, tok));
 					return;
 				}
 
-				 // Concat Rule
+				// Concat Rule
 				ParseConditionalAndExpression(node); // NonTerminal Rule: ConditionalAndExpression
 				tok = scanner.LookAhead(TokenType.PIPEPIPE); // ZeroOrMore Rule
 			}
@@ -797,38 +797,38 @@ namespace TinyExe
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			ParseConditionalOrExpression(node); // NonTerminal Rule: ConditionalOrExpression
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.QUESTIONMARK); // Option Rule
 			if (tok.Type == TokenType.QUESTIONMARK)
 			{
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.QUESTIONMARK); // Terminal Rule: QUESTIONMARK
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.QUESTIONMARK) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.QUESTIONMARK.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'QUESTIONMARK'.", 0x1001, tok));
 					return;
 				}
 
-				 // Concat Rule
+				// Concat Rule
 				ParseAssignmentExpression(node); // NonTerminal Rule: AssignmentExpression
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.COLON); // Terminal Rule: COLON
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.COLON) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.COLON.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'COLON'.", 0x1001, tok));
 					return;
 				}
 
-				 // Concat Rule
+				// Concat Rule
 				ParseAssignmentExpression(node); // NonTerminal Rule: AssignmentExpression
 			}
 
@@ -852,8 +852,8 @@ namespace TinyExe
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.ASSIGN, TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT); // Option Rule
+			// Concat Rule
+			tok = scanner.LookAhead(TokenType.FUNCTION, TokenType.VARIABLE, TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL, TokenType.BRACKETOPEN, TokenType.PLUS, TokenType.MINUS, TokenType.NOT, TokenType.ASSIGN); // Option Rule
 			if (tok.Type == TokenType.FUNCTION
 			    || tok.Type == TokenType.VARIABLE
 			    || tok.Type == TokenType.BOOLEANLITERAL
@@ -869,22 +869,22 @@ namespace TinyExe
 				ParseAssignmentExpression(node); // NonTerminal Rule: AssignmentExpression
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.ASSIGN); // Option Rule
 			if (tok.Type == TokenType.ASSIGN)
 			{
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.ASSIGN); // Terminal Rule: ASSIGN
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.ASSIGN) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.ASSIGN.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'ASSIGN'.", 0x1001, tok));
 					return;
 				}
 
-				 // Concat Rule
+				// Concat Rule
 				ParseAssignmentExpression(node); // NonTerminal Rule: AssignmentExpression
 			}
 
@@ -908,25 +908,25 @@ namespace TinyExe
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			ParseExpression(node); // NonTerminal Rule: Expression
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.SEMICOLON); // ZeroOrMore Rule
 			while (tok.Type == TokenType.SEMICOLON)
 			{
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.SEMICOLON); // Terminal Rule: SEMICOLON
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.SEMICOLON) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.SEMICOLON.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'SEMICOLON'.", 0x1001, tok));
 					return;
 				}
 
-				 // Concat Rule
+				// Concat Rule
 				ParseExpression(node); // NonTerminal Rule: Expression
 				tok = scanner.LookAhead(TokenType.SEMICOLON); // ZeroOrMore Rule
 			}
@@ -950,7 +950,7 @@ namespace TinyExe
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.Literal), "Literal");
 			parent.Nodes.Add(node);
 
-			tok = scanner.LookAhead(TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL); // Choice Rule
+			tok = scanner.LookAhead(TokenType.BOOLEANLITERAL, TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL, TokenType.REALLITERAL, TokenType.STRINGLITERAL);
 			switch (tok.Type)
 			{ // Choice Rule
 				case TokenType.BOOLEANLITERAL:
@@ -959,7 +959,7 @@ namespace TinyExe
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.BOOLEANLITERAL) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BOOLEANLITERAL.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'BOOLEANLITERAL'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -997,7 +997,7 @@ namespace TinyExe
 			ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.IntegerLiteral), "IntegerLiteral");
 			parent.Nodes.Add(node);
 
-			tok = scanner.LookAhead(TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL); // Choice Rule
+			tok = scanner.LookAhead(TokenType.DECIMALINTEGERLITERAL, TokenType.HEXINTEGERLITERAL);
 			switch (tok.Type)
 			{ // Choice Rule
 				case TokenType.DECIMALINTEGERLITERAL:
@@ -1006,7 +1006,7 @@ namespace TinyExe
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.DECIMALINTEGERLITERAL) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.DECIMALINTEGERLITERAL.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'DECIMALINTEGERLITERAL'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -1016,7 +1016,7 @@ namespace TinyExe
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.HEXINTEGERLITERAL) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.HEXINTEGERLITERAL.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'HEXINTEGERLITERAL'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -1049,7 +1049,7 @@ namespace TinyExe
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.REALLITERAL) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.REALLITERAL.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'REALLITERAL'.", 0x1001, tok));
 				return;
 			}
 
@@ -1077,7 +1077,7 @@ namespace TinyExe
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.STRINGLITERAL) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.STRINGLITERAL.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'STRINGLITERAL'.", 0x1001, tok));
 				return;
 			}
 
@@ -1105,7 +1105,7 @@ namespace TinyExe
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.VARIABLE) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.VARIABLE.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'VARIABLE'.", 0x1001, tok));
 				return;
 			}
 
