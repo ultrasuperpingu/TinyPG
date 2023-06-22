@@ -1,4 +1,4 @@
-// Automatically generated from source file: GrammarHighlighter v1.5.tpg
+// Automatically generated from source file: GrammarHighlighter.tpg
 // By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
 
 
@@ -9,18 +9,19 @@ using System.Xml.Serialization;
 using System.Globalization;
 using System.Linq;
 
+
 namespace TinyPG.Highlighter
 {
 	#region ParseTree
 	[Serializable]
 	public class ParseErrors : List<ParseError>
 	{
-		public bool HasBlockingErrors
+		public bool ContainsErrors
 		{
 			get { return Find(e => e.IsWarning == false) != null; }
 		}
-		public bool HasWarnings
-		{
+		public bool ContainsWarnings
+	{
 			get { return Find(e => e.IsWarning == true) != null; }
 		}
 		public List<ParseError> Warnings

@@ -1,4 +1,4 @@
-// Automatically generated from source file: GrammarHighlighter v1.5.tpg
+// Automatically generated from source file: GrammarHighlighter.tpg
 // By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
 
 using System;
@@ -81,7 +81,7 @@ namespace TinyPG.Highlighter
 			Patterns.Add(TokenType.ATTRIBUTESYMBOL, regex);
 			Tokens.Add(TokenType.ATTRIBUTESYMBOL);
 
-			regex = new Regex(@"^(Skip|Color|IgnoreCase|FileAndLine)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"^(Skip|Color|IgnoreCase|Comment)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.ATTRIBUTEKEYWORD, regex);
 			Tokens.Add(TokenType.ATTRIBUTEKEYWORD);
 

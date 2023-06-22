@@ -1,4 +1,4 @@
-//@TinyPG - a Tiny Parser Generator v1.5
+//@TinyPG - a Tiny Parser Generator v1.6
 //Copyright © Herre Kuijpers 2008-2010, modified by ultrasuperpingu 2023
 //Simple expression - example of an mathematical expression parser
 
@@ -77,6 +77,7 @@ EOF		->	@"^$";
 
 // Start is by convention the main rule to be matched by the parser.
 Start 		-> (AddExpr)? EOF : int default(5);
+[Comment("Handle an expression like: x+5+12")]
 AddExpr 	-> MultExpr (PLUSMINUS MultExpr)* : int;
 MultExpr 	-> Atom (MULTDIV Atom)* : List<string>;
 Atom 		-> NUMBER | BROPEN AddExpr BRCLOSE;

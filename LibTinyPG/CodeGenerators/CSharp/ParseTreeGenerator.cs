@@ -37,6 +37,10 @@ namespace TinyPG.CodeGenerators.CSharp
 				string defaultReturnValue = "default("+returnType+")";
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault) && !isDebugOther)
 					defaultReturnValue = s.ReturnTypeDefault;
+				if (s.Attributes.ContainsKey("Comment"))
+				{
+					evalmethods.AppendLine(GenerateComment(s.Attributes["Comment"], Helper.Indent2));
+				}
 				evalmethods.AppendLine("		protected virtual " + returnType + " Eval" + s.Name + "(params object[] paramlist)");
 				evalmethods.AppendLine("		{");
 				if (s.CodeBlock != null && !isDebugOther)
@@ -104,6 +108,16 @@ namespace TinyPG.CodeGenerators.CSharp
 				generated[templateName] = fileContent;
 			}
 			return generated;
+		}
+
+		protected string GenerateComment(object[] objects, string Indent)
+		{
+			StringBuilder sb = new StringBuilder();
+			foreach(var o in objects)
+			{
+				sb.Append(Indent).Append("/// ").AppendLine(o.ToString());
+			}
+			return sb.ToString();
 		}
 
 		/// <summary>

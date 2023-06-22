@@ -38,5 +38,6 @@ namespace TinyPG.Parsing
 		const int _SymbolUnknown4								= 0x1043; //(E) "Symbol '" + Nodes[0].Token.Text + "' is not declared.", 
 		const int UnexpectedToken								= 0x0002; //(E) "Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected STRING or CODEBLOCK."
 		const int _UnexpectedToken2								= 0x1001; //(E) "Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected STRING or CODEBLOCK."
+		const int CommentOnTerminal								= 0x1045; //(W) "Attribute Comment for terminal rule not allowed: " + node.Nodes[1].Token.Text
 	}
 }

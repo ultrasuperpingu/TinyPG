@@ -344,6 +344,10 @@ namespace TinyPG.Parsing
 					if (!(symbol is TerminalSymbol))
 						tree.Errors.Add(new ParseError("Attribute IgnoreCase for non-terminal rule not allowed: " + node.Nodes[1].Token.Text, 0x1035, node, true));
 					break;
+				case "Comment":
+					if ((symbol is TerminalSymbol))
+						tree.Errors.Add(new ParseError("Attribute Comment for terminal rule not allowed: " + node.Nodes[1].Token.Text, 0x1045, node, true));
+					break;
 				default:
 					tree.Errors.Add(new ParseError("Attribute not supported: " + node.Nodes[1].Token.Text, 0x1036, node.Nodes[1], true));
 					break;

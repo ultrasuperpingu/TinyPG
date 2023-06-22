@@ -1,9 +1,5 @@
-//Tiny Parser Generator v1.5
-//Copyright © Herre Kuijpers 2008-2012, modify by ultrasuperpingu
-
-//@TinyPG - a Tiny Parser Generator v1.3
-//Copyright © Herre Kuijpers 2008-2010
-//Simple expression calculator
+//@TinyPG - a Tiny Parser Generator v1.6
+//Copyright © Herre Kuijpers 2008-2010, modified by ultrasuperpingu 2023
 // https://www.codeproject.com/Articles/241830/a-Tiny-Expression-Evaluator
 
 <% @TinyPG Language="C#" OutputPath="TestCSharp\TinyExe" Namespace="TinyExe" RegexCompiled="True"%>

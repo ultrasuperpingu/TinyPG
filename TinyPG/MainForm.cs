@@ -922,7 +922,7 @@ namespace TinyPG
 				if (string.IsNullOrEmpty(ofp))
 					ofp = GetExamplesDirectory();
 				openFileDialog.InitialDirectory = ofp;
-				saveFileDialog.InitialDirectory = doc["AppSettings"]["SaveFilePath"].Attributes[0].Value;
+				saveFileDialog.InitialDirectory = ofp;
 				if(string.IsNullOrEmpty(grammarFile)) // could have been filed with a command line args
 					grammarFile = doc["AppSettings"]["GrammarFile"].Attributes[0].Value;
 
@@ -956,8 +956,6 @@ namespace TinyPG
 
 			XmlNode node = doc.CreateElement("OpenFilePath", "TinyPG");
 			settings.AppendChild(node);
-			node = doc.CreateElement("SaveFilePath", "TinyPG");
-			settings.AppendChild(node);
 			node = doc.CreateElement("GrammarFile", "TinyPG");
 			settings.AppendChild(node);
 
@@ -965,11 +963,8 @@ namespace TinyPG
 			settings["OpenFilePath"].Attributes.Append(attr);
 			if (File.Exists(openFileDialog.FileName))
 				attr.Value = new FileInfo(openFileDialog.FileName).Directory.FullName;
-
-			attr = doc.CreateAttribute("Value");
-			settings["SaveFilePath"].Attributes.Append(attr);
-			if (File.Exists(saveFileDialog.FileName))
-				attr.Value = new FileInfo(saveFileDialog.FileName).Directory.FullName;
+			else
+				Console.WriteLine();
 
 			attr = doc.CreateAttribute("Value");
 			attr.Value = grammarFile;
