@@ -5,7 +5,7 @@ The unofficial fork of the Tiny Parser Generator by Herre Kuijpers. It was first
 
 The original code and documentation can be found in the article ['A Tiny Parser Generator v1.2' on CodeProject](http://www.codeproject.com/Articles/28294/a-Tiny-Parser-Generator-v1-2).
 
-It is an LL(1) recursive descent parser generator written in C# which can generate a scanner, parser, and parsetree file in either C#, VB, Java or C++ code. It's also a IDE allowing to design a grammar. The generated files do not contains any dependancy, its just standalone C#, VB, C++ or java files you can integrate in your projects. You can also integrate custom code to evaluate the inputs.
+It is an LL(1) recursive descent parser generator written in C# which can generate a scanner, parser, and parsetree file in either C#, VB, Java or C++ code. It's also an IDE allowing to design a grammar. The generated files do not contains any dependancy, its just standalone C#, VB, C++ or java files you can integrate in your projects. You can also integrate custom code directly in grammar files to evaluate the inputs.
 
 As a real world example, [TinyExe](https://www.codeproject.com/Articles/241830/a-Tiny-Expression-Evaluator) is provided on C#, Java and C++. TinyExe allow to interpret expression like :
  * Literal only mathematical expressions: 4*(24/2-5)+14
