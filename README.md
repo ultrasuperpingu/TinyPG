@@ -1,4 +1,4 @@
-TinyPG
+![TinyPG](./icon.svg) TinyPG
 ======
 
 The unofficial fork of the Tiny Parser Generator by Herre Kuijpers. It was first forked by [SickheadGames](https://github.com/SickheadGames/TinyPG), and this is a fork of the later.
