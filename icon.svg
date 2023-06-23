@@ -138,7 +138,8 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-49.091668,-99.165021)">
+     transform="translate(-49.091668,-99.165021)"
+     style="display:inline">
     <rect
        style="fill:url(#linearGradient6165);fill-opacity:1;stroke:#000000;stroke-width:0.139379;stroke-dasharray:none;stroke-opacity:1"
        id="rect5637"
@@ -165,18 +166,18 @@
          sodipodi:nodetypes="ccccccc"
          style="display:inline;fill:#e5c41a;fill-opacity:1;stroke:none;stroke-width:0.151391;stroke-dasharray:none;stroke-opacity:1" />
     </g>
-    <text
-       xml:space="preserve"
-       style="font-weight:normal;font-size:8.11903px;font-family:'Lucida Console';-inkscape-font-specification:'Lucida Console, Normal';display:inline;fill:#b92a4b;fill-opacity:1;stroke:none;stroke-width:0.121785;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter907);font-style:normal;font-variant:normal;font-stretch:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;mix-blend-mode:normal;opacity:1"
-       x="49.240952"
-       y="106.69641"
+    <g
+       aria-label="{}"
        id="text3332"
-       inkscape:label="sourcefileText"><tspan
-         sodipodi:role="line"
-         id="tspan3330"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.11903px;font-family:'Lucida Console';-inkscape-font-specification:'Lucida Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#b92a4b;fill-opacity:1;stroke-width:0.121785"
-         x="0"
-         y="0">{}</tspan></text>
+       style="font-size:8.11903px;font-family:'Lucida Console';-inkscape-font-specification:'Lucida Console, Normal';display:inline;opacity:1;fill:#b92a4b;stroke-width:0.121785;filter:url(#filter907)"
+       inkscape:label="sourcefileText">
+      <path
+         d="m 53.300467,100.43667 v 0.58673 h -0.313186 q -0.590691,0 -0.832517,0.14668 -0.241827,0.14272 -0.241827,0.49951 0,0.13082 0.03964,0.36472 l 0.09118,0.55105 q 0.04757,0.27751 0.04757,0.45987 0,0.85234 -0.784946,1.10606 0.780981,0.25768 0.780981,1.12191 0,0.1784 -0.04361,0.44798 l -0.09118,0.54708 q -0.03964,0.23786 -0.03964,0.36869 0,0.35679 0.241827,0.49951 0.241826,0.14668 0.832517,0.14668 h 0.313186 v 0.58672 H 52.86835 q -0.808731,0 -1.240848,-0.29336 -0.428152,-0.29336 -0.428152,-0.84837 0,-0.23787 0.0555,-0.53519 l 0.134788,-0.70566 q 0.02775,-0.15858 0.02775,-0.31319 0,-0.72944 -0.888019,-0.72944 h -0.360758 v -0.58673 h 0.360758 q 0.888019,0 0.888019,-0.72548 0,-0.15461 -0.02775,-0.31318 l -0.134788,-0.70566 q -0.0555,-0.29733 -0.0555,-0.53519 0,-1.14174 1.669,-1.14174 z"
+         id="path4747" />
+      <path
+         d="m 54.965502,107.86986 v -0.58672 h 0.309221 q 0.594655,0 0.836482,-0.14668 0.241826,-0.14272 0.241826,-0.49951 0,-0.13083 -0.03964,-0.36869 l -0.09118,-0.54708 q -0.04757,-0.27751 -0.04757,-0.45987 0,-0.85234 0.780981,-1.11002 -0.780981,-0.25372 -0.780981,-1.11003 0,-0.17839 0.04757,-0.4559 l 0.09118,-0.55105 q 0.03964,-0.2339 0.03964,-0.36472 0,-0.35679 -0.245791,-0.49951 -0.241826,-0.14668 -0.832517,-0.14668 h -0.309221 v -0.58673 h 0.428152 q 0.812696,0 1.240848,0.29336 0.428152,0.29337 0.428152,0.84838 0,0.23786 -0.0555,0.53519 l -0.130824,0.70566 q -0.03171,0.15857 -0.03171,0.31318 0,0.72548 0.891984,0.72548 h 0.360757 v 0.58673 h -0.360757 q -0.891984,0 -0.891984,0.72944 0,0.15461 0.03171,0.31319 l 0.130824,0.70566 q 0.0555,0.29336 0.0555,0.53519 0,1.14173 -1.669,1.14173 z"
+         id="path4749" />
+    </g>
     <path
        d="m 52.429972,104.62592 v -0.56069 h 1.607138 v 0.56069 z"
        id="path1746"
