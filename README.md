@@ -1,6 +1,5 @@
 ![TinyPG](./icon.svg) TinyPG
 ======
-
 The unofficial fork of the Tiny Parser Generator by Herre Kuijpers. The original code and documentation can be found in the article ['A Tiny Parser Generator v1.2' on CodeProject](http://www.codeproject.com/Articles/28294/a-Tiny-Parser-Generator-v1-2). It was first forked by [SickheadGames](https://github.com/SickheadGames/TinyPG), and this is a fork of the later.
 
 
