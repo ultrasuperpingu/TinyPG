@@ -106,15 +106,15 @@ namespace <%Namespace%>
 
 				int len = -1;
 				TokenType index = (TokenType)int.MaxValue;
-				string input = Input.Substring(startpos);
+				//string input = Input.Substring(startpos);
 
 				tok = new Token(startpos, endpos);
 
 				for (i = 0; i < scantokens.Count; i++)
 				{
 					Regex r = Patterns[scantokens[i]];
-					Match m = r.Match(input);
-					if (m.Success && m.Index == 0 && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
+					Match m = r.Match(Input, startpos);
+					if (m.Success && m.Index == startpos && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
 					{
 						len = m.Length;
 						index = scantokens[i];

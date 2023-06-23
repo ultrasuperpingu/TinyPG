@@ -66,7 +66,6 @@
 			this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.statusPos = new System.Windows.Forms.ToolStripStatusLabel();
 			this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
-			this.textEditor = new TinyPG.Controls.RichTextBoxEx();
 			this.splitterBottom = new System.Windows.Forms.Splitter();
 			this.splitterRight = new System.Windows.Forms.Splitter();
 			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -84,6 +83,7 @@
 			this.panelInput = new System.Windows.Forms.Panel();
 			this.textInput = new System.Windows.Forms.RichTextBox();
 			this.headerEvaluator = new TinyPG.Controls.HeaderLabel();
+			this.textEditor = new TinyPG.Controls.RichTextBoxEx();
 			this.menuStrip.SuspendLayout();
 			this.statusStrip.SuspendLayout();
 			this.panelOutput.SuspendLayout();
@@ -383,36 +383,6 @@
 			this.toolStripStatusLabel3.Size = new System.Drawing.Size(50, 20);
 			this.toolStripStatusLabel3.Text = "INS";
 			// 
-			// textEditor
-			// 
-			this.textEditor.AcceptsTab = true;
-			this.textEditor.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.textEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.textEditor.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.textEditor.HideSelection = false;
-			this.textEditor.Location = new System.Drawing.Point(0, 28);
-			this.textEditor.Margin = new System.Windows.Forms.Padding(4);
-			this.textEditor.Name = "textEditor";
-			this.textEditor.NumberAlignment = System.Drawing.StringAlignment.Center;
-			this.textEditor.NumberBackground1 = System.Drawing.SystemColors.ControlLight;
-			this.textEditor.NumberBackground2 = System.Drawing.SystemColors.Window;
-			this.textEditor.NumberBorder = System.Drawing.SystemColors.ControlDark;
-			this.textEditor.NumberBorderThickness = 1F;
-			this.textEditor.NumberColor = System.Drawing.Color.DarkGray;
-			this.textEditor.NumberFont = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.textEditor.NumberLeadingZeroes = false;
-			this.textEditor.NumberLineCounting = TinyPG.Controls.RichTextBoxEx.LineCounting.CRLF;
-			this.textEditor.NumberPadding = 2;
-			this.textEditor.ShowLineNumbers = true;
-			this.textEditor.Size = new System.Drawing.Size(949, 516);
-			this.textEditor.TabIndex = 3;
-			this.textEditor.Text = "";
-			this.textEditor.WordWrap = false;
-			this.textEditor.SelectionChanged += new System.EventHandler(this.textEditor_SelectionChanged);
-			this.textEditor.TextChanged += new System.EventHandler(this.textEditor_TextChanged);
-			this.textEditor.Enter += new System.EventHandler(this.textEditor_Enter);
-			this.textEditor.Leave += new System.EventHandler(this.textEditor_Leave);
-			// 
 			// splitterBottom
 			// 
 			this.splitterBottom.BackColor = System.Drawing.SystemColors.InactiveCaption;
@@ -513,7 +483,7 @@
 			this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(4);
-			this.tabPage2.Size = new System.Drawing.Size(419, 687);
+			this.tabPage2.Size = new System.Drawing.Size(419, 685);
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "Parse tree";
 			this.tabPage2.UseVisualStyleBackColor = true;
@@ -525,7 +495,7 @@
 			this.tvParsetree.Location = new System.Drawing.Point(4, 4);
 			this.tvParsetree.Margin = new System.Windows.Forms.Padding(4);
 			this.tvParsetree.Name = "tvParsetree";
-			this.tvParsetree.Size = new System.Drawing.Size(411, 679);
+			this.tvParsetree.Size = new System.Drawing.Size(411, 677);
 			this.tvParsetree.TabIndex = 0;
 			this.tvParsetree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvParsetree_AfterSelect);
 			// 
@@ -535,7 +505,7 @@
 			this.tabPage3.Location = new System.Drawing.Point(4, 4);
 			this.tabPage3.Margin = new System.Windows.Forms.Padding(4);
 			this.tabPage3.Name = "tabPage3";
-			this.tabPage3.Size = new System.Drawing.Size(419, 687);
+			this.tabPage3.Size = new System.Drawing.Size(419, 685);
 			this.tabPage3.TabIndex = 2;
 			this.tabPage3.Text = "Regex tool";
 			this.tabPage3.UseVisualStyleBackColor = true;
@@ -547,7 +517,7 @@
 			this.regExControl.Location = new System.Drawing.Point(0, 0);
 			this.regExControl.Margin = new System.Windows.Forms.Padding(5);
 			this.regExControl.Name = "regExControl";
-			this.regExControl.Size = new System.Drawing.Size(419, 687);
+			this.regExControl.Size = new System.Drawing.Size(419, 685);
 			this.regExControl.TabIndex = 12;
 			// 
 			// headerOutput
@@ -605,6 +575,36 @@
 			this.headerEvaluator.TabIndex = 3;
 			this.headerEvaluator.Text = "Expression Evaluator";
 			this.headerEvaluator.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textEditor
+			// 
+			this.textEditor.AcceptsTab = true;
+			this.textEditor.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.textEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textEditor.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.textEditor.HideSelection = false;
+			this.textEditor.Location = new System.Drawing.Point(0, 28);
+			this.textEditor.Margin = new System.Windows.Forms.Padding(4);
+			this.textEditor.Name = "textEditor";
+			this.textEditor.NumberAlignment = System.Drawing.StringAlignment.Center;
+			this.textEditor.NumberBackground1 = System.Drawing.SystemColors.ControlLight;
+			this.textEditor.NumberBackground2 = System.Drawing.SystemColors.Window;
+			this.textEditor.NumberBorder = System.Drawing.SystemColors.ControlDark;
+			this.textEditor.NumberBorderThickness = 1F;
+			this.textEditor.NumberColor = System.Drawing.Color.DarkGray;
+			this.textEditor.NumberFont = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.textEditor.NumberLeadingZeroes = false;
+			this.textEditor.NumberLineCounting = TinyPG.Controls.RichTextBoxEx.LineCounting.CRLF;
+			this.textEditor.NumberPadding = 2;
+			this.textEditor.ShowLineNumbers = true;
+			this.textEditor.Size = new System.Drawing.Size(949, 516);
+			this.textEditor.TabIndex = 3;
+			this.textEditor.Text = "";
+			this.textEditor.WordWrap = false;
+			this.textEditor.SelectionChanged += new System.EventHandler(this.textEditor_SelectionChanged);
+			this.textEditor.TextChanged += new System.EventHandler(this.textEditor_TextChanged);
+			this.textEditor.Enter += new System.EventHandler(this.textEditor_Enter);
+			this.textEditor.Leave += new System.EventHandler(this.textEditor_Leave);
 			// 
 			// MainForm
 			// 

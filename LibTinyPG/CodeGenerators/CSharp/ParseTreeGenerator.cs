@@ -16,9 +16,7 @@ namespace TinyPG.CodeGenerators.CSharp
 		private bool isDebugOther;
 		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
-			string templatePath = Grammar.GetTemplatePath();
-			if (string.IsNullOrEmpty(templatePath))
-				throw new Exception("Template path not found:" + Grammar.Directives["TinyPG"]["TemplatePath"]);
+			Dictionary<string, string> templateFilesPath = GetTemplateFilesPath(Grammar, "ParseTree");
 			isDebugOther = Debug == GenerateDebugMode.DebugOther;
 
 			StringBuilder evalsymbols = new StringBuilder();
@@ -53,7 +51,8 @@ namespace TinyPG.CodeGenerators.CSharp
 					// otherwise simply not implemented!
 					evalmethods.AppendLine("			throw new NotImplementedException(\"Could not interpret input; no semantics implemented.\");");
 				}
-				evalmethods.AppendLine("		}\r\n");
+				evalmethods.AppendLine("		}");
+				evalmethods.AppendLine();
 				evalmethods.AppendLine("		protected virtual " + returnType + " Get" + s.Name + "Value(int index, params object[] paramlist )");
 				evalmethods.AppendLine("		{");
 				evalmethods.AppendLine("			" + returnType + " o = "+defaultReturnValue+";");
@@ -61,13 +60,15 @@ namespace TinyPG.CodeGenerators.CSharp
 				evalmethods.AppendLine("			if (node != null)");
 				evalmethods.AppendLine("				o = node.Eval"+s.Name+"(paramlist);");
 				evalmethods.AppendLine("			return o;");
-				evalmethods.AppendLine("		}\r\n");
+				evalmethods.AppendLine("		}");
+				evalmethods.AppendLine();
 			}
 
 			Dictionary<string, string> generated = new Dictionary<string, string>();
-			foreach (var templateName in TemplateFiles)
+			foreach (var entry in templateFilesPath)
 			{
-				string fileContent = File.ReadAllText(Path.Combine(templatePath, templateName));
+				var templateFilePath = entry.Value;
+				string fileContent = File.ReadAllText(templateFilePath);
 				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				if (Debug != GenerateDebugMode.None)
@@ -105,9 +106,48 @@ namespace TinyPG.CodeGenerators.CSharp
 				fileContent = fileContent.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
 				fileContent = fileContent.Replace(@"<%VirtualEvalMethods%>", evalmethods.ToString());
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["ParseTree"]);
-				generated[templateName] = fileContent;
+				generated[entry.Key] = fileContent;
 			}
 			return generated;
+		}
+
+		private Dictionary<string, string> GetTemplateFilesPath(Grammar Grammar, string directiveName)
+		{
+			Dictionary<string, string> _templateFiles = new Dictionary<string, string>();
+			string templatePath = Grammar.GetTemplatePath();
+			if (string.IsNullOrEmpty(templatePath))
+				throw new Exception("Template path not found:" + Grammar.Directives["TinyPG"]["TemplatePath"]);
+			List<string> files;
+			if (Grammar.Directives["ParseTree"].ContainsKey("TemplateFiles"))
+			{
+				var templateFilesString = Grammar.Directives[directiveName]["TemplateFiles"];
+				files = new List<string>(templateFilesString.Split(','));
+				for (int i = 0; i < files.Count; i++)
+				{
+					if (string.IsNullOrWhiteSpace(files[i]))
+					{
+						files.RemoveAt(i);
+						i--;
+						continue;
+					}
+					files[i] = files[i].Trim();
+				}
+			}
+			else
+			{
+				files=templateFiles;
+			}
+			for (int i = 0; i < files.Count; i++)
+			{
+				var f = Path.Combine(templatePath, files[i]);
+				if (!File.Exists(f))
+				{
+					throw new Exception("Template file "+files[i]+" does not exist.");
+				}
+				_templateFiles.Add(files[i], f);
+			}
+
+			return _templateFiles;
 		}
 
 		protected string GenerateComment(object[] objects, string Indent)
@@ -115,9 +155,9 @@ namespace TinyPG.CodeGenerators.CSharp
 			StringBuilder sb = new StringBuilder();
 			foreach(var o in objects)
 			{
-				sb.Append(Indent).Append("/// ").AppendLine(o.ToString());
+				sb.Append(Indent).Append("/// ").AppendLine(Helper.LiteralToUnescaped(o.ToString()));
 			}
-			return sb.ToString();
+			return sb.ToString().TrimEnd();
 		}
 
 		/// <summary>
@@ -130,7 +170,8 @@ namespace TinyPG.CodeGenerators.CSharp
 		private string FormatCodeBlock(NonTerminalSymbol nts)
 		{
 			string codeblock = nts.CodeBlock;
-			if (nts == null) return "";
+			if (nts == null)
+				return "";
 
 			Regex var = new Regex(@"(?<eval>\$|\?)(?<var>[a-zA-Z_0-9]+)(\[(?<index>[^]]+)\])?", RegexOptions.Compiled);
 
@@ -171,7 +212,7 @@ namespace TinyPG.CodeGenerators.CSharp
 				match = var.Match(codeblock);
 			}
 
-			codeblock = Helper.Indent3 + codeblock.Replace("\n", "\r\n" + Helper.Indent2);
+			codeblock = Helper.Indent3 + codeblock.Replace(Environment.NewLine, Environment.NewLine + Helper.Indent2);
 			return codeblock;
 		}
 	}

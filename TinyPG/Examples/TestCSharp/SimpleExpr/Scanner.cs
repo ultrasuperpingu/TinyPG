@@ -37,35 +37,35 @@ namespace SimpleExpr
 			SkipList = new List<TokenType>();
 			SkipList.Add(TokenType.WHITESPACE);
 
-			regex = new Regex(@"^\s*$", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:\s*$)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.EOF, regex);
 			Tokens.Add(TokenType.EOF);
 
-			regex = new Regex("\\A(?:[0-9]+)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex("\\G(?:[0-9]+)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.NUMBER, regex);
 			Tokens.Add(TokenType.NUMBER);
 
-			regex = new Regex("\\A(?:[a-zA-Z_][a-zA-Z0-9_]*)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex("\\G(?:[a-zA-Z_][a-zA-Z0-9_]*)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.ID, regex);
 			Tokens.Add(TokenType.ID);
 
-			regex = new Regex(@"\A(?:\+|-)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:\+|-)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.PLUSMINUS, regex);
 			Tokens.Add(TokenType.PLUSMINUS);
 
-			regex = new Regex(@"\A(?:\*|/)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:\*|/)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.MULTDIV, regex);
 			Tokens.Add(TokenType.MULTDIV);
 
-			regex = new Regex(@"\A(?:\()", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:\()", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.BROPEN, regex);
 			Tokens.Add(TokenType.BROPEN);
 
-			regex = new Regex(@"\A(?:\))", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:\))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.BRCLOSE, regex);
 			Tokens.Add(TokenType.BRCLOSE);
 
-			regex = new Regex(@"\A(?:\s+)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:\s+)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.WHITESPACE, regex);
 			Tokens.Add(TokenType.WHITESPACE);
 
@@ -139,15 +139,15 @@ namespace SimpleExpr
 
 				int len = -1;
 				TokenType index = (TokenType)int.MaxValue;
-				string input = Input.Substring(startpos);
+				//string input = Input.Substring(startpos);
 
 				tok = new Token(startpos, endpos);
 
 				for (i = 0; i < scantokens.Count; i++)
 				{
 					Regex r = Patterns[scantokens[i]];
-					Match m = r.Match(input);
-					if (m.Success && m.Index == 0 && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
+					Match m = r.Match(Input, startpos);
+					if (m.Success && m.Index == startpos && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
 					{
 						len = m.Length;
 						index = scantokens[i];

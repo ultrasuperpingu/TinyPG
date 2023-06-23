@@ -29,7 +29,7 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="10.610411"
-     inkscape:cx="1.0367176"
+     inkscape:cx="0.51835881"
      inkscape:cy="23.043405"
      inkscape:window-width="1920"
      inkscape:window-height="991"
@@ -43,11 +43,11 @@
        inkscape:collect="always"
        id="linearGradient6163">
       <stop
-         style="stop-color:#5c337b;stop-opacity:1;"
+         style="stop-color:#373599;stop-opacity:1;"
          offset="0"
          id="stop6159" />
       <stop
-         style="stop-color:#2f3a6f;stop-opacity:1;"
+         style="stop-color:#4a97b8;stop-opacity:1;"
          offset="1"
          id="stop6161" />
     </linearGradient>
@@ -55,20 +55,20 @@
        inkscape:collect="always"
        xlink:href="#linearGradient6163"
        id="linearGradient6165"
-       x1="54.102741"
-       y1="108.2484"
-       x2="54.074589"
-       y2="99.573074"
+       x1="54.148918"
+       y1="99.620537"
+       x2="54.351646"
+       y2="108.22295"
        gradientUnits="userSpaceOnUse"
        gradientTransform="matrix(1.0800434,0,0,1.1329558,-4.489636,-13.523029)" />
     <filter
        style="color-interpolation-filters:sRGB;"
        inkscape:label="Drop Shadow"
        id="filter907"
-       x="-0.060539253"
-       y="-0.064575203"
-       width="1.1967526"
-       height="1.1964162">
+       x="-0.072656249"
+       y="-0.077499998"
+       width="1.1957619"
+       height="1.2088127">
       <feFlood
          flood-opacity="0.490196"
          flood-color="rgb(0,0,0)"
@@ -82,29 +82,29 @@
          id="feComposite899" />
       <feGaussianBlur
          in="composite1"
-         stdDeviation="0.2"
+         stdDeviation="0.24003022"
          result="blur"
          id="feGaussianBlur901" />
       <feOffset
-         dx="0.6"
-         dy="0.5"
+         dx="0.40000000000000002"
+         dy="0.40000000000000002"
          result="offset"
          id="feOffset903" />
       <feComposite
          in="SourceGraphic"
          in2="offset"
          operator="over"
-         result="composite2"
+         result="fbSourceGraphic"
          id="feComposite905" />
     </filter>
     <filter
        style="color-interpolation-filters:sRGB;"
        inkscape:label="Drop Shadow"
        id="filter919"
-       x="-0.12735957"
-       y="-0.16367561"
-       width="1.4139186"
-       height="1.4978466">
+       x="-0.094214398"
+       y="-0.12107923"
+       width="1.2945618"
+       height="1.3785548">
       <feFlood
          flood-opacity="0.490196"
          flood-color="rgb(0,0,0)"
@@ -118,19 +118,19 @@
          id="feComposite911" />
       <feGaussianBlur
          in="composite1"
-         stdDeviation="0.2"
+         stdDeviation="0.14795025"
          result="blur"
          id="feGaussianBlur913" />
       <feOffset
-         dx="0.6"
-         dy="0.5"
+         dx="0.40000000000000002"
+         dy="0.40000000000000002"
          result="offset"
          id="feOffset915" />
       <feComposite
          in="SourceGraphic"
          in2="offset"
          operator="over"
-         result="composite2"
+         result="fbSourceGraphic"
          id="feComposite917" />
     </filter>
   </defs>
@@ -147,22 +147,10 @@
        x="49.161358"
        y="99.234711"
        ry="0.96616846" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.11903px;font-family:'Lucida Console';-inkscape-font-specification:'Lucida Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#b92a4b;fill-opacity:1;stroke-width:0.121785;filter:url(#filter907)"
-       x="49.240952"
-       y="106.69641"
-       id="text3332"
-       inkscape:label="sourcefileText"><tspan
-         sodipodi:role="line"
-         id="tspan3330"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.11903px;font-family:'Lucida Console';-inkscape-font-specification:'Lucida Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.121785;fill:#b92a4b;fill-opacity:1"
-         x="49.240952"
-         y="106.69641">{}</tspan></text>
     <g
        aria-label="-&gt;"
        id="text236"
-       style="font-weight:bold;font-size:5.29167px;font-family:Consolas;-inkscape-font-specification:'Consolas, Bold';fill:#c7c647;fill-opacity:1;stroke:none;stroke-width:0.151391;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter919)"
+       style="font-weight:bold;font-size:5.29167px;font-family:Consolas;-inkscape-font-specification:'Consolas, Bold';display:inline;mix-blend-mode:normal;fill:#e5c41a;fill-opacity:1;stroke:none;stroke-width:0.151391;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter919)"
        inkscape:highlight-color="#5185d8"
        inkscape:label="ruleText"
        transform="matrix(1.0014599,0,0,0.98023826,-0.2212938,1.8778862)">
@@ -170,12 +158,31 @@
          d="m 52.429972,104.62592 v -0.56069 h 1.607138 v 0.56069 z"
          id="path6167"
          sodipodi:nodetypes="ccccc"
-         style="fill:#c7c647;fill-opacity:1;stroke:none;stroke-width:0.151391;stroke-dasharray:none;stroke-opacity:1" />
+         style="display:inline;fill:#e5c41a;fill-opacity:1;stroke:none;stroke-width:0.151391;stroke-dasharray:none;stroke-opacity:1" />
       <path
          d="m 54.457333,102.84444 1.741496,1.46502 -1.741496,1.46761 -0.400493,-0.40824 1.278992,-1.0542 -1.278992,-1.06195 z"
          id="path6169"
          sodipodi:nodetypes="ccccccc"
-         style="fill:#c7c647;fill-opacity:1;stroke:none;stroke-width:0.151391;stroke-dasharray:none;stroke-opacity:1" />
+         style="display:inline;fill:#e5c41a;fill-opacity:1;stroke:none;stroke-width:0.151391;stroke-dasharray:none;stroke-opacity:1" />
     </g>
+    <text
+       xml:space="preserve"
+       style="font-weight:normal;font-size:8.11903px;font-family:'Lucida Console';-inkscape-font-specification:'Lucida Console, Normal';display:inline;fill:#b92a4b;fill-opacity:1;stroke:none;stroke-width:0.121785;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter907);font-style:normal;font-variant:normal;font-stretch:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;mix-blend-mode:normal;opacity:1"
+       x="49.240952"
+       y="106.69641"
+       id="text3332"
+       inkscape:label="sourcefileText"><tspan
+         sodipodi:role="line"
+         id="tspan3330"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.11903px;font-family:'Lucida Console';-inkscape-font-specification:'Lucida Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#b92a4b;fill-opacity:1;stroke-width:0.121785"
+         x="0"
+         y="0">{}</tspan></text>
+    <path
+       d="m 52.429972,104.62592 v -0.56069 h 1.607138 v 0.56069 z"
+       id="path1746"
+       sodipodi:nodetypes="ccccc"
+       style="font-weight:bold;font-size:5.29167px;font-family:Consolas;-inkscape-font-specification:'Consolas, Bold';opacity:1;mix-blend-mode:normal;fill:#e5c41a;fill-opacity:1;stroke:none;stroke-width:0.151394;stroke-dasharray:none;stroke-opacity:1"
+       transform="matrix(1.0014599,0,0,0.98023826,-0.22129429,1.8778854)"
+       inkscape:highlight-color="#21e416" />
   </g>
 </svg>

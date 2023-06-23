@@ -59,7 +59,7 @@ namespace TinyPG.UnitTests
 				 .Append("ALL -> @\".*\";")
 				 .Append("Start -> ALL;");
 
-			Grammar grammar = Program.ParseGrammar(input.ToString());
+			Grammar grammar = Grammar.FromSource(input.ToString());
 			Assert.IsNotNull(grammar);
 		}
 
@@ -73,7 +73,7 @@ namespace TinyPG.UnitTests
 				 .Append(@"<% @TinyPG %>")
 				 .Append("ALL -> @\".*Start -> ALL;");
 
-			Grammar grammar = Program.ParseGrammar(input.ToString());
+			Grammar grammar = Grammar.FromSource(input.ToString());
 			Assert.IsNull(grammar);
 		}
 

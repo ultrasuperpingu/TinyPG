@@ -4,6 +4,7 @@ General:
  * Remove Non terminal default return value (it will be useless once the ParseTree will be able to return the correct type)
  * Stop parsing on the first error...
  * Make Error Codes consistant (ErrorCode class with all error codes done but not used). Once done, add the ability to silent warnings.
+ * Add TemplateFiles directive attributes to specify the Scanner/Parser/ParseTree template files.
  C++:
  * Review C++ generated code and improve it (more use of templates ???)
  * ParseTree should be returns as shared_ptr ?
@@ -20,3 +21,106 @@ Prospecting/Long Term:
  * Implement a Visual Studio (and VSCode) Extension (via Language Server Protocol) (for VSCode, tmLanguage grammar is done, example of task is done too)
  * Step by step parsing for debug purpose
  * Ability to map error line in the produced file (while compiling it) to the grammar file (the code block in grammar file)
+
+
+
+
+
+
+
+
+
+
+
+Optimisation tests:
+Code:
+string pattern = "List<";
+			string content = File.ReadAllText(@"..\..\ParseTree.cs");
+			Regex r;
+			DateTime startTime;
+			int count;
+
+			r = new Regex(@"List<", RegexOptions.Compiled);
+			Console.WriteLine("Regex List< substring");
+			startTime = DateTime.Now;
+			count = 0;
+			for (int k = 0; k<1000; k++)
+				for (int i = 0; i<content.Length; i++)
+				{
+					var c = content.Substring(i);
+					var m = r.Match(c);
+					if (m.Success && m.Index == 0)
+						count++;
+				}
+			Console.WriteLine((DateTime.Now - startTime).TotalMilliseconds);
+			Console.WriteLine(count.ToString()); 
+			
+			r = new Regex(@"\GList<", RegexOptions.Compiled);
+			Console.WriteLine("Regex \\GList< substring");
+			startTime = DateTime.Now;
+			count = 0;
+			for (int k = 0; k<1000; k++)
+				for (int i = 0; i<content.Length; i++)
+				{
+					var c = content.Substring(i);
+					var m = r.Match(c);
+					if (m.Success && m.Index == 0)
+						count++;
+				}
+			Console.WriteLine((DateTime.Now - startTime).TotalMilliseconds);
+			Console.WriteLine(count.ToString());
+
+			r = new Regex(@"\GList<", RegexOptions.Compiled);
+			Console.WriteLine("Regex \\GList< index");
+			startTime = DateTime.Now;
+			count = 0;
+			for(int k=0;k<1000;k++)
+				for(int i=0;i<content.Length;i++)
+				{
+					var m=r.Match(content, i);
+					if (m.Success)
+						count++;
+				}
+			Console.WriteLine((DateTime.Now - startTime).TotalMilliseconds);
+			Console.WriteLine(count.ToString());
+
+			Console.WriteLine("string.LastIndexOf");
+			startTime = DateTime.Now;
+			count = 0;
+			for (int k = 0; k<1000; k++)
+				for (int i = 0; i<content.Length-pattern.Length; i++)
+				{
+					if(content.LastIndexOf(pattern, i+pattern.Length, pattern.Length) >= 0)
+						count++;
+				}
+			Console.WriteLine((DateTime.Now - startTime).TotalMilliseconds);
+			Console.WriteLine(count.ToString());
+
+			Console.WriteLine("string.Substring == ");
+			startTime = DateTime.Now;
+			count = 0;
+			for (int k = 0; k<1000; k++)
+				for (int i = 0; i<content.Length-pattern.Length; i++)
+				{
+					if (content.Substring(i,pattern.Length) == pattern)
+						count++;
+				}
+			Console.WriteLine((DateTime.Now - startTime).TotalMilliseconds);
+			Console.WriteLine(count.ToString());
+
+Results:
+Regex List< substring
+15926,9691
+7000
+Regex \GList< substring
+9078,8486
+7000
+Regex \GList< index
+399,0533
+7000
+string.LastIndexOf
+567,8131
+7000
+string.Substring ==
+129,5207
+7000

@@ -73,7 +73,7 @@ namespace TinyPGCL
 						grammar.Directives["TinyPG"]["OutputPath"] = Path.Combine(Environment.CurrentDirectory, parameters["--output-path"]);
 					if (parameters.ContainsKey("--template-path path"))
 						grammar.Directives["TinyPG"]["TemplatePath"] = Path.Combine(Environment.CurrentDirectory, parameters["--template-path"]);
-					if (parameters.ContainsKey("--template-path path"))
+					if (parameters.ContainsKey("--namespace"))
 						grammar.Directives["TinyPG"]["Namespace"] = parameters["--namespace"];
 					grammar.Preprocess();
 					if (!tree.Errors.ContainsErrors)
@@ -91,8 +91,8 @@ namespace TinyPGCL
 		private static void ShowHelp()
 		{
 			Console.WriteLine(AppDomain.CurrentDomain.FriendlyName + ":");
-			Console.WriteLine("\tParse a grammar file and generate the corresponding parser code.");
-			Console.WriteLine("\n\tSyntax: "+AppDomain.CurrentDomain.FriendlyName + "grammarFile [options]");
+			Console.WriteLine("\tParse grammar files and generate the corresponding parser code.");
+			Console.WriteLine("\n\tSyntax: "+AppDomain.CurrentDomain.FriendlyName + "grammarFiles [options]");
 			Console.WriteLine("\tOptions:");
 			Console.WriteLine("\t\t--namespace namespace: namespace of the generated code");
 			Console.WriteLine("\t\t--output-path path: output directory");

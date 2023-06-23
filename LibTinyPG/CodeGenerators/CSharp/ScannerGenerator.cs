@@ -49,22 +49,24 @@ namespace TinyPG.CodeGenerators.CSharp
 				string RegexCompiled = null;
 				Grammar.Directives.Find("TinyPG").TryGetValue("RegexCompiled", out RegexCompiled);
 				var expr = s.Expression;
-				// Add begin anchor if not present (\A).
+				// Add begin anchor if not present (\G).
 				// the whole regex specified by user is encapsulated by
 				//  a non capturing group: (?:userRegex)
+				// TODO: on expression starting with a begin anchor (\A, ^), Regex.Match(content, startat) will fail
+				// Launch a warning to the user...
 				if (expr.StartsWith("@"))
 				{
-					if (!expr.StartsWith("@\"^") && !expr.StartsWith(@"@""\A"))
+					if (!expr.StartsWith("@\"^") && !expr.StartsWith(@"@""\A") && !expr.StartsWith(@"@""\G"))
 					{
-						expr = expr.Insert(expr.IndexOf("\"")+1, @"\A(?:");
+						expr = expr.Insert(expr.IndexOf("\"")+1, @"\G(?:");
 						expr = expr.Insert(expr.Length-1, ")");
 					}
 				}
 				else if (expr.StartsWith("\""))
 				{
-					if (!expr.StartsWith("\"^") && !expr.StartsWith("\"\\A"))
+					if (!expr.StartsWith("\"^") && !expr.StartsWith("\"\\A") && !expr.StartsWith("\"\\G"))
 					{
-						expr = expr.Insert(expr.IndexOf("\"")+1, @"\\A(?:");
+						expr = expr.Insert(expr.IndexOf("\"")+1, @"\\G(?:");
 						expr = expr.Insert(expr.Length-1, ")");
 					}
 				}
