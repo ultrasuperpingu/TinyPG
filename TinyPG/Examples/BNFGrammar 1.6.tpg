@@ -27,7 +27,7 @@ HEX	      		-> @"(0x[0-9a-fA-F]{6})";
 ARROW             	-> @"->";
 DIRECTIVEOPEN		-> @"<%\s*@";
 DIRECTIVECLOSE	-> @"%>";
-EOF               	-> @"^$";
+EOF               	-> @"$";
 STRING             	-> @"\""(\\\""|[^\""])*\""";
 VERBATIM_STRING	-> @"(R|@)\""(\""\""|[^\""])*\""";
 REGEX_PATTERN		-> @"/(\/|[^/])+/";

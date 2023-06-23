@@ -754,6 +754,7 @@ namespace TinyPG
 				output.AppendLine("Grammar parsed successfully in " + duration.TotalMilliseconds.ToString(CultureInfo.InvariantCulture) + "ms.");
 
 				grammar.Filename = grammarFile;
+				grammar.Preprocess();
 				SetHighlighterLanguage(grammar.Directives["TinyPG"]["Language"]);
 				
 				starttimer = DateTime.Now;

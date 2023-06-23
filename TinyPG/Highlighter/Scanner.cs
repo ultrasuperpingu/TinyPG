@@ -37,23 +37,23 @@ namespace TinyPG.Highlighter
 			SkipList = new List<TokenType>();
 			SkipList.Add(TokenType.WHITESPACE);
 
-			regex = new Regex(@"\A(?:\s+)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:\s+)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.WHITESPACE, regex);
 			Tokens.Add(TokenType.WHITESPACE);
 
-			regex = new Regex(@"^$", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:$)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.EOF, regex);
 			Tokens.Add(TokenType.EOF);
 
-			regex = new Regex(@"\A(?://[^\n]*\n?)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?://[^\n]*\n?)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.GRAMMARCOMMENTLINE, regex);
 			Tokens.Add(TokenType.GRAMMARCOMMENTLINE);
 
-			regex = new Regex(@"\A(?:/\*([^*]+|\*[^/])+(\*/)?)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:/\*([^*]+|\*[^/])+(\*/)?)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.GRAMMARCOMMENTBLOCK, regex);
 			Tokens.Add(TokenType.GRAMMARCOMMENTBLOCK);
 
-			regex = new Regex(@"\A(?:((@\""(\""\""|[^\""])*(""|\n))|(\""(\\\""|[^\""])*\"")))", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:((@\""(\""\""|[^\""])*(""|\n))|(\""(\\\""|[^\""])*\"")))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DIRECTIVESTRING, regex);
 			Tokens.Add(TokenType.DIRECTIVESTRING);
 
@@ -65,163 +65,163 @@ namespace TinyPG.Highlighter
 			Patterns.Add(TokenType.DIRECTIVESYMBOL, regex);
 			Tokens.Add(TokenType.DIRECTIVESYMBOL);
 
-			regex = new Regex(@"\A(?:[^%@=""{]+)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:[^%@=""{]+)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DIRECTIVENONKEYWORD, regex);
 			Tokens.Add(TokenType.DIRECTIVENONKEYWORD);
 
-			regex = new Regex(@"\A(?:<%)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:<%)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DIRECTIVEOPEN, regex);
 			Tokens.Add(TokenType.DIRECTIVEOPEN);
 
-			regex = new Regex(@"\A(?:%>)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:%>)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DIRECTIVECLOSE, regex);
 			Tokens.Add(TokenType.DIRECTIVECLOSE);
 
-			regex = new Regex(@"\A(?:[^\[\]])", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:[^\[\]])", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.ATTRIBUTESYMBOL, regex);
 			Tokens.Add(TokenType.ATTRIBUTESYMBOL);
 
-			regex = new Regex(@"^(Skip|Color|IgnoreCase|Comment)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"^(Skip|Color|IgnoreCase|ParseComment|EvalComment)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.ATTRIBUTEKEYWORD, regex);
 			Tokens.Add(TokenType.ATTRIBUTEKEYWORD);
 
-			regex = new Regex(@"\A(?:[^\(\)\]\n\s]+)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:[^\(\)\]\n\s]+)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.ATTRIBUTENONKEYWORD, regex);
 			Tokens.Add(TokenType.ATTRIBUTENONKEYWORD);
 
-			regex = new Regex(@"\A(?:\[\s*)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:\[\s*)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.ATTRIBUTEOPEN, regex);
 			Tokens.Add(TokenType.ATTRIBUTEOPEN);
 
-			regex = new Regex(@"\A(?:\s*\]\s*)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:\s*\]\s*)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.ATTRIBUTECLOSE, regex);
 			Tokens.Add(TokenType.ATTRIBUTECLOSE);
 
-			regex = new Regex(@"^(abstract|as|base|break|case|catch|checked|class|const|continue|decimal|default|delegate|double|do|else|enum|event|explicit|extern|false|finally|fixed|float|foreach|for|get|goto|if|implicit|interface|internal|int|in|is|lock|namespace|new|null|object|operator|out|override|params|partial|private|protected|public|readonly|ref|return|sealed|set|sizeof|stackalloc|static|struct|switch|throw|this|true|try|typeof|unchecked|unsafe|ushort|using|var|virtual|void|volatile|while)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:(abstract|as|base|break|case|catch|checked|class|const|continue|decimal|default|delegate|double|do|else|enum|event|explicit|extern|false|finally|fixed|float|foreach|for|get|goto|if|implicit|interface|internal|int|in|is|lock|namespace|new|null|object|operator|out|override|params|partial|private|protected|public|readonly|ref|return|sealed|set|sizeof|stackalloc|static|struct|switch|throw|this|true|try|typeof|unchecked|unsafe|ushort|using|var|virtual|void|volatile|while))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.CS_KEYWORD, regex);
 			Tokens.Add(TokenType.CS_KEYWORD);
 
-			regex = new Regex(@"^(AddHandler|AddressOf|Alias|AndAlso|And|Ansi|Assembly|As|Auto|Boolean|ByRef|Byte|ByVal|Call|Case|Catch|CBool|CByte|CChar|CDate|CDec|CDbl|Char|CInt|Class|CLng|CObj|Const|CShort|CSng|CStr|CType|Date|Decimal|Declare|Default|Delegate|Dim|DirectCast|Double|Do|Each|ElseIf|Else|End|Enum|Erase|Error|Event|Exit|False|Finally|For|Friend|Function|GetType|Get|GoSub|GoTo|Handles|If|Implements|Imports|Inherits|Integer|Interface|In|Is|Let|Lib|Like|Long|Loop|Me|Mod|Module|MustInherit|MustOverride|MyBase|MyClass|Namespace|New|Next|Nothing|NotInheritable|NotOverridable|Not|Object|On|Optional|Option|OrElse|Or|Overloads|Overridable|Overrides|ParamArray|Preserve|Private|Property|Protected|Public|RaiseEvent|ReadOnly|ReDim|REM|RemoveHandler|Resume|Return|Select|Set|Shadows|Shared|Short|Single|Static|Step|Stop|String|Structure|Sub|SyncLock|Then|Throw|To|True|Try|TypeOf|Unicode|Until|Variant|When|While|With|WithEvents|WriteOnly|Xor|Source)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:(AddHandler|AddressOf|Alias|AndAlso|And|Ansi|Assembly|As|Auto|Boolean|ByRef|Byte|ByVal|Call|Case|Catch|CBool|CByte|CChar|CDate|CDec|CDbl|Char|CInt|Class|CLng|CObj|Const|CShort|CSng|CStr|CType|Date|Decimal|Declare|Default|Delegate|Dim|DirectCast|Double|Do|Each|ElseIf|Else|End|Enum|Erase|Error|Event|Exit|False|Finally|For|Friend|Function|GetType|Get|GoSub|GoTo|Handles|If|Implements|Imports|Inherits|Integer|Interface|In|Is|Let|Lib|Like|Long|Loop|Me|Mod|Module|MustInherit|MustOverride|MyBase|MyClass|Namespace|New|Next|Nothing|NotInheritable|NotOverridable|Not|Object|On|Optional|Option|OrElse|Or|Overloads|Overridable|Overrides|ParamArray|Preserve|Private|Property|Protected|Public|RaiseEvent|ReadOnly|ReDim|REM|RemoveHandler|Resume|Return|Select|Set|Shadows|Shared|Short|Single|Static|Step|Stop|String|Structure|Sub|SyncLock|Then|Throw|To|True|Try|TypeOf|Unicode|Until|Variant|When|While|With|WithEvents|WriteOnly|Xor|Source))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.VB_KEYWORD, regex);
 			Tokens.Add(TokenType.VB_KEYWORD);
 
-			regex = new Regex(@"^(abstract|continue|for|new|switch|assert|default|goto|package|synchronized|boolean|do|if|private|this|break|double|implements|protected|throw|byte|else|import|public|throws|case|enum|instanceof|return|transient|catch|extends|int|short|try|char|final|interface|static|void|class|finally|long|strictfp|volatile|const|float|native|super|while)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:(abstract|continue|for|new|switch|assert|default|goto|package|synchronized|boolean|do|if|private|this|break|double|implements|protected|throw|byte|else|import|public|throws|case|enum|instanceof|return|transient|catch|extends|int|short|try|char|final|interface|static|void|class|finally|long|strictfp|volatile|const|float|native|super|while))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.JAVA_KEYWORD, regex);
 			Tokens.Add(TokenType.JAVA_KEYWORD);
 
-			regex = new Regex(@"^(alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|auto|bitand|bitor|bool|break|case|catch|char|char8_t|char16_t|char32_t|class|compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|default|delete|do|double|dynamic_cast|else|enum|explicit|export|extern|false|float|for|friend|goto|if|inline|int|long|mutable|namespace|new|noexcept|not|not_eq|NULL|nullptr|operator|or|or_eq|private|protected|public|reflexpr|register|reinterpret_cast|requires|return|short|signed|sizeof|static|static_assert|static_cast|struct|switch|synchronized|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|while|xor|xor_eq)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:(alignas|alignof|and|and_eq|asm|atomic_cancel|atomic_commit|atomic_noexcept|auto|bitand|bitor|bool|break|case|catch|char|char8_t|char16_t|char32_t|class|compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|default|delete|do|double|dynamic_cast|else|enum|explicit|export|extern|false|float|for|friend|goto|if|inline|int|long|mutable|namespace|new|noexcept|not|not_eq|NULL|nullptr|operator|or|or_eq|private|protected|public|reflexpr|register|reinterpret_cast|requires|return|short|signed|sizeof|static|static_assert|static_cast|struct|switch|synchronized|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|while|xor|xor_eq))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.CPP_KEYWORD, regex);
 			Tokens.Add(TokenType.CPP_KEYWORD);
 
-			regex = new Regex(@"^(abstract|as|base|break|case|catch|checked|class|const|continue|decimal|default|delegate|double|do|else|enum|event|explicit|extern|false|finally|fixed|float|foreach|for|get|goto|if|implicit|interface|internal|int|in|is|lock|namespace|new|null|object|operator|out|override|params|partial|private|protected|public|readonly|ref|return|sealed|set|sizeof|stackalloc|static|struct|switch|throw|this|true|try|typeof|unchecked|unsafe|ushort|using|var|virtual|void|volatile|while)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:(abstract|as|base|break|case|catch|checked|class|const|continue|decimal|default|delegate|double|do|else|enum|event|explicit|extern|false|finally|fixed|float|foreach|for|get|goto|if|implicit|interface|internal|int|in|is|lock|namespace|new|null|object|operator|out|override|params|partial|private|protected|public|readonly|ref|return|sealed|set|sizeof|stackalloc|static|struct|switch|throw|this|true|try|typeof|unchecked|unsafe|ushort|using|var|virtual|void|volatile|while))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DOTNET_KEYWORD, regex);
 			Tokens.Add(TokenType.DOTNET_KEYWORD);
 
-			regex = new Regex(@"^(Array|AttributeTargets|AttributeUsageAttribute|Attribute|BitConverter|Boolean|Buffer|Byte|Char|CharEnumerator|CLSCompliantAttribute|ConsoleColor|ConsoleKey|ConsoleKeyInfo|ConsoleModifiers|ConsoleSpecialKey|Console|ContextBoundObject|ContextStaticAttribute|Converter|Convert|DateTimeKind|DateTimeOffset|DateTime|DayOfWeek|DBNull|Decimal|Delegate|Double|Enum|Environment.SpecialFolder|EnvironmentVariableTarget|Environment|EventArgs|EventHandler|Exception|FlagsAttribute|GCCollectionMode|GC|Guid|ICloneable|IComparable|IConvertible|ICustomFormatter|IDisposable|IEquatable|IFormatProvider|IFormattable|IndexOutOfRangeException|InsufficientMemoryException|Int16|Int32|Int64|IntPtr|InvalidCastException|InvalidOperationException|InvalidProgramException|MarshalByRefObject|Math|MidpointRounding|NotFiniteNumberException|NotImplementedException|NotSupportedException|Nullable|NullReferenceException|ObjectDisposedException|Object|ObsoleteAttribute|OperatingSystem|OutOfMemoryException|OverflowException|ParamArrayAttribute|PlatformID|PlatformNotSupportedException|Predicate|Random|SByte|SerializableAttribute|Single|StackOverflowException|StringComparer|StringComparison|StringSplitOptions|String|SystemException|TimeSpan|TimeZone|TypeCode|TypedReference|TypeInitializationException|Type|UInt16|UInt32|UInt64|UIntPtr|UnauthorizedAccessException|UnhandledExceptionEventArgs|UnhandledExceptionEventHandler|ValueType|Void|WeakReference|Comparer|Dictionary|EqualityComparer|ICollection|IComparer|IDictionary|IEnumerable|IEnumerator|IEqualityComparer|IList|KeyNotFoundException|KeyValuePair|List|ASCIIEncoding|Decoder|DecoderExceptionFallback|DecoderExceptionFallbackBuffer|DecoderFallback|DecoderFallbackBuffer|DecoderFallbackException|DecoderReplacementFallback|DecoderReplacementFallbackBuffer|EncoderExceptionFallback|EncoderExceptionFallbackBuffer|EncoderFallback|EncoderFallbackBuffer|EncoderFallbackException|EncoderReplacementFallback|EncoderReplacementFallbackBuffer|Encoder|EncodingInfo|Encoding|NormalizationForm|StringBuilder|UnicodeEncoding|UTF32Encoding|UTF7Encoding|UTF8Encoding)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:(Array|AttributeTargets|AttributeUsageAttribute|Attribute|BitConverter|Boolean|Buffer|Byte|Char|CharEnumerator|CLSCompliantAttribute|ConsoleColor|ConsoleKey|ConsoleKeyInfo|ConsoleModifiers|ConsoleSpecialKey|Console|ContextBoundObject|ContextStaticAttribute|Converter|Convert|DateTimeKind|DateTimeOffset|DateTime|DayOfWeek|DBNull|Decimal|Delegate|Double|Enum|Environment.SpecialFolder|EnvironmentVariableTarget|Environment|EventArgs|EventHandler|Exception|FlagsAttribute|GCCollectionMode|GC|Guid|ICloneable|IComparable|IConvertible|ICustomFormatter|IDisposable|IEquatable|IFormatProvider|IFormattable|IndexOutOfRangeException|InsufficientMemoryException|Int16|Int32|Int64|IntPtr|InvalidCastException|InvalidOperationException|InvalidProgramException|MarshalByRefObject|Math|MidpointRounding|NotFiniteNumberException|NotImplementedException|NotSupportedException|Nullable|NullReferenceException|ObjectDisposedException|Object|ObsoleteAttribute|OperatingSystem|OutOfMemoryException|OverflowException|ParamArrayAttribute|PlatformID|PlatformNotSupportedException|Predicate|Random|SByte|SerializableAttribute|Single|StackOverflowException|StringComparer|StringComparison|StringSplitOptions|String|SystemException|TimeSpan|TimeZone|TypeCode|TypedReference|TypeInitializationException|Type|UInt16|UInt32|UInt64|UIntPtr|UnauthorizedAccessException|UnhandledExceptionEventArgs|UnhandledExceptionEventHandler|ValueType|Void|WeakReference|Comparer|Dictionary|EqualityComparer|ICollection|IComparer|IDictionary|IEnumerable|IEnumerator|IEqualityComparer|IList|KeyNotFoundException|KeyValuePair|List|ASCIIEncoding|Decoder|DecoderExceptionFallback|DecoderExceptionFallbackBuffer|DecoderFallback|DecoderFallbackBuffer|DecoderFallbackException|DecoderReplacementFallback|DecoderReplacementFallbackBuffer|EncoderExceptionFallback|EncoderExceptionFallbackBuffer|EncoderFallback|EncoderFallbackBuffer|EncoderFallbackException|EncoderReplacementFallback|EncoderReplacementFallbackBuffer|Encoder|EncodingInfo|Encoding|NormalizationForm|StringBuilder|UnicodeEncoding|UTF32Encoding|UTF7Encoding|UTF8Encoding))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DOTNET_TYPES, regex);
 			Tokens.Add(TokenType.DOTNET_TYPES);
 
-			regex = new Regex(@"^(Array|ArrayList|Hashmap|LocalDate|LocalTime|LocalDateTime|Matcher|Pattern|String|StringBuilder)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:(Array|ArrayList|Hashmap|LocalDate|LocalTime|LocalDateTime|Matcher|Pattern|String|StringBuilder))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.JAVA_TYPES, regex);
 			Tokens.Add(TokenType.JAVA_TYPES);
 
-			regex = new Regex(@"^(std::vector|std::list|std::map|std::cerr|std::cin|std::cout|std::string)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:(std::vector|std::list|std::map|std::cerr|std::cin|std::cout|std::string))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.CPP_TYPES, regex);
 			Tokens.Add(TokenType.CPP_TYPES);
 
-			regex = new Regex(@"\A(?://[^\n]*\n?)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?://[^\n]*\n?)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.CS_COMMENTLINE, regex);
 			Tokens.Add(TokenType.CS_COMMENTLINE);
 
-			regex = new Regex(@"\A(?:/\*([^*]+|\*[^/])+(\*/)?)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:/\*([^*]+|\*[^/])+(\*/)?)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.CS_COMMENTBLOCK, regex);
 			Tokens.Add(TokenType.CS_COMMENTBLOCK);
 
-			regex = new Regex(@"\A(?:[^}])", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:[^}])", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.CS_SYMBOL, regex);
 			Tokens.Add(TokenType.CS_SYMBOL);
 
-			regex = new Regex(@"\A(?:([^""\n\s/;.}\(\)\[\]]|/[^/*]|}[^;])+)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:([^""\n\s/;.}\(\)\[\]]|/[^/*]|}[^;])+)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.CS_NONKEYWORD, regex);
 			Tokens.Add(TokenType.CS_NONKEYWORD);
 
-			regex = new Regex(@"\A(?:@?[""]([""][""]|[^\""\n])*[""]?)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:@?[""]([""][""]|[^\""\n])*[""]?)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.CS_STRING, regex);
 			Tokens.Add(TokenType.CS_STRING);
 
-			regex = new Regex(@"\A(?:[""]([""][""]|[^\""\n])*[""]?)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:[""]([""][""]|[^\""\n])*[""]?)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.JAVA_STRING, regex);
 			Tokens.Add(TokenType.JAVA_STRING);
 
-			regex = new Regex(@"\A(?:[""]([""][""]|[^\""\n])*[""]?)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:[""]([""][""]|[^\""\n])*[""]?)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.CPP_STRING, regex);
 			Tokens.Add(TokenType.CPP_STRING);
 
-			regex = new Regex(@"\A(?:'[^\n]*\n?)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:'[^\n]*\n?)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.VB_COMMENTLINE, regex);
 			Tokens.Add(TokenType.VB_COMMENTLINE);
 
-			regex = new Regex(@"\A(?:REM[^\n]*\n?)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:REM[^\n]*\n?)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.VB_COMMENTBLOCK, regex);
 			Tokens.Add(TokenType.VB_COMMENTBLOCK);
 
-			regex = new Regex(@"\A(?:[^}])", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:[^}])", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.VB_SYMBOL, regex);
 			Tokens.Add(TokenType.VB_SYMBOL);
 
-			regex = new Regex(@"\A(?:([^""\n\s/;.}\(\)\[\]]|/[^/*]|}[^;])+)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:([^""\n\s/;.}\(\)\[\]]|/[^/*]|}[^;])+)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.VB_NONKEYWORD, regex);
 			Tokens.Add(TokenType.VB_NONKEYWORD);
 
-			regex = new Regex(@"\A(?:@?[""]([""][""]|[^\""\n])*[""]?)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:@?[""]([""][""]|[^\""\n])*[""]?)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.VB_STRING, regex);
 			Tokens.Add(TokenType.VB_STRING);
 
-			regex = new Regex(@"\A(?://[^\n]*\n?)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?://[^\n]*\n?)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DOTNET_COMMENTLINE, regex);
 			Tokens.Add(TokenType.DOTNET_COMMENTLINE);
 
-			regex = new Regex(@"\A(?:/\*([^*]+|\*[^/])+(\*/)?)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:/\*([^*]+|\*[^/])+(\*/)?)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DOTNET_COMMENTBLOCK, regex);
 			Tokens.Add(TokenType.DOTNET_COMMENTBLOCK);
 
-			regex = new Regex(@"\A(?:[^}])", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:[^}])", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DOTNET_SYMBOL, regex);
 			Tokens.Add(TokenType.DOTNET_SYMBOL);
 
-			regex = new Regex(@"\A(?:([^""\n\s/;.}\[\]\(\)]|/[^/*]|}[^;])+)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:([^""\n\s/;.}\[\]\(\)]|/[^/*]|}[^;])+)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DOTNET_NONKEYWORD, regex);
 			Tokens.Add(TokenType.DOTNET_NONKEYWORD);
 
-			regex = new Regex(@"\A(?:@?[""]([""][""]|[^\""\n])*[""]?)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:@?[""]([""][""]|[^\""\n])*[""]?)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DOTNET_STRING, regex);
 			Tokens.Add(TokenType.DOTNET_STRING);
 
-			regex = new Regex(@"\A(?:\{)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:\{)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.CODEBLOCKOPEN, regex);
 			Tokens.Add(TokenType.CODEBLOCKOPEN);
 
-			regex = new Regex(@"\A(?:\};)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:\};)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.CODEBLOCKCLOSE, regex);
 			Tokens.Add(TokenType.CODEBLOCKCLOSE);
 
-			regex = new Regex(@"\A(?:(Start))", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:(Start))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.GRAMMARKEYWORD, regex);
 			Tokens.Add(TokenType.GRAMMARKEYWORD);
 
-			regex = new Regex(@"\A(?:->)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:->)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.GRAMMARARROW, regex);
 			Tokens.Add(TokenType.GRAMMARARROW);
 
-			regex = new Regex(@"\A(?:[^{}\[\]/<>]|[</]$)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:[^{}\[\]/<>]|[</]$)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.GRAMMARSYMBOL, regex);
 			Tokens.Add(TokenType.GRAMMARSYMBOL);
 
-			regex = new Regex(@"\A(?:([^;""\[\n\s/<{\(\)]|/[^/*]|<[^%])+)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:([^;""\[\n\s/<{\(\)]|/[^/*]|<[^%])+)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.GRAMMARNONKEYWORD, regex);
 			Tokens.Add(TokenType.GRAMMARNONKEYWORD);
 
-			regex = new Regex(@"\A(?:(@[""]([""][""]|[^\""\n])*[""]?)|([""](\\""|[^\""\n])*[""]?))", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:(@[""]([""][""]|[^\""\n])*[""]?)|([""](\\""|[^\""\n])*[""]?))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.GRAMMARSTRING, regex);
 			Tokens.Add(TokenType.GRAMMARSTRING);
 
@@ -295,15 +295,15 @@ namespace TinyPG.Highlighter
 
 				int len = -1;
 				TokenType index = (TokenType)int.MaxValue;
-				string input = Input.Substring(startpos);
+				//string input = Input.Substring(startpos);
 
 				tok = new Token(startpos, endpos);
 
 				for (i = 0; i < scantokens.Count; i++)
 				{
 					Regex r = Patterns[scantokens[i]];
-					Match m = r.Match(input);
-					if (m.Success && m.Index == 0 && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
+					Match m = r.Match(Input, startpos);
+					if (m.Success && m.Index == startpos && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
 					{
 						len = m.Length;
 						index = scantokens[i];

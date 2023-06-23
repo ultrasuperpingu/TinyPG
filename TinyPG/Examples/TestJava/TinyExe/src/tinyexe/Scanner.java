@@ -176,7 +176,7 @@ public class Scanner
 		Patterns.put(TokenType.COLON, regex);
 		Tokens.add(TokenType.COLON);
 
-		regex = Pattern.compile("^$");
+		regex = Pattern.compile("$");
 		Patterns.put(TokenType.EOF_, regex);
 		Tokens.add(TokenType.EOF_);
 

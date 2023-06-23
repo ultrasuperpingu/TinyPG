@@ -9,7 +9,7 @@
 <% @TextHighlighter Generate="True" %>
 
 [Skip]			WHITESPACE		-> @"\s+";
-			EOF			-> @"^$";
+			EOF			-> @"$";
 
 [Color(0, 128, 0)] 	GRAMMARCOMMENTLINE       	-> @"//[^\n]*\n?";
 // improved COMMENTBLOCK, will also match comment optionally with non-closing tags

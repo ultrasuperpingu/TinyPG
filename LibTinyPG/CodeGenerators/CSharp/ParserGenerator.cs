@@ -58,6 +58,10 @@ namespace TinyPG.CodeGenerators.CSharp
 		private string GenerateParseMethod(NonTerminalSymbol s)
 		{
 			StringBuilder sb = new StringBuilder();
+			if (s.Attributes.ContainsKey("ParseComment"))
+			{
+				sb.AppendLine(GenerateComment(s.Attributes["ParseComment"], Helper.Indent2));
+			}
 			sb.AppendLine("		public ParseTree Parse" + s.Name + "(string input, ParseTree tree)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
 			sb.AppendLine("		{");
 			sb.AppendLine("			scanner.Init(input);");

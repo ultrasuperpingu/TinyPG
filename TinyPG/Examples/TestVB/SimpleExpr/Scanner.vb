@@ -34,7 +34,7 @@ Namespace TinyPG
 			SkipList = New List(Of TokenType)()
 			SkipList.Add(TokenType.WHITESPACE)
 
-			regex = new Regex("^\s*$", RegexOptions.None & RegexOptions.Compiled)
+			regex = new Regex("\s*$", RegexOptions.None & RegexOptions.Compiled)
 			Patterns.Add(TokenType.EOF, regex)
 			Tokens.Add(TokenType.EOF)
 

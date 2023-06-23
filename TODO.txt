@@ -34,7 +34,7 @@ Prospecting/Long Term:
 
 Optimisation tests:
 Code:
-string pattern = "List<";
+			string pattern = "List<";
 			string content = File.ReadAllText(@"..\..\ParseTree.cs");
 			Regex r;
 			DateTime startTime;
@@ -53,8 +53,8 @@ string pattern = "List<";
 						count++;
 				}
 			Console.WriteLine((DateTime.Now - startTime).TotalMilliseconds);
-			Console.WriteLine(count.ToString()); 
-			
+			Console.WriteLine(count.ToString());
+
 			r = new Regex(@"\GList<", RegexOptions.Compiled);
 			Console.WriteLine("Regex \\GList< substring");
 			startTime = DateTime.Now;
@@ -74,23 +74,35 @@ string pattern = "List<";
 			Console.WriteLine("Regex \\GList< index");
 			startTime = DateTime.Now;
 			count = 0;
-			for(int k=0;k<1000;k++)
-				for(int i=0;i<content.Length;i++)
+			for (int k = 0; k<1000; k++)
+				for (int i = 0; i<content.Length; i++)
 				{
-					var m=r.Match(content, i);
+					var m = r.Match(content, i);
 					if (m.Success)
 						count++;
 				}
 			Console.WriteLine((DateTime.Now - startTime).TotalMilliseconds);
 			Console.WriteLine(count.ToString());
 
+			Console.WriteLine("string.IndexOf");
+			startTime = DateTime.Now;
+			count = 0;
+			for (int k = 0; k<1000; k++)
+				for (int i = 0; i<content.Length-pattern.Length; i++)
+				{
+					if (content.IndexOf(pattern, i, pattern.Length, StringComparison.Ordinal) == i)
+						count++;
+				}
+			Console.WriteLine((DateTime.Now - startTime).TotalMilliseconds);
+			Console.WriteLine(count.ToString()); 
+			
 			Console.WriteLine("string.LastIndexOf");
 			startTime = DateTime.Now;
 			count = 0;
 			for (int k = 0; k<1000; k++)
 				for (int i = 0; i<content.Length-pattern.Length; i++)
 				{
-					if(content.LastIndexOf(pattern, i+pattern.Length, pattern.Length) >= 0)
+					if (content.LastIndexOf(pattern, i+pattern.Length, pattern.Length, StringComparison.Ordinal) >= 0)
 						count++;
 				}
 			Console.WriteLine((DateTime.Now - startTime).TotalMilliseconds);
@@ -102,7 +114,7 @@ string pattern = "List<";
 			for (int k = 0; k<1000; k++)
 				for (int i = 0; i<content.Length-pattern.Length; i++)
 				{
-					if (content.Substring(i,pattern.Length) == pattern)
+					if (content.Substring(i, pattern.Length) == pattern)
 						count++;
 				}
 			Console.WriteLine((DateTime.Now - startTime).TotalMilliseconds);
@@ -110,17 +122,20 @@ string pattern = "List<";
 
 Results:
 Regex List< substring
-15926,9691
+15444,5756
 7000
 Regex \GList< substring
-9078,8486
+8769,2289
 7000
 Regex \GList< index
-399,0533
+415,0928
+7000
+string.IndexOf
+240,5434
 7000
 string.LastIndexOf
-567,8131
+244,6155
 7000
 string.Substring ==
-129,5207
+128,1088
 7000

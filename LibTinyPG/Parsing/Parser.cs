@@ -56,30 +56,30 @@ namespace TinyPG.Parsing
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.SQUAREOPEN, TokenType.IDENTIFIER, TokenType.EOF, TokenType.DIRECTIVEOPEN); // ZeroOrMore Rule
+			// Concat Rule
+			tok = scanner.LookAhead(TokenType.DIRECTIVEOPEN, TokenType.SQUAREOPEN, TokenType.IDENTIFIER, TokenType.EOF); // ZeroOrMore Rule
 			while (tok.Type == TokenType.DIRECTIVEOPEN)
 			{
 				ParseDirective(node); // NonTerminal Rule: Directive
-				tok = scanner.LookAhead(TokenType.SQUAREOPEN, TokenType.IDENTIFIER, TokenType.EOF, TokenType.DIRECTIVEOPEN); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.DIRECTIVEOPEN, TokenType.SQUAREOPEN, TokenType.IDENTIFIER, TokenType.EOF); // ZeroOrMore Rule
 			}
 
-			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.EOF, TokenType.SQUAREOPEN, TokenType.IDENTIFIER); // ZeroOrMore Rule
+			// Concat Rule
+			tok = scanner.LookAhead(TokenType.SQUAREOPEN, TokenType.IDENTIFIER, TokenType.EOF); // ZeroOrMore Rule
 			while (tok.Type == TokenType.SQUAREOPEN
 			    || tok.Type == TokenType.IDENTIFIER)
 			{
 				ParseExtProduction(node); // NonTerminal Rule: ExtProduction
-				tok = scanner.LookAhead(TokenType.EOF, TokenType.SQUAREOPEN, TokenType.IDENTIFIER); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.SQUAREOPEN, TokenType.IDENTIFIER, TokenType.EOF); // ZeroOrMore Rule
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.EOF); // Terminal Rule: EOF
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.EOF) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.EOF.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'EOF'.", 0x1001, tok));
 				return;
 			}
 
@@ -103,41 +103,41 @@ namespace TinyPG.Parsing
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.DIRECTIVEOPEN); // Terminal Rule: DIRECTIVEOPEN
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.DIRECTIVEOPEN) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.DIRECTIVEOPEN.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'DIRECTIVEOPEN'.", 0x1001, tok));
 				return;
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.IDENTIFIER); // Terminal Rule: IDENTIFIER
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.IDENTIFIER) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IDENTIFIER.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'IDENTIFIER'.", 0x1001, tok));
 				return;
 			}
 
-			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.DIRECTIVECLOSE, TokenType.IDENTIFIER); // ZeroOrMore Rule
+			// Concat Rule
+			tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.DIRECTIVECLOSE); // ZeroOrMore Rule
 			while (tok.Type == TokenType.IDENTIFIER)
 			{
 				ParseNameValue(node); // NonTerminal Rule: NameValue
-				tok = scanner.LookAhead(TokenType.DIRECTIVECLOSE, TokenType.IDENTIFIER); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.DIRECTIVECLOSE); // ZeroOrMore Rule
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.DIRECTIVECLOSE); // Terminal Rule: DIRECTIVECLOSE
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.DIRECTIVECLOSE) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.DIRECTIVECLOSE.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'DIRECTIVECLOSE'.", 0x1001, tok));
 				return;
 			}
 
@@ -161,27 +161,27 @@ namespace TinyPG.Parsing
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.IDENTIFIER); // Terminal Rule: IDENTIFIER
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.IDENTIFIER) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IDENTIFIER.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'IDENTIFIER'.", 0x1001, tok));
 				return;
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.ASSIGN); // Terminal Rule: ASSIGN
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.ASSIGN) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.ASSIGN.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'ASSIGN'.", 0x1001, tok));
 				return;
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.VERBATIM_STRING, TokenType.STRING, TokenType.CODEBLOCK);
 			switch (tok.Type)
 			{ // Choice Rule
@@ -191,7 +191,7 @@ namespace TinyPG.Parsing
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.VERBATIM_STRING) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.VERBATIM_STRING.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'VERBATIM_STRING'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -201,7 +201,7 @@ namespace TinyPG.Parsing
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.STRING) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.STRING.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'STRING'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -211,7 +211,7 @@ namespace TinyPG.Parsing
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.CODEBLOCK) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.CODEBLOCK.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'CODEBLOCK'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -240,15 +240,15 @@ namespace TinyPG.Parsing
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.SQUAREOPEN); // ZeroOrMore Rule
+			// Concat Rule
+			tok = scanner.LookAhead(TokenType.SQUAREOPEN, TokenType.IDENTIFIER); // ZeroOrMore Rule
 			while (tok.Type == TokenType.SQUAREOPEN)
 			{
 				ParseAttribute(node); // NonTerminal Rule: Attribute
-				tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.SQUAREOPEN); // ZeroOrMore Rule
+				tok = scanner.LookAhead(TokenType.SQUAREOPEN, TokenType.IDENTIFIER); // ZeroOrMore Rule
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			ParseProduction(node); // NonTerminal Rule: Production
 
 			parent.Token.UpdateRange(node.Token);
@@ -271,43 +271,43 @@ namespace TinyPG.Parsing
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.SQUAREOPEN); // Terminal Rule: SQUAREOPEN
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.SQUAREOPEN) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.SQUAREOPEN.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'SQUAREOPEN'.", 0x1001, tok));
 				return;
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.IDENTIFIER); // Terminal Rule: IDENTIFIER
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.IDENTIFIER) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IDENTIFIER.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'IDENTIFIER'.", 0x1001, tok));
 				return;
 			}
 
-			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.SQUARECLOSE, TokenType.BRACKETOPEN); // Option Rule
+			// Concat Rule
+			tok = scanner.LookAhead(TokenType.BRACKETOPEN, TokenType.SQUARECLOSE); // Option Rule
 			if (tok.Type == TokenType.BRACKETOPEN)
 			{
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.BRACKETOPEN); // Terminal Rule: BRACKETOPEN
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.BRACKETOPEN) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETOPEN.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'BRACKETOPEN'.", 0x1001, tok));
 					return;
 				}
 
-				 // Concat Rule
-				tok = scanner.LookAhead(TokenType.BRACKETCLOSE, TokenType.INTEGER, TokenType.DOUBLE, TokenType.STRING, TokenType.HEX); // Option Rule
+				// Concat Rule
+				tok = scanner.LookAhead(TokenType.INTEGER, TokenType.DOUBLE, TokenType.STRING, TokenType.HEX, TokenType.BRACKETCLOSE); // Option Rule
 				if (tok.Type == TokenType.INTEGER
 				    || tok.Type == TokenType.DOUBLE
 				    || tok.Type == TokenType.STRING
@@ -316,24 +316,24 @@ namespace TinyPG.Parsing
 					ParseParams(node); // NonTerminal Rule: Params
 				}
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.BRACKETCLOSE); // Terminal Rule: BRACKETCLOSE
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.BRACKETCLOSE) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETCLOSE.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'BRACKETCLOSE'.", 0x1001, tok));
 					return;
 				}
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.SQUARECLOSE); // Terminal Rule: SQUARECLOSE
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.SQUARECLOSE) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.SQUARECLOSE.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'SQUARECLOSE'.", 0x1001, tok));
 				return;
 			}
 
@@ -357,25 +357,25 @@ namespace TinyPG.Parsing
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			ParseParam(node); // NonTerminal Rule: Param
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.COMMA); // ZeroOrMore Rule
 			while (tok.Type == TokenType.COMMA)
 			{
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.COMMA); // Terminal Rule: COMMA
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.COMMA) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.COMMA.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'COMMA'.", 0x1001, tok));
 					return;
 				}
 
-				 // Concat Rule
+				// Concat Rule
 				ParseParam(node); // NonTerminal Rule: Param
 				tok = scanner.LookAhead(TokenType.COMMA); // ZeroOrMore Rule
 			}
@@ -408,7 +408,7 @@ namespace TinyPG.Parsing
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.INTEGER) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.INTEGER.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'INTEGER'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -418,7 +418,7 @@ namespace TinyPG.Parsing
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.DOUBLE) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.DOUBLE.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'DOUBLE'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -428,7 +428,7 @@ namespace TinyPG.Parsing
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.STRING) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.STRING.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'STRING'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -438,7 +438,7 @@ namespace TinyPG.Parsing
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.HEX) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.HEX.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'HEX'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -467,102 +467,102 @@ namespace TinyPG.Parsing
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.IDENTIFIER); // Terminal Rule: IDENTIFIER
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.IDENTIFIER) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IDENTIFIER.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'IDENTIFIER'.", 0x1001, tok));
 				return;
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.Scan(TokenType.ARROW); // Terminal Rule: ARROW
 			n = node.CreateNode(tok, tok.ToString() );
 			node.Token.UpdateRange(tok);
 			node.Nodes.Add(n);
 			if (tok.Type != TokenType.ARROW) {
-				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.ARROW.ToString(), 0x1001, tok));
+				tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'ARROW'.", 0x1001, tok));
 				return;
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			ParseRule(node); // NonTerminal Rule: Rule
 
-			 // Concat Rule
-			tok = scanner.LookAhead(TokenType.CODEBLOCK, TokenType.SEMICOLON, TokenType.COLON); // Option Rule
+			// Concat Rule
+			tok = scanner.LookAhead(TokenType.COLON, TokenType.CODEBLOCK, TokenType.SEMICOLON); // Option Rule
 			if (tok.Type == TokenType.COLON)
 			{
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.COLON); // Terminal Rule: COLON
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.COLON) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.COLON.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'COLON'.", 0x1001, tok));
 					return;
 				}
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.TYPE); // Terminal Rule: TYPE
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.TYPE) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.TYPE.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'TYPE'.", 0x1001, tok));
 					return;
 				}
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.LookAhead(TokenType.DEFAULT); // Option Rule
 				if (tok.Type == TokenType.DEFAULT)
 				{
 
-					 // Concat Rule
+					// Concat Rule
 					tok = scanner.Scan(TokenType.DEFAULT); // Terminal Rule: DEFAULT
 					n = node.CreateNode(tok, tok.ToString() );
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.DEFAULT) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.DEFAULT.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'DEFAULT'.", 0x1001, tok));
 						return;
 					}
 
-					 // Concat Rule
+					// Concat Rule
 					tok = scanner.Scan(TokenType.BRACKETOPEN); // Terminal Rule: BRACKETOPEN
 					n = node.CreateNode(tok, tok.ToString() );
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.BRACKETOPEN) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETOPEN.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'BRACKETOPEN'.", 0x1001, tok));
 						return;
 					}
 
-					 // Concat Rule
+					// Concat Rule
 					tok = scanner.Scan(TokenType.DEFAULT_VALUE); // Terminal Rule: DEFAULT_VALUE
 					n = node.CreateNode(tok, tok.ToString() );
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.DEFAULT_VALUE) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.DEFAULT_VALUE.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'DEFAULT_VALUE'.", 0x1001, tok));
 						return;
 					}
 
-					 // Concat Rule
+					// Concat Rule
 					tok = scanner.Scan(TokenType.BRACKETCLOSE); // Terminal Rule: BRACKETCLOSE
 					n = node.CreateNode(tok, tok.ToString() );
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.BRACKETCLOSE) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETCLOSE.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'BRACKETCLOSE'.", 0x1001, tok));
 						return;
 					}
 				}
 			}
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.CODEBLOCK, TokenType.SEMICOLON);
 			switch (tok.Type)
 			{ // Choice Rule
@@ -572,7 +572,7 @@ namespace TinyPG.Parsing
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.CODEBLOCK) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.CODEBLOCK.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'CODEBLOCK'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -582,7 +582,7 @@ namespace TinyPG.Parsing
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.SEMICOLON) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.SEMICOLON.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'SEMICOLON'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -619,7 +619,7 @@ namespace TinyPG.Parsing
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.VERBATIM_STRING) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.VERBATIM_STRING.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'VERBATIM_STRING'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -629,7 +629,7 @@ namespace TinyPG.Parsing
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.STRING) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.STRING.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'STRING'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -662,25 +662,25 @@ namespace TinyPG.Parsing
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			ParseConcatRule(node); // NonTerminal Rule: ConcatRule
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.PIPE); // ZeroOrMore Rule
 			while (tok.Type == TokenType.PIPE)
 			{
 
-				 // Concat Rule
+				// Concat Rule
 				tok = scanner.Scan(TokenType.PIPE); // Terminal Rule: PIPE
 				n = node.CreateNode(tok, tok.ToString() );
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.PIPE) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.PIPE.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'PIPE'.", 0x1001, tok));
 					return;
 				}
 
-				 // Concat Rule
+				// Concat Rule
 				ParseConcatRule(node); // NonTerminal Rule: ConcatRule
 				tok = scanner.LookAhead(TokenType.PIPE); // ZeroOrMore Rule
 			}
@@ -730,7 +730,7 @@ namespace TinyPG.Parsing
 			parent.Nodes.Add(node);
 
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.BRACKETOPEN);
 			switch (tok.Type)
 			{ // Choice Rule
@@ -740,32 +740,32 @@ namespace TinyPG.Parsing
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.IDENTIFIER) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IDENTIFIER.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'IDENTIFIER'.", 0x1001, tok));
 						return;
 					}
 					break;
 				case TokenType.BRACKETOPEN:
 
-					 // Concat Rule
+					// Concat Rule
 					tok = scanner.Scan(TokenType.BRACKETOPEN); // Terminal Rule: BRACKETOPEN
 					n = node.CreateNode(tok, tok.ToString() );
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.BRACKETOPEN) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETOPEN.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'BRACKETOPEN'.", 0x1001, tok));
 						return;
 					}
 
-					 // Concat Rule
+					// Concat Rule
 					ParseSubrule(node); // NonTerminal Rule: Subrule
 
-					 // Concat Rule
+					// Concat Rule
 					tok = scanner.Scan(TokenType.BRACKETCLOSE); // Terminal Rule: BRACKETCLOSE
 					n = node.CreateNode(tok, tok.ToString() );
 					node.Token.UpdateRange(tok);
 					node.Nodes.Add(n);
 					if (tok.Type != TokenType.BRACKETCLOSE) {
-						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETCLOSE.ToString(), 0x1001, tok));
+						tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'BRACKETCLOSE'.", 0x1001, tok));
 						return;
 					}
 					break;
@@ -774,7 +774,7 @@ namespace TinyPG.Parsing
 					break;
 			} // Choice Rule
 
-			 // Concat Rule
+			// Concat Rule
 			tok = scanner.LookAhead(TokenType.UNARYOPER); // Option Rule
 			if (tok.Type == TokenType.UNARYOPER)
 			{
@@ -783,7 +783,7 @@ namespace TinyPG.Parsing
 				node.Token.UpdateRange(tok);
 				node.Nodes.Add(n);
 				if (tok.Type != TokenType.UNARYOPER) {
-					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.UNARYOPER.ToString(), 0x1001, tok));
+					tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected 'UNARYOPER'.", 0x1001, tok));
 					return;
 				}
 			}

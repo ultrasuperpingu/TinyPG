@@ -69,7 +69,7 @@ GREATEREQUAL		-> @">=";
 LESSTHAN		-> @"<(?!>)"; // matches only when not followed by >
 GREATERTHAN		-> @">";
 COLON			-> @":";
-EOF_			-> @"^$";
+EOF_			-> @"$";
 
 
 [Skip] WHITESPACE 	-> @"\s+";

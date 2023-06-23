@@ -43,7 +43,7 @@ namespace TinyPG
 		
 		SkipList.push_back(TokenType::WHITESPACE);
 
-		regex = std::regex("^\\s*$");
+		regex = std::regex("^(?:\\s*$)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::EOF_, regex));
 		Tokens.push_back(TokenType::EOF_);
 
@@ -146,7 +146,7 @@ namespace TinyPG
 			{
 				std::regex r = Patterns[scantokens[i]];
 				std::smatch m;
-				std::regex_search(input.begin()+startpos, m, r);
+				std::regex_search(input, m, r);
 
 				int matchLen = (int)std::distance(m[0].first, m[0].second);
 				if (!m.empty() && m[0].first == input.begin() && ((matchLen > len) || (scantokens[i] < index && matchLen == len)))

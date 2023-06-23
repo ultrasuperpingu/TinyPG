@@ -35,9 +35,9 @@ namespace TinyPG.CodeGenerators.CSharp
 				string defaultReturnValue = "default("+returnType+")";
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault) && !isDebugOther)
 					defaultReturnValue = s.ReturnTypeDefault;
-				if (s.Attributes.ContainsKey("Comment"))
+				if (s.Attributes.ContainsKey("EvalComment"))
 				{
-					evalmethods.AppendLine(GenerateComment(s.Attributes["Comment"], Helper.Indent2));
+					evalmethods.AppendLine(GenerateComment(s.Attributes["EvalComment"], Helper.Indent2));
 				}
 				evalmethods.AppendLine("		protected virtual " + returnType + " Eval" + s.Name + "(params object[] paramlist)");
 				evalmethods.AppendLine("		{");
@@ -111,54 +111,6 @@ namespace TinyPG.CodeGenerators.CSharp
 			return generated;
 		}
 
-		private Dictionary<string, string> GetTemplateFilesPath(Grammar Grammar, string directiveName)
-		{
-			Dictionary<string, string> _templateFiles = new Dictionary<string, string>();
-			string templatePath = Grammar.GetTemplatePath();
-			if (string.IsNullOrEmpty(templatePath))
-				throw new Exception("Template path not found:" + Grammar.Directives["TinyPG"]["TemplatePath"]);
-			List<string> files;
-			if (Grammar.Directives["ParseTree"].ContainsKey("TemplateFiles"))
-			{
-				var templateFilesString = Grammar.Directives[directiveName]["TemplateFiles"];
-				files = new List<string>(templateFilesString.Split(','));
-				for (int i = 0; i < files.Count; i++)
-				{
-					if (string.IsNullOrWhiteSpace(files[i]))
-					{
-						files.RemoveAt(i);
-						i--;
-						continue;
-					}
-					files[i] = files[i].Trim();
-				}
-			}
-			else
-			{
-				files=templateFiles;
-			}
-			for (int i = 0; i < files.Count; i++)
-			{
-				var f = Path.Combine(templatePath, files[i]);
-				if (!File.Exists(f))
-				{
-					throw new Exception("Template file "+files[i]+" does not exist.");
-				}
-				_templateFiles.Add(files[i], f);
-			}
-
-			return _templateFiles;
-		}
-
-		protected string GenerateComment(object[] objects, string Indent)
-		{
-			StringBuilder sb = new StringBuilder();
-			foreach(var o in objects)
-			{
-				sb.Append(Indent).Append("/// ").AppendLine(Helper.LiteralToUnescaped(o.ToString()));
-			}
-			return sb.ToString().TrimEnd();
-		}
 
 		/// <summary>
 		/// replaces $ variables with a c# statement

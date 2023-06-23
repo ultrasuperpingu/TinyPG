@@ -183,7 +183,7 @@ namespace TinyExe
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::COLON, regex));
 		Tokens.push_back(TokenType::COLON);
 
-		regex = std::regex("^$");
+		regex = std::regex("^(?:$)");
 		Patterns.insert(std::pair<TokenType,std::regex>(TokenType::EOF_, regex));
 		Tokens.push_back(TokenType::EOF_);
 
