@@ -87,9 +87,14 @@ public class Scanner
 
 		// this prevents double scanning and matching
 		// increased performance
+		// TODO: check this, what if the expected token are different since last call?
+		// Check at least that LookAheadToken is part of the expected tokens
 		if (LookAheadToken != null 
 			&& LookAheadToken.Type != TokenType._UNDETERMINED_ 
-			&& LookAheadToken.Type != TokenType._NONE_) return LookAheadToken;
+			&& LookAheadToken.Type != TokenType._NONE_)
+		{
+			return LookAheadToken;
+		}
 
 		// if no scantokens specified, then scan for all of them (= backward compatible)
 		if (expectedtokens.length == 0)

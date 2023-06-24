@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using TinyPG;
 using TinyPG.Parsing;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
+
 
 namespace TinyPG.CodeGenerators.Java
 {
@@ -18,9 +18,7 @@ namespace TinyPG.CodeGenerators.Java
 		{
 			if (Debug != GenerateDebugMode.None)
 				throw new Exception("Java cannot be generated in debug mode");
-			string templatePath = Grammar.GetTemplatePath();
-			if (string.IsNullOrEmpty(templatePath))
-				throw new Exception("Template path not found:" + Grammar.Directives["TinyPG"]["TemplatePath"]);
+			Dictionary<string, string> templateFilesPath = GetTemplateFilesPath(Grammar, "ParseTree");
 
 			StringBuilder evalsymbols = new StringBuilder();
 			StringBuilder evalmethods = new StringBuilder();
@@ -39,6 +37,10 @@ namespace TinyPG.CodeGenerators.Java
 				string defaultReturnValue = "null";
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault))
 					defaultReturnValue = s.ReturnTypeDefault;
+				if (s.Attributes.ContainsKey("EvalComment"))
+				{
+					evalmethods.AppendLine(GenerateComment(s.Attributes["EvalComment"], Helper.Indent2, true));
+				}
 				evalmethods.AppendLine("	protected " + returnType + " Eval" + s.Name + "(Object... paramlist)");
 				evalmethods.AppendLine("	{");
 				if (s.CodeBlock != null)
@@ -63,16 +65,17 @@ namespace TinyPG.CodeGenerators.Java
 			}
 			
 			Dictionary<string, string> generated = new Dictionary<string, string>();
-			foreach (var templateName in TemplateFiles)
+			foreach (var entry in templateFilesPath)
 			{
-				string fileContent = File.ReadAllText(Path.Combine(templatePath, templateName));
+				var templateFilePath = entry.Value;
+				string fileContent = File.ReadAllText(templateFilePath);
 				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				//fileContent = fileContent.Replace(@"<%CustomCode%>", Grammar.Directives["ParseTree"]["CustomCode"]);
 				fileContent = fileContent.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
 				fileContent = fileContent.Replace(@"<%VirtualEvalMethods%>", evalmethods.ToString());
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["ParseTree"]);
-				generated[templateName] = fileContent;
+				generated[entry.Key] = fileContent;
 			}
 			return generated;
 		}
@@ -87,7 +90,8 @@ namespace TinyPG.CodeGenerators.Java
 		private string FormatCodeBlock(NonTerminalSymbol nts)
 		{
 			string codeblock = nts.CodeBlock;
-			if (nts == null) return "";
+			if (nts == null)
+				return "";
 
 			Regex var = new Regex(@"(?<eval>\$|\?)(?<var>[a-zA-Z_0-9]+)(\[(?<index>[^]]+)\])?", RegexOptions.Compiled);
 
@@ -128,7 +132,7 @@ namespace TinyPG.CodeGenerators.Java
 				match = var.Match(codeblock);
 			}
 
-			codeblock = Helper.Indent3 + codeblock.Replace("\n", "\r\n" + Helper.Indent2);
+			codeblock = Helper.Indent3 + codeblock.Replace(Environment.NewLine, Environment.NewLine + Helper.Indent2);
 			return codeblock;
 		}
 	}

@@ -16,8 +16,9 @@ namespace TinyPG.CodeGenerators.CSharp
 		private bool isDebugOther;
 		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
-			Dictionary<string, string> templateFilesPath = GetTemplateFilesPath(Grammar, "ParseTree");
 			isDebugOther = Debug == GenerateDebugMode.DebugOther;
+			Dictionary<string, string> templateFilesPath = GetTemplateFilesPath(Grammar, "ParseTree");
+
 
 			StringBuilder evalsymbols = new StringBuilder();
 			StringBuilder evalmethods = new StringBuilder();
@@ -110,7 +111,6 @@ namespace TinyPG.CodeGenerators.CSharp
 			}
 			return generated;
 		}
-
 
 		/// <summary>
 		/// replaces $ variables with a c# statement

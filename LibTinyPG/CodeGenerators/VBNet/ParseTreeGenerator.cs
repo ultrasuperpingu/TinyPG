@@ -16,10 +16,9 @@ namespace TinyPG.CodeGenerators.VBNet
 		private bool isDebugOther;
 		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
-			string templatePath = Grammar.GetTemplatePath();
-			if (string.IsNullOrEmpty(templatePath))
-				throw new Exception("Template path not found:" + Grammar.Directives["TinyPG"]["TemplatePath"]);
 			isDebugOther = Debug == GenerateDebugMode.DebugOther;
+			Dictionary<string, string> templateFilesPath = GetTemplateFilesPath(Grammar, "ParseTree");
+
 
 			StringBuilder evalsymbols = new StringBuilder();
 			StringBuilder evalmethods = new StringBuilder();
@@ -37,6 +36,10 @@ namespace TinyPG.CodeGenerators.VBNet
 				string defaultReturnValue = "Nothing";
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault) && !isDebugOther)
 					defaultReturnValue = s.ReturnTypeDefault;
+				//if (s.Attributes.ContainsKey("EvalComment"))
+				//{
+				//	evalmethods.AppendLine(GenerateComment(s.Attributes["EvalComment"], Helper.Indent2));
+				//}
 				evalmethods.AppendLine("		Protected Overridable Function Eval" + s.Name + "(ByVal ParamArray paramlist As Object()) As " + returnType);
 				if (s.CodeBlock != null && !isDebugOther)
 				{
@@ -60,9 +63,10 @@ namespace TinyPG.CodeGenerators.VBNet
 			}
 
 			Dictionary<string, string> generated = new Dictionary<string, string>();
-			foreach (var templateName in templateFiles)
+			foreach (var entry in templateFilesPath)
 			{
-				string fileContent = File.ReadAllText(Path.Combine(templatePath, templateName));
+				var templateFilePath = entry.Value;
+				string fileContent = File.ReadAllText(templateFilePath);
 				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				if (Debug != GenerateDebugMode.None)
@@ -130,7 +134,7 @@ namespace TinyPG.CodeGenerators.VBNet
 				fileContent = fileContent.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
 				fileContent = fileContent.Replace(@"<%VirtualEvalMethods%>", evalmethods.ToString());
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["ParseTree"]);
-				generated[templateName] = fileContent;
+				generated[entry.Key] = fileContent;
 			}
 			return generated;
 		}
@@ -145,7 +149,8 @@ namespace TinyPG.CodeGenerators.VBNet
 		private string FormatCodeBlock(NonTerminalSymbol nts)
 		{
 			string codeblock = nts.CodeBlock;
-			if (nts == null) return "";
+			if (nts == null)
+				return "";
 
 			Regex var = new Regex(@"(?<eval>\$|\?)(?<var>[a-zA-Z_0-9]+)(\[(?<index>[^]]+)\])?", RegexOptions.Compiled);
 
@@ -186,7 +191,7 @@ namespace TinyPG.CodeGenerators.VBNet
 				match = var.Match(codeblock);
 			}
 
-			codeblock = Helper.Indent3 + codeblock.Replace("\n", "\r\n" + Helper.Indent2);
+			codeblock = Helper.Indent3 + codeblock.Replace(Environment.NewLine, Environment.NewLine + Helper.Indent2);
 			return codeblock;
 		}
 	}

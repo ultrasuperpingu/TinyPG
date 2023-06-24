@@ -17,9 +17,8 @@ namespace TinyPG.CodeGenerators.Java
 		{
 			if (Debug != GenerateDebugMode.None)
 				throw new Exception("Java cannot be generated in debug mode");
-			string templatePath = Grammar.GetTemplatePath();
-			if (string.IsNullOrEmpty(templatePath))
-				throw new Exception("Template path not found:" + Grammar.Directives["TinyPG"]["TemplatePath"]);
+			
+			Dictionary<string, string> templateFilesPath = GetTemplateFilesPath(Grammar, "Scanner");
 
 
 			int counter = 2;
@@ -67,16 +66,17 @@ namespace TinyPG.CodeGenerators.Java
 			}
 
 			Dictionary<string, string> generated = new Dictionary<string, string>();
-			foreach (var templateName in templateFiles)
+			foreach (var entry in templateFilesPath)
 			{
-				string fileContent = File.ReadAllText(Path.Combine(templatePath, templateName));
+				var templateFilePath = entry.Value;
+				string fileContent = File.ReadAllText(templateFilePath);
 				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 				fileContent = fileContent.Replace(@"<%SkipList%>", skiplist.ToString());
 				fileContent = fileContent.Replace(@"<%RegExps%>", regexps.ToString());
 				fileContent = fileContent.Replace(@"<%TokenType%>", tokentype.ToString());
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Scanner"]);
-				generated[templateName] = fileContent;
+				generated[entry.Key] = fileContent;
 			}
 			return generated;
 		}

@@ -85,10 +85,14 @@ namespace <%Namespace%>
 
 		// this prevents double scanning and matching
 		// increased performance
+		// TODO: check this, what if the expected token are different since last call?
+		// Check at least that LookAheadToken is part of the expected tokens
 		if (&LookAheadToken != &Token::Empty
 			&& LookAheadToken.Type != TokenType::_UNDETERMINED_
 			&& LookAheadToken.Type != TokenType::_NONE_)
+		{
 			return LookAheadToken;
+		}
 
 		// if no scantokens specified, then scan for all of them (= backward compatible)
 		if (expectedtokens.size() == 0)
@@ -96,6 +100,7 @@ namespace <%Namespace%>
 		else
 		{
 			scantokens = std::vector<TokenType>(expectedtokens);
+			// TODO: Check this line (useless at first look, too late to figure out now) 
 			scantokens.insert(scantokens.end(), expectedtokens.begin(), expectedtokens.end());
 			scantokens.insert(scantokens.end(), SkipList.begin(), SkipList.end());
 		}

@@ -14,9 +14,7 @@ namespace TinyPG.CodeGenerators.CSharp
 
 		public Dictionary<string, string> Generate(Grammar Grammar,  GenerateDebugMode Debug)
 		{
-			string templatePath = Grammar.GetTemplatePath();
-			if (string.IsNullOrEmpty(templatePath))
-				throw new Exception("Template path not found:" + Grammar.Directives["TinyPG"]["TemplatePath"]);
+			Dictionary<string, string> templateFilesPath = GetTemplateFilesPath(Grammar, "TextHighlighter");
 
 			StringBuilder tokens = new StringBuilder();
 			StringBuilder colors = new StringBuilder();
@@ -60,15 +58,16 @@ namespace TinyPG.CodeGenerators.CSharp
 			}
 
 			Dictionary<string, string> generated = new Dictionary<string, string>();
-			foreach (var templateName in TemplateFiles)
+			foreach (var entry in templateFilesPath)
 			{
-				string fileContent = File.ReadAllText(Path.Combine(templatePath, templateName));
+				var templateFilePath = entry.Value;
+				string fileContent = File.ReadAllText(templateFilePath);
 				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 				fileContent = fileContent.Replace(@"<%HightlightTokens%>", tokens.ToString());
 				fileContent = fileContent.Replace(@"<%RtfColorPalette%>", colors.ToString());
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["TextHighlighter"]);
-				generated[templateName] = fileContent;
+				generated[entry.Key] = fileContent;
 			}
 			return generated;
 		}

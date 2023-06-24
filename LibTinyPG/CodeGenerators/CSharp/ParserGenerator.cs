@@ -14,9 +14,7 @@ namespace TinyPG.CodeGenerators.CSharp
 
 		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
-			string templatePath = Grammar.GetTemplatePath();
-			if (string.IsNullOrEmpty(templatePath))
-				throw new Exception("Template path not found:" + Grammar.Directives["TinyPG"]["TemplatePath"]);
+			Dictionary<string, string> templateFilesPath = GetTemplateFilesPath(Grammar, "Parser");
 
 			// generate the parser file
 			StringBuilder parsers = new StringBuilder();
@@ -29,9 +27,10 @@ namespace TinyPG.CodeGenerators.CSharp
 			}
 
 			Dictionary<string, string> generated = new Dictionary<string, string>();
-			foreach (var templateName in TemplateFiles)
+			foreach (var entry in templateFilesPath)
 			{
-				string fileContent = File.ReadAllText(Path.Combine(templatePath, templateName));
+				var templateFilePath = entry.Value;
+				string fileContent = File.ReadAllText(templateFilePath);
 				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				if (Debug != GenerateDebugMode.None)
@@ -48,7 +47,7 @@ namespace TinyPG.CodeGenerators.CSharp
 
 				fileContent = fileContent.Replace(@"<%ParseNonTerminals%>", parsers.ToString());
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Parser"]);
-				generated[templateName] = fileContent;
+				generated[entry.Key] = fileContent;
 			}
 
 			return generated;

@@ -57,11 +57,11 @@ namespace TinyPG.Highlighter
 			Patterns.Add(TokenType.DIRECTIVESTRING, regex);
 			Tokens.Add(TokenType.DIRECTIVESTRING);
 
-			regex = new Regex(@"^(@TinyPG|@Parser|@Scanner|@Grammar|@ParseTree|@TextHighlighter|@Compile)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:(@TinyPG|@Parser|@Scanner|@Grammar|@ParseTree|@TextHighlighter|@Compile))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DIRECTIVEKEYWORD, regex);
 			Tokens.Add(TokenType.DIRECTIVEKEYWORD);
 
-			regex = new Regex(@"^(@|(%[^>])|=|"")+?", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:(@|(%[^>])|=|"")+?)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.DIRECTIVESYMBOL, regex);
 			Tokens.Add(TokenType.DIRECTIVESYMBOL);
 
@@ -81,7 +81,7 @@ namespace TinyPG.Highlighter
 			Patterns.Add(TokenType.ATTRIBUTESYMBOL, regex);
 			Tokens.Add(TokenType.ATTRIBUTESYMBOL);
 
-			regex = new Regex(@"^(Skip|Color|IgnoreCase|ParseComment|EvalComment)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:(Skip|Color|IgnoreCase|ParseComment|EvalComment))", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.ATTRIBUTEKEYWORD, regex);
 			Tokens.Add(TokenType.ATTRIBUTEKEYWORD);
 
@@ -277,13 +277,20 @@ namespace TinyPG.Highlighter
 
 			// this prevents double scanning and matching
 			// increased performance
+			// TODO: check this, what if the expected token are different since last call?
+			// Check at least that LookAheadToken is part of the expected tokens
 			if (LookAheadToken != null
 				&& LookAheadToken.Type != TokenType._UNDETERMINED_
-				&& LookAheadToken.Type != TokenType._NONE_) return LookAheadToken;
+				&& LookAheadToken.Type != TokenType._NONE_)
+			{
+				return LookAheadToken;
+			}
 
 			// if no scantokens specified, then scan for all of them (= backward compatible)
 			if (expectedtokens.Length == 0)
+			{
 				scantokens = Tokens;
+			}
 			else
 			{
 				scantokens = new List<TokenType>(expectedtokens);
@@ -292,7 +299,6 @@ namespace TinyPG.Highlighter
 
 			do
 			{
-
 				int len = -1;
 				TokenType index = (TokenType)int.MaxValue;
 				//string input = Input.Substring(startpos);

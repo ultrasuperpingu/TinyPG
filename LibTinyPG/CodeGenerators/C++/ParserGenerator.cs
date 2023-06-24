@@ -17,9 +17,7 @@ namespace TinyPG.CodeGenerators.Cpp
 			if (Debug != GenerateDebugMode.None)
 				throw new Exception("Cpp cannot be generated in debug mode");
 
-			string templatePath = Grammar.GetTemplatePath();
-			if (string.IsNullOrEmpty(templatePath))
-				throw new Exception("Template path not found:" + Grammar.Directives["TinyPG"]["TemplatePath"]);
+			Dictionary<string, string> templateFilesPath = GetTemplateFilesPath(Grammar, "Parser");
 
 			// generate the parser file
 			StringBuilder parserMethodsImpl = new StringBuilder();
@@ -37,15 +35,16 @@ namespace TinyPG.CodeGenerators.Cpp
 				parserMethodsDecl.AppendLine("		void Parse" + s.Name + "(ParseNode* parent);");
 			}
 			Dictionary<string, string> generated = new Dictionary<string, string>();
-			foreach (var templateName in templateFiles)
+			foreach (var entry in templateFilesPath)
 			{
-				string fileContent = File.ReadAllText(Path.Combine(templatePath, templateName));
+				var templateFilePath = entry.Value;
+				string fileContent = File.ReadAllText(templateFilePath);
 				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				fileContent = fileContent.Replace(@"<%ParseNonTerminalsImpl%>", parserMethodsImpl.ToString());
 				fileContent = fileContent.Replace(@"<%ParseNonTerminalsDecl%>", parserMethodsDecl.ToString());
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Parser"]);
-				generated[templateName] = fileContent;
+				generated[entry.Key] = fileContent;
 			}
 			return generated;
 		}

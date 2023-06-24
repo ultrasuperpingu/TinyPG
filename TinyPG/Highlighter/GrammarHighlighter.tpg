@@ -17,15 +17,15 @@
 
 	
 [Color(255, 0, 0)]	DIRECTIVESTRING	-> @"((@\""(\""\""|[^\""])*(""|\n))|(\""(\\\""|[^\""])*\""))";
-[Color(128, 0, 255)]	DIRECTIVEKEYWORD	-> @"^(@TinyPG|@Parser|@Scanner|@Grammar|@ParseTree|@TextHighlighter|@Compile)";
-			DIRECTIVESYMBOL	-> @"^(@|(%[^>])|=|"")+?";
+[Color(128, 0, 255)]	DIRECTIVEKEYWORD	-> @"(@TinyPG|@Parser|@Scanner|@Grammar|@ParseTree|@TextHighlighter|@Compile)";
+			DIRECTIVESYMBOL	-> @"(@|(%[^>])|=|"")+?";
 			DIRECTIVENONKEYWORD	-> @"[^%@=""{]+";
 [Color(128, 0, 128)]	DIRECTIVEOPEN		-> @"<%";
 [Color(128, 0, 128)]	DIRECTIVECLOSE	-> @"%>";
 
 
 			ATTRIBUTESYMBOL	-> @"[^\[\]]";
-[Color(43, 145, 202)] ATTRIBUTEKEYWORD	-> @"^(Skip|Color|IgnoreCase|ParseComment|EvalComment)";
+[Color(43, 145, 202)] ATTRIBUTEKEYWORD	-> @"(Skip|Color|IgnoreCase|ParseComment|EvalComment)";
 			ATTRIBUTENONKEYWORD	-> @"[^\(\)\]\n\s]+";
 
 			ATTRIBUTEOPEN		-> @"\[\s*";

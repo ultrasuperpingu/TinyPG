@@ -1,11 +1,10 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.IO;
 using TinyPG.Parsing;
 using System.Text.RegularExpressions;
-using System.Reflection;
-using System.Security.Cryptography;
-using System;
 using System.Collections.Generic;
+
 
 namespace TinyPG.CodeGenerators.Cpp
 {
@@ -18,10 +17,9 @@ namespace TinyPG.CodeGenerators.Cpp
 		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (Debug != GenerateDebugMode.None)
-				throw new Exception("Cpp cannot be generated in debug mode");
-			string templatePath = Grammar.GetTemplatePath();
-			if (string.IsNullOrEmpty(templatePath))
-				throw new Exception("Template path not found:" + Grammar.Directives["TinyPG"]["TemplatePath"]);
+				throw new Exception("Java cannot be generated in debug mode");
+			Dictionary<string, string> templateFilesPath = GetTemplateFilesPath(Grammar, "ParseTree");
+
 
 			StringBuilder evalsymbols = new StringBuilder();
 			StringBuilder evalMethodsDecl = new StringBuilder();
@@ -32,7 +30,6 @@ namespace TinyPG.CodeGenerators.Cpp
 			{
 				evalsymbols.AppendLine("				case TokenType::" + s.Name + ":");
 				evalsymbols.AppendLine("					Value = Eval" + s.Name + "(paramlist);");
-				//evalsymbols.AppendLine("					Value = Token.Text;");
 				evalsymbols.AppendLine("					break;");
 
 				string returnType = "std::any";
@@ -41,6 +38,10 @@ namespace TinyPG.CodeGenerators.Cpp
 				string defaultReturnValue = "std::any()";
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault))
 					defaultReturnValue = s.ReturnTypeDefault;
+				if (s.Attributes.ContainsKey("EvalComment"))
+				{
+					evalMethodsDecl.AppendLine(GenerateComment(s.Attributes["EvalComment"], Helper.Indent2));
+				}
 				evalMethodsDecl.AppendLine("		virtual " + returnType + " Eval" + s.Name + "(const std::vector<std::any>& paramlist);");
 				
 				evalMethodsImpl.AppendLine("	" + returnType + " ParseNode::Eval" + s.Name + "(const std::vector<std::any>& paramlist)");
@@ -69,9 +70,10 @@ namespace TinyPG.CodeGenerators.Cpp
 			}
 
 			Dictionary<string, string> generated = new Dictionary<string, string>();
-			foreach (var templateName in templateFiles)
+			foreach (var entry in templateFilesPath)
 			{
-				string fileContent = File.ReadAllText(Path.Combine(Grammar.GetTemplatePath(), templateName));
+				var templateFilePath = entry.Value;
+				string fileContent = File.ReadAllText(templateFilePath);
 				fileContent = fileContent.Replace(@"<%SourceFilename%>", Grammar.SourceFilename);
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				
@@ -79,11 +81,10 @@ namespace TinyPG.CodeGenerators.Cpp
 				fileContent = fileContent.Replace(@"<%VirtualEvalMethods%>", evalMethodsDecl.ToString());
 				fileContent = fileContent.Replace(@"<%VirtualEvalMethodsImpl%>", evalMethodsImpl.ToString());
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["ParseTree"]);
-				generated[templateName] = fileContent;
+				generated[entry.Key] = fileContent;
 			}
 			return generated;
 		}
-
 
 		/// <summary>
 		/// replaces $ variables with a c# statement
@@ -95,7 +96,8 @@ namespace TinyPG.CodeGenerators.Cpp
 		private string FormatCodeBlock(NonTerminalSymbol nts)
 		{
 			string codeblock = nts.CodeBlock;
-			if (nts == null) return "";
+			if (nts == null)
+				return "";
 
 			Regex var = new Regex(@"(?<eval>\$|\?)(?<var>[a-zA-Z_0-9]+)(\[(?<index>[^]]+)\])?", RegexOptions.Compiled);
 
@@ -136,7 +138,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				match = var.Match(codeblock);
 			}
 
-			codeblock = Helper.Indent2 + codeblock.Replace("\n", "\r\n" + Helper.Indent2);
+			codeblock = Helper.Indent2 + codeblock.Replace(Environment.NewLine, Environment.NewLine + Helper.Indent2);
 			return codeblock;
 		}
 	}
