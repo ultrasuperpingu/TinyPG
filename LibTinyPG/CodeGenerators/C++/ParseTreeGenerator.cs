@@ -60,13 +60,14 @@ namespace TinyPG.CodeGenerators.Cpp
 
 
 				evalMethodsDecl.AppendLine("		virtual " + returnType + " Get" + s.Name + "Value(int index, const std::vector<std::any>& paramlist);");
-				evalMethodsImpl.AppendLine("	inline " + returnType + " ParseNode::Get" + s.Name + "Value(int index, const std::vector<std::any>& paramlist)");
+				evalMethodsImpl.AppendLine("	" + returnType + " ParseNode::Get" + s.Name + "Value(int index, const std::vector<std::any>& paramlist)");
 				evalMethodsImpl.AppendLine("	{");
 				evalMethodsImpl.AppendLine("		ParseNode* node = GetTokenNode(TokenType::" + s.Name + ", index);");
 				evalMethodsImpl.AppendLine("		if (node != NULL)");
 				evalMethodsImpl.AppendLine("			return node->Eval"+s.Name+"(paramlist);");
 				evalMethodsImpl.AppendLine("		throw std::runtime_error(\"No "+ s.Name+"[index] found.\");");
-				evalMethodsImpl.AppendLine("	}\r\n");
+				evalMethodsImpl.AppendLine("	}");
+				evalMethodsImpl.AppendLine();
 			}
 
 			Dictionary<string, string> generated = new Dictionary<string, string>();
@@ -138,7 +139,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				match = var.Match(codeblock);
 			}
 
-			codeblock = Helper.Indent2 + codeblock.Replace(Environment.NewLine, Environment.NewLine + Helper.Indent2);
+			codeblock = Helper.Indent2 + codeblock.Replace("\n", Environment.NewLine + Helper.Indent1);
 			return codeblock;
 		}
 	}

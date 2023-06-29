@@ -23,11 +23,9 @@ namespace System.Text
 	{
 		public static string Reverse(this string text)
 		{
-			char[] charArray = new char[text.Length];
-			int len = text.Length - 1;
-			for (int i = 0; i <= len; i++)
-				charArray[i] = text[len - i];
-			return new string(charArray);
+			char[] chars = text.ToCharArray();
+			Array.Reverse(chars);
+			return new string(chars);
 		}
 
 		public static string Outline(string text1, int indent1, string text2, int indent2)
@@ -91,7 +89,7 @@ namespace System.Text
 		/// </example>
 		/// </summary>
 		/// <param name="v">string literal to unverbatim</param>
-		/// <param name="force">proceed event if literal does not start with @</param>
+		/// <param name="force">proceed even if literal does not start with @</param>
 		/// <returns>regular string literal</returns>
 		public static string Unverbatim(this string v, bool force=false)
 		{
@@ -162,7 +160,7 @@ namespace System.Text
 					v = v.Replace(@"\n", "\n");
 					v = v.Replace(@"\r", "\r");
 					v = v.Replace(@"\t", "\t");
-					v = v.Replace(@"\\", @"\");                 
+					v = v.Replace(@"\\", @"\");
 					//TODO: other escape
 				}
 				v = v.Replace(@"\""", "\"");
@@ -232,7 +230,7 @@ namespace System.Text
 
 		/// <summary>
 		/// Check if a string if a valid regex pattern. If not, <paramref name="errorMessage"/>
-		/// will be filled with an error message describing the problem. Otherwise, it will be null.
+		/// will be filled with an error message describing the problem. Otherwise, <paramref name="errorMessage"/> will be null.
 		/// </summary>
 		/// <param name="pattern">string to check</param>
 		/// <param name="errorMessage">will be filled with an error message describing the problem if input is not a valid regex. Otherwise, it will be null.</param>

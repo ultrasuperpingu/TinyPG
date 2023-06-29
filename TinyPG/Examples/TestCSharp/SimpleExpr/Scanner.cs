@@ -41,11 +41,11 @@ namespace SimpleExpr
 			Patterns.Add(TokenType.EOF, regex);
 			Tokens.Add(TokenType.EOF);
 
-			regex = new Regex("\\G(?:[0-9]+)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:[0-9]+)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.NUMBER, regex);
 			Tokens.Add(TokenType.NUMBER);
 
-			regex = new Regex("\\G(?:[a-zA-Z_][a-zA-Z0-9_]*)", RegexOptions.None | RegexOptions.Compiled);
+			regex = new Regex(@"\G(?:[a-zA-Z_][a-zA-Z0-9_]*)", RegexOptions.None | RegexOptions.Compiled);
 			Patterns.Add(TokenType.ID, regex);
 			Tokens.Add(TokenType.ID);
 
