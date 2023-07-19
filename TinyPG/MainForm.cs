@@ -744,7 +744,7 @@ namespace TinyPG
 			foreach (ParseError error in errors)
 				output.AppendLine(string.Format((error.IsWarning ? "Warning: " : "Error: ")+"({0},{1}): {2}", error.Line, error.Column, error.Message));
 			
-			if (grammar != null)
+			if (grammar != null && errors.Count == 0)
 			{
 				output.AppendLine(grammar.PrintGrammar());
 				output.AppendLine(grammar.PrintFirsts());

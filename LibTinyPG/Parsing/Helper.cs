@@ -1,4 +1,5 @@
 ﻿// Copyright 2008 - 2010 Herre Kuijpers - <herre.kuijpers@gmail.com>
+//  modified by ultrasuperpingu 2023
 //
 // This source file(s) may be redistributed, altered and customized
 // by any means PROVIDING the authors name and all copyright
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 // extends the System.Text namespace
 namespace System.Text
@@ -72,6 +74,46 @@ namespace System.Text
 #else
 			return "";
 #endif
+		}
+
+		/// <summary>
+		/// Get the line number (start at 1) from the position in the string
+		/// </summary>
+		/// <param name="v">the string</param>
+		/// <param name="pos">the position</param>
+		/// <returns>line number at pos</returns>
+		public static int GetLineFromPos(this string v, int pos)
+		{
+			return v.Take(pos).Count(c => c == '\n') + 1;
+		}
+
+		/// <summary>
+		/// Get the line start position
+		/// </summary>
+		/// <param name="v">the string</param>
+		/// <param name="line">line number</param>
+		/// <returns>line start position</returns>
+		public static int GetLinePos(this string v, int line)
+		{
+			return v.Select((value, index) => new { value, index })
+				.Where(pair => pair.value == '\n')
+				.Select(pair => pair.index + 1)
+				.Take(line - 1)
+				.DefaultIfEmpty(1) // Handle line = 1
+				.Last();
+		}
+
+		/// <summary>
+		/// Get line, column and line start position at the given position
+		/// </summary>
+		/// <param name="v">the string</param>
+		/// <param name="pos">the position</param>
+		/// <returns>line, column and line start position</returns>
+		public static (int, int, int) GetLineColumnLinePos(this string v, int pos)
+		{
+			var line = v.GetLineFromPos(pos);
+			var posLine = v.GetLinePos(line);
+			return (line, pos - posLine, posLine);
 		}
 
 		/// <summary>

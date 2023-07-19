@@ -577,7 +577,8 @@ namespace TinyPG.Parsing
 				Symbol s = symbols.Find(match.Groups["var"].Value);
 				if (s == null)
 				{
-					tree.Errors.Add(new ParseError("Variable $" + match.Groups["var"].Value + " cannot be matched.", 0x1016, node.Token.StartPos + match.Groups["var"].Index, node.Token.StartPos + match.Groups["var"].Index, node.Token.StartPos + match.Groups["var"].Index, match.Groups["var"].Length, true));
+					int pos = node.Token.StartPos + match.Groups["var"].Index;
+					tree.Errors.Add(new ParseError("Variable $" + match.Groups["var"].Value + " cannot be matched.", 0x1016, 1, 0, pos, match.Groups["var"].Length, true));
 					//break; // error situation
 					// just a warning, the code will probably fail to compile, but generation should work
 				}
