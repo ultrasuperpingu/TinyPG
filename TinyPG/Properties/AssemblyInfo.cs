@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Tiny Parser Generator")]
-[assembly: AssemblyDescription("LL(1) Parser and code generator to generate C# source code")]
+[assembly: AssemblyDescription("LL(1) Parser and code generator to generate C#/C++/Java/VB source code")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Tiny Parser Generator")]

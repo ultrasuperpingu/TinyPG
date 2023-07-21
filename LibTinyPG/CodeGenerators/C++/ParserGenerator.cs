@@ -43,6 +43,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				fileContent = fileContent.Replace(@"<%ParseNonTerminalsImpl%>", parserMethodsImpl.ToString());
 				fileContent = fileContent.Replace(@"<%ParseNonTerminalsDecl%>", parserMethodsDecl.ToString());
+				fileContent = fileContent.Replace(@"<%GeneratorVersion%>", TinyPGInfos.Version);
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Parser"]);
 				generated[entry.Key] = fileContent;
 			}

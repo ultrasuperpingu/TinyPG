@@ -1,5 +1,5 @@
 ﻿'Automatically generated from source file: <%SourceFilename%>
-'By TinyPG v1.6 available at https://github.com/ultrasuperpingu/TinyPG
+'By TinyPG v<%GeneratorVersion%> available at https://github.com/ultrasuperpingu/TinyPG
 
 Imports Microsoft.VisualBasic
 Imports System

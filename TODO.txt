@@ -4,7 +4,7 @@ General:
  * Remove Non terminal default return value (it will be useless once the ParseTree will be able to return the correct type)
  * Stop parsing on the first error...
  * Make Error Codes consistant (ErrorCode class with all error codes done but not used). Once done, add the ability to silent warnings.
- * Add TinyPG version substitution string in templates and generators
+
  C++:
  * Review C++ generated code and improve it (more use of templates ???)
  * ParseTree should be returns as shared_ptr ?

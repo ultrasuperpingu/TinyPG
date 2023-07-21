@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("LibTinyPG")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Tiny Parser Generator Library")]
+[assembly: AssemblyDescription("LL(1) Parser and code generator to generate C#/C++/Java/VB source code")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("LibTinyPG")]
-[assembly: AssemblyCopyright("Copyright ©  2023")]
+[assembly: AssemblyProduct("Tiny Parser Generator Library")]
+[assembly: AssemblyCopyright("Copyright © Herre Kuijpers 2008-2012, modify by ultrasuperpingu 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Vous pouvez spécifier toutes les valeurs ou indiquer les numéros de build et de révision par défaut
 // en utilisant '*', comme indiqué ci-dessous :
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.6.2")]
+[assembly: AssemblyFileVersion("1.6.2.0")]

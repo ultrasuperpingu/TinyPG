@@ -81,6 +81,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				fileContent = fileContent.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
 				fileContent = fileContent.Replace(@"<%VirtualEvalMethods%>", evalMethodsDecl.ToString());
 				fileContent = fileContent.Replace(@"<%VirtualEvalMethodsImpl%>", evalMethodsImpl.ToString());
+				fileContent = fileContent.Replace(@"<%GeneratorVersion%>", TinyPGInfos.Version);
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["ParseTree"]);
 				generated[entry.Key] = fileContent;
 			}

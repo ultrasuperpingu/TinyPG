@@ -112,6 +112,7 @@ namespace TinyPG.CodeGenerators.CSharp
 				{
 					fileContent = fileContent.Replace(@"<%IToken%>", "");
 				}
+				fileContent = fileContent.Replace(@"<%GeneratorVersion%>", TinyPGInfos.Version);
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Scanner"]);
 				generated[entry.Key] = fileContent;
 			}

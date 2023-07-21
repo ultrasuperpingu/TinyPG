@@ -66,6 +66,7 @@ namespace TinyPG.CodeGenerators.CSharp
 				fileContent = fileContent.Replace(@"<%HightlightTokens%>", tokens.ToString());
 				fileContent = fileContent.Replace(@"<%RtfColorPalette%>", colors.ToString());
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
+				fileContent = fileContent.Replace(@"<%GeneratorVersion%>", TinyPGInfos.Version);
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["TextHighlighter"]);
 				generated[entry.Key] = fileContent;
 			}

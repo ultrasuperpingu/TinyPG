@@ -47,6 +47,7 @@ namespace TinyPG.CodeGenerators.VBNet
 				}
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Parser"]);
 				fileContent = fileContent.Replace(@"<%ParseNonTerminals%>", parsers.ToString());
+				fileContent = fileContent.Replace(@"<%GeneratorVersion%>", TinyPGInfos.Version);
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["Parser"]);
 				generated[entry.Key] = fileContent;
 			}
