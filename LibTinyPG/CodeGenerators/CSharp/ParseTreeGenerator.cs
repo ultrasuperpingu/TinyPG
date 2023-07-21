@@ -130,13 +130,17 @@ namespace TinyPG.CodeGenerators.CSharp
 			Symbols symbols = nts.DetermineProductionSymbols();
 
 
-			Match match = var.Match(codeblock);
+			int startIndex = 0;
+			Match match = var.Match(codeblock, startIndex);
 			while (match.Success)
 			{
 				Symbol s = symbols.Find(match.Groups["var"].Value);
 				if (s == null)
 				{
-					continue; // error situation
+					// error situation
+					startIndex =  match.Index + match.Length;
+					match = var.Match(codeblock, startIndex);
+					continue;
 				}
 				string indexer = "0";
 				if (match.Groups["index"].Value.Length > 0)
@@ -161,10 +165,11 @@ namespace TinyPG.CodeGenerators.CSharp
 					replacement = "this.IsTokenPresent(TokenType." + s.Name + ", " + indexer + ")";
 				}
 				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
-				match = var.Match(codeblock);
+				startIndex =  match.Index + replacement.Length;
+				match = var.Match(codeblock, startIndex);
 			}
 
-			codeblock = Helper.Indent3 + codeblock.Replace(Environment.NewLine, Environment.NewLine + Helper.Indent2);
+			codeblock = Helper.Indent3 + codeblock.FixNewLines().Replace(Environment.NewLine, Environment.NewLine + Helper.Indent2);
 			return codeblock;
 		}
 	}
