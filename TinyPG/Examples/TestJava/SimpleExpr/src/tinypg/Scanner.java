@@ -1,5 +1,5 @@
 // Automatically generated from source file: simple expression2_java.tpg
-// By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
+// By TinyPG v1.6 available at https://github.com/ultrasuperpingu/TinyPG
 
 package tinypg;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class Scanner
 		SkipList = new ArrayList<TokenType>();
 		SkipList.add(TokenType.WHITESPACE);
 
-		regex = Pattern.compile("^\\s*$");
+		regex = Pattern.compile("\\s*$");
 		Patterns.put(TokenType.EOF, regex);
 		Tokens.add(TokenType.EOF);
 
@@ -120,9 +120,14 @@ public class Scanner
 
 		// this prevents double scanning and matching
 		// increased performance
+		// TODO: check this, what if the expected token are different since last call?
+		// Check at least that LookAheadToken is part of the expected tokens
 		if (LookAheadToken != null 
 			&& LookAheadToken.Type != TokenType._UNDETERMINED_ 
-			&& LookAheadToken.Type != TokenType._NONE_) return LookAheadToken;
+			&& LookAheadToken.Type != TokenType._NONE_)
+		{
+			return LookAheadToken;
+		}
 
 		// if no scantokens specified, then scan for all of them (= backward compatible)
 		if (expectedtokens.length == 0)

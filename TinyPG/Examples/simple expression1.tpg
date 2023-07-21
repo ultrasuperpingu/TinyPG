@@ -54,7 +54,7 @@ MULTDIV	->	@"\*|/";
 BROPEN		->	@"\(";
 [Color(180,15,15)]
 BRCLOSE	-> 	@"\)";
-EOF		->	@"^$";
+EOF		->	@"$";
 
 // The Skip attribute tells the parser to ignore this token. Can't be used on non terminal rules.
 [Skip] WHITESPACE  -> @"\s+";

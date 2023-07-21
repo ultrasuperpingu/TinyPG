@@ -1,5 +1,5 @@
 // Automatically generated from source file: simple expression2.tpg
-// By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
+// By TinyPG v1.6 available at https://github.com/ultrasuperpingu/TinyPG
 
 
 using System;
@@ -268,17 +268,17 @@ namespace SimpleExpr
 		protected virtual int EvalAddExpr(params object[] paramlist)
 		{
 			int Value = this.GetMultExprValue(0, paramlist);
-	int i = 1;
-	while (this.IsTokenPresent(TokenType.MultExpr, i))
-	{
-		string sign = this.GetTerminalValue(TokenType.PLUSMINUS, i-1);
-		if (sign == "+")
-			Value += this.GetMultExprValue(i++, paramlist);
-		else 
-			Value -= this.GetMultExprValue(i++, paramlist);
-	}
-
-	return Value;
+			int i = 1;
+			while (this.IsTokenPresent(TokenType.MultExpr, i))
+			{
+				string sign = this.GetTerminalValue(TokenType.PLUSMINUS, i-1);
+				if (sign == "+")
+					Value += this.GetMultExprValue(i++, paramlist);
+				else 
+					Value -= this.GetMultExprValue(i++, paramlist);
+			}
+		
+			return Value;
 		}
 
 		protected virtual int GetAddExprValue(int index, params object[] paramlist )
@@ -293,16 +293,16 @@ namespace SimpleExpr
 		protected virtual int EvalMultExpr(params object[] paramlist)
 		{
 			int Value = this.GetAtomValue(0, paramlist);
-	int i = 1;
-	while (this.IsTokenPresent(TokenType.Atom, i))
-	{
-		string sign = this.GetTerminalValue(TokenType.MULTDIV, i-1);
-		if (sign == "*")
-			Value *= this.GetAtomValue(i++, paramlist);
-		else 
-			Value /= this.GetAtomValue(i++, paramlist);
-	}
-	return Value;
+			int i = 1;
+			while (this.IsTokenPresent(TokenType.Atom, i))
+			{
+				string sign = this.GetTerminalValue(TokenType.MULTDIV, i-1);
+				if (sign == "*")
+					Value *= this.GetAtomValue(i++, paramlist);
+				else 
+					Value /= this.GetAtomValue(i++, paramlist);
+			}
+			return Value;
 		}
 
 		protected virtual int GetMultExprValue(int index, params object[] paramlist )
@@ -317,10 +317,10 @@ namespace SimpleExpr
 		protected virtual int EvalAtom(params object[] paramlist)
 		{
 			if (this.IsTokenPresent(TokenType.NUMBER, 0))
-		return Convert.ToInt32(this.GetTerminalValue(TokenType.NUMBER, 0));
-	if (this.IsTokenPresent(TokenType.ID, 0))
-		return GetVarValue(this.GetTerminalValue(TokenType.ID, 0));
-	return this.GetAddExprValue(0, paramlist);
+				return Convert.ToInt32(this.GetTerminalValue(TokenType.NUMBER, 0));
+			if (this.IsTokenPresent(TokenType.ID, 0))
+				return GetVarValue(this.GetTerminalValue(TokenType.ID, 0));
+			return this.GetAddExprValue(0, paramlist);
 		}
 
 		protected virtual int GetAtomValue(int index, params object[] paramlist )

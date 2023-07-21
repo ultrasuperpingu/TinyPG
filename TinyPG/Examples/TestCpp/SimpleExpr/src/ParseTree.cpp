@@ -1,5 +1,5 @@
 // Automatically generated from source file: simple expression2_cpp.tpg
-// By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
+// By TinyPG v1.6 available at https://github.com/ultrasuperpingu/TinyPG
 
 #include "ParseTree.h"
 
@@ -117,7 +117,7 @@ namespace TinyPG
 		return this->GetAddExprValue(0, paramlist);
 	}
 
-	inline int ParseNode::GetStartValue(int index, const std::vector<std::any>& paramlist)
+	int ParseNode::GetStartValue(int index, const std::vector<std::any>& paramlist)
 	{
 		ParseNode* node = GetTokenNode(TokenType::Start, index);
 		if (node != NULL)
@@ -128,20 +128,20 @@ namespace TinyPG
 	int ParseNode::EvalAddExpr(const std::vector<std::any>& paramlist)
 	{
 		int Value = this->GetMultExprValue(0, paramlist);
-			int i = 1;
-			while (this->IsTokenPresent(TokenType::MultExpr, i))
-			{
-				std::string sign = this->GetTerminalValue(TokenType::PLUSMINUS, i-1);
-				if (sign == "+")
-					Value += this->GetMultExprValue(i++, paramlist);
-				else 
-					Value -= this->GetMultExprValue(i++, paramlist);
-			}
-		
-			return Value;
+		int i = 1;
+		while (this->IsTokenPresent(TokenType::MultExpr, i))
+		{
+			std::string sign = this->GetTerminalValue(TokenType::PLUSMINUS, i-1);
+			if (sign == "+")
+				Value += this->GetMultExprValue(i++, paramlist);
+			else 
+				Value -= this->GetMultExprValue(i++, paramlist);
+		}
+	
+		return Value;
 	}
 
-	inline int ParseNode::GetAddExprValue(int index, const std::vector<std::any>& paramlist)
+	int ParseNode::GetAddExprValue(int index, const std::vector<std::any>& paramlist)
 	{
 		ParseNode* node = GetTokenNode(TokenType::AddExpr, index);
 		if (node != NULL)
@@ -152,19 +152,19 @@ namespace TinyPG
 	int ParseNode::EvalMultExpr(const std::vector<std::any>& paramlist)
 	{
 		int Value = this->GetAtomValue(0, paramlist);
-			int i = 1;
-			while (this->IsTokenPresent(TokenType::Atom, i))
-			{
-				std::string sign = this->GetTerminalValue(TokenType::MULTDIV, i-1);
-				if (sign == "*")
-					Value *= this->GetAtomValue(i++, paramlist);
-				else 
-					Value /= this->GetAtomValue(i++, paramlist);
-			}
-			return Value;
+		int i = 1;
+		while (this->IsTokenPresent(TokenType::Atom, i))
+		{
+			std::string sign = this->GetTerminalValue(TokenType::MULTDIV, i-1);
+			if (sign == "*")
+				Value *= this->GetAtomValue(i++, paramlist);
+			else 
+				Value /= this->GetAtomValue(i++, paramlist);
+		}
+		return Value;
 	}
 
-	inline int ParseNode::GetMultExprValue(int index, const std::vector<std::any>& paramlist)
+	int ParseNode::GetMultExprValue(int index, const std::vector<std::any>& paramlist)
 	{
 		ParseNode* node = GetTokenNode(TokenType::MultExpr, index);
 		if (node != NULL)
@@ -175,13 +175,13 @@ namespace TinyPG
 	int ParseNode::EvalAtom(const std::vector<std::any>& paramlist)
 	{
 		if (this->IsTokenPresent(TokenType::NUMBER, 0))
-				return std::stoi(this->GetTerminalValue(TokenType::NUMBER, 0));
-			if (this->IsTokenPresent(TokenType::ID, 0))
-				return getVarValue(this->GetTerminalValue(TokenType::ID, 0));
-			return this->GetAddExprValue(0, paramlist);
+			return std::stoi(this->GetTerminalValue(TokenType::NUMBER, 0));
+		if (this->IsTokenPresent(TokenType::ID, 0))
+			return getVarValue(this->GetTerminalValue(TokenType::ID, 0));
+		return this->GetAddExprValue(0, paramlist);
 	}
 
-	inline int ParseNode::GetAtomValue(int index, const std::vector<std::any>& paramlist)
+	int ParseNode::GetAtomValue(int index, const std::vector<std::any>& paramlist)
 	{
 		ParseNode* node = GetTokenNode(TokenType::Atom, index);
 		if (node != NULL)

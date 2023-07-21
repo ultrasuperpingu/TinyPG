@@ -144,7 +144,7 @@ namespace TinyPG.CodeGenerators.Cpp
 				match = var.Match(codeblock, startIndex);
 			}
 
-			codeblock = Helper.Indent2 + codeblock.Replace("\n", Environment.NewLine + Helper.Indent1);
+			codeblock = Helper.Indent2 + codeblock.FixNewLines().Replace(Environment.NewLine, Environment.NewLine + Helper.Indent1);
 			return codeblock;
 		}
 	}

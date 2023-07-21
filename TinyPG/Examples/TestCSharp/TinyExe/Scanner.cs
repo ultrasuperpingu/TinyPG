@@ -1,5 +1,5 @@
 // Automatically generated from source file: TinyExpEval.tpg
-// By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
+// By TinyPG v1.6 available at https://github.com/ultrasuperpingu/TinyPG
 
 using System;
 using System.Collections.Generic;
@@ -237,13 +237,20 @@ namespace TinyExe
 
 			// this prevents double scanning and matching
 			// increased performance
+			// TODO: check this, what if the expected token are different since last call?
+			// Check at least that LookAheadToken is part of the expected tokens
 			if (LookAheadToken != null
 				&& LookAheadToken.Type != TokenType._UNDETERMINED_
-				&& LookAheadToken.Type != TokenType._NONE_) return LookAheadToken;
+				&& LookAheadToken.Type != TokenType._NONE_)
+			{
+				return LookAheadToken;
+			}
 
 			// if no scantokens specified, then scan for all of them (= backward compatible)
 			if (expectedtokens.Length == 0)
+			{
 				scantokens = Tokens;
+			}
 			else
 			{
 				scantokens = new List<TokenType>(expectedtokens);
@@ -252,7 +259,6 @@ namespace TinyExe
 
 			do
 			{
-
 				int len = -1;
 				TokenType index = (TokenType)int.MaxValue;
 				//string input = Input.Substring(startpos);

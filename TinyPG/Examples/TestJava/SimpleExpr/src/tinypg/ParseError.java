@@ -1,5 +1,5 @@
 // Automatically generated from source file: simple expression2_java.tpg
-// By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
+// By TinyPG v1.6 available at https://github.com/ultrasuperpingu/TinyPG
 
 package tinypg;
 

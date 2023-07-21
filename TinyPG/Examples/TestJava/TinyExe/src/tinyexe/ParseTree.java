@@ -1,5 +1,5 @@
 // Automatically generated from source file: TinyExpEval_java.tpg
-// By TinyPG v1.5 available at https://github.com/ultrasuperpingu/TinyPG
+// By TinyPG v1.6 available at https://github.com/ultrasuperpingu/TinyPG
 
 package tinyexe;
 import java.util.ArrayList;

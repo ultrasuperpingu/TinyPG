@@ -196,7 +196,7 @@ namespace TinyPG.CodeGenerators.VBNet
 				match = var.Match(codeblock, startIndex);
 			}
 
-			codeblock = Helper.Indent3 + codeblock.Replace(Environment.NewLine, Environment.NewLine + Helper.Indent2);
+			codeblock = Helper.Indent3 + codeblock.FixNewLines().Replace(Environment.NewLine, Environment.NewLine + Helper.Indent2);
 			return codeblock;
 		}
 	}
