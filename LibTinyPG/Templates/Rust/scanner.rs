@@ -20,6 +20,11 @@ pub struct Scanner
 	tokens : Vec<TokenType>,
 	skip_list : Vec<TokenType> // tokens to be skipped
 }
+impl Default for Scanner {
+	fn default() -> Self {
+		Self::new()
+	}
+}
 impl Scanner {
 	pub fn new() -> Self
 	{
@@ -37,16 +42,49 @@ impl Scanner {
 			tokens : Vec::new(),
 			skip_list : Vec::new() // tokens to be skipped
 		};
-<%SkipList%>
-<%RegExps%>
+		ret.skip_list.push(TokenType::WHITESPACE);
+
+		regex = Regex::new("^(?:\\s*$)").expect("Invalid regex");
+		ret.patterns.insert(TokenType::EOF_, regex);
+		ret.tokens.push(TokenType::EOF_);
+
+		regex = Regex::new("^(?:[0-9]+)").expect("Invalid regex");
+		ret.patterns.insert(TokenType::NUMBER, regex);
+		ret.tokens.push(TokenType::NUMBER);
+
+		regex = Regex::new("^(?:[a-zA-Z_][a-zA-Z0-9_]*)").expect("Invalid regex");
+		ret.patterns.insert(TokenType::ID, regex);
+		ret.tokens.push(TokenType::ID);
+
+		regex = Regex::new("^(?:(\\+|-))").expect("Invalid regex");
+		ret.patterns.insert(TokenType::PLUSMINUS, regex);
+		ret.tokens.push(TokenType::PLUSMINUS);
+
+		regex = Regex::new("^(?:\\*|/)").expect("Invalid regex");
+		ret.patterns.insert(TokenType::MULTDIV, regex);
+		ret.tokens.push(TokenType::MULTDIV);
+
+		regex = Regex::new("^(?:\\()").expect("Invalid regex");
+		ret.patterns.insert(TokenType::BROPEN, regex);
+		ret.tokens.push(TokenType::BROPEN);
+
+		regex = Regex::new("^(?:\\))").expect("Invalid regex");
+		ret.patterns.insert(TokenType::BRCLOSE, regex);
+		ret.tokens.push(TokenType::BRCLOSE);
+
+		regex = Regex::new("^(?:\\s+)").expect("Invalid regex");
+		ret.patterns.insert(TokenType::WHITESPACE, regex);
+		ret.tokens.push(TokenType::WHITESPACE);
+
+
 
 		ret
 	}
 
 
-	pub fn Init(&mut self, input : String)
+	pub fn init(&mut self, input : &str)
 	{
-		self.input = input;
+		self.input = input.to_owned();
 		self.startpos = 0;
 		self.endpos = 0;
 		self.currentline = 1;
@@ -55,7 +93,7 @@ impl Scanner {
 		self.look_ahead_token = None;
 	}
 
-	pub fn GetToken(&self, _type : TokenType) -> Token
+	pub fn get_token(&self, _type : TokenType) -> Token
 	{
 		let mut t = Token::new_with_start_end(self.startpos, self.endpos);
 		t._type = _type;
@@ -67,9 +105,9 @@ impl Scanner {
 	/// and will advance the scan on the input string
 	/// </summary>
 	/// <returns></returns>
-	pub fn Scan(&mut self, expectedtokens: Vec<TokenType>) -> Token
+	pub fn scan(&mut self, expectedtokens: Vec<TokenType>) -> Token
 	{
-		let tok = self.LookAhead(expectedtokens); // temporarely retrieve the lookahead
+		let tok = self.look_ahead(expectedtokens); // temporarely retrieve the lookahead
 		self.startpos = tok.endpos;
 		self.endpos = tok.endpos; // set the tokenizer to the new scan position
 		self.currentline = tok.line + (tok.text.len() - tok.text.replace("\n", "").len()) as i32;
@@ -80,7 +118,7 @@ impl Scanner {
 	/// returns token with longest best match
 	/// </summary>
 	/// <returns></returns>
-	pub fn LookAhead(&mut self,expectedtokens : Vec<TokenType>) -> Token
+	pub fn look_ahead(&mut self,expectedtokens : Vec<TokenType>) -> Token
 	{
 		let mut startpos = self.startpos;
 		let mut endpos = self.endpos;
@@ -102,7 +140,7 @@ impl Scanner {
 		}
 
 		// if no scantokens specified, then scan for all of them (= backward compatible)
-		if expectedtokens.len() == 0
+		if expectedtokens.is_empty()
 		{
 			scantokens = self.tokens.clone();
 		}
@@ -120,9 +158,9 @@ impl Scanner {
 
 			tok = Token::new_with_start_end(startpos, endpos);
 
-			for i  in 0..scantokens.len()
+			for scantoken in &scantokens
 			{
-				let r = &self.patterns[&scantokens[i]];
+				let r = &self.patterns[scantoken];
 				//let m = r.match(Input, startpos);
 				//if (m.Success && m.Index == startpos && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
 				if let Some(caps) = r.captures(&self.input[startpos as usize..]) 
@@ -130,7 +168,7 @@ impl Scanner {
 					//if (m.Index == startpos && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
 					{
 						len = caps[0].len() as i32;
-						index = scantokens[i];
+						index = *scantoken;
 					}
 				}
 			}
@@ -180,6 +218,7 @@ impl Scanner {
 }
 
 
+
 #[derive(PartialEq, Eq, Hash, Clone, Debug, Copy, PartialOrd)]
 pub enum TokenType
 {
@@ -202,6 +241,12 @@ pub struct Token
 	pub skipped : Vec<Token>,
 	pub _type : TokenType
 }
+impl Default for Token {
+	fn default() -> Self {
+		Self::new()
+	}
+}
+
 impl Token {
 	pub fn new() -> Self
 	{
@@ -221,7 +266,7 @@ impl Token {
 		}
 	}
 
-	pub fn UpdateRange(&mut self, token:&Token)
+	pub fn update_range(&mut self, token:&Token)
 	{
 		if token.startpos < self.startpos {
 			self.startpos = token.startpos;
@@ -241,4 +286,5 @@ impl std::fmt::Display for Token {
 		write!(f, "{:?} '{}'", self._type, self.text)
 	}
 }
+
 

@@ -43,10 +43,10 @@ namespace TinyPG.CodeGenerators.Rust
 					evalMethodsImpl.AppendLine(GenerateComment(s.Attributes["EvalComment"], Helper.Indent2));
 					evalMethodsDecl.AppendLine(GenerateComment(s.Attributes["EvalComment"], Helper.Indent2));
 				}
-				evalMethodsDecl.AppendLine("	fn Eval" + s.Name + "(&self/*, paramlist:&Vec<std::any>*/) -> " + returnType + ";");
-				evalMethodsDecl.AppendLine("	fn Get" + s.Name + "Value(&self, index : i32/*, paramlist:&Vec<std::any>*/) -> " + returnType + ";");
+				evalMethodsDecl.AppendLine("	fn eval_" + s.Name.ToLowerInvariant() + "(&self/*, paramlist:&Vec<std::any>*/) -> " + returnType + ";");
+				evalMethodsDecl.AppendLine("	fn get_" + s.Name.ToLowerInvariant() + "_value(&self, index : i32/*, paramlist:&Vec<std::any>*/) -> " + returnType + ";");
 
-				evalMethodsImpl.AppendLine("	fn Eval" + s.Name + "(&self/*, paramlist:&Vec<std::any>*/) -> " + returnType);
+				evalMethodsImpl.AppendLine("	fn eval_" + s.Name.ToLowerInvariant() + "(&self/*, paramlist:&Vec<std::any>*/) -> " + returnType);
 				evalMethodsImpl.AppendLine("	{");
 				if (s.CodeBlock != null)
 				{
@@ -61,11 +61,11 @@ namespace TinyPG.CodeGenerators.Rust
 				evalMethodsImpl.AppendLine("	}\r\n");
 
 
-				evalMethodsImpl.AppendLine("	fn Get" + s.Name + "Value(&self, index : i32/*, paramlist:&Vec<std::any>*/) -> " + returnType);
+				evalMethodsImpl.AppendLine("	fn get_" + s.Name.ToLowerInvariant() + "_value(&self, index : i32/*, paramlist:&Vec<std::any>*/) -> " + returnType);
 				evalMethodsImpl.AppendLine("	{");
-				evalMethodsImpl.AppendLine("		let node = self.GetTokenNode(TokenType::" + s.Name + ", index);");
-				evalMethodsImpl.AppendLine("		if node.is_some() {");
-				evalMethodsImpl.AppendLine("			return node.unwrap().Eval"+s.Name+"(/*paramlist*/);");
+				evalMethodsImpl.AppendLine("		let node = self.get_token_node(TokenType::" + s.Name + ", index);");
+				evalMethodsImpl.AppendLine("		if let Some(n) = node {");
+				evalMethodsImpl.AppendLine("			return n.eval_"+s.Name.ToLowerInvariant()+"(/*paramlist*/);");
 				evalMethodsImpl.AppendLine("		}");
 				evalMethodsImpl.AppendLine("		panic!(\"No "+ s.Name+"[index] found.\");");
 				evalMethodsImpl.AppendLine("	}");
@@ -131,16 +131,16 @@ namespace TinyPG.CodeGenerators.Rust
 				{
 					if(s is TerminalSymbol)
 					{
-						replacement = "self.GetTerminalValue(TokenType::" + s.Name + ", " + indexer + ")";
+						replacement = "self.get_terminal_value(TokenType::" + s.Name + ", " + indexer + ")";
 					}
 					else
 					{
-						replacement = "self.Get"+s.Name+"Value(" + indexer + "/*, paramlist*/)";
+						replacement = "self.get_"+s.Name.ToLowerInvariant()+"_value(" + indexer + "/*, paramlist*/)";
 					}
 				}
 				else
 				{
-					replacement = "self.IsTokenPresent(TokenType::" + s.Name + ", " + indexer + ")";
+					replacement = "self.is_token_present(TokenType::" + s.Name + ", " + indexer + ")";
 				}
 				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
 				startIndex =  match.Index + replacement.Length;

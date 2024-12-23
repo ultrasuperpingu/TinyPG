@@ -48,21 +48,22 @@ namespace TinyPG.CodeGenerators.Rust
 		private string GenerateParseMethod(NonTerminalSymbol s)
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.AppendLine("	pub fn Parse" + s.Name + "(&mut self, input: String, mut tree : ParseTree) -> ParseTree" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("	pub fn parse_" + s.Name.ToLowerInvariant() + "(&mut self, input: &str, mut tree : ParseTree) -> ParseTree" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
 			sb.AppendLine("	{");
-			sb.AppendLine("		self.scanner.Init(input);");
+			sb.AppendLine("		self.scanner.init(input);");
 			sb.AppendLine("		let mut node = tree.node.take().unwrap();");
-			sb.AppendLine("		self.ParseNode" + s.Name + "(&mut tree, &mut node);");
-			sb.AppendLine("		tree.Skipped = self.scanner.skipped.clone();");
+			sb.AppendLine("		self.parse_node_" + s.Name.ToLowerInvariant() + "(&mut tree, &mut node);");
+			sb.AppendLine("		tree.skipped = self.scanner.skipped.clone();");
 			sb.AppendLine("		tree.node = Some(node);");
 			sb.AppendLine("		tree");
 			sb.AppendLine("	}");
 			sb.AppendLine();
-			sb.AppendLine("	fn ParseNode" + s.Name + "(&mut self, tree:&mut ParseTree, parent : &mut Box<dyn IParseNode>)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("	fn parse_node_" + s.Name.ToLowerInvariant() + "(&mut self, tree:&mut ParseTree, parent : &mut Box<dyn IParseNode>)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
 			sb.AppendLine("	{");
 			sb.AppendLine("		let mut tok: Token;");
+			sb.AppendLine("		#[allow(unused_mut)]");
 			sb.AppendLine("		let mut n: Box<dyn IParseNode>;");
-			sb.AppendLine("		let mut node = parent.CreateNode(self.scanner.GetToken(TokenType::" + s.Name + "), \"" + s.Name + "\".to_string());");
+			sb.AppendLine("		let mut node = parent.create_node(self.scanner.get_token(TokenType::" + s.Name + "), \"" + s.Name + "\".to_string());");
 			sb.AppendLine("");
 
 			if (s.Rules.Count == 1)
@@ -70,7 +71,7 @@ namespace TinyPG.CodeGenerators.Rust
 			else
 				throw new Exception("Internal error");
 
-			sb.AppendLine("		parent.getToken_mut().UpdateRange(&node.getToken());");
+			sb.AppendLine("		parent.get_token_mut().update_range(node.get_token());");
 			sb.AppendLine("		parent.add_node(node);");
 			sb.AppendLine("	}" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
 			sb.AppendLine();
@@ -82,7 +83,7 @@ namespace TinyPG.CodeGenerators.Rust
 		{
 			Rule r = rules[index];
 			Symbols firsts = null;
-#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+#if look_ahead_FOLLOWING_RULES_ON_OPTIONALS
 			Symbols firstsExtended = null;
 #endif
 			StringBuilder sb = new StringBuilder();
@@ -91,17 +92,17 @@ namespace TinyPG.CodeGenerators.Rust
 			{
 				case RuleType.Terminal:
 					// expecting terminal, so scan it.
-					sb.AppendLine(Indent + "tok = self.scanner.Scan(vec![TokenType::" + r.Symbol.Name + "]);" + Helper.AddComment("Terminal Rule: " + r.Symbol.Name));
-					sb.AppendLine(Indent + "n = node.CreateNode(tok.clone(), tok.to_string() );");
-					sb.AppendLine(Indent + "node.getToken_mut().UpdateRange(&tok);");
+					sb.AppendLine(Indent + "tok = self.scanner.scan(vec![TokenType::" + r.Symbol.Name + "]);" + Helper.AddComment("Terminal Rule: " + r.Symbol.Name));
+					sb.AppendLine(Indent + "n = node.create_node(tok.clone(), tok.to_string() );");
+					sb.AppendLine(Indent + "node.get_token_mut().update_range(&tok);");
 					sb.AppendLine(Indent + "node.add_node(n);");
 					sb.AppendLine(Indent + "if tok._type != TokenType::" + r.Symbol.Name + " {");
-					sb.AppendLine(Indent + "	tree.Errors.push(ParseError::new3(\"Unexpected token '\".to_string() + tok.text.replace(&\"\\n\".to_string(), \"\").as_str() + \"' found. Expected '" + r.Symbol.Name + "'.\", 0x1001, tok, false));");
+					sb.AppendLine(Indent + "	tree.errors.push(ParseError::new3(\"Unexpected token '\".to_string() + tok.text.replace(&\"\\n\".to_string(), \"\").as_str() + \"' found. Expected '" + r.Symbol.Name + "'.\", 0x1001, tok, false));");
 					sb.AppendLine(Indent + "	return;");
 					sb.AppendLine(Indent + "}");
 					break;
 				case RuleType.NonTerminal:
-					sb.AppendLine(Indent + "self.ParseNode" + r.Symbol.Name + "(tree, &mut node);" + Helper.AddComment("NonTerminal Rule: " + r.Symbol.Name));
+					sb.AppendLine(Indent + "self.parse_node_" + r.Symbol.Name.ToLowerInvariant() + "(tree, &mut node);" + Helper.AddComment("NonTerminal Rule: " + r.Symbol.Name));
 					break;
 				case RuleType.Concat:
 					for (int i = 0; i < r.Rules.Count; i++)
@@ -113,12 +114,12 @@ namespace TinyPG.CodeGenerators.Rust
 					break;
 				case RuleType.ZeroOrMore:
 					firsts = r.GetFirstTerminals();
-#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+#if look_ahead_FOLLOWING_RULES_ON_OPTIONALS
 					firstsExtended = CollectExpectedTokens(rules, index + 1);
 					firstsExtended.InsertRange(0, firsts);
 #endif
-					sb.Append(Indent + "tok = self.scanner.LookAhead(vec![");
-#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					sb.Append(Indent + "tok = self.scanner.look_ahead(vec![");
+#if look_ahead_FOLLOWING_RULES_ON_OPTIONALS
 					AppendTokenList(firstsExtended, sb);
 #else
 					AppendTokenList(firsts, sb);
@@ -135,8 +136,8 @@ namespace TinyPG.CodeGenerators.Rust
 						sb.Append(GenerateProductionRuleCode(r.Rules, i, indent + 1));
 					}
 
-					sb.Append(Indent + "	tok = self.scanner.LookAhead(vec![");
-#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					sb.Append(Indent + "	tok = self.scanner.look_ahead(vec![");
+#if look_ahead_FOLLOWING_RULES_ON_OPTIONALS
 					AppendTokenList(firstsExtended, sb);
 #else
 					AppendTokenList(firsts, sb);
@@ -153,13 +154,13 @@ namespace TinyPG.CodeGenerators.Rust
 					}
 
 					firsts = r.GetFirstTerminals();
-#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+#if look_ahead_FOLLOWING_RULES_ON_OPTIONALS
 					firstsExtended = CollectExpectedTokens(rules, index + 1);
 					firstsExtended.InsertRange(0, firsts);
 #endif
 
-					sb.Append    (Indent + "	tok = self.scanner.LookAhead(vec![");
-#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					sb.Append    (Indent + "	tok = self.scanner.look_ahead(vec![");
+#if look_ahead_FOLLOWING_RULES_ON_OPTIONALS
 					AppendTokenList(firstsExtended, sb);
 #else
 					AppendTokenList(firsts, sb);
@@ -174,12 +175,12 @@ namespace TinyPG.CodeGenerators.Rust
 					break;
 				case RuleType.Option:
 					firsts = r.GetFirstTerminals();
-#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+#if look_ahead_FOLLOWING_RULES_ON_OPTIONALS
 					firstsExtended = CollectExpectedTokens(rules, index + 1);
 					firstsExtended.InsertRange(0, firsts);
 #endif
-					sb.Append(Indent + "tok = self.scanner.LookAhead(vec![");
-#if LOOKAHEAD_FOLLOWING_RULES_ON_OPTIONALS
+					sb.Append(Indent + "tok = self.scanner.look_ahead(vec![");
+#if look_ahead_FOLLOWING_RULES_ON_OPTIONALS
 					AppendTokenList(firstsExtended, sb);
 #else
 					AppendTokenList(firsts, sb);
@@ -199,7 +200,7 @@ namespace TinyPG.CodeGenerators.Rust
 					break;
 				case RuleType.Choice:
 					firsts = r.GetFirstTerminals();
-					sb.Append(Indent + "tok = self.scanner.LookAhead(vec![");
+					sb.Append(Indent + "tok = self.scanner.look_ahead(vec![");
 					var tokens = new List<string>();
 					AppendTokenList(firsts, sb, tokens);
 					sb.AppendLine("]);");
@@ -217,7 +218,7 @@ namespace TinyPG.CodeGenerators.Rust
 					}
 					sb.AppendLine(Indent + "	_=> {");
 					string expectedTokens = BuildExpectedTokensStringForErrorMessage(tokens);
-					sb.AppendLine(Indent + "		tree.Errors.push(ParseError::new3(\"Unexpected token '\".to_string() + tok.text.replace(\"\\n\", \"\").as_str() + \"' found. Expected " + expectedTokens + ".\", 0x0002, tok, false));");
+					sb.AppendLine(Indent + "		tree.errors.push(ParseError::new3(\"Unexpected token '\".to_string() + tok.text.replace(\"\\n\", \"\").as_str() + \"' found. Expected " + expectedTokens + ".\", 0x0002, tok, false));");
 					sb.AppendLine(Indent + "	}");
 					sb.AppendLine(Indent + "}" + Helper.AddComment("Choice Rule"));
 					break;

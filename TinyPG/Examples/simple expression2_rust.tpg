@@ -3,26 +3,31 @@
 //Simple expression calculator
 //
 // You can test it with a simple main like this:
-//#![forbid(unsafe_code)]
-//use std::collections::HashMap;
 //use parser::Parser;
 //use scanner::Scanner;
 //pub mod scanner;
 //pub mod parser;
 //pub mod parse_tree;
-////mod Scanner;
-////mod Parser;
+//
 //fn main() {
 //	let s = Scanner::new();
 //	let mut p = Parser::new(s);
-//	let tree = p.Parse("(_5 + 3) / _15 * (3 - 2)".to_string());
+//	let input = "5*3+12/(1+2*test)".to_string();
+//	let tree = p.parse(input);
+//	println!("{}", tree.print_tree());
+//	let mut error=false;
+//	for e in &tree.errors {
+//		println!("{}", e.message);
+//		error = true;
+//	}
+//	if error {
+//		return;
+//	}
 //	let mut context: HashMap<String, i32> = HashMap::new();
-//	context.insert("_5".to_string(), 5);
-//	context.insert("_15".to_string(), 15);
+//	context.insert("test".to_string(), 2);
 //	tree.set_context(&context);
-//	println!("{}", tree.node.EvalStart());
+//	println!("{}", tree.node.unwrap().get_nodes()[0].eval_start());
 //}
-
 
 
 <% @TinyPG Language="rust" Namespace="TinyPG" OutputPath="TestRust\SimpleExpr\src" %>
@@ -34,7 +39,7 @@
 	//TODO
 }; %>
 
-						EOF_         	-> @"\s*$";
+				EOF_         	-> @"\s*$";
 [Color(255, 0, 0)] 		NUMBER 	-> @"[0-9]+";
 [Color(255, 0, 0)] 		ID	 	-> @"[a-zA-Z_][a-zA-Z0-9_]*";
 [Color(0, 127, 0)] 		PLUSMINUS 	-> @"(\+|-)";
@@ -49,37 +54,37 @@ Start -> (AddExpr)? EOF_ : i32 default(0)
 
 AddExpr -> MultExpr (PLUSMINUS MultExpr)* : i32 default(0)
 { 
-	let mut Value = $MultExpr;
+	let mut value = $MultExpr;
 	let mut i = 1;
-	while (?MultExpr[i])
+	while ?MultExpr[i]
 	{
 		let sign = $PLUSMINUS[i-1];
 		if sign == "+" {
-			Value += $MultExpr[i];
+			value += $MultExpr[i];
 		} else {
-			Value -= $MultExpr[i];
+			value -= $MultExpr[i];
 		}
 		i+=1;
 	}
 
-	Value 
+	value 
 };
 
 MultExpr -> Atom (MULTDIV Atom)* : i32 default(0)
 { 
-	let mut Value = $Atom;
+	let mut value = $Atom;
 	let mut i = 1;
-	while (?Atom[i])
+	while ?Atom[i]
 	{
 		let sign = $MULTDIV[i-1];
 		if sign == "*" {
-			Value *= $Atom[i];
+			value *= $Atom[i];
 		} else {
-			Value /= $Atom[i];
+			value /= $Atom[i];
 		}
 		i+=1;
 	}
-	Value 
+	value
 };
 
 Atom -> NUMBER | BROPEN AddExpr BRCLOSE | ID : i32 default(0)

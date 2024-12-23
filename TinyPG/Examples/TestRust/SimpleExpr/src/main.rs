@@ -5,21 +5,25 @@ use scanner::Scanner;
 pub mod scanner;
 pub mod parser;
 pub mod parse_tree;
-//mod Scanner;
-//mod Parser;
+
 fn main() {
 	let s = Scanner::new();
 	let mut p = Parser::new(s);
-	let tree = p.Parse("(_5 + 3) / _15 * (3 - 2)".to_string());
-	println!("{}", tree.PrintTree());
-	for e in &tree.Errors {
+	let input = "5*3+12/(1+2*test)";
+	let tree = p.parse(input);
+	println!("{}", tree.print_tree());
+	let mut error=false;
+	for e in &tree.errors {
 		println!("{}", e.message);
+		error = true;
 	}
-	//println!("{:?}", tree.node.unwrap().get_nodes()[0].get_nodes().len());
+	if error {
+		return;
+	}
 	let mut context: HashMap<String, i32> = HashMap::new();
-	context.insert("_5".to_string(), 5);
-	context.insert("_15".to_string(), 15);
-	//tree.setContext(&context);
-	println!("{}", tree.node.unwrap().get_nodes()[0].EvalStart());
+	context.insert("test".to_string(), 2);
+	//tree.set_context(&context);
+	println!("{} = {}", input, tree.node.unwrap().get_nodes()[0].eval_start());
 }
+
 

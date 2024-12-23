@@ -9,21 +9,21 @@ pub struct Parser
 impl Parser {
 	pub fn new(scanner:Scanner) -> Self
 	{
-		Self {scanner : scanner}
+		Self {scanner}
 	}
 
-	pub fn Parse(&mut self, input : String) -> ParseTree
+	pub fn parse(&mut self, input: &str) -> ParseTree
 	{
-		self.ParseWithTree(input, ParseTree::new())
+		self.parse_with_tree(input, ParseTree::new())
 	}
 
-	pub fn ParseWithTree(&mut self, input:String, mut tree:ParseTree) -> ParseTree
+	pub fn parse_with_tree(&mut self, input: &str, mut tree: ParseTree) -> ParseTree
 	{
-		self.scanner.Init(input);
+		self.scanner.init(input);
 
 		let mut node = tree.node.take().unwrap();
-		self.ParseNodeStart(&mut tree, &mut node);
-		tree.Skipped = self.scanner.skipped.clone();
+		self.parse_node_start(&mut tree, &mut node);
+		tree.skipped = self.scanner.skipped.clone();
 		tree.node = Some(node);
 		tree
 	}
