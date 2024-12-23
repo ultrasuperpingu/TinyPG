@@ -18,31 +18,31 @@ pub struct ParseError
 }
 impl Default for ParseError {
 	fn default() -> Self {
-		Self::new()
+		Self::empty()
 	}
 }
 impl ParseError {
-	pub fn new() -> Self
+	pub fn empty() -> Self
 	{
 		Self { message: "".to_string(), code: -1, line: 1, col: 1, pos: 0, length: 0, is_warning: false }
 	}
 
-	pub fn new2(message: String, code: i32, node: ParseNode, is_warning : bool) -> Self
+	pub fn from_parse_node(message: String, code: i32, node: ParseNode, is_warning : bool) -> Self
 	{
-		Self::new3(message, code, node.token, is_warning)
+		Self::from_token(message, code, node.token, is_warning)
 	}
 
-	pub fn new3(message:String, code:i32, token:Token, is_warning:bool) -> Self
+	pub fn from_token(message:String, code:i32, token:Token, is_warning:bool) -> Self
 	{
-		Self::new5( message, code, token.line, token.column, token.startpos, token.text.len() as i32, is_warning)
+		Self::new( message, code, token.line, token.column, token.startpos, token.text.len() as i32, is_warning)
 	}
 
-	pub fn new4(message:String, code:i32, is_warning:bool) -> Self
+	pub fn from_code_only(message:String, code:i32, is_warning:bool) -> Self
 	{
-		Self::new5( message, code, 0, 0, 0, 0, is_warning)
+		Self::new( message, code, 0, 0, 0, 0, is_warning)
 	}
 
-	pub fn new5(message:String, code:i32, line:i32, col:i32, pos:i32, length:i32, is_warning:bool) -> Self
+	pub fn new(message:String, code:i32, line:i32, col:i32, pos:i32, length:i32, is_warning:bool) -> Self
 	{
 		Self { message, code, line, col, pos, length, is_warning }
 	}
@@ -51,7 +51,7 @@ impl ParseError {
 // rootlevel of the node tree
 pub struct ParseTree //: ParseNode
 {
-	pub node:Option<Box<dyn IParseNode>>,
+	pub root:Option<Box<dyn IParseNode>>,
 	pub errors:Vec<ParseError>,
 	pub skipped:Vec<Token>,
 }
@@ -65,7 +65,7 @@ impl ParseTree {
 	pub fn new() -> Self
 	{
 		Self {
-			node:Some(Box::new(ParseNode { text: "Root".to_string(), nodes: vec![], token: Token::new() })),
+			root:Some(Box::new(ParseNode { text: "Root".to_string(), nodes: vec![], token: Token::new() })),
 			errors : vec![],
 			skipped:vec![]
 		}
@@ -73,10 +73,10 @@ impl ParseTree {
 
 	pub fn print_tree(&self) -> String
 	{
-		Self::print_node(self.node.as_ref().unwrap(), 0)
+		Self::print_node(self.root.as_ref().unwrap().as_ref(), 0)
 	}
 
-	fn print_node(node:&Box<dyn IParseNode>, indent:usize) -> String
+	fn print_node(node: &dyn IParseNode, indent:usize) -> String
 	{
 		let mut content = "".to_string();
 		for _i in 0..indent {
@@ -84,8 +84,8 @@ impl ParseTree {
 		}
 		content += node.get_text().as_str();
 		for n in node.get_nodes() {
-			content+="\r\n";
-			content+=Self::print_node(n, indent + 2).as_str();
+			content+="\n";
+			content+=Self::print_node(n.as_ref(), indent + 2).as_str();
 		}
 		content
 	}

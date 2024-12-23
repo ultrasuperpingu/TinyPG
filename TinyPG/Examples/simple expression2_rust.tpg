@@ -97,7 +97,7 @@ Atom -> NUMBER | BROPEN AddExpr BRCLOSE | ID : i32 default(0)
 	}
 	if ?ID {
 		//return getVarValue($ID);
-		return 12;
+		return 2;
 	}
 	$AddExpr
 };
