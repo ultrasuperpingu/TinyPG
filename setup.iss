@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TinyPG"
-#define MyAppVersion "1.6"
+#define MyAppVersion "1.6.1"
 #define MyAppPublisher "ultrasuperpingu"
 #define MyAppURL "https://github.com/ultrasuperpingu/TinyPG"
 #define MyAppExeName "TinyPG.exe"

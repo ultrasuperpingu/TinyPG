@@ -6,18 +6,18 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
 
-namespace TinyPG.CodeGenerators.Cpp
+namespace TinyPG.CodeGenerators.Rust
 {
 	public class ParseTreeGenerator : BaseGenerator, ICodeGenerator
 	{
-		internal ParseTreeGenerator() : base("include/ParseTree.h", "src/ParseTree.cpp")
+		internal ParseTreeGenerator() : base("parse_tree.rs")
 		{
 		}
 
 		public Dictionary<string, string> Generate(Grammar Grammar, GenerateDebugMode Debug)
 		{
 			if (Debug != GenerateDebugMode.None)
-				throw new Exception("Cpp cannot be generated in debug mode");
+				throw new Exception("Rust cannot be generated in debug mode");
 			Dictionary<string, string> templateFilesPath = GetTemplateFilesPath(Grammar, "ParseTree");
 
 
@@ -28,9 +28,9 @@ namespace TinyPG.CodeGenerators.Cpp
 			// build non terminal tokens
 			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
-				evalsymbols.AppendLine("				case TokenType::" + s.Name + ":");
-				evalsymbols.AppendLine("					Value = Eval" + s.Name + "(paramlist);");
-				evalsymbols.AppendLine("					break;");
+				evalsymbols.AppendLine("				TokenType::" + s.Name + "=> {");
+				evalsymbols.AppendLine("					Value = self.Eval" + s.Name + "(/*paramlist*/);");
+				evalsymbols.AppendLine("				},");
 
 				string returnType = "std::any";
 				if (!string.IsNullOrEmpty(s.ReturnType))
@@ -40,11 +40,13 @@ namespace TinyPG.CodeGenerators.Cpp
 					defaultReturnValue = s.ReturnTypeDefault;
 				if (s.Attributes.ContainsKey("EvalComment"))
 				{
+					evalMethodsImpl.AppendLine(GenerateComment(s.Attributes["EvalComment"], Helper.Indent2));
 					evalMethodsDecl.AppendLine(GenerateComment(s.Attributes["EvalComment"], Helper.Indent2));
 				}
-				evalMethodsDecl.AppendLine("		virtual " + returnType + " Eval" + s.Name + "(const std::vector<std::any>& paramlist);");
-				
-				evalMethodsImpl.AppendLine("	" + returnType + " ParseNode::Eval" + s.Name + "(const std::vector<std::any>& paramlist)");
+				evalMethodsDecl.AppendLine("	fn Eval" + s.Name + "(&self/*, paramlist:&Vec<std::any>*/) -> " + returnType + ";");
+				evalMethodsDecl.AppendLine("	fn Get" + s.Name + "Value(&self, index : i32/*, paramlist:&Vec<std::any>*/) -> " + returnType + ";");
+
+				evalMethodsImpl.AppendLine("	fn Eval" + s.Name + "(&self/*, paramlist:&Vec<std::any>*/) -> " + returnType);
 				evalMethodsImpl.AppendLine("	{");
 				if (s.CodeBlock != null)
 				{
@@ -53,19 +55,19 @@ namespace TinyPG.CodeGenerators.Cpp
 				}
 				else
 				{
-					evalMethodsImpl.AppendLine("		throw std::runtime_error(\"Could not interpret input; no semantics implemented.\");");
+					evalMethodsImpl.AppendLine("		panic!(\"Could not interpret input; no semantics implemented.\");");
 					// otherwise simply not implemented!
 				}
 				evalMethodsImpl.AppendLine("	}\r\n");
 
 
-				evalMethodsDecl.AppendLine("		virtual " + returnType + " Get" + s.Name + "Value(int index, const std::vector<std::any>& paramlist);");
-				evalMethodsImpl.AppendLine("	" + returnType + " ParseNode::Get" + s.Name + "Value(int index, const std::vector<std::any>& paramlist)");
+				evalMethodsImpl.AppendLine("	fn Get" + s.Name + "Value(&self, index : i32/*, paramlist:&Vec<std::any>*/) -> " + returnType);
 				evalMethodsImpl.AppendLine("	{");
-				evalMethodsImpl.AppendLine("		ParseNode* node = GetTokenNode(TokenType::" + s.Name + ", index);");
-				evalMethodsImpl.AppendLine("		if (node != NULL)");
-				evalMethodsImpl.AppendLine("			return node->Eval"+s.Name+"(paramlist);");
-				evalMethodsImpl.AppendLine("		throw std::runtime_error(\"No "+ s.Name+"[index] found.\");");
+				evalMethodsImpl.AppendLine("		let node = self.GetTokenNode(TokenType::" + s.Name + ", index);");
+				evalMethodsImpl.AppendLine("		if node.is_some() {");
+				evalMethodsImpl.AppendLine("			return node.unwrap().Eval"+s.Name+"(/*paramlist*/);");
+				evalMethodsImpl.AppendLine("		}");
+				evalMethodsImpl.AppendLine("		panic!(\"No "+ s.Name+"[index] found.\");");
 				evalMethodsImpl.AppendLine("	}");
 				evalMethodsImpl.AppendLine();
 			}
@@ -79,8 +81,8 @@ namespace TinyPG.CodeGenerators.Cpp
 				fileContent = fileContent.Replace(@"<%Namespace%>", Grammar.Directives["TinyPG"]["Namespace"]);
 				
 				fileContent = fileContent.Replace(@"<%EvalSymbols%>", evalsymbols.ToString());
-				fileContent = fileContent.Replace(@"<%VirtualEvalMethods%>", evalMethodsDecl.ToString());
-				fileContent = fileContent.Replace(@"<%VirtualEvalMethodsImpl%>", evalMethodsImpl.ToString());
+				fileContent = fileContent.Replace(@"<%VirtualEvalMethods%>", evalMethodsImpl.ToString());
+				fileContent = fileContent.Replace(@"<%VirtualEvalMethodsDecl%>", evalMethodsDecl.ToString());
 				fileContent = fileContent.Replace(@"<%GeneratorVersion%>", TinyPGInfos.Version);
 				fileContent = ReplaceDirectiveAttributes(fileContent, Grammar.Directives["ParseTree"]);
 				generated[entry.Key] = fileContent;
@@ -129,16 +131,16 @@ namespace TinyPG.CodeGenerators.Cpp
 				{
 					if(s is TerminalSymbol)
 					{
-						replacement = "this->GetTerminalValue(TokenType::" + s.Name + ", " + indexer + ")";
+						replacement = "self.GetTerminalValue(TokenType::" + s.Name + ", " + indexer + ")";
 					}
 					else
 					{
-						replacement = "this->Get"+s.Name+"Value(" + indexer + ", paramlist)";
+						replacement = "self.Get"+s.Name+"Value(" + indexer + "/*, paramlist*/)";
 					}
 				}
 				else
 				{
-					replacement = "this->IsTokenPresent(TokenType::" + s.Name + ", " + indexer + ")";
+					replacement = "self.IsTokenPresent(TokenType::" + s.Name + ", " + indexer + ")";
 				}
 				codeblock = codeblock.Substring(0, match.Captures[0].Index) + replacement + codeblock.Substring(match.Captures[0].Index + match.Captures[0].Length);
 				startIndex =  match.Index + replacement.Length;

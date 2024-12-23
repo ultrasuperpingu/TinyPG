@@ -219,6 +219,11 @@ namespace TinyPG.Parsing
 						d["TemplatePath"] = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
 							"Templates", "C++") + Path.DirectorySeparatorChar;
 						break;
+					case "rs":
+					case "rust":
+						d["TemplatePath"] = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+							"Templates", "Rust") + Path.DirectorySeparatorChar;
+						break;
 					default:
 						d["TemplatePath"] = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
 							"Templates", "C#") + Path.DirectorySeparatorChar;

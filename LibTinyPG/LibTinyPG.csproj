@@ -9,9 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LibTinyPG</RootNamespace>
     <AssemblyName>LibTinyPG</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <Deterministic>false</Deterministic>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -51,6 +51,9 @@
     <Compile Include="CodeGenerators\Java\ParseTreeGenerator.cs" />
     <Compile Include="CodeGenerators\Java\ScannerGenerator.cs" />
     <Compile Include="CodeGenerators\CompileIncludeGenerator.cs" />
+    <Compile Include="CodeGenerators\Rust\ParserGenerator.cs" />
+    <Compile Include="CodeGenerators\Rust\ParseTreeGenerator.cs" />
+    <Compile Include="CodeGenerators\Rust\ScannerGenerator.cs" />
     <Compile Include="CodeGenerators\VBNet\ParserGenerator.cs" />
     <Compile Include="CodeGenerators\VBNet\ParseTreeGenerator.cs" />
     <Compile Include="CodeGenerators\VBNet\ScannerGenerator.cs" />

@@ -4,7 +4,7 @@
 
 // The TinyPG Directive allows to specify the following parameters:
 // * Language: c#, cs, csharp, vb, vb.net, vbnet, visualbasic,
-// 		 java, cpp, c++ (case insensitive). Default is C#.
+// 		 java, cpp, c++, rs, rust (case insensitive). Default is C#.
 // * Namespace: The namespace of the generated code. This can't be empty. Default is TinyPG.
 // * OutputPath: The directory where the generated files will be produced.
 //			The default value is the current directory.

@@ -12,6 +12,7 @@ namespace TinyPG.CodeGenerators
 		VBNet = 1,
 		Java = 2,
 		Cpp = 3,
+		Rust = 4,
 	}
 
 	public static class CodeGeneratorFactory
@@ -31,6 +32,9 @@ namespace TinyPG.CodeGenerators
 				case "cpp":
 				case "c++":
 					return SupportedLanguage.Cpp;
+				case "rs":
+				case "rust":
+					return SupportedLanguage.Rust;
 				default: // c# is default language
 					return SupportedLanguage.CSharp;
 			}
@@ -80,6 +84,17 @@ namespace TinyPG.CodeGenerators
 							return new Cpp.ParseTreeGenerator();
 					}
 					break;
+				case SupportedLanguage.Rust:
+					switch (generator)
+					{
+						case "Parser":
+							return new Rust.ParserGenerator();
+						case "Scanner":
+							return new Rust.ScannerGenerator();
+						case "ParseTree":
+							return new Rust.ParseTreeGenerator();
+					}
+					break;
 				default: // c# is default language
 					switch (generator)
 					{
@@ -110,6 +125,8 @@ namespace TinyPG.CodeGenerators
 				case "java":
 				case "cpp":
 				case "c++":
+				case "rs":
+				case "rust":
 					return null;
 				default:
 					return new Microsoft.CSharp.CSharpCodeProvider();

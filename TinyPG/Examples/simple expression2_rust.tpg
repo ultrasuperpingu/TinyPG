@@ -1,0 +1,99 @@
+//@TinyPG - a Tiny Parser Generator v1.6
+//Copyright © Herre Kuijpers 2008-2010, modified by ultrasuperpingu 2024
+//Simple expression calculator
+//
+// You can test it with a simple main like this:
+//#![forbid(unsafe_code)]
+//use std::collections::HashMap;
+//use parser::Parser;
+//use scanner::Scanner;
+//pub mod scanner;
+//pub mod parser;
+//pub mod parse_tree;
+////mod Scanner;
+////mod Parser;
+//fn main() {
+//	let s = Scanner::new();
+//	let mut p = Parser::new(s);
+//	let tree = p.Parse("(_5 + 3) / _15 * (3 - 2)".to_string());
+//	let mut context: HashMap<String, i32> = HashMap::new();
+//	context.insert("_5".to_string(), 5);
+//	context.insert("_15".to_string(), 15);
+//	tree.set_context(&context);
+//	println!("{}", tree.node.EvalStart());
+//}
+
+
+
+<% @TinyPG Language="rust" Namespace="TinyPG" OutputPath="TestRust\SimpleExpr\src" %>
+
+// this is not supported in Rust
+//<% @TextHighlighter Generate="true" %>
+
+<% @ParseTree CustomCode={
+	//TODO
+}; %>
+
+						EOF_         	-> @"\s*$";
+[Color(255, 0, 0)] 		NUMBER 	-> @"[0-9]+";
+[Color(255, 0, 0)] 		ID	 	-> @"[a-zA-Z_][a-zA-Z0-9_]*";
+[Color(0, 127, 0)] 		PLUSMINUS 	-> @"(\+|-)";
+[Color(0, 0, 255)] 		MULTDIV 	-> @"\*|/";
+[Color(127, 0, 127)] 	BROPEN 	-> @"\(";
+[Color(127, 0, 127)] 	BRCLOSE 	-> @"\)";
+
+[Skip] 			WHITESPACE  	-> @"\s+";
+
+Start -> (AddExpr)? EOF_ : i32 default(0)
+{ $AddExpr };      
+
+AddExpr -> MultExpr (PLUSMINUS MultExpr)* : i32 default(0)
+{ 
+	let mut Value = $MultExpr;
+	let mut i = 1;
+	while (?MultExpr[i])
+	{
+		let sign = $PLUSMINUS[i-1];
+		if sign == "+" {
+			Value += $MultExpr[i];
+		} else {
+			Value -= $MultExpr[i];
+		}
+		i+=1;
+	}
+
+	Value 
+};
+
+MultExpr -> Atom (MULTDIV Atom)* : i32 default(0)
+{ 
+	let mut Value = $Atom;
+	let mut i = 1;
+	while (?Atom[i])
+	{
+		let sign = $MULTDIV[i-1];
+		if sign == "*" {
+			Value *= $Atom[i];
+		} else {
+			Value /= $Atom[i];
+		}
+		i+=1;
+	}
+	Value 
+};
+
+Atom -> NUMBER | BROPEN AddExpr BRCLOSE | ID : i32 default(0)
+{
+	if ?NUMBER {
+		return match $NUMBER.parse::<i32>() {
+		  Ok(i) => i,
+		  Err(_e) => -1,
+		} ;
+	}
+	if ?ID {
+		//return getVarValue($ID);
+		return 12;
+	}
+	$AddExpr
+};
+
