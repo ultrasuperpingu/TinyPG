@@ -1,7 +1,7 @@
 ﻿// Automatically generated from source file: <%SourceFilename%>
 // By TinyPG v<%GeneratorVersion%> available at https://github.com/ultrasuperpingu/TinyPG
 
-use regex::Regex;
+use fancy_regex::Regex;
 use std::collections::HashMap;
 
 #[derive(Debug)]
@@ -42,41 +42,9 @@ impl Scanner {
 			tokens : Vec::new(),
 			skip_list : Vec::new() // tokens to be skipped
 		};
-		ret.skip_list.push(TokenType::WHITESPACE);
+<%SkipList%>
 
-		regex = Regex::new("^(?:\\s*$)").expect("Invalid regex");
-		ret.patterns.insert(TokenType::EOF_, regex);
-		ret.tokens.push(TokenType::EOF_);
-
-		regex = Regex::new("^(?:[0-9]+)").expect("Invalid regex");
-		ret.patterns.insert(TokenType::NUMBER, regex);
-		ret.tokens.push(TokenType::NUMBER);
-
-		regex = Regex::new("^(?:[a-zA-Z_][a-zA-Z0-9_]*)").expect("Invalid regex");
-		ret.patterns.insert(TokenType::ID, regex);
-		ret.tokens.push(TokenType::ID);
-
-		regex = Regex::new("^(?:(\\+|-))").expect("Invalid regex");
-		ret.patterns.insert(TokenType::PLUSMINUS, regex);
-		ret.tokens.push(TokenType::PLUSMINUS);
-
-		regex = Regex::new("^(?:\\*|/)").expect("Invalid regex");
-		ret.patterns.insert(TokenType::MULTDIV, regex);
-		ret.tokens.push(TokenType::MULTDIV);
-
-		regex = Regex::new("^(?:\\()").expect("Invalid regex");
-		ret.patterns.insert(TokenType::BROPEN, regex);
-		ret.tokens.push(TokenType::BROPEN);
-
-		regex = Regex::new("^(?:\\))").expect("Invalid regex");
-		ret.patterns.insert(TokenType::BRCLOSE, regex);
-		ret.tokens.push(TokenType::BRCLOSE);
-
-		regex = Regex::new("^(?:\\s+)").expect("Invalid regex");
-		ret.patterns.insert(TokenType::WHITESPACE, regex);
-		ret.tokens.push(TokenType::WHITESPACE);
-
-
+<%RegExps%>
 
 		ret
 	}
@@ -163,7 +131,7 @@ impl Scanner {
 				let r = &self.patterns[scantoken];
 				//let m = r.match(Input, startpos);
 				//if (m.Success && m.Index == startpos && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
-				if let Some(caps) = r.captures(&self.input[startpos as usize..]) 
+				if let Ok(Some(caps)) = r.captures(&self.input[startpos as usize..]) 
 				{
 					//if (m.Index == startpos && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
 					{

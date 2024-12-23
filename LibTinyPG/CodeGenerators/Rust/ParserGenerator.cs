@@ -210,14 +210,20 @@ namespace TinyPG.CodeGenerators.Rust
 					sb.AppendLine(Indent + "{" + Helper.AddComment("Choice Rule"));
 					for (int i = 0; i < r.Rules.Count; i++)
 					{
-						foreach (TerminalSymbol s in r.Rules[i].GetFirstTerminals())
+						var terminals = r.Rules[i].GetFirstTerminals();
+						for (int j=0;j < terminals.Count;j++)
 						{
-							sb.AppendLine(Indent + "	TokenType::" + s.Name + "=> {");
+							TerminalSymbol s = terminals[j] as TerminalSymbol;
+							sb.Append(Indent + "	TokenType::" + s.Name);
+							if (j == terminals.Count - 1)
+								sb.AppendLine(" => {");
+							else
+								sb.AppendLine(" |");
 						}
 						sb.Append(GenerateProductionRuleCode(r.Rules, i, indent + 2));
 						sb.AppendLine(Indent + "	},");
 					}
-					sb.AppendLine(Indent + "	_=> {");
+					sb.AppendLine(Indent + "	_ => {");
 					string expectedTokens = BuildExpectedTokensStringForErrorMessage(tokens);
 					sb.AppendLine(Indent + "		tree.errors.push(ParseError::from_token(\"Unexpected token '\".to_string() + tok.text.replace(\"\\n\", \"\").as_str() + \"' found. Expected " + expectedTokens + ".\", 0x0002, tok, false));");
 					sb.AppendLine(Indent + "	}");

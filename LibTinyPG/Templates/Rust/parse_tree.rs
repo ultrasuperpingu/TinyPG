@@ -250,7 +250,6 @@ impl IParseNode for ParseNode {
 
 <%VirtualEvalMethods%>
 
-<%CustomCode%>
 }
 
 impl ParseNode {
@@ -262,4 +261,5 @@ impl ParseNode {
 			nodes : vec![],
 		}
 	}
+	<%CustomCode%>
 }

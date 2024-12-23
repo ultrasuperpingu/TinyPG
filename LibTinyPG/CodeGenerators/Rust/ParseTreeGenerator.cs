@@ -32,10 +32,10 @@ namespace TinyPG.CodeGenerators.Rust
 				evalsymbols.AppendLine("					Value = self.Eval" + s.Name + "(/*paramlist*/);");
 				evalsymbols.AppendLine("				},");
 
-				string returnType = "std::any";
+				string returnType = "Option<Box<dyn std::any::Any>>";
 				if (!string.IsNullOrEmpty(s.ReturnType))
 					returnType = s.ReturnType;
-				string defaultReturnValue = "std::any()";
+				string defaultReturnValue = "None";
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault))
 					defaultReturnValue = s.ReturnTypeDefault;
 				if (s.Attributes.ContainsKey("EvalComment"))
