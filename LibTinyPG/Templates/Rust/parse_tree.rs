@@ -112,6 +112,7 @@ pub trait IParseNode {
 	fn get_text(&self) -> &String;
 	fn add_node(&mut self, node:Box<dyn IParseNode>);
 	fn get_nodes(&self) -> &Vec<Box<dyn IParseNode>>;
+	fn eval(&self, paramlist: &mut Vec<Box<dyn std::any::Any>>) -> Option<Box<dyn std::any::Any>>;
 
 <%VirtualEvalMethodsDecl%>
 }
@@ -214,38 +215,25 @@ impl IParseNode for ParseNode {
 	}*/
 
 
-	/*
 	/// <summary>
 	/// this implements the evaluation functionality, cannot be used directly
 	/// </summary>
 	/// <param name="tree">the parsetree itself</param>
 	/// <param name="paramlist">optional input parameters</param>
 	/// <returns>a partial result of the evaluation</returns>
-	fn EvalNode(&self, paramlist: Vec<object>) -> object
+	fn eval(&self, paramlist: &mut Vec<Box<dyn std::any::Any>>) -> Option<Box<dyn std::any::Any>>
 	{
-		let Value:object = None;
+		let value:Option<Box<dyn std::any::Any>>;
 
-		match self.Token._type
+		match self.get_token()._type
 		{
-				TokenType::Start=> {
-					Value = self.EvalStart(/*paramlist*/);
-				},
-				TokenType::AddExpr=> {
-					Value = self.EvalAddExpr(/*paramlist*/);
-				},
-				TokenType::MultExpr=> {
-					Value = self.EvalMultExpr(/*paramlist*/);
-				},
-				TokenType::Atom=> {
-					Value = self.EvalAtom(/*paramlist*/);
-				},
-
-			_ =>{
-				Value = self.Token.text;
+<%EvalSymbols%>
+			_ => {
+				value = Some(Box::new(self.get_token().text.clone()));
 			}
 		}
-		Value
-	}*/
+		value
+	}
 
 
 <%VirtualEvalMethods%>

@@ -218,58 +218,50 @@ PowerExpression -> UnaryExpression (POWER UnaryExpression)*
 MultiplicativeExpression -> PowerExpression ((ASTERIKS | SLASH | PERCENT) PowerExpression)*
 {
 	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
-	let result = self.get_powerexpression_value(0, paramlist);
-	//TODO: uncomment and make it work
-	/*
+	let mut result = self.get_powerexpression_value(0, paramlist);
+
 	for i in (1..self.nodes.len()).step_by(2)
 	{
 		let token = self.nodes[i].get_token();
 		let val = self.nodes[i + 1].eval(paramlist);
 		if token._type == TokenType::ASTERIKS {
-			result = ConvertToDouble(result) * ConvertToDouble(val);
+			result = Some(Box::new(ConvertToDouble(result)? * ConvertToDouble(val)?));
 		} else if token._type == TokenType::SLASH {
-			result = ConvertToDouble(result) / ConvertToDouble(val);
+			result = Some(Box::new(ConvertToDouble(result)? / ConvertToDouble(val)?));
 		} else if token._type == TokenType::PERCENT {
-			result = ConvertToInt32(result) % ConvertToInt32(val);
+			result = Some(Box::new(ConvertToInt32(result)? % ConvertToInt32(val)?));
 		}
 	}
-	*/
 	result
 };
 AdditiveExpression -> MultiplicativeExpression ((PLUS | MINUS) MultiplicativeExpression)*
 {
 	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
-	let result = self.get_multiplicativeexpression_value(0, paramlist);
-	//TODO: uncomment and make it work
-	/*
+	let mut result = self.get_multiplicativeexpression_value(0, paramlist);
 	for i in (1..self.nodes.len()).step_by(2)
 	{
 		let token = self.nodes[i].get_token();
 		let val = self.nodes[i + 1].eval(paramlist);
 		if token._type == TokenType::PLUS {
-			result = ConvertToDouble(result) + ConvertToDouble(val);
+			result = Some(Box::new(ConvertToDouble(result)? + ConvertToDouble(val)?));
 		} else if token._type == TokenType::MINUS {
-			result = ConvertToDouble(result) - ConvertToDouble(val);
+			result = Some(Box::new(ConvertToDouble(result)? - ConvertToDouble(val)?));
 		}
 	}
-	*/
 	result
 }; 
 ConcatEpression -> AdditiveExpression (AMP AdditiveExpression)*
 {
 	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
-	let result = self.get_additiveexpression_value(0, paramlist);
-	//TODO: uncomment and make it work
-	/*
+	let mut result = self.get_additiveexpression_value(0, paramlist);
 	for i in (1..self.nodes.len()).step_by(2)
 	{
 		let token = self.nodes[i].get_token();
 		let val = self.nodes[i + 1].eval(paramlist);
 		if token._type == TokenType::AMP {
-			result = ConvertToString(result) + ConvertToString(val);
+			result = Some(Box::new(ConvertToString(result)? + ConvertToString(val)?.as_str()));
 		}
 	}
-	*/
 	result
 };
 RelationalExpression -> ConcatEpression ((LESSTHAN | LESSEQUAL | GREATERTHAN | GREATEREQUAL) ConcatEpression)?
@@ -391,35 +383,29 @@ EqualityExpression -> RelationalExpression ((EQUAL | NOTEQUAL) RelationalExpress
 ConditionalAndExpression -> EqualityExpression (AMPAMP EqualityExpression)*  //ok
 {
 	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
-	let result = self.get_equalityexpression_value(0, paramlist);
-	//TODO: uncomment and make it work
-	/*
+	let mut result = self.get_equalityexpression_value(0, paramlist);
 	for i in (1..self.nodes.len()).step_by(2)
 	{
 		let token = self.nodes[i].get_token();
 		let val = self.nodes[i + 1].eval(paramlist);
 		if (token._type == TokenType::AMPAMP) {
-			result = ConvertToBoolean(result) && ConvertToBoolean(val);
+			result = Some(Box::new(ConvertToBoolean(result)? && ConvertToBoolean(val)?));
 		}
 	}
-	*/
 	result
 };
 ConditionalOrExpression -> ConditionalAndExpression (PIPEPIPE ConditionalAndExpression)* //ok
 {
 	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
-	let result = self.get_equalityexpression_value(0, paramlist);
-	//TODO: uncomment and make it work
-	/*
+	let mut result = self.get_conditionalandexpression_value(0, paramlist);
 	for i in (1..self.nodes.len()).step_by(2)
 	{
 		let token = self.nodes[i].get_token();
 		let val = self.nodes[i + 1].eval(paramlist);
 		if (token._type == TokenType::PIPEPIPE) {
-			result = ConvertToBoolean(result) || ConvertToBoolean(val);
+			result = Some(Box::new(ConvertToBoolean(result)? || ConvertToBoolean(val)?));
 		}
 	}
-	*/
 	result
 };
 AssignmentExpression -> ConditionalOrExpression (QUESTIONMARK AssignmentExpression COLON AssignmentExpression)? // ok
@@ -545,16 +531,16 @@ Params -> Expression (SEMICOLON Expression)*
 Literal -> BOOLEANLITERAL | IntegerLiteral | RealLiteral | StringLiteral
 {
 	let _type = self.nodes[0].get_token()._type;
-	if (_type == TokenType::StringLiteral) {
+	if _type == TokenType::StringLiteral {
 		return self.get_stringliteral_value(0, paramlist);
-	} else if (_type == TokenType::IntegerLiteral) {
+	} else if _type == TokenType::IntegerLiteral {
 		return self.get_integerliteral_value(0, paramlist);
-	} else if (_type == TokenType::RealLiteral) {
+	} else if _type == TokenType::RealLiteral {
 		return self.get_realliteral_value(0, paramlist);
-	} else if (_type == TokenType::BOOLEANLITERAL) {
+	} else if _type == TokenType::BOOLEANLITERAL {
 		return Some(Box::new(self.get_terminal_value(TokenType::BOOLEANLITERAL, 0) == "true"));
 	}
-	
+		
 	let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
 	tree.errors.push(ParseError::from_parse_node("illegal Literal format".to_string(), 1003, self, false));
 	None
