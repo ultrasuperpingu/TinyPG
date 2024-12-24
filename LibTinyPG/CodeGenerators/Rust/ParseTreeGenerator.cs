@@ -29,7 +29,7 @@ namespace TinyPG.CodeGenerators.Rust
 			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
 				evalsymbols.AppendLine("			TokenType::" + s.Name + " => {");
-				evalsymbols.AppendLine("				value = self.eval_" + s.Name.ToLowerInvariant() + "(paramlist);");
+				evalsymbols.AppendLine("				self.eval_" + s.Name.ToLowerInvariant() + "(paramlist)");
 				evalsymbols.AppendLine("			},");
 
 				string returnType = "Option<Box<dyn std::any::Any>>";

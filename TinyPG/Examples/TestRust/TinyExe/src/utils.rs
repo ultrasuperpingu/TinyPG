@@ -1,6 +1,6 @@
 
 
-pub fn ConvertToDouble(val: Option<Box<dyn std::any::Any>>) -> Option<f64>
+pub fn convert_to_double(val: Option<Box<dyn std::any::Any>>) -> Option<f64>
 {
 	if let Some(dval) = val
 	{
@@ -44,7 +44,7 @@ pub fn ConvertToDouble(val: Option<Box<dyn std::any::Any>>) -> Option<f64>
 	}
 	None
 }
-pub fn ConvertToBoolean(val: Option<Box<dyn std::any::Any>>) -> Option<bool>
+pub fn convert_to_boolean(val: Option<Box<dyn std::any::Any>>) -> Option<bool>
 {
 	if let Some(dval) = val
 	{
@@ -88,7 +88,7 @@ pub fn ConvertToBoolean(val: Option<Box<dyn std::any::Any>>) -> Option<bool>
 	}
 	None
 }
-pub fn ConvertToString(val: Option<Box<dyn std::any::Any>>) -> Option<String>
+pub fn convert_to_string(val: Option<Box<dyn std::any::Any>>) -> Option<String>
 {
 	if let Some(dval) = val
 	{
@@ -128,7 +128,7 @@ pub fn ConvertToString(val: Option<Box<dyn std::any::Any>>) -> Option<String>
 	}
 	None
 }
-pub fn ConvertToInt32(val: Option<Box<dyn std::any::Any>>) -> Option<i64>
+pub fn convert_to_int(val: Option<Box<dyn std::any::Any>>) -> Option<i64>
 {
 	if let Some(dval) = val
 	{

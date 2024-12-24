@@ -188,6 +188,7 @@ impl Scanner {
 
 
 #[derive(PartialEq, Eq, Hash, Clone, Debug, Copy, PartialOrd)]
+#[allow(clippy::upper_case_acronyms)]
 pub enum TokenType
 {
 <%TokenType%>

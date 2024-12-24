@@ -1,5 +1,6 @@
 ﻿// Automatically generated from source file: <%SourceFilename%>
 // By TinyPG v<%GeneratorVersion%> available at https://github.com/ultrasuperpingu/TinyPG
+<%HeaderCode%>
 
 use crate::{parse_tree::{IParseNode, ParseError, ParseTree}, scanner::{Scanner, Token, TokenType}};
 pub struct Parser

@@ -6,7 +6,7 @@
 
 <% @ParseTree CustomCode={
 	// helper function to find access the function or variable
-	pub fn GetFunctionOrVariable(n:&Box<dyn IParseNode>) -> Option<&Box<dyn IParseNode>>
+	pub fn get_function_or_variable(n:&dyn IParseNode) -> Option<&dyn IParseNode>
 	{
 		// found the right node, exit
 		if n.get_token()._type == TokenType::Function || n.get_token()._type == TokenType::VARIABLE {
@@ -14,13 +14,19 @@
 		}
 
 		if n.get_nodes().len() == 1 { // search lower branch (left side only, may not contain other node branches)
-			return Self::GetFunctionOrVariable(&n.get_nodes()[0]);
+			return Self::get_function_or_variable(n.get_nodes()[0].as_ref());
 		}
 		// function or variable not found in branch
-		return None;
+		None
 	}
-	//Context* context = NULL;}; HeaderCode=@"
+	//Context* context = NULL;};
+	HeaderCode=@"#![allow(dead_code)]
+use crate::utils::{convert_to_boolean, convert_to_double, convert_to_int, convert_to_string};
 " %>
+
+<% @Parser CustomCode={
+	// helper function to find access the function or variable
+	}; HeaderCode=@"#![allow(dead_code)]" %>
 
 [Color(0, 0, 255)]
 BOOLEANLITERAL	-> @"true|false";
@@ -71,52 +77,53 @@ EOF_			-> @"$";
 
 Start -> (Expression)? EOF_
 {
-	return $Expression;
+	$Expression
 };
 
 //expressions
 Function -> FUNCTION BRACKETOPEN Params? BRACKETCLOSE
 {
 	/*let tree = &mut paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
-	ParseNode* funcNode = this->Nodes[0];
-	ParseNode* paramNode = this->Nodes[2];
-
-	if (tree->context == NULL)
+	let funcNode = self.nodes[0];
+	let paramNode = self.nodes[2];
+		
+	if tree.context.is_none()
 	{
-		tree.errors.push(ParseError::from_parse_node("No context defined", 1041, self));
-		return NULL;
+		tree.errors.push(ParseError::from_parse_node("No context defined".to_string(), 1041, self, false));
+		return None;
 	}
-	if (tree->context->CurrentStackSize > 50)
+	if tree.context.CurrentStackSize > 50
 	{
-		tree.errors.push(ParseError::from_parse_node("Stack overflow: " + funcNode->TokenVal.Text + "()", 1046, self));
-		return NULL;
+		tree.errors.push(ParseError::from_parse_node("Stack overflow: ".to_string() + funcNode.get_token().text.as_str() + "()", 1046, self, false));
+		return None;
 	}
-	std::string key = str_tolower(funcNode->TokenVal.Text);
-	if (!containsKey(tree->context->functions, key))
+	let key = funcNode.get_token().text.to_lowercase();
+	if !tree.context.functions.contains_key(key)
 	{
-		tree->Errors.push_back(ParseError("Fuction not defined: " + funcNode->TokenVal.Text + "()", 1042, this));
-		return NULL;
+		tree.errors.push(ParseError::from_parse_node("Fuction not defined: ".to_string() + funcNode.get_token().text.as_str() + "()", 1042, self, false));
+		return None;
 	}
-
+		
 	// retrieves the function from declared functions
-	class Function* func = tree->context->functions[key];
-
+	let func = tree.context.functions[key];
+		
 	// evaluate the function parameters
-	std::vector<std::any> parameters = std::vector<std::any>();
-	if (paramNode->TokenVal.Type == TokenType::Params)
-		parameters = std::any_cast<std::vector<std::any>>(paramNode->Eval(paramlist));
-	if (parameters.size() < func->MinParameters) 
-	{
-		tree->Errors.push_back(ParseError("At least " + std::to_string(func->MinParameters) + " parameter(s) expected", 1043, this));
-		return NULL; // illegal number of parameters
+	let mut parameters : Vec<Box<dyn std::any::Any>> = vec![];
+	if paramNode.get_token()._type == TokenType::Params {
+		parameters = *paramNode.eval(paramlist)?.downcast::<Vec<Box<dyn std::any::Any>>>().unwrap();
 	}
-	else if (parameters.size() > func->MaxParameters)
+	if parameters.len() < func.MinParameters
 	{
-		tree->Errors.push_back(ParseError("No more than " + std::to_string(func->MaxParameters) + " parameter(s) expected", 1044, this));
-		return NULL; // illegal number of parameters
+		tree.errors.push(ParseError::from_parse_node("At least ".to_string() + func.MinParameters.to_string().as_str() + " parameter(s) expected", 1043, self, false));
+		return None; // illegal number of parameters
 	}
-	
-	return func->Eval(parameters, tree);*/
+	else if parameters.len() > func.MaxParameters
+	{
+		tree.errors.push(ParseError::from_parse_node("No more than ".to_string() + func.MaxParameters.to_string().as_str() + " parameter(s) expected", 1044, self, false));
+		return None; // illegal number of parameters
+	}
+			
+	return func.eval(parameters, tree);*/
 	None
 };
 PrimaryExpression -> Function | Variable | Literal | ParenthesizedExpression
@@ -145,61 +152,54 @@ UnaryExpression -> PrimaryExpression
 				   | NOT UnaryExpression
 {
 	let _type = self.nodes[0].get_token()._type;
-		if _type == TokenType::PrimaryExpression {
-			return self.get_primaryexpression_value(0, paramlist);
-		}
-		if _type == TokenType::MINUS
-		{
-			let val_opt = self.get_unaryexpression_value(0, paramlist);
-			if let Some(val) = val_opt {
-				match val.downcast::<f64>() {
-					Ok(dval) => {
-						return Some(Box::new(-*dval));
-					},
-					Err(val) => {
-						match val.downcast::<i64>() {
-							Ok(ival) => {
-								return Some(Box::new(-*ival));
-							},
-							Err(_) => {
-								
-							}
-						}
+	if _type == TokenType::PrimaryExpression {
+		return self.get_primaryexpression_value(0, paramlist);
+	}
+	if _type == TokenType::MINUS
+	{
+		let val_opt = self.get_unaryexpression_value(0, paramlist);
+		if let Some(val) = val_opt {
+			match val.downcast::<f64>() {
+				Ok(dval) => {
+					return Some(Box::new(-*dval));
+				},
+				Err(val) => {
+					if let Ok(ival) = val.downcast::<i64>() {
+						return Some(Box::new(-*ival));
 					}
 				}
 			}
-			let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
-			tree.errors.push(ParseError::from_parse_node("Illegal UnaryExpression format, cannot interpret minus ".to_string() /*+ val*/, 1095, self, false));
-			return None;
 		}
-		else if _type == TokenType::PLUS
-		{
-			let val = self.get_unaryexpression_value(0, paramlist);
-			return val;
-		}
-		else if _type == TokenType::NOT
-		{
-			let val = self.get_unaryexpression_value(0, paramlist);
-			let bval_res = val.unwrap().downcast::<bool>();
-			if let Ok(bval) = bval_res {
-				return Some(Box::new(!(*bval)));
-			}
-			let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
-			tree.errors.push(ParseError::from_parse_node("Illegal UnaryExpression format, cannot interpret negate ".to_string() /*+ val*/, 1098, self, false));
-			return None;
-		}
-	
 		let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
-		tree.errors.push(ParseError::from_parse_node("Illegal UnaryExpression format".to_string(), 1099, self, false));
-		None
+		tree.errors.push(ParseError::from_parse_node("Illegal UnaryExpression format, cannot interpret minus ".to_string() /*+ val*/, 1095, self, false));
+		return None;
+	}
+	else if _type == TokenType::PLUS
+	{
+		let val = self.get_unaryexpression_value(0, paramlist);
+		return val;
+	}
+	else if _type == TokenType::NOT
+	{
+		let val = self.get_unaryexpression_value(0, paramlist);
+		let bval_res = val.unwrap().downcast::<bool>();
+		if let Ok(bval) = bval_res {
+			return Some(Box::new(!(*bval)));
+		}
+		let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+		tree.errors.push(ParseError::from_parse_node("Illegal UnaryExpression format, cannot interpret negate ".to_string() /*+ val*/, 1098, self, false));
+		return None;
+	}
+	
+	let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	tree.errors.push(ParseError::from_parse_node("Illegal UnaryExpression format".to_string(), 1099, self, false));
+	None
 };
 
 PowerExpression -> UnaryExpression (POWER UnaryExpression)*
 {
 	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
-	let result = self.get_unaryexpression_value(0, paramlist);
-	//TODO: uncomment and make it work
-/*
+	let mut result = self.get_unaryexpression_value(0, paramlist);
 	// IMPORTANT: scanning and calculating the power is done from Left to Right.
 	// this is conform the Excel evaluation of power, but not conform strict mathematical guidelines
 	// this means that a^b^c evaluates to (a^b)^c  (Excel uses the same kind of evaluation)
@@ -209,10 +209,10 @@ PowerExpression -> UnaryExpression (POWER UnaryExpression)*
 		let token = self.nodes[i].get_token();
 		let val = self.nodes[i + 1].eval(paramlist);
 		if token._type == TokenType::POWER {
-			result = std::pow(ConvertToDouble(result), ConvertToDouble(val));
+			result = Some(Box::new(convert_to_double(result)?.powf(convert_to_double(val)?)));
 		}
-	}*/
-	
+	}
+		
 	result
 };
 MultiplicativeExpression -> PowerExpression ((ASTERIKS | SLASH | PERCENT) PowerExpression)*
@@ -225,11 +225,11 @@ MultiplicativeExpression -> PowerExpression ((ASTERIKS | SLASH | PERCENT) PowerE
 		let token = self.nodes[i].get_token();
 		let val = self.nodes[i + 1].eval(paramlist);
 		if token._type == TokenType::ASTERIKS {
-			result = Some(Box::new(ConvertToDouble(result)? * ConvertToDouble(val)?));
+			result = Some(Box::new(convert_to_double(result)? * convert_to_double(val)?));
 		} else if token._type == TokenType::SLASH {
-			result = Some(Box::new(ConvertToDouble(result)? / ConvertToDouble(val)?));
+			result = Some(Box::new(convert_to_double(result)? / convert_to_double(val)?));
 		} else if token._type == TokenType::PERCENT {
-			result = Some(Box::new(ConvertToInt32(result)? % ConvertToInt32(val)?));
+			result = Some(Box::new(convert_to_int(result)? % convert_to_int(val)?));
 		}
 	}
 	result
@@ -243,9 +243,9 @@ AdditiveExpression -> MultiplicativeExpression ((PLUS | MINUS) MultiplicativeExp
 		let token = self.nodes[i].get_token();
 		let val = self.nodes[i + 1].eval(paramlist);
 		if token._type == TokenType::PLUS {
-			result = Some(Box::new(ConvertToDouble(result)? + ConvertToDouble(val)?));
+			result = Some(Box::new(convert_to_double(result)? + convert_to_double(val)?));
 		} else if token._type == TokenType::MINUS {
-			result = Some(Box::new(ConvertToDouble(result)? - ConvertToDouble(val)?));
+			result = Some(Box::new(convert_to_double(result)? - convert_to_double(val)?));
 		}
 	}
 	result
@@ -259,7 +259,7 @@ ConcatEpression -> AdditiveExpression (AMP AdditiveExpression)*
 		let token = self.nodes[i].get_token();
 		let val = self.nodes[i + 1].eval(paramlist);
 		if token._type == TokenType::AMP {
-			result = Some(Box::new(ConvertToString(result)? + ConvertToString(val)?.as_str()));
+			result = Some(Box::new(convert_to_string(result)? + convert_to_string(val)?.as_str()));
 		}
 	}
 	result
@@ -268,40 +268,37 @@ RelationalExpression -> ConcatEpression ((LESSTHAN | LESSEQUAL | GREATERTHAN | G
 {
 	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
 	let result = self.get_concatepression_value(0, paramlist);
-	//TODO: uncomment and make it work
-	/*
-	for i in (1..self.nodes.len()).step_by(2)
+	/*for i in (1..self.nodes.len()).step_by(2)
 	{
 		let token = self.nodes[i].get_token();
 		let val = self.nodes[i + 1].eval(paramlist);
-	
+		
 		// compare as numbers
-		if (result.has_value() && result.type().name() == "double" && val.has_value() && val.type().name() == "double")
+		if result.is_some() && result.type().name() == "double" && val.is_some() && val.type().name() == "double"
 		{
 			if token._type == TokenType::LESSTHAN {
-				result = ConvertToDouble(result) < ConvertToDouble(val);
+				result = Some(Box::new(convert_to_double(result)? < convert_to_double(val)?));
 			} else if token._type == TokenType::LESSEQUAL {
-				result = ConvertToDouble(result) <= ConvertToDouble(val);
+				result = Some(Box::new(convert_to_double(result)? <= convert_to_double(val)?));
 			} else if token._type == TokenType::GREATERTHAN {
-				result = ConvertToDouble(result) > ConvertToDouble(val);
+				result = Some(Box::new(convert_to_double(result)? > convert_to_double(val)?));
 			} else if token._type == TokenType::GREATEREQUAL {
-				result = ConvertToDouble(result) >= ConvertToDouble(val);
+				result = Some(Box::new(convert_to_double(result)? >= convert_to_double(val)?));
 			}
 		}
 		else // compare as strings
 		{
 			if token._type == TokenType::LESSTHAN {
-				result = ConvertToString(result) < ConvertToString(val);
+				result = Some(Box::new(convert_to_string(result)? < convert_to_string(val)?));
 			} else if token._type == TokenType::LESSEQUAL {
-				result = ConvertToString(result) <= ConvertToString(val);
+				result = Some(Box::new(convert_to_string(result)? <= convert_to_string(val)?));
 			} else if token._type == TokenType::GREATERTHAN {
-				result = ConvertToString(result) > ConvertToString(val);
+				result = Some(Box::new(convert_to_string(result)? > convert_to_string(val)?));
 			} else if token._type == TokenType::GREATEREQUAL {
-				result = ConvertToString(result) >= ConvertToString(val);
+				result = Some(Box::new(convert_to_string(result)? >= convert_to_string(val)?));
 			}
 		}
-	}
-	*/
+	}*/
 	result
 };
 EqualityExpression -> RelationalExpression ((EQUAL | NOTEQUAL) RelationalExpression)*
@@ -388,8 +385,8 @@ ConditionalAndExpression -> EqualityExpression (AMPAMP EqualityExpression)*  //o
 	{
 		let token = self.nodes[i].get_token();
 		let val = self.nodes[i + 1].eval(paramlist);
-		if (token._type == TokenType::AMPAMP) {
-			result = Some(Box::new(ConvertToBoolean(result)? && ConvertToBoolean(val)?));
+		if token._type == TokenType::AMPAMP {
+			result = Some(Box::new(convert_to_boolean(result)? && convert_to_boolean(val)?));
 		}
 	}
 	result
@@ -402,8 +399,8 @@ ConditionalOrExpression -> ConditionalAndExpression (PIPEPIPE ConditionalAndExpr
 	{
 		let token = self.nodes[i].get_token();
 		let val = self.nodes[i + 1].eval(paramlist);
-		if (token._type == TokenType::PIPEPIPE) {
-			result = Some(Box::new(ConvertToBoolean(result)? || ConvertToBoolean(val)?));
+		if token._type == TokenType::PIPEPIPE {
+			result = Some(Box::new(convert_to_boolean(result)? || convert_to_boolean(val)?));
 		}
 	}
 	result
@@ -418,7 +415,7 @@ AssignmentExpression -> ConditionalOrExpression (QUESTIONMARK AssignmentExpressi
 		&& self.nodes[1].get_token()._type == TokenType::QUESTIONMARK
 		&& self.nodes[3].get_token()._type == TokenType::COLON)
 	{
-		if ConvertToBoolean(result) {
+		if convert_to_boolean(result) {
 			result = self.nodes[2]->eval(paramlist); // return 1st argument
 		} else {
 			result = self.nodes[4]->eval(paramlist); // return 2nd argument
@@ -443,7 +440,7 @@ Expression -> AssignmentExpression? (ASSIGN AssignmentExpression)?
 	
 	// ok, this is an assignment so declare the function or variable
 	// assignment only allowed to function or to a variable
-	/*let v = Self::GetFunctionOrVariable(&self.nodes[0]);
+	/*let v = Self::get_function_or_variable(&self.nodes[0]);
 	if v.is_none()
 	{
 		let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
@@ -489,7 +486,7 @@ Expression -> AssignmentExpression? (ASSIGN AssignmentExpression)?
 		{   // function has parameters, so check if they are all variable declarations
 			for i in (0..paramsNode.nodes.len()).step_by(2)
 			{
-				let varNode = Self::GetFunctionOrVariable(paramsNode.nodes[i]);
+				let varNode = Self::get_function_or_variable(paramsNode.nodes[i]);
 				if varNode.is_none() || varNode.unwrap().get_token()._type != TokenType::VARIABLE
 				{
 					tree.errors.push(ParseError::from_parse_node("Function declaration may only contain variables".to_string(), 1051, self, false));
@@ -516,16 +513,15 @@ Expression -> AssignmentExpression? (ASSIGN AssignmentExpression)?
 Params -> Expression (SEMICOLON Expression)*
 {
 	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
-	let parameters : Vec<Box<dyn std::any::Any>> = vec![];
-	//TODO
-	/*for i in (0..self.nodes.len()).step_by(2)
+	let mut parameters : Vec<Box<dyn std::any::Any>> = vec![];
+	for i in (0..self.nodes.len()).step_by(2)
 	{
-		if (self.nodes[i].get_token()._type == TokenType::Expression)
+		if self.nodes[i].get_token()._type == TokenType::Expression
 		{
-			let val = self.nodes[i]->eval(paramlist);
-			parameters.push(val);
+			let val = self.nodes[i].eval(paramlist);
+			parameters.push(val?);
 		}
-	}*/
+	}
 	Some(Box::new(parameters))
 };
 Literal -> BOOLEANLITERAL | IntegerLiteral | RealLiteral | StringLiteral
@@ -562,7 +558,7 @@ IntegerLiteral -> DECIMALINTEGERLITERAL | HEXINTEGERLITERAL
 };
 RealLiteral -> REALLITERAL
 {
-	if (self.is_token_present(TokenType::REALLITERAL, 0))
+	if self.is_token_present(TokenType::REALLITERAL, 0)
 	{
 		return Some(Box::new(self.get_terminal_value(TokenType::REALLITERAL, 0).parse::<f64>().unwrap()));
 	}
@@ -610,5 +606,5 @@ Variable -> VARIABLE
 	tree.errors.push(ParseError::from_parse_node("Variable not defined: ".to_string() + &key, 1039, self, false));
 	None*/
 	//just for testing
-	Some(Box::new(2))
+	Some(Box::new(2_i64))
 };

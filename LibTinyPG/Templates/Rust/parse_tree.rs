@@ -60,8 +60,15 @@ impl Default for ParseTree {
 		Self::new()
 	}
 }
+pub trait IParserTree {
+	fn print_tree(&self) -> String;
+	/// This is the entry point for executing and evaluating the parse tree.
+	/// 
+	/// <param name="paramlist">additional optional input parameters</param>
+	/// <returns>the output of the evaluation function</returns>
+	fn eval(&self, paramlist:&mut Vec<Box<dyn std::any::Any>>) -> Option<Box<dyn std::any::Any>>;
+}
 impl ParseTree {
-
 	pub fn new() -> Self
 	{
 		Self {
@@ -70,12 +77,6 @@ impl ParseTree {
 			skipped:vec![]
 		}
 	}
-
-	pub fn print_tree(&self) -> String
-	{
-		Self::print_node(self.root.as_ref().unwrap().as_ref(), 0)
-	}
-
 	fn print_node(node: &dyn IParseNode, indent:usize) -> String
 	{
 		let mut content = "".to_string();
@@ -89,18 +90,18 @@ impl ParseTree {
 		}
 		content
 	}
-	/*
-	/// <summary>
-	/// this is the entry point for executing and evaluating the parse tree.
-	/// </summary>
-	/// <param name="paramlist">additional optional input parameters</param>
-	/// <returns>the output of the evaluation function</returns>
-	pub fn Eval(&self, paramlist:Vec<object>) -> object
-	{
-		self.node.nodes[0].EvalNode(self.node, paramlist)
-	}*/
 }
-pub trait IParserTree : IParseNode {
+impl IParserTree for ParseTree {
+
+	fn print_tree(&self) -> String
+	{
+		Self::print_node(self.root.as_ref().unwrap().as_ref(), 0)
+	}
+
+	fn eval(&self, paramlist:&mut Vec<Box<dyn std::any::Any>>) -> Option<Box<dyn std::any::Any>>
+	{
+		self.root.as_ref()?.get_nodes().first()?.eval(paramlist)
+	}
 }
 pub trait IParseNode {
 	fn create_node(&self, token:Token, text:String) -> Box<dyn IParseNode>;
@@ -215,24 +216,20 @@ impl IParseNode for ParseNode {
 	}*/
 
 
-	/// <summary>
-	/// this implements the evaluation functionality, cannot be used directly
-	/// </summary>
+	/// This implements the evaluation functionality, cannot be used directly
+	///
 	/// <param name="tree">the parsetree itself</param>
 	/// <param name="paramlist">optional input parameters</param>
 	/// <returns>a partial result of the evaluation</returns>
 	fn eval(&self, paramlist: &mut Vec<Box<dyn std::any::Any>>) -> Option<Box<dyn std::any::Any>>
 	{
-		let value:Option<Box<dyn std::any::Any>>;
-
 		match self.get_token()._type
 		{
 <%EvalSymbols%>
 			_ => {
-				value = Some(Box::new(self.get_token().text.clone()));
+				Some(Box::new(self.get_token().text.clone()))
 			}
 		}
-		value
 	}
 
 
