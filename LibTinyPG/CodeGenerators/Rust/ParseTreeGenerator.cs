@@ -29,7 +29,7 @@ namespace TinyPG.CodeGenerators.Rust
 			foreach (NonTerminalSymbol s in Grammar.GetNonTerminals())
 			{
 				evalsymbols.AppendLine("				TokenType::" + s.Name + "=> {");
-				evalsymbols.AppendLine("					Value = self.Eval" + s.Name + "(/*paramlist*/);");
+				evalsymbols.AppendLine("					value = self.eval_" + s.Name.ToLowerInvariant() + "(paramlist);");
 				evalsymbols.AppendLine("				},");
 
 				string returnType = "Option<Box<dyn std::any::Any>>";
@@ -43,10 +43,10 @@ namespace TinyPG.CodeGenerators.Rust
 					evalMethodsImpl.AppendLine(GenerateComment(s.Attributes["EvalComment"], Helper.Indent2));
 					evalMethodsDecl.AppendLine(GenerateComment(s.Attributes["EvalComment"], Helper.Indent2));
 				}
-				evalMethodsDecl.AppendLine("	fn eval_" + s.Name.ToLowerInvariant() + "(&self/*, paramlist:&Vec<std::any>*/) -> " + returnType + ";");
-				evalMethodsDecl.AppendLine("	fn get_" + s.Name.ToLowerInvariant() + "_value(&self, index : i32/*, paramlist:&Vec<std::any>*/) -> " + returnType + ";");
+				evalMethodsDecl.AppendLine("	fn eval_" + s.Name.ToLowerInvariant() + "(&self, paramlist:&mut Vec<Box<dyn std::any::Any>>) -> " + returnType + ";");
+				evalMethodsDecl.AppendLine("	fn get_" + s.Name.ToLowerInvariant() + "_value(&self, index : i32, paramlist:&mut Vec<Box<dyn std::any::Any>>) -> " + returnType + ";");
 
-				evalMethodsImpl.AppendLine("	fn eval_" + s.Name.ToLowerInvariant() + "(&self/*, paramlist:&Vec<std::any>*/) -> " + returnType);
+				evalMethodsImpl.AppendLine("	fn eval_" + s.Name.ToLowerInvariant() + "(&self, paramlist:&mut Vec<Box<dyn std::any::Any>>) -> " + returnType);
 				evalMethodsImpl.AppendLine("	{");
 				if (s.CodeBlock != null)
 				{
@@ -61,11 +61,11 @@ namespace TinyPG.CodeGenerators.Rust
 				evalMethodsImpl.AppendLine("	}\r\n");
 
 
-				evalMethodsImpl.AppendLine("	fn get_" + s.Name.ToLowerInvariant() + "_value(&self, index : i32/*, paramlist:&Vec<std::any>*/) -> " + returnType);
+				evalMethodsImpl.AppendLine("	fn get_" + s.Name.ToLowerInvariant() + "_value(&self, index : i32, paramlist:&mut Vec<Box<dyn std::any::Any>>) -> " + returnType);
 				evalMethodsImpl.AppendLine("	{");
 				evalMethodsImpl.AppendLine("		let node = self.get_token_node(TokenType::" + s.Name + ", index);");
 				evalMethodsImpl.AppendLine("		if let Some(n) = node {");
-				evalMethodsImpl.AppendLine("			return n.eval_"+s.Name.ToLowerInvariant()+"(/*paramlist*/);");
+				evalMethodsImpl.AppendLine("			return n.eval_"+s.Name.ToLowerInvariant()+"(paramlist);");
 				evalMethodsImpl.AppendLine("		}");
 				evalMethodsImpl.AppendLine("		panic!(\"No "+ s.Name+"[index] found.\");");
 				evalMethodsImpl.AppendLine("	}");
@@ -135,7 +135,7 @@ namespace TinyPG.CodeGenerators.Rust
 					}
 					else
 					{
-						replacement = "self.get_"+s.Name.ToLowerInvariant()+"_value(" + indexer + "/*, paramlist*/)";
+						replacement = "self.get_"+s.Name.ToLowerInvariant()+"_value(" + indexer + ", paramlist)";
 					}
 				}
 				else

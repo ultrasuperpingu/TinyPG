@@ -77,18 +77,18 @@ Start -> (Expression)? EOF_
 //expressions
 Function -> FUNCTION BRACKETOPEN Params? BRACKETCLOSE
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
+	/*let tree = &mut paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
 	ParseNode* funcNode = this->Nodes[0];
 	ParseNode* paramNode = this->Nodes[2];
 
 	if (tree->context == NULL)
 	{
-		tree->Errors.push_back(ParseError("No context defined", 1041, this));
+		tree.errors.push(ParseError::from_parse_node("No context defined", 1041, self));
 		return NULL;
 	}
 	if (tree->context->CurrentStackSize > 50)
 	{
-		tree->Errors.push_back(ParseError("Stack overflow: " + funcNode->TokenVal.Text + "()", 1046, this));
+		tree.errors.push(ParseError::from_parse_node("Stack overflow: " + funcNode->TokenVal.Text + "()", 1046, self));
 		return NULL;
 	}
 	std::string key = str_tolower(funcNode->TokenVal.Text);
@@ -121,468 +121,508 @@ Function -> FUNCTION BRACKETOPEN Params? BRACKETCLOSE
 };
 PrimaryExpression -> Function | Variable | Literal | ParenthesizedExpression
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	TokenType type = this->Nodes[0]->TokenVal.Type;
-	if (type == TokenType::Function)
-		return $Function;
-	else if (type == TokenType::Literal)
-		return $Literal;
-	else if (type == TokenType::ParenthesizedExpression)
-		return $ParenthesizedExpression;
-	else if (type == TokenType::Variable)
-		return $Variable;
-
-	tree->Errors.push_back(ParseError("Illegal EvalPrimaryExpression format", 1097, this));*/
-	return NULL;
+	let _type = self.nodes[0].get_token()._type;
+	if _type == TokenType::Function {
+		return self.get_function_value(0, paramlist);
+	} else if _type == TokenType::Literal {
+		return self.get_literal_value(0, paramlist);
+	} else if _type == TokenType::ParenthesizedExpression {
+		return self.get_parenthesizedexpression_value(0, paramlist);
+	} else if _type == TokenType::Variable {
+		return self.get_variable_value(0, paramlist);
+	}
+	let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	tree.errors.push(ParseError::from_parse_node("Illegal EvalPrimaryExpression format".to_string(), 1097, self, false));
 	None
 };
 ParenthesizedExpression -> BRACKETOPEN Expression BRACKETCLOSE
 {
-	return $Expression;
+	$Expression
 };
 UnaryExpression -> PrimaryExpression
 				   | PLUS UnaryExpression
 				   | MINUS UnaryExpression
 				   | NOT UnaryExpression
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	TokenType type = this->Nodes[0]->TokenVal.Type;
-	if (type == TokenType::PrimaryExpression)
-		return $PrimaryExpression;
-
-	if (type == TokenType::MINUS)
-	{
-		std::any val = $UnaryExpression;
-		if (auto x = std::any_cast<double>(&val))
-			return -*x;
-		if (auto x = std::any_cast<int>(&val))
-			return -*x;
-
-		tree->Errors.push_back(ParseError("Illegal UnaryExpression format, cannot interpret minus " + ConvertToString(val), 1095, this));
-		return NULL;
-	}
-	else if (type == TokenType::PLUS)
-	{
-		std::any val = $UnaryExpression;
-		return val;
-	}
-	else if (type == TokenType::NOT)
-	{
-		std::any val = $UnaryExpression[0];
-		if (auto x = std::any_cast<bool>(&val))
-			return !(*x);
-
-		tree->Errors.push_back(ParseError("Illegal UnaryExpression format, cannot interpret negate " + ConvertToString(val), 1098, this));
-		return NULL;
-	}
-
-	tree->Errors.push_back(ParseError("Illegal UnaryExpression format", 1099, this));
-	*/
-	None
+	let _type = self.nodes[0].get_token()._type;
+		if _type == TokenType::PrimaryExpression {
+			return self.get_primaryexpression_value(0, paramlist);
+		}
+		if _type == TokenType::MINUS
+		{
+			let val_opt = self.get_unaryexpression_value(0, paramlist);
+			if let Some(val) = val_opt {
+				match val.downcast::<f64>() {
+					Ok(dval) => {
+						return Some(Box::new(-*dval));
+					},
+					Err(val) => {
+						match val.downcast::<i64>() {
+							Ok(ival) => {
+								return Some(Box::new(-*ival));
+							},
+							Err(_) => {
+								
+							}
+						}
+					}
+				}
+			}
+			let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+			tree.errors.push(ParseError::from_parse_node("Illegal UnaryExpression format, cannot interpret minus ".to_string() /*+ val*/, 1095, self, false));
+			return None;
+		}
+		else if _type == TokenType::PLUS
+		{
+			let val = self.get_unaryexpression_value(0, paramlist);
+			return val;
+		}
+		else if _type == TokenType::NOT
+		{
+			let val = self.get_unaryexpression_value(0, paramlist);
+			let bval_res = val.unwrap().downcast::<bool>();
+			if let Ok(bval) = bval_res {
+				return Some(Box::new(!(*bval)));
+			}
+			let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+			tree.errors.push(ParseError::from_parse_node("Illegal UnaryExpression format, cannot interpret negate ".to_string() /*+ val*/, 1098, self, false));
+			return None;
+		}
+	
+		let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+		tree.errors.push(ParseError::from_parse_node("Illegal UnaryExpression format".to_string(), 1099, self, false));
+		None
 };
 
 PowerExpression -> UnaryExpression (POWER UnaryExpression)*
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	std::any result = $UnaryExpression[0];
-
+	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	let result = self.get_unaryexpression_value(0, paramlist);
+	//TODO: uncomment and make it work
+/*
 	// IMPORTANT: scanning and calculating the power is done from Left to Right.
 	// this is conform the Excel evaluation of power, but not conform strict mathematical guidelines
 	// this means that a^b^c evaluates to (a^b)^c  (Excel uses the same kind of evaluation)
 	// stricly mathematical speaking a^b^c should evaluate to a^(b^c) (therefore calculating the powers from Right to Left)
-	for (int i = 1; i < Nodes.size(); i += 2)
+	for i in (1..self.nodes.len()).step_by(2)
 	{
-		Token token = Nodes[i]->TokenVal;
-		std::any val = Nodes[i + 1]->Eval(paramlist);
-		if (token.Type == TokenType::POWER)
+		let token = self.nodes[i].get_token();
+		let val = self.nodes[i + 1].eval(paramlist);
+		if token._type == TokenType::POWER {
 			result = std::pow(ConvertToDouble(result), ConvertToDouble(val));
-	}
-
-	return result;*/
-	None
+		}
+	}*/
+	
+	result
 };
 MultiplicativeExpression -> PowerExpression ((ASTERIKS | SLASH | PERCENT) PowerExpression)*
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	std::any result = $PowerExpression;
-	for (int i = 1; i < Nodes.size(); i+=2 )
+	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	let result = self.get_powerexpression_value(0, paramlist);
+	//TODO: uncomment and make it work
+	/*
+	for i in (1..self.nodes.len()).step_by(2)
 	{
-		Token token = Nodes[i]->TokenVal;
-		std::any val = Nodes[i+1]->Eval(paramlist);
-		if (token.Type == TokenType::ASTERIKS)
+		let token = self.nodes[i].get_token();
+		let val = self.nodes[i + 1].eval(paramlist);
+		if token._type == TokenType::ASTERIKS {
 			result = ConvertToDouble(result) * ConvertToDouble(val);
-		else if (token.Type == TokenType::SLASH)
+		} else if token._type == TokenType::SLASH {
 			result = ConvertToDouble(result) / ConvertToDouble(val);
-		else if (token.Type == TokenType::PERCENT)
+		} else if token._type == TokenType::PERCENT {
 			result = ConvertToInt32(result) % ConvertToInt32(val);
+		}
 	}
-
-	return result;*/
-	None
+	*/
+	result
 };
 AdditiveExpression -> MultiplicativeExpression ((PLUS | MINUS) MultiplicativeExpression)*
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	std::any result = $MultiplicativeExpression[0];
-	for (int i = 1; i < Nodes.size(); i += 2)
+	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	let result = self.get_multiplicativeexpression_value(0, paramlist);
+	//TODO: uncomment and make it work
+	/*
+	for i in (1..self.nodes.len()).step_by(2)
 	{
-		Token token = Nodes[i]->TokenVal;
-		std::any val = Nodes[i + 1]->Eval(paramlist);
-		if (token.Type == TokenType::PLUS)
+		let token = self.nodes[i].get_token();
+		let val = self.nodes[i + 1].eval(paramlist);
+		if token._type == TokenType::PLUS {
 			result = ConvertToDouble(result) + ConvertToDouble(val);
-		else if (token.Type == TokenType::MINUS)
+		} else if token._type == TokenType::MINUS {
 			result = ConvertToDouble(result) - ConvertToDouble(val);
+		}
 	}
-
-	return result;*/
-	None
+	*/
+	result
 }; 
 ConcatEpression -> AdditiveExpression (AMP AdditiveExpression)*
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	std::any result = $AdditiveExpression[0];
-	for (int i = 1; i < Nodes.size(); i += 2)
+	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	let result = self.get_additiveexpression_value(0, paramlist);
+	//TODO: uncomment and make it work
+	/*
+	for i in (1..self.nodes.len()).step_by(2)
 	{
-		Token token = Nodes[i]->TokenVal;
-		std::any val = Nodes[i + 1]->Eval(paramlist);
-		if (token.Type == TokenType::AMP)
+		let token = self.nodes[i].get_token();
+		let val = self.nodes[i + 1].eval(paramlist);
+		if token._type == TokenType::AMP {
 			result = ConvertToString(result) + ConvertToString(val);
+		}
 	}
-	return result;*/
-	None
+	*/
+	result
 };
 RelationalExpression -> ConcatEpression ((LESSTHAN | LESSEQUAL | GREATERTHAN | GREATEREQUAL) ConcatEpression)?
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	std::any result = $ConcatEpression[0];
-	for (int i = 1; i < Nodes.size(); i += 2)
+	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	let result = self.get_concatepression_value(0, paramlist);
+	//TODO: uncomment and make it work
+	/*
+	for i in (1..self.nodes.len()).step_by(2)
 	{
-		Token token = Nodes[i]->TokenVal;
-		std::any val = Nodes[i + 1]->Eval(paramlist);
-
+		let token = self.nodes[i].get_token();
+		let val = self.nodes[i + 1].eval(paramlist);
+	
 		// compare as numbers
 		if (result.has_value() && result.type().name() == "double" && val.has_value() && val.type().name() == "double")
 		{
-			if (token.Type == TokenType::LESSTHAN)
+			if token._type == TokenType::LESSTHAN {
 				result = ConvertToDouble(result) < ConvertToDouble(val);
-			else if (token.Type == TokenType::LESSEQUAL)
+			} else if token._type == TokenType::LESSEQUAL {
 				result = ConvertToDouble(result) <= ConvertToDouble(val);
-			else if (token.Type == TokenType::GREATERTHAN)
+			} else if token._type == TokenType::GREATERTHAN {
 				result = ConvertToDouble(result) > ConvertToDouble(val);
-			else if (token.Type == TokenType::GREATEREQUAL)
+			} else if token._type == TokenType::GREATEREQUAL {
 				result = ConvertToDouble(result) >= ConvertToDouble(val);
+			}
 		}
 		else // compare as strings
 		{
-			if (token.Type == TokenType::LESSTHAN)
+			if token._type == TokenType::LESSTHAN {
 				result = ConvertToString(result) < ConvertToString(val);
-			else if (token.Type == TokenType::LESSEQUAL)
+			} else if token._type == TokenType::LESSEQUAL {
 				result = ConvertToString(result) <= ConvertToString(val);
-			else if (token.Type == TokenType::GREATERTHAN)
+			} else if token._type == TokenType::GREATERTHAN {
 				result = ConvertToString(result) > ConvertToString(val);
-			else if (token.Type == TokenType::GREATEREQUAL)
+			} else if token._type == TokenType::GREATEREQUAL {
 				result = ConvertToString(result) >= ConvertToString(val);
+			}
 		}
-		
 	}
-	return result;*/
-	None
+	*/
+	result
 };
 EqualityExpression -> RelationalExpression ((EQUAL | NOTEQUAL) RelationalExpression)*
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	std::any result = $RelationalExpression[0];
-	for (int i = 1; i < Nodes.size(); i += 2)
+	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	let result = self.get_relationalexpression_value(0, paramlist);
+	//TODO: uncomment and make it work
+	/*
+	for i in (1..self.nodes.len()).step_by(2)
 	{
-		Token token = Nodes[i]->TokenVal;
-		std::any val = Nodes[i + 1]->Eval(paramlist);
-		if (result.has_value() && !val.has_value() || !result.has_value() && val.has_value())
+		let token = self.nodes[i].get_token();
+		let val = self.nodes[i + 1].eval(paramlist);
+		if result.is_some() && !val.has_value() || result.is_none() && val.has_value()
 		{
-			if (token.Type == TokenType::EQUAL)
-				result = false;
-			else if (token.Type == TokenType::NOTEQUAL)
-				result = true;
+			if token._type == TokenType::EQUAL {
+				result = Some(Box::new(false));
+			} else if token._type == TokenType::NOTEQUAL {
+				result = Some(Box::new(true));
+			}
 		}
-		else if (!result.has_value() && !val.has_value())
+		else if result.is_none() && !val.has_value()
 		{
-			if (token.Type == TokenType::EQUAL)
-				result = true;
-			else if (token.Type == TokenType::NOTEQUAL)
-				result = false;
+			if token._type == TokenType::EQUAL {
+				result = Some(Box::new(true));
+			} else if token._type == TokenType::NOTEQUAL {
+				result = Some(Box::new(false));
+			}
 		}
 		else // if (result.has_value() && val.has_value())
 		{
-			if (result.type().name() != val.type().name())
+			if result.type().name() != val.type().name()
 			{
-				if (token.Type == TokenType::EQUAL)
-					result = true;
-				else if (token.Type == TokenType::NOTEQUAL)
-					result = false;
+				if token._type == TokenType::EQUAL {
+					result = Some(Box::new(true));
+				} else if token._type == TokenType::NOTEQUAL {
+					result = Some(Box::new(false));
+				}
 			}
 			else
 			{
 				if (auto x = std::any_cast<bool>(&val))
 				{
-					if (token.Type == TokenType::EQUAL)
+					if token._type == TokenType::EQUAL {
 						result = std::any_cast<bool>(result) == std::any_cast<bool>(val);
-					else if (token.Type == TokenType::NOTEQUAL)
+					} else if token._type == TokenType::NOTEQUAL {
 						result = std::any_cast<bool>(result) != std::any_cast<bool>(val);
+					}
 				}
 				else if (auto x = std::any_cast<double>(&val))
 				{
-					if (token.Type == TokenType::EQUAL)
+					if token._type == TokenType::EQUAL {
 						result = std::any_cast<double>(result) == std::any_cast<double>(val);
-					else if (token.Type == TokenType::NOTEQUAL)
+					} else if token._type == TokenType::NOTEQUAL {
 						result = std::any_cast<double>(result) != std::any_cast<double>(val);
+					}
 				}
 				else if (auto x = std::any_cast<int>(&val))
 				{
-					if (token.Type == TokenType::EQUAL)
+					if token._type == TokenType::EQUAL {
 						result = std::any_cast<int>(result) == std::any_cast<int>(val);
-					else if (token.Type == TokenType::NOTEQUAL)
+					} else if token._type == TokenType::NOTEQUAL {
 						result = std::any_cast<int>(result) != std::any_cast<int>(val);
+					}
 				}
 				else if (auto x = std::any_cast<std::string>(&val))
 				{
-					if (token.Type == TokenType::EQUAL)
+					if token._type == TokenType::EQUAL {
 						result = std::any_cast<std::string>(result) == std::any_cast<std::string>(val);
-					else if (token.Type == TokenType::NOTEQUAL)
+					} else if token._type == TokenType::NOTEQUAL {
 						result = std::any_cast<std::string>(result) != std::any_cast<std::string>(val);
+					}
 				}
 			}
 		}
 	}
-	return result;*/
-	None
+	*/
+	result
 };
 ConditionalAndExpression -> EqualityExpression (AMPAMP EqualityExpression)*  //ok
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	std::any result = $EqualityExpression[0];
-	for (int i = 1; i < Nodes.size(); i += 2)
+	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	let result = self.get_equalityexpression_value(0, paramlist);
+	//TODO: uncomment and make it work
+	/*
+	for i in (1..self.nodes.len()).step_by(2)
 	{
-		Token token = Nodes[i]->TokenVal;
-		std::any val = Nodes[i + 1]->Eval(paramlist);
-		if (token.Type == TokenType::AMPAMP)
+		let token = self.nodes[i].get_token();
+		let val = self.nodes[i + 1].eval(paramlist);
+		if (token._type == TokenType::AMPAMP) {
 			result = ConvertToBoolean(result) && ConvertToBoolean(val);
+		}
 	}
-	return result;*/
-	None
+	*/
+	result
 };
 ConditionalOrExpression -> ConditionalAndExpression (PIPEPIPE ConditionalAndExpression)* //ok
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	std::any result = $ConditionalAndExpression[0];
-	for (int i = 1; i < Nodes.size(); i += 2)
+	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	let result = self.get_equalityexpression_value(0, paramlist);
+	//TODO: uncomment and make it work
+	/*
+	for i in (1..self.nodes.len()).step_by(2)
 	{
-		Token token = Nodes[i]->TokenVal;
-		std::any val = Nodes[i + 1]->Eval(paramlist);
-		if (token.Type == TokenType::PIPEPIPE)
+		let token = self.nodes[i].get_token();
+		let val = self.nodes[i + 1].eval(paramlist);
+		if (token._type == TokenType::PIPEPIPE) {
 			result = ConvertToBoolean(result) || ConvertToBoolean(val);
+		}
 	}
-	return result;*/
-	None
+	*/
+	result
 };
 AssignmentExpression -> ConditionalOrExpression (QUESTIONMARK AssignmentExpression COLON AssignmentExpression)? // ok
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	std::any result = $ConditionalOrExpression;
-	if (Nodes.size() >= 5 && result.has_value() && std::any_cast<int>(&result)
-		&& Nodes[1]->TokenVal.Type == TokenType::QUESTIONMARK
-		&& Nodes[3]->TokenVal.Type == TokenType::COLON)
+	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	let result = self.get_conditionalorexpression_value(0, paramlist);
+	//TODO: uncomment and make it work
+	/*
+	if (self.nodes.len() >= 5 && result.is_some() && std::any_cast<int>(&result)
+		&& self.nodes[1].get_token()._type == TokenType::QUESTIONMARK
+		&& self.nodes[3].get_token()._type == TokenType::COLON)
 	{
-		if (ConvertToBoolean(result))
-			result = Nodes[2]->Eval(paramlist); // return 1st argument
-		else
-			result = Nodes[4]->Eval(paramlist); // return 2nd argumen
+		if ConvertToBoolean(result) {
+			result = self.nodes[2]->eval(paramlist); // return 1st argument
+		} else {
+			result = self.nodes[4]->eval(paramlist); // return 2nd argument
+		}
 	}
-	return result;*/
-	None
+	*/
+	result
 };
 Expression -> AssignmentExpression? (ASSIGN AssignmentExpression)?
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
+	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
 	// if only left hand side available, this is not an assignment, simple evaluate expression
-	if (Nodes.size() == 1)
-		return $AssignmentExpression[0]; // return the result
-
-	if (Nodes.size() != 3)
-	{
-		tree->Errors.push_back(ParseError("Illegal EvalExpression format", 1092, this));
-		return NULL;
+	if self.nodes.len() == 1 {
+		return self.get_assignmentexpression_value(0, paramlist); // return the result
 	}
-
+	if self.nodes.len() != 3
+	{
+		let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+		tree.errors.push(ParseError::from_parse_node("Illegal EvalExpression format".to_string(), 1092, self, false));
+		return None;
+	}
+	
 	// ok, this is an assignment so declare the function or variable
 	// assignment only allowed to function or to a variable
-	ParseNode* v = GetFunctionOrVariable(Nodes[0]);
-	if (v == NULL)
+	/*let v = Self::GetFunctionOrVariable(&self.nodes[0]);
+	if v.is_none()
 	{
-		tree->Errors.push_back(ParseError("Can only assign to function or variable", 1020, this));
-		return NULL;
+		let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+		tree.errors.push(ParseError::from_parse_node("Can only assign to function or variable".to_string(), 1020, self, false));
+		return None;
 	}
-
-	if (tree->context == NULL)
+	let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	if tree.context.is_none()
 	{
-		tree->Errors.push_back(ParseError("No context defined", 1041, this));
-		return NULL;
+		tree.errors.push(ParseError::from_parse_node("No context defined".to_string(), 1041, self, false));
+		return None;
 	}
-
-	if (v->TokenVal.Type == TokenType::VARIABLE)
+	
+	let vtoken = v.as_ref().unwrap().get_token();
+	if vtoken._type == TokenType::VARIABLE
 	{
 		// simply overwrite any previous defnition
-		std::string key = v->TokenVal.Text;
-		tree->context->Globals[key] = $AssignmentExpression[1];
-		return tree->context->Globals[key] ;
+		let key = &vtoken.text;
+		tree.context.Globals[key] = self.get_assignmentexpression_value(1, paramlist);
+		return tree.context.Globals[key] ;
 	}
-	else if (v->TokenVal.Type == TokenType::Function)
+	else if vtoken._type == TokenType::Function
 	{
-
-		std::string key = v->Nodes[0]->TokenVal.Text;
-
+	
+		let key = &v.as_ref().unwrap().get_nodes()[0].get_token().text;
+	
 		// function lookup is case insensitive
-		if (containsKey(tree->context->functions, str_tolower(key)))
+		if (containsKey(tree->context->functions, key.to_lowercase()))
 		{
-			auto func = tree->context->functions[str_tolower(key)];
+			let func = tree->context->functions[key.to_lowercase()];
 			if (!func->IsDynamic())
 			{
-				tree->Errors.push_back(ParseError("Built in functions cannot be overwritten", 1050, this));
-				return std::any();
+				tree.errors.push(ParseError::from_parse_node("Built in functions cannot be overwritten".to_string(), 1050, self, false));
+				return None;
 			}
 		}
 		// lets determine the input variables. 
 		// functions must be of te form f(x;y;z) = x+y*z;
 		// check the function parameters to be of type Variable, error otherwise
-		Variables* vars = new Variables();
-		ParseNode* paramsNode = v->Nodes[2];
+		let vars = Variables::new();
+		let paramsNode = v.get_nodes()[2];
 		if (paramsNode->TokenVal.Type == TokenType::Params)
 		{   // function has parameters, so check if they are all variable declarations
-			for (int i = 0; i < paramsNode->Nodes.size(); i += 2)
+			for i in (0..paramsNode.nodes.len()).step_by(2)
 			{
-				ParseNode* varNode = GetFunctionOrVariable(paramsNode->Nodes[i]);
-				if (varNode == NULL || varNode->TokenVal.Type != TokenType::VARIABLE)
+				let varNode = Self::GetFunctionOrVariable(paramsNode.nodes[i]);
+				if varNode.is_none() || varNode.unwrap().get_token()._type != TokenType::VARIABLE
 				{
-					tree->Errors.push_back(ParseError("Function declaration may only contain variables", 1051, this));
-					return NULL;
+					tree.errors.push(ParseError::from_parse_node("Function declaration may only contain variables".to_string(), 1051, self, false));
+					return None;
 				}
 				// simply declare the variable, no need to evaluate the value of it at this point. 
 				// evaluation will be done when the function is executed
 				// note, variables are Case Sensitive (!)
-				vars->insert(std::make_pair(varNode->TokenVal.Text, std::any()));
+				vars.insert(varNode.unwrap().get_token().text, None);
 			}
 		}
 		// we have all the info we need to know to declare the dynamicly defined function
 		// pass on nodes[2] which is the Right Hand Side (RHS) of the assignment
 		// nodes[2] will be evaluated at runtime when the function is executed.
-		DynamicFunction* dynf = new DynamicFunction(key, Nodes[2], vars, (int)vars->size(), (int)vars->size());
-		tree->context->functions[str_tolower(key)] = dynf;
+		let dynf = DynamicFunction::new (key, self.nodes[2], vars, vars.len(), vars.len());
+		tree.context.functions[key.to_lowercase()] = dynf;
 		return dynf;
-	}
+	}*/
 
-	return std::any();*/
 	None
 };
 
 //literals
 Params -> Expression (SEMICOLON Expression)*
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	std::vector<std::any> parameters = std::vector<std::any>();
-	for (int i = 0; i < Nodes.size(); i += 2)
+	//let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	let parameters : Vec<Box<dyn std::any::Any>> = vec![];
+	//TODO
+	/*for i in (0..self.nodes.len()).step_by(2)
 	{
-		if (Nodes[i]->TokenVal.Type == TokenType::Expression)
+		if (self.nodes[i].get_token()._type == TokenType::Expression)
 		{
-			std::any val = Nodes[i]->Eval(paramlist);
-			parameters.push_back(val);
+			let val = self.nodes[i]->eval(paramlist);
+			parameters.push(val);
 		}
-	}
-	return parameters;*/
-	None
+	}*/
+	Some(Box::new(parameters))
 };
 Literal -> BOOLEANLITERAL | IntegerLiteral | RealLiteral | StringLiteral
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	TokenType type = this->Nodes[0]->TokenVal.Type;
-	if (type == TokenType::StringLiteral)
-		return $StringLiteral;
-	else if (type == TokenType::IntegerLiteral)
-		return $IntegerLiteral;
-	else if (type == TokenType::RealLiteral)
-		return $RealLiteral;
-	else if (type == TokenType::BOOLEANLITERAL)
-	{
-		return $BOOLEANLITERAL == "true";
+	let _type = self.nodes[0].get_token()._type;
+	if (_type == TokenType::StringLiteral) {
+		return self.get_stringliteral_value(0, paramlist);
+	} else if (_type == TokenType::IntegerLiteral) {
+		return self.get_integerliteral_value(0, paramlist);
+	} else if (_type == TokenType::RealLiteral) {
+		return self.get_realliteral_value(0, paramlist);
+	} else if (_type == TokenType::BOOLEANLITERAL) {
+		return Some(Box::new(self.get_terminal_value(TokenType::BOOLEANLITERAL, 0) == "true"));
 	}
-
-	tree->Errors.push_back(ParseError("illegal Literal format", 1003, this));
-	return NULL;*/
+	
+	let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	tree.errors.push(ParseError::from_parse_node("illegal Literal format".to_string(), 1003, self, false));
 	None
 };
 IntegerLiteral -> DECIMALINTEGERLITERAL | HEXINTEGERLITERAL
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	if (?DECIMALINTEGERLITERAL)
-		return ConvertToDouble($DECIMALINTEGERLITERAL);
-	if (?HEXINTEGERLITERAL)
-	{
-		std::string hex = $HEXINTEGERLITERAL;
-		int x;
-		std::stringstream ss;
-		ss << std::hex << hex.substr(2, hex.length() - 2);
-		ss >> x;
-		return ConvertToDouble(x);
+	if self.is_token_present(TokenType::DECIMALINTEGERLITERAL, 0) {
+		return Some(Box::new(self.get_terminal_value(TokenType::DECIMALINTEGERLITERAL, 0).parse::<i64>()));
 	}
-
-	tree->Errors.push_back(ParseError("illegal IntegerLiteral format", 1002, this));
-	return NULL;*/
+	if self.is_token_present(TokenType::HEXINTEGERLITERAL, 0)
+	{
+		let hex = self.get_terminal_value(TokenType::HEXINTEGERLITERAL, 0);
+		return Some(Box::new(i64::from_str_radix(&hex[2..], 16)));
+	}
+	
+	let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	tree.errors.push(ParseError::from_parse_node("illegal IntegerLiteral format".to_string(), 1002, self, false));
 	None
 };
 RealLiteral -> REALLITERAL
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	if (?REALLITERAL)
+	if (self.is_token_present(TokenType::REALLITERAL, 0))
 	{
-		return ConvertToDouble($REALLITERAL);
+		return Some(Box::new(self.get_terminal_value(TokenType::REALLITERAL, 0).parse::<f64>().unwrap()));
 	}
-	tree->Errors.push_back(ParseError("illegal RealLiteral format", 1001, this));
-	return NULL;*/
+	let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	tree.errors.push(ParseError::from_parse_node("illegal RealLiteral format".to_string(), 1001, self, false));
+		
 	None
 };
 StringLiteral -> STRINGLITERAL
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	if (?STRINGLITERAL)
+	if self.is_token_present(TokenType::STRINGLITERAL, 0)
 	{
-		std::string r = $STRINGLITERAL;
-		r = r.substr(1, r.length() - 2); // strip quotes
-		return r;
+		let mut r = self.get_terminal_value(TokenType::STRINGLITERAL, 0);
+		r = r.trim_matches('"').to_string(); // strip quotes
+		return Some(Box::new(r));
 	}
-
-	tree->Errors.push_back(ParseError("illegal StringLiteral format", 1000, this));
-	return "";*/
-	None
+	
+	let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	tree.errors.push(ParseError::from_parse_node("illegal StringLiteral format".to_string(), 1000, self, false));
+	Some(Box::new("".to_string()))
 };
 Variable -> VARIABLE
 {
-	/*ParseTree* tree = std::any_cast<ParseTree*>(paramlist[0]);
-	if (tree->context == NULL)
+	/*let tree = paramlist.first_mut().unwrap().downcast_mut::<ParseTree>().unwrap();
+	if tree.context.is_none()
 	{
-		tree->Errors.push_back(ParseError("No context defined", 1041, this));
-		return NULL;
+		tree.errors.push(ParseError::from_parse_node("No context defined".to_string(), 1041, self, false));
+		return None;
 	}
-
-	std::string key = (std::string)$VARIABLE;
-	// first check if the variable was declared in scope of a function
-	std::any scope_var = tree->context->GetScopeVariable(key);
-	if(scope_var.has_value())
-		return scope_var;
 	
+	let key = self.get_terminal_value(TokenType::VARIABLE, 0);
+	// first check if the variable was declared in scope of a function
+	let scope_var = tree.context.unwarp().GetScopeVariable(key);
+	if scope_var.is_some() {
+		return scope_var.unwarp();
+	}
+		
 	// if not in scope of a function
 	// next check if the variable was declared as a global variable
-	if (containsKey(tree->context->Globals,key))
+	if containsKey(tree->context->Globals,key) {
 		return tree->context->Globals[key];
-
+	}
+	
 	//variable not found
-	tree->Errors.push_back(ParseError("Variable not defined: " + key, 1039, this));
-	return std::any();*/
-	None
+	tree.errors.push(ParseError::from_parse_node("Variable not defined: ".to_string() + &key, 1039, self, false));
+	None*/
+	//just for testing
+	Some(Box::new(2))
 };

@@ -27,12 +27,12 @@ impl ParseError {
 		Self { message: "".to_string(), code: -1, line: 1, col: 1, pos: 0, length: 0, is_warning: false }
 	}
 
-	pub fn from_parse_node(message: String, code: i32, node: ParseNode, is_warning : bool) -> Self
+	pub fn from_parse_node(message: String, code: i32, node: &ParseNode, is_warning : bool) -> Self
 	{
-		Self::from_token(message, code, node.token, is_warning)
+		Self::from_token(message, code, &node.token, is_warning)
 	}
 
-	pub fn from_token(message:String, code:i32, token:Token, is_warning:bool) -> Self
+	pub fn from_token(message:String, code:i32, token:&Token, is_warning:bool) -> Self
 	{
 		Self::new( message, code, token.line, token.column, token.startpos, token.text.len() as i32, is_warning)
 	}

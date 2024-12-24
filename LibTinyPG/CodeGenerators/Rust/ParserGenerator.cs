@@ -60,8 +60,9 @@ namespace TinyPG.CodeGenerators.Rust
 			sb.AppendLine();
 			sb.AppendLine("	fn parse_node_" + s.Name.ToLowerInvariant() + "(&mut self, tree:&mut ParseTree, parent : &mut Box<dyn IParseNode>)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
 			sb.AppendLine("	{");
+			sb.AppendLine("		#[allow(unused_variables, unused_mut)]");
 			sb.AppendLine("		let mut tok: Token;");
-			sb.AppendLine("		#[allow(unused_mut)]");
+			sb.AppendLine("		#[allow(unused_variables, unused_mut)]");
 			sb.AppendLine("		let mut n: Box<dyn IParseNode>;");
 			sb.AppendLine("		let mut node = parent.create_node(self.scanner.get_token(TokenType::" + s.Name + "), \"" + s.Name + "\".to_string());");
 			sb.AppendLine("");
@@ -97,7 +98,7 @@ namespace TinyPG.CodeGenerators.Rust
 					sb.AppendLine(Indent + "node.get_token_mut().update_range(&tok);");
 					sb.AppendLine(Indent + "node.add_node(n);");
 					sb.AppendLine(Indent + "if tok._type != TokenType::" + r.Symbol.Name + " {");
-					sb.AppendLine(Indent + "	tree.errors.push(ParseError::from_token(\"Unexpected token '\".to_string() + tok.text.replace(&\"\\n\".to_string(), \"\").as_str() + \"' found. Expected '" + r.Symbol.Name + "'.\", 0x1001, tok, false));");
+					sb.AppendLine(Indent + "	tree.errors.push(ParseError::from_token(\"Unexpected token '\".to_string() + tok.text.replace(&\"\\n\".to_string(), \"\").as_str() + \"' found. Expected '" + r.Symbol.Name + "'.\", 0x1001, &tok, false));");
 					sb.AppendLine(Indent + "	parent.add_node(node);");
 					sb.AppendLine(Indent + "	return;");
 					sb.AppendLine(Indent + "}");
@@ -225,7 +226,7 @@ namespace TinyPG.CodeGenerators.Rust
 					}
 					sb.AppendLine(Indent + "	_ => {");
 					string expectedTokens = BuildExpectedTokensStringForErrorMessage(tokens);
-					sb.AppendLine(Indent + "		tree.errors.push(ParseError::from_token(\"Unexpected token '\".to_string() + tok.text.replace(\"\\n\", \"\").as_str() + \"' found. Expected " + expectedTokens + ".\", 0x0002, tok, false));");
+					sb.AppendLine(Indent + "		tree.errors.push(ParseError::from_token(\"Unexpected token '\".to_string() + tok.text.replace(\"\\n\", \"\").as_str() + \"' found. Expected " + expectedTokens + ".\", 0x0002, &tok, false));");
 					sb.AppendLine(Indent + "	}");
 					sb.AppendLine(Indent + "}" + Helper.AddComment("Choice Rule"));
 					break;
