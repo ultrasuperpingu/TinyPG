@@ -106,7 +106,7 @@ impl IParserTree for ParseTree {
 
 	fn eval(&self, paramlist:&mut Vec<Box<dyn std::any::Any>>) -> Option<Box<dyn std::any::Any>>
 	{
-		self.root.as_ref()?.get_nodes().first()?.eval(paramlist)
+		self.root.as_ref()?.eval(paramlist)
 	}
 }
 pub trait IParseNode {
