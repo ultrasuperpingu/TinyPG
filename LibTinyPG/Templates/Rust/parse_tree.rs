@@ -10,10 +10,10 @@ pub struct ParseError
 {
 	pub message : String,
 	pub code : i32,
-	pub line : i32,
-	pub col : i32,
-	pub pos : i32,
-	pub length : i32,
+	pub line : usize,
+	pub col : usize,
+	pub pos : usize,
+	pub length : usize,
 	pub is_warning : bool
 }
 impl Default for ParseError {
@@ -34,7 +34,7 @@ impl ParseError {
 
 	pub fn from_token(message:String, code:i32, token:&Token, is_warning:bool) -> Self
 	{
-		Self::new( message, code, token.line, token.column, token.startpos, token.text.len() as i32, is_warning)
+		Self::new( message, code, token.line, token.column, token.startpos, token.text.len(), is_warning)
 	}
 
 	pub fn from_code_only(message:String, code:i32, is_warning:bool) -> Self
@@ -42,7 +42,7 @@ impl ParseError {
 		Self::new( message, code, 0, 0, 0, 0, is_warning)
 	}
 
-	pub fn new(message:String, code:i32, line:i32, col:i32, pos:i32, length:i32, is_warning:bool) -> Self
+	pub fn new(message:String, code:i32, line:usize, col:usize, pos:usize, length:usize, is_warning:bool) -> Self
 	{
 		Self { message, code, line, col, pos, length, is_warning }
 	}
@@ -61,6 +61,7 @@ impl Default for ParseTree {
 	}
 }
 pub trait IParserTree {
+	fn create_node(&self, token:Token, text:String) -> Box<dyn IParseNode>;
 	fn print_tree(&self) -> String;
 	/// This is the entry point for executing and evaluating the parse tree.
 	/// 
@@ -92,6 +93,11 @@ impl ParseTree {
 	}
 }
 impl IParserTree for ParseTree {
+	fn create_node(&self, token:Token, text:String) -> Box<dyn IParseNode>
+	{
+		let node = ParseNode::new(token, text);
+		Box::new(node)
+	}
 
 	fn print_tree(&self) -> String
 	{
@@ -104,7 +110,6 @@ impl IParserTree for ParseTree {
 	}
 }
 pub trait IParseNode {
-	fn create_node(&self, token:Token, text:String) -> Box<dyn IParseNode>;
 	fn get_token_node(&self, _type:TokenType, index:i32) -> Option<&dyn IParseNode>;
 	fn is_token_present(&self, _type:TokenType, index: i32) -> bool;
 	fn get_terminal_value(&self, _type:TokenType, index: i32) -> String;
@@ -125,12 +130,6 @@ pub struct ParseNode
 }
 
 impl IParseNode for ParseNode {
-
-	fn create_node(&self, token:Token, text:String) -> Box<dyn IParseNode>
-	{
-		let node = ParseNode::new(token, text);
-		Box::new(node)
-	}
 
 	fn get_token_node(&self, _type:TokenType, mut index:i32) -> Option<&dyn IParseNode>
 	{

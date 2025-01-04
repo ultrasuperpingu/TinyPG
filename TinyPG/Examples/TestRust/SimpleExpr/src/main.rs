@@ -2,6 +2,7 @@
 use std::collections::HashMap;
 use parser::Parser;
 use scanner::Scanner;
+use parse_tree::IParserTree;
 pub mod scanner;
 pub mod parser;
 pub mod parse_tree;
@@ -22,8 +23,7 @@ fn main() {
 	}
 	let mut context: HashMap<String, i32> = HashMap::new();
 	context.insert("test".to_string(), 2);
-	//tree.set_context(&context);
-	println!("{} = {}", input, tree.node.unwrap().get_nodes()[0].eval_start());
+	println!("{} = {:?}", input, tree.eval(&mut vec![Box::new(context)]).unwrap().downcast::<i32>().unwrap());
 }
 
 

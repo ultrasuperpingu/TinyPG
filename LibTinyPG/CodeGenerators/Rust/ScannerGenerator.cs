@@ -29,7 +29,8 @@ namespace TinyPG.CodeGenerators.Rust
 			}
 
 			// build system tokens
-			tokentype.AppendLine(Environment.NewLine + "		//Non terminal tokens:");
+			tokentype.AppendLine();
+			tokentype.AppendLine("		//Non terminal tokens:");
 			tokentype.AppendLine(Helper.Outline("_NONE_", 1, "= 0,", 5));
 			tokentype.AppendLine(Helper.Outline("_UNDETERMINED_", 1, "= 1,", 5));
 
@@ -42,8 +43,8 @@ namespace TinyPG.CodeGenerators.Rust
 			}
 
 			// build terminal tokens
-			tokentype.AppendLine("\r\n		//Terminal tokens:");
-			//bool first = true;
+			tokentype.AppendLine();
+			tokentype.AppendLine("		//Terminal tokens:");
 			foreach (TerminalSymbol s in Grammar.GetTerminals())
 			{
 				var expr = s.Expression;
@@ -56,20 +57,15 @@ namespace TinyPG.CodeGenerators.Rust
 					expr = expr.Insert(expr.IndexOf("\"")+1, @"^(?:");
 					expr = expr.Insert(expr.Length-1, ")");
 				}
-				regexps.Append("		regex = Regex::new(" + Helper.Unverbatim(expr) + "");
+				regexps.Append("		regex = RegexBuilder::new(" + Helper.Unverbatim(expr) + ")");
+				if (s.Attributes.ContainsKey("IgnoreCase")) {
+					regexps.Append(".case_insensitive(true)");
+				}
+				regexps.AppendLine(".build().expect(\"Invalid regex\");");
 
-				if (s.Attributes.ContainsKey("IgnoreCase"))
-					regexps.Append("std::regex_constants::icase");
-
-				regexps.Append(").expect(\"Invalid regex\");\r\n");
-
-				regexps.Append("		ret.patterns.insert(TokenType::" + s.Name + ", regex);\r\n");
-				regexps.Append("		ret.tokens.push(TokenType::" + s.Name + ");\r\n\r\n");
-
-				//if (first)
-				//	first = false;
-				//else
-				//	tokentype.AppendLine(",");
+				regexps.AppendLine("		ret.patterns.insert(TokenType::" + s.Name + ", regex);");
+				regexps.AppendLine("		ret.tokens.push(TokenType::" + s.Name + ");");
+				regexps.AppendLine();
 
 				tokentype.Append(Helper.Outline(s.Name, 1, "= " + string.Format("{0:d}", counter), 5)).AppendLine(",");
 				counter++;

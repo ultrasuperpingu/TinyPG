@@ -2,7 +2,7 @@
 // By TinyPG v<%GeneratorVersion%> available at https://github.com/ultrasuperpingu/TinyPG
 <%HeaderCode%>
 
-use crate::{parse_tree::{IParseNode, ParseError, ParseTree}, scanner::{Scanner, Token, TokenType}};
+use crate::{parse_tree::{IParseNode, IParserTree, ParseError, ParseTree}, scanner::{Scanner, Token, TokenType}};
 pub struct Parser
 {
 	scanner : Scanner

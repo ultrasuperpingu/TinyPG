@@ -1,24 +1,27 @@
 ﻿// Automatically generated from source file: <%SourceFilename%>
 // By TinyPG v<%GeneratorVersion%> available at https://github.com/ultrasuperpingu/TinyPG
 
-use fancy_regex::Regex;
+use fancy_regex::{Regex, RegexBuilder};
 use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct Scanner
 {
 	pub input: String,
-	pub startpos : i32,
-	pub endpos : i32,
-	pub currentline : i32,
-	pub currentcolumn : i32,
-	pub currentposition : i32,
+	pub startpos : usize,
+	pub endpos : usize,
+	pub currentline : usize,
+	pub currentcolumn : usize,
+	pub currentposition : usize,
 	pub skipped : Vec<Token>, // tokens that were skipped
 	pub patterns : HashMap<TokenType, Regex>,
 
+	/// Already read next token (probably a source of bugs)
 	look_ahead_token : Option<Token>,
+	/// All tokens types
 	tokens : Vec<TokenType>,
-	skip_list : Vec<TokenType> // tokens to be skipped
+	/// Tokens that should be ignored
+	skip_list : Vec<TokenType>
 }
 impl Default for Scanner {
 	fn default() -> Self {
@@ -45,7 +48,6 @@ impl Scanner {
 <%SkipList%>
 
 <%RegExps%>
-
 		ret
 	}
 
@@ -78,7 +80,7 @@ impl Scanner {
 		let tok = self.look_ahead(expectedtokens); // temporarely retrieve the lookahead
 		self.startpos = tok.endpos;
 		self.endpos = tok.endpos; // set the tokenizer to the new scan position
-		self.currentline = tok.line + (tok.text.len() - tok.text.replace("\n", "").len()) as i32;
+		self.currentline = tok.line + (tok.text.len() - tok.text.replace("\n", "").len());
 		self.look_ahead_token.take().unwrap() // reset lookahead token, so scanning will continue
 	}
 
@@ -98,9 +100,8 @@ impl Scanner {
 		// increased performance
 		// TODO: check this, what if the expected token are different since last call?
 		// Check at least that LookAheadToken is part of the expected tokens
-		if self.look_ahead_token.is_some()
+		if let Some(token) = self.look_ahead_token.clone()
 		{
-			let token = self.look_ahead_token.clone().unwrap();
 			if token._type != TokenType::_UNDETERMINED_
 				&& token._type != TokenType::_NONE_ {
 				return token;
@@ -120,7 +121,7 @@ impl Scanner {
 
 		loop
 		{
-			let mut len = -1;
+			let mut len = 0_usize;
 			let mut index : TokenType = TokenType::_END_;
 			//string input = Input.Substring(startpos);
 
@@ -135,13 +136,13 @@ impl Scanner {
 				{
 					//if (m.Index == startpos && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
 					{
-						len = caps[0].len() as i32;
+						len = caps[0].len();
 						index = *scantoken;
 					}
 				}
 			}
 
-			if index >= TokenType::_NONE_ && len >= 0
+			if index != TokenType::_END_ //&& len >= 0
 			{
 				tok.endpos = startpos + len;
 				tok.text = self.input[tok.startpos as usize..(tok.startpos+len) as usize].to_string();
@@ -149,7 +150,7 @@ impl Scanner {
 			}
 			else if tok.startpos == tok.endpos
 			{
-				if tok.startpos < self.input.len() as i32 {
+				if tok.startpos < self.input.len() {
 					tok.text = self.input[tok.startpos as usize..tok.startpos as usize+1].to_string();
 				} else {
 					tok.text = "EOF".to_string();
@@ -158,14 +159,14 @@ impl Scanner {
 
 			// Update the line and column count for error reporting.
 			tok.line = currentline;
-			if tok.startpos < self.input.len() as i32 {
-				tok.column = tok.startpos - self.input[tok.startpos as usize..].to_string().rfind('\n').unwrap_or_default() as i32;
+			if tok.startpos < self.input.len() {
+				tok.column = tok.startpos - self.input[tok.startpos as usize..].to_string().rfind('\n').unwrap_or_default();
 			}
 			if self.skip_list.contains(&tok._type)
 			{
 				startpos = tok.endpos;
 				endpos = tok.endpos;
-				currentline = tok.line + (tok.text.len() - tok.text.replace("\n", "").len()) as i32;
+				currentline = tok.line + (tok.text.len() - tok.text.replace("\n", "").len());
 				self.skipped.push(tok.clone());
 			}
 			else
@@ -188,22 +189,23 @@ impl Scanner {
 
 
 #[derive(PartialEq, Eq, Hash, Clone, Debug, Copy, PartialOrd)]
-#[allow(clippy::upper_case_acronyms)]
+#[allow(clippy::upper_case_acronyms, non_camel_case_types)]
+#[repr(usize)]
 pub enum TokenType
 {
 <%TokenType%>
 
 	//End
-	_END_ = 10000000
+	_END_ = usize::MAX
 }
 
 #[derive(Debug, Clone)]
 pub struct Token
 {
-	pub line : i32,
-	pub column : i32,
-	pub startpos : i32,
-	pub endpos : i32,
+	pub line : usize,
+	pub column : usize,
+	pub startpos : usize,
+	pub endpos : usize,
 	pub text : String,
 
 	// contains all prior skipped symbols
@@ -222,7 +224,7 @@ impl Token {
 		Self::new_with_start_end(0,0)
 	}
 
-	pub fn new_with_start_end(start: i32, end : i32) -> Self
+	pub fn new_with_start_end(start: usize, end : usize) -> Self
 	{
 		Self {
 			_type : TokenType::_UNDETERMINED_,

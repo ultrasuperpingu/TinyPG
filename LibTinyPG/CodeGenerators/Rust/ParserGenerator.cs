@@ -64,7 +64,7 @@ namespace TinyPG.CodeGenerators.Rust
 			sb.AppendLine("		let mut tok: Token;");
 			sb.AppendLine("		#[allow(unused_variables, unused_mut)]");
 			sb.AppendLine("		let mut n: Box<dyn IParseNode>;");
-			sb.AppendLine("		let mut node = parent.create_node(self.scanner.get_token(TokenType::" + s.Name + "), \"" + s.Name + "\".to_string());");
+			sb.AppendLine("		let mut node = tree.create_node(self.scanner.get_token(TokenType::" + s.Name + "), \"" + s.Name + "\".to_string());");
 			sb.AppendLine("");
 
 			if (s.Rules.Count == 1)
@@ -94,7 +94,7 @@ namespace TinyPG.CodeGenerators.Rust
 				case RuleType.Terminal:
 					// expecting terminal, so scan it.
 					sb.AppendLine(Indent + "tok = self.scanner.scan(vec![TokenType::" + r.Symbol.Name + "]);" + Helper.AddComment("Terminal Rule: " + r.Symbol.Name));
-					sb.AppendLine(Indent + "n = node.create_node(tok.clone(), tok.to_string() );");
+					sb.AppendLine(Indent + "n = tree.create_node(tok.clone(), tok.to_string() );");
 					sb.AppendLine(Indent + "node.get_token_mut().update_range(&tok);");
 					sb.AppendLine(Indent + "node.add_node(n);");
 					sb.AppendLine(Indent + "if tok._type != TokenType::" + r.Symbol.Name + " {");
