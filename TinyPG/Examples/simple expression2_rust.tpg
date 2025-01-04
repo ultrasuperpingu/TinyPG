@@ -96,7 +96,7 @@ Atom -> NUMBER | BROPEN AddExpr BRCLOSE | ID : i32 default(0)
 		} ;
 	}
 	if ?ID {
-		let context = paramlist.get(0).unwrap().downcast_ref::<std::collections::HashMap<String, i32>>().unwrap();;
+		let context = paramlist.first().unwrap().downcast_ref::<std::collections::HashMap<String, i32>>().unwrap();
 		let val = context.get(&$ID);
 		//return getVarValue(self.get_terminal_value(TokenType::ID, 0));
 		if let Some(v) = val {

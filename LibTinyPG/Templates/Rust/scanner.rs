@@ -132,7 +132,7 @@ impl Scanner {
 				let r = &self.patterns[scantoken];
 				//let m = r.match(Input, startpos);
 				//if (m.Success && m.Index == startpos && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
-				if let Ok(Some(caps)) = r.captures(&self.input[startpos as usize..]) 
+				if let Ok(Some(caps)) = r.captures(&self.input[startpos..]) 
 				{
 					//if (m.Index == startpos && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
 					{
@@ -145,13 +145,13 @@ impl Scanner {
 			if index != TokenType::_END_ //&& len >= 0
 			{
 				tok.endpos = startpos + len;
-				tok.text = self.input[tok.startpos as usize..(tok.startpos+len) as usize].to_string();
+				tok.text = self.input[tok.startpos..(tok.startpos+len)].to_string();
 				tok._type = index;
 			}
 			else if tok.startpos == tok.endpos
 			{
 				if tok.startpos < self.input.len() {
-					tok.text = self.input[tok.startpos as usize..tok.startpos as usize+1].to_string();
+					tok.text = self.input[tok.startpos..tok.startpos+1].to_string();
 				} else {
 					tok.text = "EOF".to_string();
 				}
@@ -160,7 +160,7 @@ impl Scanner {
 			// Update the line and column count for error reporting.
 			tok.line = currentline;
 			if tok.startpos < self.input.len() {
-				tok.column = tok.startpos - self.input[tok.startpos as usize..].to_string().rfind('\n').unwrap_or_default();
+				tok.column = tok.startpos - self.input[tok.startpos..].to_string().rfind('\n').unwrap_or_default();
 			}
 			if self.skip_list.contains(&tok._type)
 			{
