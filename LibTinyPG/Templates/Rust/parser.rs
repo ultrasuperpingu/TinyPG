@@ -22,10 +22,8 @@ impl Parser {
 	{
 		self.scanner.init(input);
 
-		let mut node = tree.root.take().unwrap();
-		self.parse_node_start(&mut tree, &mut node);
+		self.parse_node_start(&mut tree, None);
 		tree.skipped = self.scanner.skipped.clone();
-		tree.root = Some(node);
 		tree
 	}
 

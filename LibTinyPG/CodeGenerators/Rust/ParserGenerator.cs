@@ -52,13 +52,13 @@ namespace TinyPG.CodeGenerators.Rust
 			sb.AppendLine("	{");
 			sb.AppendLine("		self.scanner.init(input);");
 			sb.AppendLine("		let mut node = tree.root.take().unwrap();");
-			sb.AppendLine("		self.parse_node_" + s.Name.ToLowerInvariant() + "(&mut tree, &mut node);");
+			sb.AppendLine("		self.parse_node_" + s.Name.ToLowerInvariant() + "(&mut tree, Some(&mut node));");
 			sb.AppendLine("		tree.skipped = self.scanner.skipped.clone();");
 			sb.AppendLine("		tree.root = Some(node);");
 			sb.AppendLine("		tree");
 			sb.AppendLine("	}");
 			sb.AppendLine();
-			sb.AppendLine("	fn parse_node_" + s.Name.ToLowerInvariant() + "(&mut self, tree:&mut ParseTree, parent : &mut Box<dyn IParseNode>)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
+			sb.AppendLine("	fn parse_node_" + s.Name.ToLowerInvariant() + "(&mut self, tree:&mut ParseTree, parent : Option<&mut Box<dyn IParseNode>>)" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
 			sb.AppendLine("	{");
 			sb.AppendLine("		#[allow(unused_variables, unused_mut)]");
 			sb.AppendLine("		let mut tok: Token;");
@@ -71,9 +71,12 @@ namespace TinyPG.CodeGenerators.Rust
 				sb.AppendLine(GenerateProductionRuleCode(s.Rules, 0, 2));
 			else
 				throw new Exception("Internal error");
-
-			sb.AppendLine("		parent.get_token_mut().update_range(node.get_token());");
-			sb.AppendLine("		parent.add_node(node);");
+			sb.AppendLine("		if let Some(p) = parent {");
+			sb.AppendLine("			p.get_token_mut().update_range(node.get_token());");
+			sb.AppendLine("			p.add_node(node);");
+			sb.AppendLine("		} else {");
+			sb.AppendLine("			tree.root = Some(node);");
+			sb.AppendLine("		}");
 			sb.AppendLine("	}" + Helper.AddComment("NonTerminalSymbol: " + s.Name));
 			sb.AppendLine();
 			return sb.ToString();
@@ -99,12 +102,16 @@ namespace TinyPG.CodeGenerators.Rust
 					sb.AppendLine(Indent + "node.add_node(n);");
 					sb.AppendLine(Indent + "if tok._type != TokenType::" + r.Symbol.Name + " {");
 					sb.AppendLine(Indent + "	tree.errors.push(ParseError::from_token(\"Unexpected token '\".to_string() + tok.text.replace(&\"\\n\".to_string(), \"\").as_str() + \"' found. Expected '" + r.Symbol.Name + "'.\", 0x1001, &tok, false));");
-					sb.AppendLine(Indent + "	parent.add_node(node);");
+					sb.AppendLine(Indent + "	if let Some(p) = parent {");
+					sb.AppendLine(Indent + "		p.add_node(node);");
+					sb.AppendLine(Indent + "	} else {");
+					sb.AppendLine(Indent + "		tree.root = Some(node);");
+					sb.AppendLine(Indent + "	}");
 					sb.AppendLine(Indent + "	return;");
 					sb.AppendLine(Indent + "}");
 					break;
 				case RuleType.NonTerminal:
-					sb.AppendLine(Indent + "self.parse_node_" + r.Symbol.Name.ToLowerInvariant() + "(tree, &mut node);" + Helper.AddComment("NonTerminal Rule: " + r.Symbol.Name));
+					sb.AppendLine(Indent + "self.parse_node_" + r.Symbol.Name.ToLowerInvariant() + "(tree, Some(&mut node));" + Helper.AddComment("NonTerminal Rule: " + r.Symbol.Name));
 					break;
 				case RuleType.Concat:
 					for (int i = 0; i < r.Rules.Count; i++)

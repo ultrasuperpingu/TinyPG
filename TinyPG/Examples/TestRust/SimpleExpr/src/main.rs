@@ -26,4 +26,3 @@ fn main() {
 	println!("{} = {:?}", input, tree.eval(&mut vec![Box::new(context)]).unwrap().downcast::<i32>().unwrap());
 }
 
-
