@@ -217,9 +217,9 @@ impl IParseNode for ParseNode {
 
 	/// This implements the evaluation functionality, cannot be used directly
 	///
-	/// <param name="tree">the parsetree itself</param>
-	/// <param name="paramlist">optional input parameters</param>
-	/// <returns>a partial result of the evaluation</returns>
+	///  * `tree` - the parsetree itself
+	///  * `paramlist">optional input parameters
+	///  * returns a partial result of the evaluation
 	fn eval(&self, paramlist: &mut Vec<Box<dyn std::any::Any>>) -> Option<Box<dyn std::any::Any>>
 	{
 		match self.get_token()._type

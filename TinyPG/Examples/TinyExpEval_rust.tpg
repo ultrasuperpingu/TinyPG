@@ -20,7 +20,7 @@
 		None
 	}
 	//Context* context = NULL;};
-	HeaderCode=@"#![allow(dead_code)]
+}; HeaderCode=@"#![allow(dead_code)]
 use crate::utils::{convert_to_boolean, convert_to_double, convert_to_int, convert_to_string};
 " %>
 
