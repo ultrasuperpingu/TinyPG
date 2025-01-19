@@ -252,7 +252,7 @@ namespace TinyPG.Parsing
 			directive[key] = value;
 
 			List<string> names = new List<string>(new string[] { "Namespace", "OutputPath", "TemplatePath", });
-			List<string> languages = new List<string>(new string[] { "c#", "cs", "csharp", "vb", "vb.net", "vbnet", "visualbasic", "java", "cpp", "c++", "rs", "rust" });
+			List<string> languages = new List<string>(new string[] { "c#", "cs", "csharp", "vb", "vb.net", "vbnet", "visualbasic", "java", "cpp", "c++", "rs", "rust", "py", "python" });
 			switch (directive.Name)
 			{
 				case "TinyPG":

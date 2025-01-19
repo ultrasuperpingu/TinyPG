@@ -42,6 +42,9 @@
     <Compile Include="CodeGenerators\C++\ParseTreeGenerator.cs" />
     <Compile Include="CodeGenerators\C++\ScannerGenerator.cs" />
     <Compile Include="CodeGenerators\CodeGeneratorFactory.cs" />
+    <Compile Include="CodeGenerators\Python\ParserGenerator.cs" />
+    <Compile Include="CodeGenerators\Python\ParseTreeGenerator.cs" />
+    <Compile Include="CodeGenerators\Python\ScannerGenerator.cs" />
     <Compile Include="CodeGenerators\ICodeGenerator.cs" />
     <Compile Include="CodeGenerators\CSharp\ParserGenerator.cs" />
     <Compile Include="CodeGenerators\CSharp\ParseTreeGenerator.cs" />
@@ -74,6 +77,15 @@
     <Compile Include="Debug\IToken.cs" />
     <Compile Include="GeneratedFilesWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Templates\Python\parser.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Python\parse_tree.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Python\scanner.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Compile Include="TinyPGInfos.cs" />
     <Content Include="Templates\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

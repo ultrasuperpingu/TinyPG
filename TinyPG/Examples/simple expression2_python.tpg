@@ -1,0 +1,90 @@
+//@TinyPG - a Tiny Parser Generator v1.6
+//Copyright © Herre Kuijpers 2008-2010, modified by ultrasuperpingu 2024
+//Simple expression calculator
+//
+// You can test it with a simple main like this:
+// from simple_expr import Scanner, Parser;
+// 
+// scanner = Scanner();
+// parser = Parser(scanner);
+// input = "5*3+12/(1+2*test)";
+// tree=parser.Parse(input, None);
+// print(tree)
+// 
+// error=False;
+// for e in tree.Errors:
+// 	print(e.Message);
+// 	error = True;
+// if error:
+// 	exit();
+// context: {};
+// context["test"]=2;
+// print("{} = {}".format(input, tree.Eval([context])));
+
+
+<% @TinyPG Language="python" Namespace="TinyPG" OutputPath="TestPython\simple_expr\simple_expr" %>
+
+// this is not supported in Python
+//<% @TextHighlighter Generate="true" %>
+
+<% @ParseTree CustomCode={
+	#TODO
+}; %>
+
+				EOF_         	-> @"\s*$";
+[Color(255, 0, 0)] 		NUMBER 	-> @"[0-9]+";
+[Color(255, 0, 0)] 		ID	 	-> @"[a-zA-Z_][a-zA-Z0-9_]*";
+[Color(0, 127, 0)] 		PLUSMINUS 	-> @"(\+|-)";
+[Color(0, 0, 255)] 		MULTDIV 	-> @"\*|/";
+[Color(127, 0, 127)] 	BROPEN 	-> @"\(";
+[Color(127, 0, 127)] 	BRCLOSE 	-> @"\)";
+
+[Skip] 			WHITESPACE  	-> @"\s+";
+
+Start -> (AddExpr)? EOF_ : i32 default(0)
+{ $AddExpr };      
+
+AddExpr -> MultExpr (PLUSMINUS MultExpr)* : i32 default(0)
+{ 
+	value = $MultExpr;
+	i = 1;
+	while ?MultExpr[i]:
+		sign = $PLUSMINUS[i-1];
+		if sign == "+":
+			value += $MultExpr[i];
+		else:
+			value -= $MultExpr[i];
+		i+=1;
+
+	return value;
+};
+
+MultExpr -> Atom (MULTDIV Atom)* : i32 default(0)
+{ 
+	value = $Atom;
+	i = 1;
+	while ?Atom[i]:
+		sign = $MULTDIV[i-1];
+		if sign == "*":
+			value *= $Atom[i];
+		else:
+			value /= $Atom[i];
+		i+=1;
+	return value;
+};
+
+Atom -> NUMBER | BROPEN AddExpr BRCLOSE | ID : i32 default(0)
+{
+	if ?NUMBER:
+		return parseInt($NUMBER)
+
+	if ?ID:
+		context = paramlist[0];
+		val = context.get($ID);
+		if val != None:
+			return val;
+		return 0;
+
+	return $AddExpr;
+};
+
