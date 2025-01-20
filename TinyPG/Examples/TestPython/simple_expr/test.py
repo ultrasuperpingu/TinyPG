@@ -12,6 +12,6 @@ for e in tree.Errors:
 	error = True;
 if error:
 	exit();
-context: {};
+context = {};
 context["test"]=2;
 print("{} = {}".format(input, tree.Eval([context])));

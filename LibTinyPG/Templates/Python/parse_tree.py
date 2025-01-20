@@ -9,37 +9,9 @@ from .scanner import Token, TokenType
 
 
 class ParseError:
-	#private string message;
-	#private int code;
-	#private int line;
-	#private int col;
-	#private int pos;
-	#private int length;
-	#private bool isWarning;
-	#
-	#public int Code { get { return code; } }
-	#public int Line { get { return line; } }
-	#public int Column { get { return col; } }
-	#public int Position { get { return pos; } }
-	#public int Length { get { return length; } }
-	#public string Message { get { return message; } }
-	#public bool IsWarning { get { return isWarning; } }
-	#
-	## just for the sake of serialization
-	#def ParseError()
-	#{
-	#}
-	#
-	#public ParseError(string message, int code, ParseNode node, bool isWarning = false) : this(message, code, node.Token)
-	#{
-	#}
-	#
+
 	def FromToken(message, code, token, isWarning = False):
 		return ParseError(message, code, token.Line, token.Column, token.StartPos, token.Length(), isWarning);
-
-	#public ParseError(string message, int code, bool isWarning = false) : this(message, code, 0, 0, 0, 0, isWarning)
-	#{
-	#}
 
 	def __init__(self, message, code, line, col, pos, length, isWarning = False):
 		self.Message = message;
@@ -137,17 +109,19 @@ class ParseTree(ParseNode):
 
 	def PrintNode(self, sb, node, indent):
 		space = " " * indent;
-	
+
 		sb+=space;
 		sb+=node.Text;
-	
+		sb+="\n";
+
 		for n in node.Nodes:
-			self.PrintNode(sb, n, indent + 2);
+			sb=self.PrintNode(sb, n, indent + 2);
 		return sb;
 
 	"""This is the entry point for executing and evaluating the parse tree."""
 	""" <param name="paramlist">additional optional input parameters</param>
 		<returns>the output of the evaluation function</returns>"""
 	def Eval(self, paramlist):
-		return self.Nodes[0].EvalNode(self, paramlist);
+		params=[self]+paramlist;
+		return self.Nodes[0].EvalNode(params);
 

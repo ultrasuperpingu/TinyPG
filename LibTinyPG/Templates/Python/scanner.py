@@ -72,7 +72,7 @@ class Scanner:
 		if len(expectedtokens) == 0:
 			scantokens = self.Tokens;
 		else:
-			scantokens = [];
+			scantokens += expectedtokens;
 			scantokens += self.SkipList;
 
 		while True:

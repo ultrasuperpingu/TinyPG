@@ -17,7 +17,7 @@
 // 	error = True;
 // if error:
 // 	exit();
-// context: {};
+// context = {};
 // context["test"]=2;
 // print("{} = {}".format(input, tree.Eval([context])));
 
@@ -41,10 +41,12 @@
 
 [Skip] 			WHITESPACE  	-> @"\s+";
 
-Start -> (AddExpr)? EOF_ : i32 default(0)
-{ $AddExpr };      
+Start -> (AddExpr)? EOF_
+{
+	return $AddExpr;
+};      
 
-AddExpr -> MultExpr (PLUSMINUS MultExpr)* : i32 default(0)
+AddExpr -> MultExpr (PLUSMINUS MultExpr)*
 { 
 	value = $MultExpr;
 	i = 1;
@@ -59,7 +61,7 @@ AddExpr -> MultExpr (PLUSMINUS MultExpr)* : i32 default(0)
 	return value;
 };
 
-MultExpr -> Atom (MULTDIV Atom)* : i32 default(0)
+MultExpr -> Atom (MULTDIV Atom)*
 { 
 	value = $Atom;
 	i = 1;
@@ -68,18 +70,18 @@ MultExpr -> Atom (MULTDIV Atom)* : i32 default(0)
 		if sign == "*":
 			value *= $Atom[i];
 		else:
-			value /= $Atom[i];
+			value //= $Atom[i];
 		i+=1;
 	return value;
 };
 
-Atom -> NUMBER | BROPEN AddExpr BRCLOSE | ID : i32 default(0)
+Atom -> NUMBER | BROPEN AddExpr BRCLOSE | ID
 {
 	if ?NUMBER:
-		return parseInt($NUMBER)
+		return int($NUMBER)
 
 	if ?ID:
-		context = paramlist[0];
+		context = paramlist[1];
 		val = context.get($ID);
 		if val != None:
 			return val;

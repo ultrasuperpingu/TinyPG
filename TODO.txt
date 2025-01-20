@@ -5,15 +5,19 @@ General:
  * Stop parsing on the first error...
  * Make Error Codes consistant (ErrorCode class with all error codes done but not used). Once done, add the ability to silent warnings.
 
- C++:
+C++:
  * Review C++ generated code and improve it (more use of templates ???)
  * ParseTree should be returns as shared_ptr ?
+Rust:
+ * Review Rust generated code and improve it (more use of templates ???)
+Python:
+ * Review Python generated code
  
 Prospecting/Long Term:
  * Add my backtracking parser as a possible implementation (in addition to LL(1))
  * Remove VB support
  * Add a Search (and SearchXXX) method (in addition to Parse (and ParseXXX)) in the Parser
- * Add python and javascript generation
+ * Add javascript generation
  * Add a Comment attribute to be able to add comments to the EvalXXX methods (ex: specify the expected param list (which is params object[] or equivalent) to the method via documentation comments)
  * Add a Parameters attribute (to be able to specify the parameters of the EvalXXX function and their type instead of the params object[] parameters)
  * Allows void return type ??
@@ -21,6 +25,7 @@ Prospecting/Long Term:
  * Implement a Visual Studio (and VSCode) Extension (via Language Server Protocol) (for VSCode, tmLanguage grammar is done, example of task is done too)
  * Step by step parsing for debug purpose
  * Ability to map error line in the produced file (while compiling it) to the grammar file (the code block in grammar file)
+ * Rewrite from scratch in rust
 
 
 

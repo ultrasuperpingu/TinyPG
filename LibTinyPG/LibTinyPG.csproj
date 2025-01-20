@@ -77,15 +77,6 @@
     <Compile Include="Debug\IToken.cs" />
     <Compile Include="GeneratedFilesWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="Templates\Python\parser.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Templates\Python\parse_tree.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Templates\Python\scanner.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Compile Include="TinyPGInfos.cs" />
     <Content Include="Templates\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

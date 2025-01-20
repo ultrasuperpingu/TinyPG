@@ -30,19 +30,19 @@ namespace TinyPG.CodeGenerators.Python
 					evalsymbols.AppendLine("		if self.Token.Type == TokenType." + s.Name + ":");
 				else
 					evalsymbols.AppendLine("		elif self.Token.Type == TokenType." + s.Name + ":");
-				evalsymbols.AppendLine("			Value = Eval" + s.Name + "(paramlist);");
-
+				evalsymbols.AppendLine("			Value = self.Eval" + s.Name + "(paramlist);");
+				first = false;
 				string returnType = "object";
 				if (!string.IsNullOrEmpty(s.ReturnType) && !isDebugOther)
 					returnType = s.ReturnType;
-				string defaultReturnValue = "";
+				string defaultReturnValue = "None";
 				if (!string.IsNullOrEmpty(s.ReturnTypeDefault) && !isDebugOther)
 					defaultReturnValue = s.ReturnTypeDefault;
 				if (s.Attributes.ContainsKey("EvalComment"))
 				{
 					evalmethods.AppendLine(GenerateComment(s.Attributes["EvalComment"], Helper.Indent2));
 				}
-				evalmethods.AppendLine("	def  Eval" + s.Name + "(paramlist):");
+				evalmethods.AppendLine("	def Eval" + s.Name + "(self, paramlist):");
 				if (s.CodeBlock != null && !isDebugOther)
 				{
 					// paste user code here
@@ -54,7 +54,7 @@ namespace TinyPG.CodeGenerators.Python
 					evalmethods.AppendLine("		print(\"Could not interpret input; no semantics implemented.\");");
 				}
 				evalmethods.AppendLine();
-				evalmethods.AppendLine("	def Get" + s.Name + "Value(index, paramlist):");
+				evalmethods.AppendLine("	def Get" + s.Name + "Value(self, index, paramlist):");
 				evalmethods.AppendLine("		o = "+defaultReturnValue+";");
 				evalmethods.AppendLine("		node = self.GetTokenNode(TokenType." + s.Name + ", index);");
 				evalmethods.AppendLine("		if (node != None):");
